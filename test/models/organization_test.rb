@@ -17,8 +17,9 @@ class OrganizationTest < ActiveSupport::TestCase
   context "validations" do
     context "handle" do
       should allow_value("CapsLOCK").for(:handle)
+      should allow_value("1abcde").for(:handle)
+
       should_not allow_value(nil).for(:handle)
-      should_not allow_value("1abcde").for(:handle)
       should_not allow_value("abc^%def").for(:handle)
       should_not allow_value("abc\n<script>bad").for(:handle)
 
@@ -77,6 +78,40 @@ class OrganizationTest < ActiveSupport::TestCase
 
         refute_predicate organization, :valid?
         assert_contains organization.errors[:handle], "is reserved and cannot be used"
+      end
+
+      should "be invalid when handle is reserved under a different separator spelling" do
+        organization = build(:organization, handle: "ruby-gems")
+
+        refute_predicate organization, :valid?
+        assert_contains organization.errors[:handle], "is reserved and cannot be used"
+      end
+
+      should "be invalid when a user already owns the handle" do
+        create(:user, handle: "someuser")
+        organization = build(:organization, handle: "someuser")
+
+        refute_predicate organization, :valid?
+        assert_contains organization.errors[:handle], "has already been taken"
+      end
+
+      should "be invalid when a user already owns the handle in different case" do
+        create(:user, handle: "someuser")
+        organization = build(:organization, handle: "SomeUser")
+
+        refute_predicate organization, :valid?
+        assert_contains organization.errors[:handle], "has already been taken"
+      end
+
+      should "not check user handles when the handle is unchanged" do
+        organization = create(:organization, handle: "mycompany")
+        # Simulate a collision predating this validation: User's own guard
+        # would reject this handle now, so write it past validation.
+        create(:user).update_column(:handle, "mycompany")
+
+        organization.name = "A New Name"
+
+        assert_predicate organization, :valid?
       end
     end
   end
