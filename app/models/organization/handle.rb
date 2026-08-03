@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Organization::Handle
+class Organization::Handle # rubocop:disable Metrics/ClassLength
   # Handles are compared without separators
   # ex "rubygems" reserves "ruby-gems" and "ruby_gems"
   def self.normalize(handle)
@@ -333,15 +333,15 @@ class Organization::Handle
   ].freeze
 
   RESERVED = [
+    *FUTURE_ROUTES,
+    *INFRASTRUCTURE,
+    *REGISTRY_IDENTITY,
+    *RESERVED_WORDS,
     *RESTFUL_ACTIONS,
     *ROUTES,
-    *STATIC_PATHS,
-    *FUTURE_ROUTES,
-    *REGISTRY_IDENTITY,
     *RUBY_CORE,
-    *TRUST_AND_SAFETY,
-    *INFRASTRUCTURE,
-    *RESERVED_WORDS
+    *STATIC_PATHS,
+    *TRUST_AND_SAFETY
   ].freeze
 
   # Indexed on the normalized form so lookups stay O(1) and every separator
