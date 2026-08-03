@@ -319,6 +319,30 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    should "pass all attributes to the transparency log recorder" do
+      rubygem = create(:rubygem, name: "test")
+      version = create(:version, rubygem: rubygem)
+      gemcutter = stub(rubygem: rubygem, version: version)
+      recorder = mock
+
+      TransparencyLog::Recorder.expects(:new).returns(recorder)
+      recorder.expects(:record).with(
+        event_type: "gem_push",
+        resource_type: "rubygem",
+        resource_name: rubygem.name,
+        resource_id: rubygem.id.to_s,
+        subject_type: "gem_version",
+        subject_name: version.full_name,
+        subject_id: version.id.to_s,
+        actor_type: "user",
+        actor_id: @api_key.owner_id.to_s,
+        actor_handle: @api_key.owner.name,
+        authentication_method: "api_key"
+      )
+
+      @controller.send(:record_transparency_log_event, gemcutter)
+    end
+
     context "On POST to create for new gem" do
       setup do
         post :create, body: gem_file(&:read)

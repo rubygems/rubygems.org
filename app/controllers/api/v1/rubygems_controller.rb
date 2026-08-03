@@ -106,7 +106,7 @@ class Api::V1::RubygemsController < Api::BaseController
     version = gemcutter.version
     return if rubygem.nil? || version.nil?
 
-    event = TransparencyLogEvent.new(
+    TransparencyLog::Recorder.new.record(
       event_type: "gem_push",
       resource_type: "rubygem",
       resource_name: rubygem.name,
@@ -119,8 +119,6 @@ class Api::V1::RubygemsController < Api::BaseController
       actor_handle: @api_key.owner&.name,
       authentication_method: "api_key"
     )
-
-    TransparencyLog::Recorder.new.record(event)
   rescue StandardError => e
     Rails.error.report(e, handled: true)
   end

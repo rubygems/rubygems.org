@@ -281,6 +281,34 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
           end
         end
 
+        context "passing transparency log attributes" do
+          setup do
+            recorder = mock
+
+            TransparencyLog::Recorder.expects(:new).returns(recorder)
+            recorder.expects(:record).with(
+              event_type: "ownership_change",
+              resource_type: "rubygem",
+              resource_name: @rubygem.name,
+              resource_id: @rubygem.id.to_s,
+              subject_type: "user",
+              subject_name: @second_user.handle,
+              subject_id: @second_user.id.to_s,
+              actor_type: "user",
+              actor_id: @user.id.to_s,
+              actor_handle: @user.handle,
+              authentication_method: "api_key"
+            )
+
+            post :create, params: {
+              rubygem_id: @rubygem.slug,
+              email: @second_user.email
+            }
+          end
+
+          should respond_with :success
+        end
+
         context "add user with handler" do
           setup do
             post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.handle }

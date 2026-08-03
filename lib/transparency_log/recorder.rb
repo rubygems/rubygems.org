@@ -6,7 +6,9 @@ class TransparencyLog::Recorder
     @entry_builder = TransparencyLog::EntryBuilder.new
   end
 
-  def record(event)
+  def record(attributes)
+    event = TransparencyLogEvent.new(attributes)
+
     event.assign_attributes(
       spec_version: "1.0",
       canonicalization_algorithm: "JCS",

@@ -99,7 +99,7 @@ class Api::V1::OwnersController < Api::BaseController
   end
 
   def record_transparency_log_event(owner)
-    event = TransparencyLogEvent.new(
+    TransparencyLog::Recorder.new.record(
       event_type: "ownership_change",
       resource_type: "rubygem",
       resource_name: @rubygem.name,
@@ -112,8 +112,6 @@ class Api::V1::OwnersController < Api::BaseController
       actor_handle: @api_key.user.handle,
       authentication_method: "api_key"
     )
-
-    TransparencyLog::Recorder.new.record(event)
   rescue StandardError => e
     Rails.error.report(e, handled: true)
   end
