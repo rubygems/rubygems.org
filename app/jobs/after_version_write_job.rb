@@ -6,9 +6,8 @@ class AfterVersionWriteJob < ApplicationJob
   def perform(version:)
     version.transaction do
       rubygem = version.rubygem
-      version.rubygem.push_notifiable_owners.each do |notified_user|
-        Mailer.gem_pushed(owner, version.id, notified_user.id).deliver_later
-      end
+      notify_pushed(rubygem.push_notifiable_owners, version)
+      notify_pushed(rubygem.organization.push_notifiable_members, version) if rubygem.organization.present?
       Indexer.perform_later
       UploadVersionsFileJob.perform_later
       UploadInfoFileJob.perform_later(rubygem_name: rubygem.name)
@@ -27,5 +26,13 @@ class AfterVersionWriteJob < ApplicationJob
 
   def owner
     arguments.dig(0, :version).pusher_api_key&.owner
+  end
+
+  private
+
+  def notify_pushed(users, version)
+    users.each do |notified_user|
+      Mailer.gem_pushed(owner, version.id, notified_user.id).deliver_later
+    end
   end
 end

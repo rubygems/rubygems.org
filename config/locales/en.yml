@@ -669,6 +669,9 @@ en:
       update: Update
       owner_heading: Ownership Notifications
       push_heading: Push Notifications
+      gems_heading: Gems
+      organizations_heading: Organizations
+      organization_info: Push notifications for all gems owned by this organization.
   webauthn_verifications:
     expired_or_already_used: The token in the link you used has either expired or been used already.
     no_port: No port provided. Please try again.
