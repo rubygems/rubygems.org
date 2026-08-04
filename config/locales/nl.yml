@@ -658,6 +658,9 @@ nl:
       update:
       owner_heading:
       push_heading:
+      gems_heading:
+      organizations_heading:
+      organization_info:
   webauthn_verifications:
     expired_or_already_used:
     no_port:

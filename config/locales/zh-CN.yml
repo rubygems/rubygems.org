@@ -663,6 +663,9 @@ zh-CN:
       update: 更新
       owner_heading: 所有权通知
       push_heading: 推送通知
+      gems_heading:
+      organizations_heading:
+      organization_info:
   webauthn_verifications:
     expired_or_already_used: 您链接中使用的的令牌已过期或已被使用。
     no_port: 没有提供端口。请再试一次。

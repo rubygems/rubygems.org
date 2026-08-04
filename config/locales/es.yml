@@ -732,6 +732,9 @@ es:
       update: Actualizar
       owner_heading: Notificaciones de propietarios
       push_heading: Notificaciones Push
+      gems_heading:
+      organizations_heading:
+      organization_info:
   webauthn_verifications:
     expired_or_already_used: El token del enlace utilizado ha expirado o ya ha sido
       utilizado.
