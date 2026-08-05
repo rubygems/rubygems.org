@@ -204,6 +204,7 @@ nl:
       reset:
       save_key:
       mfa:
+      mfa_enabled_notice:
       expiration:
       update_owner:
       view_expired:

@@ -215,6 +215,7 @@ es:
       save_key: 'Ten en cuenta que no se volverá a mostrar la clave de API. Nueva
         clave de API:'
       mfa: AMF
+      mfa_enabled_notice:
       expiration:
       update_owner:
       view_expired:

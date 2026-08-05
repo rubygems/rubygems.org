@@ -6,10 +6,10 @@
   <%= auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem.slug, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
   <% if @rubygem.versions.any? && @latest_version.indexed %>
     <!-- canonical url -->
-    <link rel="canonical" href="<%= rubygem_version_url(@rubygem.slug, @latest_version.slug) %>" />
+    <link rel="canonical" href="<%= rubygem_version_url(@rubygem.slug, @latest_version.slug) %>">
     <%# Locale alternate links temporarily disabled to improve cacheability and mitigate bot abuse %>
   <% else %>
-    <meta name="robots" content="noindex" />
+    <meta name="robots" content="noindex">
   <% end %>
 <% end %>
 

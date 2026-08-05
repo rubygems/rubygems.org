@@ -219,6 +219,7 @@ de:
       save_key: 'Beachten Sie, dass wir Ihnen den Schlüssel nicht erneut anzeigen
         können. Neuer API-Schlüssel:'
       mfa: MFA
+      mfa_enabled_notice:
       expiration:
       update_owner:
       view_expired:
