@@ -9,11 +9,11 @@ module ApiKeysHelper
 
   def api_key_checkbox(form, api_scope)
     exclusive = ApiKey::EXCLUSIVE_SCOPES.include?(api_scope)
-    gem_scope = ApiKey::APPLICABLE_GEM_API_SCOPES.include?(api_scope)
+    gem_scope_target = ApiKey::APPLICABLE_GEM_API_SCOPES.include?(api_scope)
 
     data = {}
     data[:exclusive_checkbox_target] = exclusive ? "exclusive" : "inclusive"
-    data[:gem_scope_target] = "checkbox" if gem_scope
+    data[:gem_scope_target] = "checkbox" if gem_scope_target
 
     html_options = { class: CHECKBOX_CLASSES, id: api_scope, data: }
     form.check_box api_scope, html_options, "true", "false"
