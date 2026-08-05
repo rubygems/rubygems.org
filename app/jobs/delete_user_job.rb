@@ -7,8 +7,7 @@ class DeleteUserJob < ApplicationJob
   def perform(user:, send_emails: true)
     email = user.email
     return if user.discarded?
-    user.skip_deletion_complete_email = !send_emails
-    user.discard!
+    send_emails ? user.discard! : user.discard_without_deletion_email!
   rescue ActiveRecord::ActiveRecordError, Discard::RecordNotDiscarded => e
     # Catch the exception so we can log it, otherwise using `destroy` would give
     # us no hint as to why the deletion failed.

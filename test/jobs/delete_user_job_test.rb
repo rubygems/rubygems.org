@@ -27,7 +27,10 @@ class DeleteUserJobTest < ActiveJob::TestCase
     refute_predicate user, :deleted_at
   end
 
-  test "does not send email when a successful deletion has emails disabled" do
+  test "does not send email after spam account deletion when a successful deletion has emails disabled" do
+    spam_user = create(:user, email: "spam@spammy-test.org", email_confirmed: false)
+    Maintenance::DiscardSpamAccountsTask.process(spam_user)
+
     user = create(:user)
     rubygem = create(:rubygem, name: "admin-email-suppression", owners: [user])
     create(:version, rubygem:)

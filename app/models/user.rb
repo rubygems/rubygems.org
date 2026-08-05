@@ -173,6 +173,13 @@ class User < ApplicationRecord
     handle || id
   end
 
+  def discard_without_deletion_email!
+    self.skip_deletion_complete_email = true
+    discard!
+  ensure
+    self.skip_deletion_complete_email = false
+  end
+
   def flipper_id
     "user:#{handle}"
   end

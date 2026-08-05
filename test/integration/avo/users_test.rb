@@ -38,7 +38,7 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
   test "disabling the delete action when the user is the sole owner of an old gem version" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
     user = create(:user)
-    rubygem = create(:rubygem, owners: [user])
+    rubygem = create(:rubygem, name: "admin-delete-blocked-old-gem", owners: [user])
     create(:version, rubygem:, created_at: 31.days.ago)
 
     get avo.resources_user_path(user)
@@ -53,7 +53,7 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
   test "enabling the delete action when an old gem version has another owner" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
     user = create(:user)
-    rubygem = create(:rubygem, owners: [user, create(:user)])
+    rubygem = create(:rubygem, name: "admin-delete-shared-old-gem", owners: [user, create(:user)])
     create(:version, rubygem:, created_at: 31.days.ago)
 
     get avo.resources_user_path(user)
@@ -66,7 +66,7 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
   test "enabling the delete action when the user's old gem version is already yanked" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
     user = create(:user)
-    rubygem = create(:rubygem, owners: [user])
+    rubygem = create(:rubygem, name: "admin-delete-yanked-old-gem", owners: [user])
     create(:version, rubygem:, created_at: 31.days.ago, indexed: false)
     create(:version, rubygem:)
 
@@ -86,7 +86,8 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
     refute page.has_content? "Delete User"
   end
 
-  test "not showing the delete action to operators outside the rubygems.org team" do
+  test "redirecting operators outside the rubygems.org team" do
+    requires_avo_pro
     admin = create(:admin_github_user, :is_admin)
     info_data = admin.info_data.deep_dup
     info_data[:viewer][:organization][:teams][:edges].reject! { |edge| edge.dig(:node, :slug) == "rubygems-org" }
@@ -95,7 +96,6 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
 
     get avo.resources_user_path(create(:user))
 
-    assert_response :success
-    refute page.has_content? "Delete User"
+    assert_redirected_to avo_path
   end
 end
