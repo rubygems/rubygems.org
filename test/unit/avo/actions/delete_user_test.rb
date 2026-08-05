@@ -23,7 +23,7 @@ class DeleteUserTest < ActiveSupport::TestCase
       query: nil
     }
 
-    assert_enqueued_with(job: DeleteUserJob, args: [user: @user, initiated_by: :admin]) do
+    assert_enqueued_with(job: DeleteUserJob, args: [user: @user, actor: @current_user]) do
       @action.handle(**args)
     end
   end

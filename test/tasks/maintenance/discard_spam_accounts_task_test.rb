@@ -46,7 +46,7 @@ class Maintenance::DiscardSpamAccountsTaskTest < ActiveSupport::TestCase
     other_user = create(:user, email: "regular@spammy-test.org", created_at: 1.day.ago)
 
     assert_enqueued_email_with Mailer, :deletion_complete, args: [other_user.email] do
-      DeleteUserJob.new(user: other_user, initiated_by: :user).perform(user: other_user, initiated_by: :user)
+      DeleteUserJob.new(user: other_user, actor: other_user).perform(user: other_user, actor: other_user)
     end
   end
 

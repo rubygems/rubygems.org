@@ -21,7 +21,7 @@ class DeleteUserJobTest < ActiveJob::TestCase
 
     Mailer.expects(:deletion_failed).with(user.email).returns(mock(deliver_later: nil))
     User.any_instance.expects(:yank_gems).raises(ActiveRecord::RecordNotDestroyed)
-    DeleteUserJob.new(user:, initiated_by: :user).perform(user:, initiated_by: :user)
+    DeleteUserJob.new(user:, actor: user).perform(user:, actor: user)
 
     refute_predicate user.reload, :destroyed?
     refute_predicate user, :deleted_at
@@ -29,12 +29,13 @@ class DeleteUserJobTest < ActiveJob::TestCase
 
   test "does not send email when deletion is initiated by an admin" do
     user = create(:user)
+    actor = create(:admin_github_user, :is_admin)
     rubygem = create(:rubygem, name: "admin-email-suppression", owners: [user])
     create(:version, rubygem:)
 
     Mailer.expects(:deletion_complete).never
     assert_no_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-      DeleteUserJob.new(user:, initiated_by: :admin).perform(user:, initiated_by: :admin)
+      DeleteUserJob.new(user:, actor:).perform(user:, actor:)
     end
 
     assert_predicate user.reload, :discarded?
@@ -42,10 +43,11 @@ class DeleteUserJobTest < ActiveJob::TestCase
 
   test "does not send deletion failed when deletion is initiated by an admin" do
     user = create(:user)
+    actor = create(:admin_github_user, :is_admin)
 
     Mailer.expects(:deletion_failed).never
     User.any_instance.expects(:yank_gems).raises(ActiveRecord::RecordNotDestroyed)
-    DeleteUserJob.new(user:, initiated_by: :admin).perform(user:, initiated_by: :admin)
+    DeleteUserJob.new(user:, actor:).perform(user:, actor:)
 
     refute_predicate user.reload, :discarded?
   end
@@ -152,7 +154,7 @@ class DeleteUserJobTest < ActiveJob::TestCase
   def assert_delete(user)
     Mailer.expects(:deletion_complete).with(user.email).returns(mock(deliver_later: nil))
     Mailer.expects(:deletion_failed).never
-    DeleteUserJob.new(user:, initiated_by: :user).perform(user:, initiated_by: :user)
+    DeleteUserJob.new(user:, actor: user).perform(user:, actor: user)
 
     refute_predicate user.reload, :destroyed?
     assert_predicate user.reload, :deleted_at
