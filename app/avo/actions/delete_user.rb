@@ -7,7 +7,7 @@ class Avo::Actions::DeleteUser < Avo::Actions::ApplicationAction
   }
 
   self.message = lambda {
-    "Are you sure you would like to delete user #{record.handle} with #{record.email}? " \
+    "Are you sure you would like to delete user #{record.display_handle} with #{record.email}? " \
       "This action can't be undone and will use the same account deletion process available from the user's profile."
   }
 

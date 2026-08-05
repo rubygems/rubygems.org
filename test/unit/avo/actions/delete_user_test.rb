@@ -29,7 +29,7 @@ class DeleteUserTest < ActiveSupport::TestCase
   end
 
   should "not enqueue deletion when the user is the sole owner of an old gem version" do
-    rubygem = create(:rubygem, owners: [@user])
+    rubygem = create(:rubygem, name: "old-gem-owned-by-deleted-user", owners: [@user])
     create(:version, rubygem:, created_at: 31.days.ago)
     args = {
       current_user: @current_user,
@@ -52,5 +52,13 @@ class DeleteUserTest < ActiveSupport::TestCase
 
     assert_includes message, @user.handle
     assert_includes message, @user.email
+  end
+
+  should "ask for confirmation naming a user without a handle" do
+    @user.update!(handle: nil)
+
+    message = @action.get_message
+
+    assert_includes message, "delete user ##{@user.id} with #{@user.email}"
   end
 end
