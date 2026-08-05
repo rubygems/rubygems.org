@@ -209,6 +209,7 @@ en:
       reset: Reset
       save_key: "Note that we won't be able to show the key to you again. New API key:"
       mfa: MFA
+      mfa_enabled_notice: This API key requires multi-factor authentication when it is used.
       expiration: Expiration
       update_owner: Update Owner
       view_expired: View previous API keys

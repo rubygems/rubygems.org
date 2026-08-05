@@ -40,11 +40,9 @@ module ApiKeysHelper
   private
 
   def invalid_gem_tooltip(name)
-    content_tag(
-      :span,
-      "#{name} [?]",
-      class: "cursor-help",
-      title: t("api_keys.gem_ownership_removed", rubygem_name: name)
-    )
+    safe_join([
+                name,
+                render(TooltipComponent.new(text: t("api_keys.gem_ownership_removed", rubygem_name: name))) { "[?]" }
+              ], " ")
   end
 end

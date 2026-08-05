@@ -204,6 +204,7 @@ zh-TW:
       reset: 重設
       save_key: 請注意，我們無法再次顯示您的 API 金鑰。新 API 金鑰：
       mfa: MFA
+      mfa_enabled_notice:
       expiration:
       update_owner:
       view_expired:
