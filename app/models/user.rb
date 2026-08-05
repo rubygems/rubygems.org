@@ -12,8 +12,6 @@ class User < ApplicationRecord
   self.discard_column = :deleted_at
   self.ignored_columns += [:token]
 
-  attr_accessor :skip_deletion_complete_email
-
   default_scope { not_deleted }
 
   before_save :_generate_confirmation_token_no_reset_unconfirmed_email, if: :will_save_change_to_unconfirmed_email?
@@ -27,7 +25,6 @@ class User < ApplicationRecord
   before_discard :expire_all_api_keys
   before_discard :destroy_associations_for_discard
   before_discard :clear_personal_attributes
-  after_discard :send_deletion_complete_email, unless: :skip_deletion_complete_email
   before_destroy :yank_gems
 
   scope :not_deleted, -> { kept }
@@ -171,13 +168,6 @@ class User < ApplicationRecord
 
   def display_id
     handle || id
-  end
-
-  def discard_without_deletion_email!
-    self.skip_deletion_complete_email = true
-    discard!
-  ensure
-    self.skip_deletion_complete_email = false
   end
 
   def flipper_id
@@ -366,7 +356,6 @@ class User < ApplicationRecord
   end
 
   def clear_personal_attributes
-    @email_before_discard = email
     update!(
       email: "deleted+#{id}@rubygems.org",
       handle: nil, email_confirmed: false,
@@ -377,10 +366,6 @@ class User < ApplicationRecord
       mfa_level: :disabled,
       password: SecureRandom.hex(20).encode("UTF-8")
     )
-  end
-
-  def send_deletion_complete_email
-    Mailer.deletion_complete(@email_before_discard).deliver_later
   end
 
   def record_create_event

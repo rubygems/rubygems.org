@@ -39,14 +39,14 @@ class Maintenance::DiscardSpamAccountsTaskTest < ActiveSupport::TestCase
     end
   end
 
-  test "#process restores deletion email callback after processing" do
+  test "#process does not affect user-initiated deletion emails" do
     user = create(:user, email: "spam@spammy-test.org", created_at: 1.day.ago, email_confirmed: false)
     Maintenance::DiscardSpamAccountsTask.process(user)
 
     other_user = create(:user, email: "regular@spammy-test.org", created_at: 1.day.ago)
 
-    assert_enqueued_emails 1 do
-      other_user.discard!
+    assert_enqueued_email_with Mailer, :deletion_complete, args: [other_user.email] do
+      DeleteUserJob.new(user: other_user, initiated_by: :user).perform(user: other_user, initiated_by: :user)
     end
   end
 

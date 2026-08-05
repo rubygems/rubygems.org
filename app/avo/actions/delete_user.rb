@@ -31,7 +31,7 @@ class Avo::Actions::DeleteUser < Avo::Actions::ApplicationAction
     def handle_record(user)
       return error(Avo::Actions::DeleteUser.blocked_reason) if user.sole_owner_of_old_gem_versions?
 
-      DeleteUserJob.perform_later(user:, send_emails: false)
+      DeleteUserJob.perform_later(user:, initiated_by: :admin)
       succeed("Account deletion for #{user.display_handle} has been scheduled")
     end
   end

@@ -5,7 +5,7 @@ require "test_helper"
 class DeleteUserJobTest < ActiveJob::TestCase
   test "sends deletion complete on success" do
     user = create(:user)
-    rubygem = create(:ownership, user:).rubygem
+    rubygem = create(:rubygem, name: "self-service-deletion-email", owners: [user])
     version = create(:version, rubygem:)
 
     assert_delete user
@@ -21,34 +21,31 @@ class DeleteUserJobTest < ActiveJob::TestCase
 
     Mailer.expects(:deletion_failed).with(user.email).returns(mock(deliver_later: nil))
     User.any_instance.expects(:yank_gems).raises(ActiveRecord::RecordNotDestroyed)
-    DeleteUserJob.new(user:).perform(user:)
+    DeleteUserJob.new(user:, initiated_by: :user).perform(user:, initiated_by: :user)
 
     refute_predicate user.reload, :destroyed?
     refute_predicate user, :deleted_at
   end
 
-  test "does not send email after spam account deletion when a successful deletion has emails disabled" do
-    spam_user = create(:user, email: "spam@spammy-test.org", email_confirmed: false)
-    Maintenance::DiscardSpamAccountsTask.process(spam_user)
-
+  test "does not send email when deletion is initiated by an admin" do
     user = create(:user)
     rubygem = create(:rubygem, name: "admin-email-suppression", owners: [user])
     create(:version, rubygem:)
 
     Mailer.expects(:deletion_complete).never
     assert_no_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-      DeleteUserJob.new(user:, send_emails: false).perform(user:, send_emails: false)
+      DeleteUserJob.new(user:, initiated_by: :admin).perform(user:, initiated_by: :admin)
     end
 
     assert_predicate user.reload, :discarded?
   end
 
-  test "does not send deletion failed when emails are disabled" do
+  test "does not send deletion failed when deletion is initiated by an admin" do
     user = create(:user)
 
     Mailer.expects(:deletion_failed).never
     User.any_instance.expects(:yank_gems).raises(ActiveRecord::RecordNotDestroyed)
-    DeleteUserJob.new(user:, send_emails: false).perform(user:, send_emails: false)
+    DeleteUserJob.new(user:, initiated_by: :admin).perform(user:, initiated_by: :admin)
 
     refute_predicate user.reload, :discarded?
   end
@@ -155,7 +152,7 @@ class DeleteUserJobTest < ActiveJob::TestCase
   def assert_delete(user)
     Mailer.expects(:deletion_complete).with(user.email).returns(mock(deliver_later: nil))
     Mailer.expects(:deletion_failed).never
-    DeleteUserJob.new(user:).perform(user:)
+    DeleteUserJob.new(user:, initiated_by: :user).perform(user:, initiated_by: :user)
 
     refute_predicate user.reload, :destroyed?
     assert_predicate user.reload, :deleted_at

@@ -23,7 +23,7 @@ class Maintenance::DiscardSpamAccountsTask < MaintenanceTasks::Task
 
   def process(user)
     return if user.discarded?
-    user.discard_without_deletion_email!
+    user.discard!
   rescue ActiveRecord::ActiveRecordError, Discard::RecordNotDiscarded => e
     Rails.error.report(e, context: { user_id: user.id }, handled: true)
   end
