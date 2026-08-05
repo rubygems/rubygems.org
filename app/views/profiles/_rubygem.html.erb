@@ -1,22 +1,19 @@
-<li>
-  <div>
-    <span>
-      <a href="<%= rubygem_path(rubygem.slug) %>">
-        <%= rubygem.name %>
-        <span><%= rubygem.latest_version %></span>
-      </a>
-    </span>
-    <p>
-      <%= number_with_delimiter(rubygem.downloads) %>
-      <span>Downloads</span>
-    </p>
-    <% if local_assigns[:owners] %>
-      <div>
-        <h3><%= t '.owners_header'%>:</h3>
-        <div>
-          <%= links_to_owners(rubygem) %>
-        </div>
-      </div>
+<li class="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
+  <div class="flex flex-wrap items-center justify-between gap-2">
+    <%= link_to rubygem_path(rubygem.slug), class: "flex items-center gap-2 font-semibold text-neutral-900 hover:text-orange-500 dark:text-white" do %>
+      <%= rubygem.name %>
+      <% if rubygem.latest_version %>
+        <%= version_number(rubygem.latest_version) %>
+      <% end %>
     <% end %>
+    <%= download_count_component(rubygem) %>
   </div>
+  <% if local_assigns[:owners] %>
+    <div class="mt-3">
+      <h3 class="text-b4 font-bold uppercase tracking-wide text-neutral-800 dark:text-neutral-200"><%= t '.owners_header' %>:</h3>
+      <div class="mt-2 flex flex-wrap gap-1">
+        <%= links_to_owners(rubygem) %>
+      </div>
+    </div>
+  <% end %>
 </li>
