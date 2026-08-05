@@ -82,6 +82,10 @@ class PushTest < ActionDispatch::IntegrationTest
     push_gem gem_io
 
     assert_response :success
+    # Drain twice: ReorderVersionsJob enqueues SetLinksetHomeJob (which sets the
+    # homepage link), and each perform_enqueued_jobs pass only runs the jobs already
+    # queued when it was called.
+    perform_enqueued_jobs
     perform_enqueued_jobs
 
     get rubygem_path("sandworm")

@@ -80,6 +80,7 @@ OmniAuth.config.test_mode = true
 WebAuthn.configuration.allowed_origins = ["http://localhost:31337"]
 
 class ActiveSupport::TestCase
+  include ActiveJob::TestHelper
   include FactoryBot::Syntax::Methods
   include GemHelpers
   include EmailHelpers

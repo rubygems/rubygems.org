@@ -41,6 +41,13 @@ FactoryBot.define do
         checksum = GemInfo.new(version.rubygem.name).info_checksum
         version.update_attribute :info_checksum_v2, checksum
       end
+
+      # In production, everything in this after(:create) block (the info_checksum_v2
+      # update above and the version reordering below) is performed asynchronously by
+      # AfterVersionWriteJob. The test queue adapter never runs that job, so we do it
+      # inline here to keep info_checksum_v2/position/latest consistent for
+      # factory-built versions.
+      version.rubygem.reorder_versions
     end
   end
 end

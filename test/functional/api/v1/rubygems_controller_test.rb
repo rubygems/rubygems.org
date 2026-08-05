@@ -572,7 +572,9 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         setup do
           @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
           @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
-          post :create, body: gem_file("test-1.0.0.gem", &:read)
+          perform_enqueued_jobs(only: ReorderVersionsJob) do
+            post :create, body: gem_file("test-1.0.0.gem", &:read)
+          end
         end
 
         should respond_with :success
@@ -581,7 +583,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           assert_equal 2, Rubygem.last.versions.count
         end
         should "disable mfa requirement" do
-          refute_predicate @rubygem, :metadata_mfa_required?
+          refute_predicate @rubygem.reload, :metadata_mfa_required?
         end
       end
     end

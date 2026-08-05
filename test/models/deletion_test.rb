@@ -213,6 +213,9 @@ class DeletionTest < ActiveSupport::TestCase
       end
 
       should "reorder versions" do
+        # Reordering runs asynchronously via ReorderVersionsJob now; perform it inline.
+        perform_enqueued_jobs(only: ReorderVersionsJob)
+
         assert_predicate @version.reload, :latest?
       end
 
