@@ -4,7 +4,7 @@ require "test_helper"
 require "compact_index"
 require "helpers/compact_index_helpers"
 
-class CompactIndex::GemVersionTest < ActiveSupport::TestCase
+class CompactIndex::GemVersionV2Test < ActiveSupport::TestCase
   include CompactIndexHelpers
 
   context "#<=>" do
@@ -32,20 +32,14 @@ class CompactIndex::GemVersionTest < ActiveSupport::TestCase
   end
 
   context "#to_line" do
-    should "not include created_at for v1" do
+    should "not include created_at when absent" do
       v = build_version(number: "1.0")
 
       assert_equal "1.0 |checksum:sum+test_gem+1.0", v.to_line
     end
 
-    should "not include created_at for v2 when absent" do
-      v = build_version(version: 2, number: "1.0")
-
-      assert_equal "1.0 |checksum:sum+test_gem+1.0", v.to_line
-    end
-
-    should "include created_at for v2 when present" do
-      v = build_version(version: 2, number: "1.0", created_at: "2026-05-12T10:00:00Z")
+    should "include created_at when present" do
+      v = build_version(number: "1.0", created_at: "2026-05-12T10:00:00Z")
 
       assert_equal "1.0 |checksum:sum+test_gem+1.0,created_at:2026-05-12T10:00:00Z", v.to_line
     end

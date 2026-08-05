@@ -17,8 +17,8 @@ class CompactIndexVersionsTest < ActiveSupport::TestCase
       versions = GemInfo.compact_index_versions(4.days.ago)
 
       expected_versions = [
-        CompactIndex::Gem.new("foo", [CompactIndex::GemVersion.new("1.0.1", "ruby", nil, "v232ddwe")]),
-        CompactIndex::Gem.new("foo", [CompactIndex::GemVersion.new("2.0.0", "ruby", nil, "v2qw2dwe")])
+        CompactIndex::Gem.new("foo", [CompactIndex::GemVersionV2.new("1.0.1", "ruby", nil, "v232ddwe")]),
+        CompactIndex::Gem.new("foo", [CompactIndex::GemVersionV2.new("2.0.0", "ruby", nil, "v2qw2dwe")])
       ]
 
       assert_equal expected_versions, versions
@@ -32,7 +32,7 @@ class CompactIndexVersionsTest < ActiveSupport::TestCase
       versions = GemInfo.compact_index_versions(4.days.ago)
 
       assert_includes versions,
-        CompactIndex::Gem.new("bar", [CompactIndex::GemVersion.new("-1.0.0", "ruby", nil, "v2yanked")])
+        CompactIndex::Gem.new("bar", [CompactIndex::GemVersionV2.new("-1.0.0", "ruby", nil, "v2yanked")])
     end
   end
 
@@ -45,7 +45,7 @@ class CompactIndexVersionsTest < ActiveSupport::TestCase
 
       expected_versions = [CompactIndex::Gem.new(
         version.rubygem.name,
-        [CompactIndex::GemVersion.new(version.number, version.platform, version.sha256, version.info_checksum_v2)]
+        [CompactIndex::GemVersionV2.new(version.number, version.platform, version.sha256, version.info_checksum_v2)]
       )]
 
       assert_equal expected_versions, versions
@@ -59,7 +59,7 @@ class CompactIndexVersionsTest < ActiveSupport::TestCase
 
       versions = GemInfo.compact_index_public_versions(@ts)
 
-      assert_includes versions, CompactIndex::Gem.new("bar", [CompactIndex::GemVersion.new("1.0.0", "ruby", indexed_version.sha256, "v2yanked")])
+      assert_includes versions, CompactIndex::Gem.new("bar", [CompactIndex::GemVersionV2.new("1.0.0", "ruby", indexed_version.sha256, "v2yanked")])
     end
 
     should "fall back to info_checksum_v2 for yanked rows missing yanked_info_checksum_v2" do
@@ -71,7 +71,7 @@ class CompactIndexVersionsTest < ActiveSupport::TestCase
 
       versions = GemInfo.compact_index_public_versions(@ts)
 
-      assert_includes versions, CompactIndex::Gem.new("bar", [CompactIndex::GemVersion.new("1.0.0", "ruby", indexed_version.sha256, "v2qw2dwe")])
+      assert_includes versions, CompactIndex::Gem.new("bar", [CompactIndex::GemVersionV2.new("1.0.0", "ruby", indexed_version.sha256, "v2qw2dwe")])
     end
 
     should "stream public versions one gem at a time" do
@@ -82,7 +82,7 @@ class CompactIndexVersionsTest < ActiveSupport::TestCase
 
       versions = GemInfo.each_compact_index_public_version(@ts).to_a
 
-      assert_includes versions, CompactIndex::Gem.new("bar", [CompactIndex::GemVersion.new("1.0.0", "ruby", indexed_version.sha256, "v2yanked")])
+      assert_includes versions, CompactIndex::Gem.new("bar", [CompactIndex::GemVersionV2.new("1.0.0", "ruby", indexed_version.sha256, "v2yanked")])
       assert_equal GemInfo.compact_index_public_versions(@ts), versions
     end
 

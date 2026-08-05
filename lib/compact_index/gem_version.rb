@@ -52,11 +52,6 @@ module CompactIndex
     end
   end
 
-  GemVersion = Struct.new(:number, :platform, :checksum, :info_checksum,
-                          :dependencies, :ruby_version, :rubygems_version) do
-    include GemVersionMethods
-  end
-
   GemVersionV2 = Struct.new(:number, :platform, :checksum, :info_checksum,
                             :dependencies, :ruby_version, :rubygems_version,
                             :created_at) do
