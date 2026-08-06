@@ -491,10 +491,59 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       assert @cutter.save
     end
 
+    should "roll back version changes when normalize raises" do
+      original = @version.required_rubygems_version
+      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec) do |version, _spec|
+        version.update!(required_rubygems_version: "99.0.0")
+      end
+      @version.stubs(:normalize_content_addressable_gem_metadata!)
+        .raises(ActiveRecord::RecordInvalid.new(@version))
+
+      refute @cutter.save
+      assert_equal original, @version.reload.required_rubygems_version
+    end
+
     should "include platform and Ruby ABI in success message" do
       assert @cutter.save
 
       assert_equal "Successfully registered gem: #{@version.to_title}", @cutter.message
+    end
+
+    should "retry the persist on a content_address unique collision" do
+      sequence = sequence("content address collision retry")
+      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec)
+        .in_sequence(sequence)
+        .raises(ActiveRecord::RecordNotUnique.new(
+                  'duplicate key value violates unique constraint "index_versions_number_content_address"'
+                ))
+      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec)
+        .in_sequence(sequence)
+
+      assert @cutter.save
+    end
+
+    should "not retry on an unrelated unique violation" do
+      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec).once
+        .raises(ActiveRecord::RecordNotUnique.new(
+                  'duplicate key value violates unique constraint "index_versions_full_name"'
+                ))
+
+      refute @cutter.save
+    end
+
+    should "fail with an error after exhausting content_address retries" do
+      StatsD.stubs(:increment)
+      StatsD.expects(:increment).with("push.content_address_collision", tags: { rubygem: @rubygem.name }).times(3)
+      StatsD.expects(:increment).with("push.content_address_collision_exhausted", tags: { rubygem: @rubygem.name }).once
+
+      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec).times(4)
+        .raises(ActiveRecord::RecordNotUnique.new(
+                  'duplicate key value violates unique constraint "index_versions_number_content_address"'
+                ))
+
+      refute @cutter.save
+      assert_equal 409, @cutter.code
+      assert_includes @cutter.message, "could not generate a unique content address"
     end
   end
 

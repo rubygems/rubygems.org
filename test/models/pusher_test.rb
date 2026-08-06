@@ -329,6 +329,31 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal "3.4", @cutter.version.ruby_abi
     end
 
+    should "not set Ruby ABI for gems without a platform even when the feature flag is on" do
+      FeatureFlag.enable_for_actor(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, @user)
+      create(:rubygem, name: "sandworm")
+
+      spec = mock
+      spec.stubs(:name).returns "sandworm"
+      spec.stubs(:version).returns Gem::Version.new("1.0.0")
+      spec.stubs(:original_platform).returns "ruby"
+      spec.stubs(:platform).returns "ruby"
+      spec.stubs(:cert_chain).returns nil
+      spec.stubs(:required_ruby_version).returns Gem::Requirement.new("~> 3.4.0")
+      spec.stubs(:metadata).returns({})
+
+      @cutter.stubs(:spec).returns spec
+      @cutter.stubs(:spec_contents).returns "spec"
+      @cutter.stubs(:size).returns 5
+      @cutter.stubs(:body).returns StringIO.new("dummy body")
+
+      assert @cutter.find
+
+      assert_equal "ruby", @cutter.version.platform
+      assert_equal "~> 3.4.0", @cutter.version.required_ruby_version
+      assert_nil @cutter.version.ruby_abi
+    end
+
     should "reject a new version when the existing version has the same Ruby ABI" do
       FeatureFlag.enable_for_actor(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, @user)
       rubygem = create(:rubygem, name: "sandworm")

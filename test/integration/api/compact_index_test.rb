@@ -116,7 +116,7 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
       ruby_abi: "3.2"
     )
 
-    content_address = version.full_name.split("-").last
+    content_address = version.content_address
 
     get versions_path
 
@@ -221,7 +221,7 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
       ruby_abi: "3.2"
     )
 
-    content_address = version.full_name.split("-").last
+    content_address = version.content_address
 
     expected = <<~VERSIONS_FILE
       ---
