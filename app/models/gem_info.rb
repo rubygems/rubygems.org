@@ -72,11 +72,10 @@ class GemInfo
         end
       end
 
-      number, platform, checksum, info_checksum, ruby_version, rubygems_version, created_at, ruby_abi, full_name, = row
+      number, platform, checksum, info_checksum, ruby_version, rubygems_version, created_at, ruby_abi, content_address, = row
       version_class = VERSIONS.dig(version, :klass)
       checksum = Version._sha256_hex(checksum)
       created_at = created_at&.utc&.iso8601
-      content_address = self.class.content_address_for(ruby_abi, full_name)
       args = { number:,
               platform:,
               checksum:,
@@ -101,7 +100,7 @@ class GemInfo
     checksum_column = VERSIONS.fetch(version).fetch(:checksum_column)
     group_by_columns = [
       "number", "platform", "sha256", checksum_column,
-      "required_ruby_version", "required_rubygems_version", "versions.created_at", "ruby_abi", "full_name"
+      "required_ruby_version", "required_rubygems_version", "versions.created_at", "ruby_abi", "content_address"
     ]
 
     dep_req_agg = "string_agg(dependencies.requirements, '@' ORDER BY rubygems_dependencies.name, dependencies.id)"
@@ -115,7 +114,7 @@ class GemInfo
           AND dependencies.scope = 'runtime'")
       .where("rubygems.name = ? AND versions.indexed = true", @rubygem_name)
       .group(*group_by_columns)
-      .order(Arel.sql("versions.created_at, number, platform, ruby_abi, full_name, dep_name"))
+      .order(Arel.sql("versions.created_at, number, platform, ruby_abi, content_address, dep_name"))
       .pluck(*group_by_columns, Arel.sql(dep_req_agg), Arel.sql(dep_name_agg))
   end
 end
