@@ -2,7 +2,7 @@
 en:
   admin:
     delete_user:
-      blocked_reason: Blocked because this user is the sole owner of gem versions published more than 30 days ago.
+      blocked_reason: Blocked because this user is the sole owner of gem versions published more than 30 days ago or with more than 100,000 downloads.
   credentials_required: Credentials required
   copied: Copied!
   copy_to_clipboard: Copy to clipboard

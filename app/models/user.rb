@@ -244,11 +244,14 @@ class User < ApplicationRecord
       SELECT rubygem_id FROM ownerships GROUP BY rubygem_id HAVING count(rubygem_id) = 1)')
   end
 
-  def sole_owner_of_old_gem_versions?
+  def sole_owner_of_ineligible_gem_versions?
     only_owner_gems
-      .joins(:versions)
+      .left_joins(versions: :gem_download)
       .where(versions: { indexed: true })
-      .where(Version.arel_table[:created_at].lt(Deletion::MAXIMUM_VERSION_AGE.ago))
+      .where(
+        Version.arel_table[:created_at].lt(Deletion::MAXIMUM_VERSION_AGE.ago)
+          .or(GemDownload.arel_table[:count].gt(Deletion::MAXIMUM_DOWNLOADS))
+      )
       .exists?
   end
 

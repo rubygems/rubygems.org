@@ -47,6 +47,26 @@ class DeleteUserTest < ActiveSupport::TestCase
     assert_equal Avo::Actions::DeleteUser.blocked_reason, @action.response.dig(:messages, 0, :body)
   end
 
+  should "not enqueue deletion when the user is the sole owner of a gem version with too many downloads" do
+    rubygem = create(:rubygem, name: "popular-gem-owned-by-deleted-user", owners: [@user])
+    version = create(:version, rubygem:)
+    GemDownload.increment(100_001, rubygem_id: rubygem.id, version_id: version.id)
+    args = {
+      current_user: @current_user,
+      resource: @resource,
+      records: [@user],
+      fields: {
+        comment: "Deleting at the user's request"
+      },
+      query: nil
+    }
+
+    assert_no_enqueued_jobs only: DeleteUserJob do
+      @action.handle(**args)
+    end
+    assert_equal Avo::Actions::DeleteUser.blocked_reason, @action.response.dig(:messages, 0, :body)
+  end
+
   should "ask for confirmation naming the user" do
     message = @action.get_message
 

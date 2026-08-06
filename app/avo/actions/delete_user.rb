@@ -29,7 +29,7 @@ class Avo::Actions::DeleteUser < Avo::Actions::ApplicationAction
 
   class ActionHandler < Avo::Actions::ActionHandler
     def handle_record(user)
-      return error(Avo::Actions::DeleteUser.blocked_reason) if user.sole_owner_of_old_gem_versions?
+      return error(Avo::Actions::DeleteUser.blocked_reason) if user.sole_owner_of_ineligible_gem_versions?
 
       DeleteUserJob.perform_later(user:, actor: current_user)
       succeed("Account deletion for #{user.display_handle} has been scheduled")
@@ -41,6 +41,6 @@ class Avo::Actions::DeleteUser < Avo::Actions::ApplicationAction
   def blocked?
     return @blocked if defined?(@blocked)
 
-    @blocked = record.sole_owner_of_old_gem_versions?
+    @blocked = record.sole_owner_of_ineligible_gem_versions?
   end
 end
