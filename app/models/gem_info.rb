@@ -76,7 +76,7 @@ class GemInfo
       version_class = VERSIONS.dig(version, :klass)
       checksum = Version._sha256_hex(checksum)
       created_at = created_at&.utc&.iso8601
-      content_address = self.class.content_address_for(ruby_abi, full_name)
+      content_address = Version.content_address_in(full_name, ruby_abi:, platform:)
       args = { number:,
               platform:,
               checksum:,

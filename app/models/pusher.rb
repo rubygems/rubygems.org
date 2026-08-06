@@ -131,7 +131,7 @@ class Pusher
       )
 
     version.required_ruby_version = spec.required_ruby_version.to_s
-    version.ruby_abi = Version.ruby_abi_for(version.required_ruby_version) if FeatureFlag.enabled?(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, owner)
+    version.ruby_abi = version.derive_ruby_abi if FeatureFlag.enabled?(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, owner)
     unless @rubygem.new_record?
       # Return success for idempotent pushes
       return notify("Gem was already pushed: #{version.to_title}", 200) if version.indexed?

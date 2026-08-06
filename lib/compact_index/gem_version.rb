@@ -3,7 +3,7 @@
 module CompactIndex
   module GemVersionMethods
     def version_token
-      return "#{number}-#{content_address}" if ruby_abi.present? && content_address.present?
+      return "#{number}-#{content_address}" if content_address.present?
 
       if platform.nil? || platform == "ruby"
         number
@@ -27,7 +27,7 @@ module CompactIndex
       line = "#{version_token} #{deps_line}|checksum:#{checksum}"
       line << ",ruby:#{ruby_version_line}" if ruby_version && ruby_version != ">= 0"
       line << ",rubygems:#{rubygems_version_line}" if rubygems_version && rubygems_version != ">= 0"
-      line << ",platform:= #{platform}" if ruby_abi.present? && content_address.present?
+      line << ",platform:= #{platform}" if content_address.present?
       line
     end
 

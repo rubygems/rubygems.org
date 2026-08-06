@@ -5,6 +5,7 @@ require "digest/sha2"
 class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   RUBYGEMS_IMPORT_DATE = Date.parse("2009-07-25")
   DEFAULT_CONTENT_ADDRESS_LENGTH = 8
+  CONTENT_ADDRESS_FORMAT = /\A[0-9a-f]{#{DEFAULT_CONTENT_ADDRESS_LENGTH},64}\z/
   CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION = ">= 4.1.0.beta1"
 
   belongs_to :rubygem, touch: true
@@ -219,7 +220,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def platformed?
-    platform != "ruby"
+    Version.platformed?(platform)
   end
 
   delegate :reorder_versions, to: :rubygem
@@ -459,18 +460,21 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     "#{full_name}.gem"
   end
 
-  def self.ruby_abi_for(required_ruby_version)
+  def content_addressable?
+    platformed? && ruby_abi.present?
+  end
+
+  def derive_ruby_abi
+    return unless platformed?
     return if required_ruby_version.blank?
 
-    requirement = Gem::Requirement.create(required_ruby_version.split(/\s*,\s*/))
-    requirements = requirement.requirements
-
+    requirements = Gem::Requirement.create(required_ruby_version.split(/\s*,\s*/)).requirements
     return unless requirements.one?
 
-    operator, version = requirements.first
+    operator, requirement_version = requirements.first
     return unless operator == "~>"
 
-    segments = version.segments
+    segments = requirement_version.segments
     return unless segments.length == 3
 
     patch = segments[2]
@@ -482,8 +486,16 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     nil
   end
 
-  def content_addressable?
-    platformed? && ruby_abi.present?
+  def self.platformed?(platform)
+    platform.present? && platform != "ruby"
+  end
+
+  def self.content_address_in(full_name, ruby_abi:, platform:)
+    return if full_name.blank? || ruby_abi.blank?
+    return unless platformed?(platform)
+
+    candidate = full_name.split("-").last
+    candidate if candidate&.match?(CONTENT_ADDRESS_FORMAT)
   end
 
   def normalize_content_addressable_gem_metadata!
@@ -566,6 +578,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def content_address
+    Version.content_address_in(full_name, ruby_abi:, platform:) || generate_content_address
+  end
+
+  def generate_content_address
     digest = sha256_hex
     raise ArgumentError, "Could not generate unique content-address" if digest.blank?
 

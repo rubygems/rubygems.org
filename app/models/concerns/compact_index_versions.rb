@@ -78,22 +78,12 @@ module CompactIndexVersions
           checksum: version_row["sha256"],
           info_checksum: version_row["info_checksum"],
           ruby_abi: version_row["ruby_abi"],
-          content_address: content_address_for(version_row["ruby_abi"], version_row["full_name"])
+          content_address: Version.content_address_in(version_row["full_name"], ruby_abi: version_row["ruby_abi"], platform: version_row["platform"])
         }
         args = args.slice(*version_class.members)
         version_class.new(**args)
       end
       CompactIndex::Gem.new(gem_name, compact_index_versions)
-    end
-
-    def content_address_for(ruby_abi, full_name)
-      return if ruby_abi.blank?
-      return if full_name.blank?
-
-      content_address = full_name.split("-").last
-      return unless content_address.match?(/\A[0-9a-f]{#{Version::DEFAULT_CONTENT_ADDRESS_LENGTH},64}\z/o)
-
-      content_address
     end
 
     private :map_gem_versions, :public_compact_index_gem, :build_compact_index_gem, :execute_raw_sql
