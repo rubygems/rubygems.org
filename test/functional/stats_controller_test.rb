@@ -60,9 +60,9 @@ class StatsControllerTest < ActionController::TestCase
     end
 
     should "not have width greater than 100%" do
-      assert page.has_selector?(".stats__graph__gem__meter")
+      assert page.has_selector?("[data-testid='stats-graph-gem-meter']")
 
-      page.find_all(".stats__graph__gem__meter").each do |element|
+      page.find_all("[data-testid='stats-graph-gem-meter']").each do |element|
         assert element["data-stats-width-value"]
         width = element["data-stats-width-value"].to_f
 

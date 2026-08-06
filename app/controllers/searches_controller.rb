@@ -6,8 +6,6 @@ class SearchesController < ApplicationController
   rescue_from SearchQuerySanitizer::QueryTooLongError,
               SearchQuerySanitizer::MalformedQueryError, with: :render_invalid_query
 
-  layout "hammy"
-
   def show
     # Return early for blank queries. Non-string params (e.g., arrays) are converted
     # to strings by SearchQuerySanitizer via to_s, which handles them safely.

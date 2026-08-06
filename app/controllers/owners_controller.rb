@@ -12,8 +12,6 @@ class OwnersController < ApplicationController
     redirect_to rubygem_path(@rubygem.slug), alert: e.policy.error
   end
 
-  layout "hammy"
-
   def confirm
     ownership = Ownership.find_by!(token: token_params)
 

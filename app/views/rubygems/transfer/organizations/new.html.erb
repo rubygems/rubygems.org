@@ -14,7 +14,7 @@
 
 <%= form_with(model: @rubygem_transfer, url: organization_transfer_rubygems_path, method: :post) do |f| %>
   <%= render "rubygems/transfer/error", transfer: @rubygem_transfer if @rubygem_transfer.errors.any? %>
-  <%= f.label :organization, t(".organization"), class: 'form__label block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
+  <%= f.label :organization, t(".organization"), class: 'block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
   <label class="flex flex-col xl:flex-row items-center rounded-lg border border-neutral-400 dark:border-neutral-600 overflow-hidden">
     <%= f.select(
       :organization,

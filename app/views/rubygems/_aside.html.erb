@@ -1,5 +1,5 @@
 <% heading_class = "text-b4 font-bold uppercase tracking-wide text-neutral-800 dark:text-neutral-200" %>
-<div class="gem__aside flex flex-col gap-4 pt-2 lg:pt-10 pb-2 lg:pb-6">
+<div class="flex flex-col gap-4 pt-2 lg:pt-10 pb-2 lg:pb-6">
   <div>
     <h1 class="text-h3 font-semibold break-words text-neutral-900 dark:text-white"><%= @rubygem.name %></h1>
     <div class="flex flex-wrap items-center gap-2 mt-1">
@@ -32,11 +32,11 @@
   <div class="flex flex-col gap-3">
     <div>
       <h2 class="<%= heading_class %>"><%= t("total_downloads") %></h2>
-      <p class="gem__downloads text-h4 font-semibold text-neutral-900 dark:text-white"><%= number_with_delimiter(@rubygem.downloads) %></p>
+      <p class="text-h4 font-semibold text-neutral-900 dark:text-white"><%= number_with_delimiter(@rubygem.downloads) %></p>
     </div>
     <div>
       <h2 class="<%= heading_class %>"><%= t("rubygems.aside.downloads_for_this_version") %></h2>
-      <p class="gem__downloads text-b2 font-semibold text-neutral-900 dark:text-white"><%= number_with_delimiter(@latest_version.downloads_count) %></p>
+      <p class="text-b2 font-semibold text-neutral-900 dark:text-white"><%= number_with_delimiter(@latest_version.downloads_count) %></p>
     </div>
   </div>
 

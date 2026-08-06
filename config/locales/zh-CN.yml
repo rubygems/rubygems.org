@@ -205,6 +205,7 @@ zh-CN:
       reset: 重置
       save_key: 请注意在此之后我们不会再次向您显示该密钥，新的 API 密钥为：
       mfa: 多因素验证（MFA）
+      mfa_enabled_notice:
       expiration:
       update_owner:
       view_expired:

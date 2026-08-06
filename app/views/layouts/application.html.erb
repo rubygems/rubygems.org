@@ -1,207 +1,225 @@
 <!DOCTYPE html>
 <html lang="<%= I18n.locale %>">
-  <head>
-    <title><%= page_title %></title>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" name="viewport">
-    <meta name="google-site-verification" content="AuesbWQ9MCDMmC1lbDlw25RJzyqWOcDYpuaCjgPxEZY" />
-    <link rel="apple-touch-icon" href="/apple-touch-icons/apple-touch-icon.png" />
-    <% ["57x57", "72x72", "76x76", "114x114","120x120", "144x144", "152x152", "180x180"].each do |size| %>
-      <link rel="apple-touch-icon" sizes="<%= size %>" href="/apple-touch-icons/apple-touch-icon-<%= size %>.png" />
-    <% end %>
-    <link rel="mask-icon" href="/rubygems_logo.svg" color="#e9573f">
-    <link rel="fluid-icon" href="/fluid-icon.png"/>
-    <link rel="search" type="application/opensearchdescription+xml" title="<%=t :title %>" href="/opensearch.xml">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    <%= stylesheet_link_tag("application", "preload_links_header" => true) %>
-    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-    <link href='https://fonts.googleapis.com/css?family=Roboto:100&amp;subset=greek,latin,cyrillic,latin-ext' rel='stylesheet' type='text/css'>
-    <%= render "layouts/feeds" %>
-    <%= csrf_meta_tag if signed_in? %>
-    <%= yield :head %>
-    <%= javascript_importmap_tags %>
-  </head>
+<head>
+  <title><%= page_title %></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta name="google-site-verification" content="AuesbWQ9MCDMmC1lbDlw25RJzyqWOcDYpuaCjgPxEZY" />
+  <link rel="apple-touch-icon" href="/apple-touch-icons/apple-touch-icon.png" />
+  <% ["57x57", "72x72", "76x76", "114x114","120x120", "144x144", "152x152", "180x180"].each do |size| %>
+    <link rel="apple-touch-icon" sizes="<%= size %>" href="/apple-touch-icons/apple-touch-icon-<%= size %>.png" />
+  <% end %>
+  <link rel="mask-icon" href="/rubygems_logo.svg" color="#e9573f">
+  <link rel="fluid-icon" href="/fluid-icon.png"/>
+  <link rel="search" type="application/opensearchdescription+xml" title="<%=t :title %>" href="/opensearch.xml">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
-  <body class="<%= 'body--index' if request.path_info == '/' %>" data-controller="nav" data-nav-expanded-class="mobile-nav-is-expanded">
-    <!-- Top banner -->
-    <% if content_for?(:banner) %>
-      <div class="banner">
-        <%= yield :banner %>
-      </div>
-    <% end %>
+  <%= stylesheet_link_tag("hammy") %>
+  <%= stylesheet_link_tag("tailwind", "data-turbo-track": "reload") %>
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet" type="text/css">
+  <%= render "layouts/feeds" %>
+  <%= csrf_meta_tag if signed_in? %>
+  <%= yield :head %>
+  <%= javascript_importmap_tags %>
+</head>
+<body class="bg-neutral-050 dark:bg-neutral-950">
+  <div class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-white dark:bg-black">
+      <!-- Header Nav -->
+      <div class="py-4 px-8 border-b border-neutral-400 dark:border-neutral-800">
+        <div class="flex flex-wrap justify-between max-w-screen-xl mx-auto" data-controller="reveal-search" data-reveal-search-toggle-class="bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border">
+          <!-- Menu button, Logo, desktop nav, mobile nav dialog -->
+          <div class="flex flex-row items-center xl:mr-auto" data-controller="dialog">
+            <!-- Mobile Menu Button -->
+            <button data-action="dialog#open" data-dialog-target="button" aria-label="Open menu" class="px-2 py-1 w-10 h-9 mr-3 items-center rounded text-white bg-orange hover:bg-orange-600 dark:bg-orange-600 dark:hover:bg-orange-700 lg:hidden focus:outline-none">
+              <%= icon_tag "menu" %>
+            </button>
 
-    <!-- Policies acknowledgment banner -->
-    <%= render "layouts/policies_acknowledgement" if show_policies_acknowledge_banner?(current_user) %>
-
-    <header class="header <%= 'header--interior' if request.path_info != '/' %>" data-nav-target="header collapse">
-      <div class="l-wrap--header">
-        <%= link_to(root_path, title: 'RubyGems', class: 'header__logo-wrap', data: { nav_target: "logo" }) do %>
-          <span class="header__logo" data-icon="⬡">⬢</span>
-          <span class="t-hidden">RubyGems</span>
-        <% end %>
-        <a class="header__club-sandwich" href="#" data-action="nav#toggle focusin->nav#focus mousedown->nav#mouseDown click@window->nav#hide">
-          <span class="t-hidden">Navigation menu</span>
-        </a>
-
-        <div class="header__nav-links-wrap">
-          <%= render "layouts/search" unless current_page?(root_path) || current_page?(advanced_search_path) %>
-
-          <nav class="header__nav-links" data-controller="dropdown">
-            <% if signed_in? %>
-              <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link mobile__header__nav-link">
-                <span><%= current_user.name %></span>
-                <%= avatar 80, "user_gravatar", theme: :dark %>
-              </a>
+            <!-- Logo -->
+            <%= link_to(root_path, title: "RubyGems", class: "flex h-8 items-center text-orange text-b1") do %>
+              <%= icon_tag "logo", size: 8, class: "w-7 h-7 lg:w-8 lg:h-8", aria: { label: "RubyGems Home" } %>
+              <span class="hidden sm:flex ml-1 text-h5 text-orange">RubyGems</span>
             <% end %>
 
-            <%= link_to t('.footer.releases'), news_url, class: "header__nav-link #{active_status(news_path)}" %>
-            <%= link_to t('.footer.blog'), "https://blog.rubygems.org", class: "header__nav-link" %>
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden lg:flex flex-row ml-7 items-center justify-end text-b2 text-neutral-800 dark:text-white leading-7">
+              <%= link_to t("layouts.application.footer.blog"), "https://blog.rubygems.org", class: "lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
+              <%= link_to t("layouts.application.footer.statistics"), stats_path, class: "ml-7 lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
+              <%= link_to t("layouts.application.footer.docs"), "https://guides.rubygems.org/command-reference/#gem-install", class: "ml-7 lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
+              <!-- About links -->
+              <div class="flex relative ml-7" data-controller="dropdown">
+                <button data-action="dropdown#toggle click@window->dropdown#hide" class="flex items-center text-neutral-900 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-400 focus:outline-none lowercase">
+                  <span><%= t("layouts.application.footer.about") %></span>
+                  <%= icon_tag "arrow-drop-down" %>
+                </button>
 
-            <%- if request.path_info == '/gems' %>
-              <%= link_to "Gems", rubygems_path, class: "header__nav-link is-active" %>
-            <%- else %>
-              <%= link_to "Gems", rubygems_path, class: "header__nav-link" %>
-            <%- end %>
-
-            <%= link_to t('.footer.guides'), "https://guides.rubygems.org", class: "header__nav-link" %>
-
-            <% if signed_in? %>
-              <a href="<%= profile_path(current_user.display_id) %>" class="header__nav-link desktop__header__nav-link">
-                <span><%= current_user.name %></span>
-                <%= avatar 80, "user_gravatar", theme: :dark %>
-              </a>
-              <a href="#" class="header__popup-link" data-icon="▼" data-action="dropdown#toggle click@window->dropdown#hide">
-                <span class="t-hidden">More items</span>
-              </a>
-              <div class="header__popup__nav-links hidden" data-dropdown-target="menu" >
-                <%= link_to t('.header.settings'), edit_settings_path, class: "header__nav-link" %>
-                <%= link_to t('.header.dashboard'), dashboard_path, class: "header__nav-link" %>
-                <%= link_to t('.header.edit_profile'), edit_profile_path, class: "header__nav-link" %>
-                <%= link_to t('sign_out'), sign_out_path, method: :delete, class: "header__nav-link" %>
+                <!-- About Dropdown Menu -->
+                <div data-dropdown-target="menu" class="z-50 hidden absolute -left-4 top-8 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded shadow-lg text-b2 text-neutral-700 dark:text-neutral-300 divide-y divide-neutral-200 dark:divide-neutral-800">
+                  <%= link_to t('title'), page_path("about"), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                  <%= link_to t('layouts.application.footer.status'), "https://status.rubygems.org", data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                  <%= link_to t('layouts.application.footer.data'), page_path("data"), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                  <%= link_to t('layouts.application.footer.security'), page_path("security"), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                  <%= mail_to "support@rubygems.org", t('layouts.application.footer.help'), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                </div>
               </div>
-            <% else %>
-              <%= link_to t('sign_in'), sign_in_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_in'}" %>
-              <%= link_to t('sign_up'), sign_up_path, class: "header__nav-link #{'is-active' if request.path_info == '/sign_up'}" %>
+              <%# Locale switcher temporarily disabled to improve cacheability and mitigate bot abuse %>
+            </nav>
+
+            <!-- Mobile Left Navigation Menu -->
+            <dialog
+              data-dialog-target="dialog" data-action="click->dialog#backdropClose"
+              role="dialog" aria-modal="true"
+              class="fixed left-0 top-0 h-full w-screen max-h-full max-w-screen bg-white bg-opacity-20 z-50 overflow-hidden">
+              <div class="h-full w-72 bg-white dark:bg-black overflow-y-auto border-r border-neutral-400 dark:border-neutral-800 shadow-[5px_0px_9px_3px_rgba(0,0,0,0.10)]">
+                <!-- Mobile nav header -->
+                <div class="flex flex-row items-center px-8 py-4 border-b border-neutral-400 dark:border-neutral-800">
+                  <!-- Close Menu Button -->
+                  <button data-action="dialog#close" aria-label="Close menu" class="px-2 py-1 w-10 h-9 mr-3 rounded text-white bg-orange dark:bg-orange-600 hover:bg-orange-700 dark:hover:bg-orange-700 focus:outline-none items-center">
+                    <%= icon_tag "close" %>
+                  </button>
+                  <!-- Logo -->
+                  <%= link_to(root_path, title: "RubyGems", class: "flex h-8 items-center text-orange text-b1") do %>
+                    <%= icon_tag "logo", size: 8, class: "w-7 h-7 lg:w-8 lg:h-8", aria: { label: "RubyGems Home" } %>
+                    <span class="ml-1 text-h5 lg:text-h4 text-orange">RubyGems</span>
+                  <% end %>
+                </div>
+
+                <!-- Mobile nav links -->
+                <nav class="flex flex-col py-6 text-left text-b2 text-neutral-900 dark:text-white">
+                  <%= link_to t("layouts.application.footer.blog"), "https://blog.rubygems.org", class: "px-8 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                  <%= link_to t("layouts.application.footer.statistics"), stats_path, class: "px-8 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                  <%= link_to t("layouts.application.footer.docs"), "https://guides.rubygems.org/command-reference/#gem-install", class: "px-8 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+
+                  <!-- About links expand -->
+                  <div data-controller="reveal" data-reveal-toggle-class="rotate-180" class="flex flex-col">
+                    <button class="flex items-center px-8 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none justify-between" data-action="reveal#toggle" data-reveal-target="button">
+                      <span><%= t("layouts.application.footer.about") %></span>
+                      <%= icon_tag "keyboard-arrow-down", class:"transition-transform transform", data: { reveal_target: "toggle" } %>
+                    </button>
+
+                    <%= link_to t('title'), page_path("about"), data: { reveal_target: "item" }, class: "hidden px-16 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                    <%= link_to t('layouts.application.footer.status'), "https://status.rubygems.org", data: { reveal_target: "item" }, class: "hidden px-16 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                    <%= link_to t('layouts.application.footer.data'), page_path("data"), data: { reveal_target: "item" }, class: "hidden px-16 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                    <%= link_to t('layouts.application.footer.security'), page_path("security"), data: { reveal_target: "item" }, class: "hidden px-16 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                    <%= mail_to "support@rubygems.org", t('layouts.application.footer.help'), data: { reveal_target: "item" }, class: "mb-4 hidden px-16 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                  </div>
+
+                  <%# Mobile locale switcher temporarily disabled to improve cacheability and mitigate bot abuse %>
+                </nav>
+              </div>
+            </dialog>
+          </div>
+
+          <!-- Search button and Profile -->
+          <div class="ml-auto flex flex-row items-center xl:ml-0 xl:order-3">
+            <!-- Search button -->
+            <button type="button" data-action="reveal-search#toggle" data-reveal-search-target="toggle" aria-label="Open search" class="flex xl:hidden h-9 w-9 box-border text-neutral-800 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-400 items-center justify-center rounded border-neutral-300 dark:border-neutral-700">
+              <%= icon_tag "search", class: "h-6 w-6" %>
+            </button>
+
+            <!-- Profile -->
+            <%= render "layouts/session" %>
+          </div>
+
+          <!-- Search Bar -->
+          <div data-reveal-search-target="item" class="hidden pt-4 w-full items-center xl:flex xl:pt-0 xl:w-72 xl:order-2" role="search">
+            <%= form_tag(search_path, method: :get, data: { controller: "autocomplete", autocomplete_selected_class: "bg-neutral-100 dark:bg-neutral-800", reveal_target: "item" }, class: "relative w-full items-center", role: "search") do %>
+              <%= rubygem_search_field(data: { reveal_search_target: "input" }, class: "w-full md h-9 pr-12 bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded border-neutral-300 dark:border-neutral-700 box-border outline-none focus:ring-0 focus:border-neutral-500") %>
+
+              <ul role="listbox" data-autocomplete-target="suggestions" class="hidden absolute z-40 start-0 mt-2 w-full bg-white dark:bg-black text-b2 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-800 rounded shadow-md divide-y divide-neutral-200 dark:divide-neutral-800"></ul>
+
+              <template id="suggestion" data-autocomplete-target="template">
+                <li class="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" role="option" tabindex="-1" data-autocomplete-target="item" data-action="click->autocomplete#choose mouseover->autocomplete#highlight"></li>
+              </template>
+
+              <%= label_tag :query, id: "querylabel" do %>
+                <span class="hidden"><%= t('layouts.application.header.search_gem_html') %></span>
+              <% end %>
+
+              <button type="submit" id="search_submit" aria-labelledby="querylabel" class="absolute end-[1px] top-[1px] p-[5px] text-neutral-900 dark:text-white focus:outline-neutral-700 dark:focus:outline-white border-l border-neutral-300 dark:border-neutral-700 hover:text-neutral-600 dark:hover:text-neutral-400 rounded-r">
+                <%= icon_tag "search", class: "h-6 w-6" %>
+              </button>
             <% end %>
-          </nav>
+          </div>
         </div>
       </div>
+
+      <!-- Policies acknowledgment banner -->
+      <%= render "layouts/policies_acknowledgement_hammy" if show_policies_acknowledge_banner?(current_user) %>
+
+      <!-- Breadcrumbs -->
+      <%= render "layouts/breadcrumbs" %>
     </header>
 
-    <% flash.each do |name, msg| %>
-      <div id="flash-border" class="flash">
-        <div class="flash-wrap">
-          <div id="flash_<%= name %>" class="l-wrap--b"><span><%= flash_message(name, msg) %></span></div>
-        </div>
-      </div>
-    <% end %>
+    <!-- Content -->
+    <% if content_for?(:main) %>
+      <%= yield :main %>
+    <% else %>
+      <main class="flex-1 w-full px-8 flex-col bg-neutral-050 dark:bg-neutral-950 text-neutral-950 dark:text-neutral-050 text-b2 items-center inline-flex">
+        <div class="max-w-screen-xl w-full mx-auto pt-8 pb-10 mb-12 md:mb-16 lg:mb-28">
 
-    <% if content_for?(:fold) %>
-      <div class="fold">
-        <%= yield :fold %>
-      </div>
-    <% end %>
-
-    <main class="<%= 'main--interior' if request.path_info != '/' %>" data-nav-target="collapse">
-      <% if request.path_info != '/' %>
-        <div class="l-wrap--b">
-          <% if @title %>
-            <h1 class="t-display page__heading">
-              <%= content_for_title @title, @title_url %>
-
-              <% if @subtitle %>
-                <i class="page__subheading"><%= @subtitle %></i>
+          <% flash.each do |name, msg| %>
+            <div id="flash_<%= name %>">
+              <%= render AlertComponent.new(style: name, closeable: true) do %>
+                <%= flash_message(name, msg) %>
               <% end %>
-            </h1>
+            </div>
           <% end %>
-          <%= yield :title %>
+
           <%= yield %>
         </div>
-      <% else %>
-        <%= yield %>
-      <% end %>
-    </main>
+      </main>
+    <% end %>
 
-    <footer class="footer" data-nav-target="collapse">
-      <div class="l-wrap--footer">
-        <div class="l-overflow">
-          <div class="nav--v l-col--r--pad">
-            <%= link_to t('.footer.status'), "https://status.rubygems.org", class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.uptime'), "https://uptime.rubygems.org", class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.source_code'), "https://github.com/rubygems/rubygems.org", class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.data'), page_path("data"), class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.statistics'), stats_path, class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.contribute'), "https://guides.rubygems.org/contributing/", class: "nav--v__link--footer" %>
-            <%- if request.path_info == '/pages/about' %>
-              <%= link_to t('.footer.about'), page_path("about"), class: "nav--v__link--footer is-active" %>
-            <%- else %>
-              <%= link_to t('.footer.about'), page_path("about"), class: "nav--v__link--footer" %>
-            <%- end %>
-            <%= mail_to "support@rubygems.org", t('.footer.help'), class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.api'), "https://guides.rubygems.org/rubygems-org-api", class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.policies'), policies_path, class: "nav--v__link--footer" %>
-            <%= link_to t('.footer.support_us'), page_path("supporters"), class: "nav--v__link--footer" %>
-            <%- if request.path_info == '/pages/security' %>
-              <%= link_to t('.footer.security'), page_path("security"), class: "nav--v__link--footer is-active" %>
-            <%- else %>
-              <%= link_to t('.footer.security'), page_path("security"), class: "nav--v__link--footer" %>
-            <%- end %>
-          </div>
-          <div class="l-colspan--l colspan--l--has-border">
-            <div class="footer__about">
-              <p>
-                <%= t('footer_about_html',
-                  publish_docs: "https://guides.rubygems.org/publishing/",
-                  install_docs: "https://guides.rubygems.org/command-reference/#gem-install",
-                  api_docs: "https://guides.rubygems.org/rubygems-org-api/",
-                  gem_list: rubygems_path,
-                  contributing_docs: "https://guides.rubygems.org/contributing/"
-                  ) %>
-              </p>
-              <p>
-                <%= t('footer_sponsors_html', supporters_page: page_path("supporters")) %>
-              </p>
-            </div>
+    <!-- Footer -->
+    <footer>
+      <div class="w-full px-8 py-8 bg-orange-100 dark:bg-orange-950 text-neutral-800 dark:text-neutral-200">
+        <!-- Footer Nav -->
+        <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row justify-between">
+          <nav class="mb-4 md:mb-0 justify-start">
+            <ul class="flex flex-col md:flex-row md:space-x-8 text-b1 md:text-b2">
+              <li><%= link_to t("layouts.application.footer.about"), page_path("about"), class: "hover:text-neutral-600" %></li>
+              <li><%= link_to t("layouts.application.footer.docs"), "https://guides.rubygems.org/command-reference/#gem-install", class: "hover:text-neutral-600" %></li>
+              <li><%= link_to t("layouts.application.footer.policies"), policies_path, class: "hover:text-neutral-600" %></li>
+              <li><%= link_to t("layouts.application.footer.status"), "https://status.rubygems.org", class: "hover:text-neutral-600" %></li>
+              <li><%= link_to t("layouts.application.footer.security"), page_path("security"), class: "hover:text-neutral-600" %></li>
+              <li><%= mail_to "support@rubygems.org", t('layouts.application.footer.help'), class: "hover:text-neutral-600" %></li>
+            </ul>
+          </nav>
+          <div class="flex space-x-4">
+            <a href="https://github.com/rubygems/rubygems.org">
+              <%= icon_tag "github" %>
+            </a>
+            <a href="https://ruby.social/users/rubygems">
+              <%= icon_tag "mastodon" %>
+            </a>
           </div>
         </div>
       </div>
-      <div class="footer__sponsors">
-        <a class="footer__sponsor footer__sponsor__ruby_central" href="https://rubycentral.org/open-source/" target="_blank" rel="noopener">
-          <%= t("layouts.application.footer.operated_by") %>
-          <span class="t-hidden">Ruby Central</span>
-        </a>
-        <a class="footer__sponsor footer__sponsor__dockyard" href="https://dockyard.com/ruby-on-rails-consulting" target="_blank" rel="noopener">
-          <%= t("layouts.application.footer.designed_by") %>
-          <span class="t-hidden">DockYard</span>
-        </a>
-        <a class="footer__sponsor footer__sponsor__aws" href="https://aws.amazon.com/" target="_blank" rel="noopener">
-          <%= t("layouts.application.footer.hosted_by") %>
-          <span class="t-hidden">AWS</span>
-        </a>
-        <a class="footer__sponsor footer__sponsor__dnsimple" href="https://dnsimple.link/resolving-rubygems" target="_blank" rel="noopener">
-          <%= t("layouts.application.footer.resolved_with") %>
-          <span class="t-hidden">DNSimple</span>
-        </a>
-        <a class="footer__sponsor footer__sponsor__datadog" href="https://www.datadoghq.com/" target="_blank" rel="noopener">
-          <%= t("layouts.application.footer.monitored_by") %>
-          <span class="t-hidden">Datadog</span>
-        </a>
-        <a class="footer__sponsor footer__sponsor__fastly" href="https://www.fastly.com/customers/ruby-central" target="_blank" rel="noopener">
-          <%= t("layouts.application.footer.gems_served_by") %>
-          <span class="t-hidden">Fastly</span>
-        </a>
-        <a class="footer__sponsor footer__sponsor__honeybadger" href="https://www.honeybadger.io/" target="_blank" rel="noopener">
-          <%= t("layouts.application.footer.monitored_by") %>
-          <span class="t-hidden">Honeybadger</span>
-        </a>
-        <a class="footer__sponsor footer__sponsor__mend" href="https://mend.io/" target="_blank" rel="noopener">
-          <%= t("layouts.application.footer.secured_by") %>
-          <span class="t-hidden">Mend.io</span>
-        </a>
+
+      <div class="w-full px-6 bg-orange-200 dark:bg-orange-900 text-neutral-900 dark:text-neutral-100">
+        <!-- Supported By -->
+        <div class="flex flex-col lg:flex-row max-w-screen-xl mx-auto py-6 items-center justify-between">
+          <!-- RubyGems.org is supported by -->
+          <p class="mb-6 lg:mb-0 lg:mr-14 lg:w-52 text-b2 leading-6 text-balance">
+            <%= t("layouts.application.footer.supported_by_html") %>
+          </p>
+
+          <!-- Supporter Icons -->
+          <div class="w-full lg:grow mx-auto grid grid-cols-3 gap-6 justify-items-center md:flex md:items-center md:justify-between">
+            <a href="https://rubycentral.org/" class="p-1"><%= icon_tag "ruby-central", size: 15 %></a>
+            <a href="https://aws.amazon.com/" class="p-1"><%= icon_tag "aws", size: 15 %></a>
+            <a href="https://dnsimple.link/resolving-rubygems" class="p-1"><%= icon_tag "dnsimple", size: 15 %></a>
+            <a href="https://www.datadoghq.com/" class="p-1"><%= icon_tag "datadog", size: 15 %></a>
+            <a href="https://www.fastly.com/" class="p-1"><%= icon_tag "fastly", size: 15 %></a>
+            <a href="https://www.honeybadger.io/" class="p-1"><%= icon_tag "honeybadger", size: 15 %></a>
+            <a href="https://mend.io/" class="col-start-2 p-1"><%= icon_tag "mend-io", size: 15 %></a>
+          </div>
+        </div>
       </div>
-      <%# Locale switcher temporarily disabled to improve cacheability and mitigate bot abuse %>
     </footer>
-    <%= yield :javascript %>
-    <script type="text/javascript" defer src="https://www.fastly-insights.com/insights.js?k=3e63c3cd-fc37-4b19-80b9-65ce64af060a"></script>
-  </body>
+  </div>
+</body>
 </html>
