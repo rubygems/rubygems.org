@@ -14,4 +14,6 @@ class Admin::ApiKeyPolicy < Admin::ApplicationPolicy
   def avo_show?
     policy!(user, record.owner).avo_show?
   end
+
+  def act_on? = rubygems_org_admin?
 end
