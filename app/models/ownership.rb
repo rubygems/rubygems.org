@@ -16,10 +16,14 @@ class Ownership < ApplicationRecord
   before_create :generate_confirmation_token
 
   after_create :record_create_event
+  after_create :create_historical_ownership, if: :confirmed?
   after_update :record_confirmation_event, if: :saved_change_to_confirmed_at?
+  after_update :create_historical_ownership, if: :saved_change_to_confirmed_at?
   after_update :record_role_updated_event, if: :saved_change_to_role?
   after_update :notify_user_role_of_role_change, if: :saved_change_to_role?
+  after_update :raise_historical_ownership_role, if: :saved_change_to_role?
   after_destroy :record_destroy_event
+  after_destroy :close_historical_ownership
 
   scope :confirmed, -> { where.not(confirmed_at: nil) }
   scope :unconfirmed, -> { where(confirmed_at: nil) }
@@ -129,6 +133,25 @@ class Ownership < ApplicationRecord
       removed_by: Current.user&.display_handle,
       owner_gid: user.to_gid,
       actor_gid: Current.user&.to_gid)
+  end
+
+  def create_historical_ownership
+    HistoricalOwnership.create!(rubygem_id:, user_id:, role:, first_owned_at: confirmed_at)
+  end
+
+  # Tracks the highest role ever held during the open stint, never downgrades.
+  def raise_historical_ownership_role
+    lower_roles = HistoricalOwnership.roles_below(role)
+    return if lower_roles.empty?
+
+    HistoricalOwnership.where(rubygem_id:, user_id:, removed_at: nil, role: lower_roles)
+      .update_all(role: HistoricalOwnership.roles[role])
+  end
+
+  # Intentionally tolerant of not finding a record to update
+  def close_historical_ownership
+    HistoricalOwnership.where(rubygem_id:, user_id:, removed_at: nil)
+      .update_all(removed_at: Time.current)
   end
 
   def notify_user_role_of_role_change
