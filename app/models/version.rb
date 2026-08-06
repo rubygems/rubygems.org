@@ -5,6 +5,7 @@ require "digest/sha2"
 class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   RUBYGEMS_IMPORT_DATE = Date.parse("2009-07-25")
   DEFAULT_CONTENT_ADDRESS_LENGTH = 8
+  CONTENT_ADDRESS_FORMAT = /\A[0-9a-f]{#{DEFAULT_CONTENT_ADDRESS_LENGTH},64}\z/
   CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION = ">= 4.1.0.beta1"
 
   belongs_to :rubygem, touch: true
@@ -20,6 +21,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_many :attestations, dependent: :destroy, inverse_of: :version
 
   before_validation :set_canonical_number, if: :number_changed?
+  before_validation :content_addressify!
   before_validation :full_nameify!
   before_validation :gem_full_nameify!
   before_save :create_link_verifications, if: :metadata_changed?
@@ -52,7 +54,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     allow_blank: true
   validates :sha256, :spec_sha256, format: { with: Patterns::BASE64_SHA256_PATTERN }, allow_nil: true
   validates :sha256, presence: true, if: :content_addressable?
+  validates :content_address, format: { with: CONTENT_ADDRESS_FORMAT }, allow_nil: true
+  validates :content_address, absence: true, unless: :content_addressable?
   validates :ruby_abi, format: { with: /\A\d+\.\d+\z/ }, allow_nil: true
+  validates :ruby_abi, absence: true, unless: :platformed?
 
   validates :number, :platform, :gem_platform, :full_name, :gem_full_name, :canonical_number,
     name_format: { requires_letter: false },
@@ -220,7 +225,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def platformed?
-    platform != "ruby"
+    Version.platformed?(platform)
   end
 
   delegate :reorder_versions, to: :rubygem
@@ -460,18 +465,21 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     "#{full_name}.gem"
   end
 
-  def self.ruby_abi_for(required_ruby_version)
+  def content_addressable?
+    platformed? && ruby_abi.present?
+  end
+
+  def derive_ruby_abi
+    return unless platformed?
     return if required_ruby_version.blank?
 
-    requirement = Gem::Requirement.create(required_ruby_version.split(/\s*,\s*/))
-    requirements = requirement.requirements
-
+    requirements = Gem::Requirement.create(required_ruby_version.split(/\s*,\s*/)).requirements
     return unless requirements.one?
 
-    operator, version = requirements.first
+    operator, requirement_version = requirements.first
     return unless operator == "~>"
 
-    segments = version.segments
+    segments = requirement_version.segments
     return unless segments.length == 3
 
     patch = segments[2]
@@ -483,14 +491,13 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     nil
   end
 
-  def content_addressable?
-    platformed? && ruby_abi.present?
+  def self.platformed?(platform)
+    platform.present? && platform != "ruby"
   end
 
   def normalize_content_addressable_gem_metadata!
     return unless content_addressable?
     return if required_rubygems_version_satisfies_content_addressable_floor?
-
     preserved = required_rubygems_version.to_s.split(/\s*,\s*/).filter_map do |req|
       req = req.strip
       if req.start_with?("~>")
@@ -574,7 +581,15 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     self.gem_full_name = platform_identity(gem_platform)
   end
 
-  def content_address
+  def content_addressify!
+    return if rubygem.nil?
+    return unless content_addressable?
+    return if sha256.blank?
+
+    self.content_address ||= generate_content_address
+  end
+
+  def generate_content_address
     digest = sha256_hex
     raise ArgumentError, "Could not generate unique content-address" if digest.blank?
 
@@ -592,7 +607,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def platform_identity(platform_value)
-    return content_addressed_full_name if content_addressable? && sha256.present?
+    return content_addressed_full_name if content_addressable? && content_address.present?
 
     identity = "#{rubygem.name}-#{number}"
     identity << "-#{platform_value}" unless platform_value == "ruby"

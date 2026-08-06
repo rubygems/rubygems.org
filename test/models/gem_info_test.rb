@@ -52,7 +52,23 @@ class GemInfoTest < ActiveSupport::TestCase
       compact_index_version = info.first
 
       assert_equal "3.2", compact_index_version.ruby_abi
-      assert_equal version.full_name.split("-").last, compact_index_version.content_address
+      assert_equal version.content_address, compact_index_version.content_address
+    end
+
+    should "return no content address for unplatformed versions" do
+      rubygem = create(:rubygem, name: "datestamped")
+      create(
+        :version,
+        rubygem: rubygem,
+        number: "20260101",
+        platform: "ruby",
+        required_ruby_version: "~> 3.2.0",
+        info_checksum_v2: "datestamped-info"
+      )
+
+      info = GemInfo.new("datestamped").compact_index_info
+
+      assert_nil info.first.content_address
     end
 
     should "order info versions with the same number and platform by Ruby ABI" do

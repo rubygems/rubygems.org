@@ -131,7 +131,7 @@ class Pusher
       )
 
     version.required_ruby_version = spec.required_ruby_version.to_s
-    version.ruby_abi = Version.ruby_abi_for(version.required_ruby_version) if FeatureFlag.enabled?(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, owner)
+    version.ruby_abi = version.derive_ruby_abi if FeatureFlag.enabled?(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, owner)
     unless @rubygem.new_record?
       # Return success for idempotent pushes
       return notify("Gem was already pushed: #{version.to_title}", 200) if version.indexed?
@@ -228,8 +228,7 @@ class Pusher
 
   def update
     rubygem.disown if rubygem.versions.indexed.none?
-    rubygem.update_attributes_from_gem_specification!(version, spec)
-    version.normalize_content_addressable_gem_metadata!
+    persist_version
 
     if rubygem.unowned?
       if api_key.user?
@@ -252,6 +251,29 @@ class Pusher
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback, ActiveRecord::RecordNotUnique => e
     logger.info { { message: "Error updating rubygem", exception: e } }
     false
+  end
+
+  def persist_version
+    retries = 0
+    begin
+      rubygem.transaction do
+        rubygem.update_attributes_from_gem_specification!(version, spec)
+        version.normalize_content_addressable_gem_metadata!
+      end
+    rescue ActiveRecord::RecordNotUnique => e
+      raise e unless e.message.include?("index_versions_number_content_address")
+
+      if retries >= 3
+        StatsD.increment("push.content_address_collision_exhausted", tags: { rubygem: rubygem.name })
+        notify("There was a problem saving your gem: could not generate a unique content address after multiple attempts. Please try again.", 409)
+        raise e
+      end
+
+      StatsD.increment("push.content_address_collision", tags: { rubygem: rubygem.name })
+      version.content_address = nil
+      retries += 1
+      retry
+    end
   end
 
   def republish_notification(version)
