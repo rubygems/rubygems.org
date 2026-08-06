@@ -144,6 +144,10 @@ class User < ApplicationRecord
     where(ownerships: { push_notifier: true })
   end
 
+  def self.push_notifiable_members
+    where(memberships: { push_notifier: true })
+  end
+
   def self.ownership_notifiable_owners
     where(ownerships: { owner_notifier: true })
   end
