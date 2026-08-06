@@ -284,7 +284,7 @@ class ProfilesControllerTest < ActionController::TestCase
     context "on DELETE to destroy" do
       context "correct password" do
         should "enqueue deletion request" do
-          assert_enqueued_jobs 1, only: DeleteUserJob do
+          assert_enqueued_with(job: DeleteUserJob, args: [user: @user, actor: @user]) do
             delete :destroy, params: { user: { password: @user.password } }
           end
         end

@@ -5,7 +5,7 @@ require "test_helper"
 class DeleteUserJobTest < ActiveJob::TestCase
   test "sends deletion complete on success" do
     user = create(:user)
-    rubygem = create(:ownership, user:).rubygem
+    rubygem = create(:rubygem, name: "self-service-deletion-email", owners: [user])
     version = create(:version, rubygem:)
 
     assert_delete user
@@ -21,10 +21,35 @@ class DeleteUserJobTest < ActiveJob::TestCase
 
     Mailer.expects(:deletion_failed).with(user.email).returns(mock(deliver_later: nil))
     User.any_instance.expects(:yank_gems).raises(ActiveRecord::RecordNotDestroyed)
-    DeleteUserJob.new(user:).perform(user:)
+    DeleteUserJob.new(user:, actor: user).perform(user:, actor: user)
 
     refute_predicate user.reload, :destroyed?
     refute_predicate user, :deleted_at
+  end
+
+  test "does not send email when deletion is initiated by an admin" do
+    user = create(:user)
+    actor = create(:admin_github_user, :is_admin)
+    rubygem = create(:rubygem, name: "admin-email-suppression", owners: [user])
+    create(:version, rubygem:)
+
+    Mailer.expects(:deletion_complete).never
+    assert_no_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      DeleteUserJob.new(user:, actor:).perform(user:, actor:)
+    end
+
+    assert_predicate user.reload, :discarded?
+  end
+
+  test "does not send deletion failed when deletion is initiated by an admin" do
+    user = create(:user)
+    actor = create(:admin_github_user, :is_admin)
+
+    Mailer.expects(:deletion_failed).never
+    User.any_instance.expects(:yank_gems).raises(ActiveRecord::RecordNotDestroyed)
+    DeleteUserJob.new(user:, actor:).perform(user:, actor:)
+
+    refute_predicate user.reload, :discarded?
   end
 
   test "succeeds with api key" do
@@ -129,7 +154,7 @@ class DeleteUserJobTest < ActiveJob::TestCase
   def assert_delete(user)
     Mailer.expects(:deletion_complete).with(user.email).returns(mock(deliver_later: nil))
     Mailer.expects(:deletion_failed).never
-    DeleteUserJob.new(user:).perform(user:)
+    DeleteUserJob.new(user:, actor: user).perform(user:, actor: user)
 
     refute_predicate user.reload, :destroyed?
     assert_predicate user.reload, :deleted_at

@@ -1,5 +1,8 @@
 ---
 es:
+  admin:
+    delete_user:
+      blocked_reason:
   credentials_required: Credenciales requeridas
   copied: "¡Copiado!"
   copy_to_clipboard: Copiar al portapapeles

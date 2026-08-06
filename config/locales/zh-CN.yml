@@ -1,5 +1,8 @@
 ---
 zh-CN:
+  admin:
+    delete_user:
+      blocked_reason:
   credentials_required: 需要凭证
   copied: 已复制！
   copy_to_clipboard: 复制到剪贴板

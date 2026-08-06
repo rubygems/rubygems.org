@@ -1,5 +1,8 @@
 ---
 de:
+  admin:
+    delete_user:
+      blocked_reason:
   credentials_required:
   copied: Kopiert!
   copy_to_clipboard: In die Zwischenablage kopieren

@@ -25,7 +25,6 @@ class User < ApplicationRecord
   before_discard :expire_all_api_keys
   before_discard :destroy_associations_for_discard
   before_discard :clear_personal_attributes
-  after_discard :send_deletion_complete_email
   before_destroy :yank_gems
 
   scope :not_deleted, -> { kept }
@@ -245,6 +244,17 @@ class User < ApplicationRecord
       SELECT rubygem_id FROM ownerships GROUP BY rubygem_id HAVING count(rubygem_id) = 1)')
   end
 
+  def sole_owner_of_ineligible_gem_versions?
+    only_owner_gems
+      .left_joins(versions: :gem_download)
+      .where(versions: { indexed: true })
+      .where(
+        Version.arel_table[:created_at].lt(Deletion::MAXIMUM_VERSION_AGE.ago)
+          .or(GemDownload.arel_table[:count].gt(Deletion::MAXIMUM_DOWNLOADS))
+      )
+      .exists?
+  end
+
   def remember_me!
     self.remember_token = Clearance::Token.new
     self.remember_token_expires_at = Gemcutter::REMEMBER_FOR.from_now
@@ -349,7 +359,6 @@ class User < ApplicationRecord
   end
 
   def clear_personal_attributes
-    @email_before_discard = email
     update!(
       email: "deleted+#{id}@rubygems.org",
       handle: nil, email_confirmed: false,
@@ -360,10 +369,6 @@ class User < ApplicationRecord
       mfa_level: :disabled,
       password: SecureRandom.hex(20).encode("UTF-8")
     )
-  end
-
-  def send_deletion_complete_email
-    Mailer.deletion_complete(@email_before_discard).deliver_later
   end
 
   def record_create_event

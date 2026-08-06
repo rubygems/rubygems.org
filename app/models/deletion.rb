@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Deletion < ApplicationRecord
+  MAXIMUM_VERSION_AGE = 30.days
+  MAXIMUM_DOWNLOADS = 100_000
+
   # we nullify the user when they delete their account
   belongs_to :user, optional: true
 
@@ -37,9 +40,9 @@ class Deletion < ApplicationRecord
   end
 
   def ineligible_reason
-    if version.created_at&.before? 30.days.ago
+    if version.created_at&.before? MAXIMUM_VERSION_AGE.ago
       "Versions published more than 30 days ago cannot be deleted."
-    elsif version.downloads_count > 100_000
+    elsif version.downloads_count > MAXIMUM_DOWNLOADS
       "Versions with more than 100,000 downloads cannot be deleted."
     end
   end

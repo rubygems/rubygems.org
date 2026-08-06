@@ -23,17 +23,8 @@ class Maintenance::DiscardSpamAccountsTask < MaintenanceTasks::Task
 
   def process(user)
     return if user.discarded?
-    without_deletion_email { user.discard! }
+    user.discard!
   rescue ActiveRecord::ActiveRecordError, Discard::RecordNotDiscarded => e
     Rails.error.report(e, context: { user_id: user.id }, handled: true)
-  end
-
-  private
-
-  def without_deletion_email
-    User.skip_callback(:discard, :after, :send_deletion_complete_email)
-    yield
-  ensure
-    User.set_callback(:discard, :after, :send_deletion_complete_email)
   end
 end

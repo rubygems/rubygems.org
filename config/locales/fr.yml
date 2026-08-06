@@ -1,5 +1,8 @@
 ---
 fr:
+  admin:
+    delete_user:
+      blocked_reason:
   credentials_required:
   copied: Copié!
   copy_to_clipboard: Copier

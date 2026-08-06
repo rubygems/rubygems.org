@@ -49,7 +49,7 @@ class ProfilesController < ApplicationController
   end
 
   def destroy
-    DeleteUserJob.perform_later(user: current_user)
+    DeleteUserJob.perform_later(user: current_user, actor: current_user)
     sign_out
     redirect_to root_path, notice: t(".request_queued")
   end

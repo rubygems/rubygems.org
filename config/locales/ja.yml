@@ -1,5 +1,8 @@
 ---
 ja:
+  admin:
+    delete_user:
+      blocked_reason:
   credentials_required: 認証情報が必要です
   copied: コピー完了!
   copy_to_clipboard: クリップボードにコピー
