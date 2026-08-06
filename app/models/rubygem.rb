@@ -329,7 +329,7 @@ class Rubygem < ApplicationRecord
     versions_of_platforms = versions
       .release
       .indexed
-      .group_by(&:platform)
+      .group_by { |version| [version.platform, version.ruby_abi] }
 
     Version.default_scoped.where(id: versions_of_platforms.values.map! { |v| v.max.id }).update_all(latest: true)
   end
