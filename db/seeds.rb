@@ -2,10 +2,12 @@
 
 password = "super-secret-password"
 
+# "rubygems" is a reserved handle (see Organization::Handle), so the seed
+# organization uses the same gem-* naming as the seed users below.
 org = Organization.create_with(
-  name: "RubyGems",
-  handle: "rubygems"
-).find_or_create_by!(name: "RubyGems")
+  name: "Gem Org",
+  handle: "gem-org"
+).find_or_create_by!(name: "Gem Org")
 
 author = User.create_with(
   handle: "gem-author",

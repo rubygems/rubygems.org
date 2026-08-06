@@ -28,6 +28,7 @@ class OrganizationOnboarding < ApplicationRecord
   before_validation :remove_invalid_invites
 
   validate :organization_handle_reservable
+  validate :organization_handle_available
   validate :created_by_gem_ownerships
   validates :organization_name, :organization_handle, presence: true
 
@@ -142,6 +143,18 @@ class OrganizationOnboarding < ApplicationRecord
 
     return unless Organization::Handle.reserved?(organization_handle)
     errors.add(:organization_handle, "is reserved and cannot be used")
+  end
+
+  def organization_handle_available
+    return if organization_handle.blank?
+
+    # Exclude the organization this onboarding just created: #onboard! calls save and re-runs the validations
+    organizations = Organization.where("lower(handle) = lower(?)", organization_handle)
+    organizations = organizations.where.not(id: onboarded_organization_id) if onboarded_organization_id.present?
+
+    taken = organizations.any? || User.where("lower(handle) = lower(?)", organization_handle).any?
+
+    errors.add(:organization_handle, "has already been taken") if taken
   end
 
   def created_by_gem_ownerships
