@@ -115,7 +115,7 @@ class GemInfo
           AND dependencies.scope = 'runtime'")
       .where("rubygems.name = ? AND versions.indexed = true", @rubygem_name)
       .group(*group_by_columns)
-      .order(Arel.sql("versions.created_at, number, platform, dep_name"))
+      .order(Arel.sql("versions.created_at, number, platform, ruby_abi, full_name, dep_name"))
       .pluck(*group_by_columns, Arel.sql(dep_req_agg), Arel.sql(dep_name_agg))
   end
 end
