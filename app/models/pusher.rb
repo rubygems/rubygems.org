@@ -60,7 +60,7 @@ class Pusher
 
     return notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403) unless rubygem.valid? && version.valid?
 
-    unless version.full_name == spec.original_name && version.gem_full_name == spec.full_name
+    unless uploaded_spec_matches_version?
       return notify("There was a problem saving your gem: the uploaded spec has malformed platform attributes", 409)
     end
 
@@ -130,13 +130,15 @@ class Pusher
         pusher_api_key: api_key
       )
 
+    version.required_ruby_version = spec.required_ruby_version.to_s
+    version.ruby_abi = version.derive_ruby_abi if FeatureFlag.enabled?(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, owner)
     unless @rubygem.new_record?
       # Return success for idempotent pushes
       return notify("Gem was already pushed: #{version.to_title}", 200) if version.indexed?
 
       # If the gem is yanked, we can't repush it
       # Additionally, we don't allow overwriting existing versions
-      if (existing = @rubygem.versions.find_by(number: version.number, platform: version.platform))
+      if (existing = @rubygem.versions.find_by(number: version.number, platform: version.platform, ruby_abi: version.ruby_abi))
         return republish_notification(existing)
       end
 
@@ -202,6 +204,12 @@ class Pusher
 
   private
 
+  def uploaded_spec_matches_version?
+    return version.full_name == spec.original_name && version.gem_full_name == spec.full_name unless version.content_addressable?
+
+    version.platform == spec.original_platform.to_s && version.gem_platform == spec.platform.to_s
+  end
+
   def after_write
     GemCachePurger.call(rubygem.name)
     RackAttackReset.gem_push_backoff(@request.remote_ip, owner.to_gid) if @request&.remote_ip.present?
@@ -221,6 +229,7 @@ class Pusher
   def update
     rubygem.disown if rubygem.versions.indexed.none?
     rubygem.update_attributes_from_gem_specification!(version, spec)
+    version.normalize_content_addressable_gem_metadata!
 
     if rubygem.unowned?
       if api_key.user?

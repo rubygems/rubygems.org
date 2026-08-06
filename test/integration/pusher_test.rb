@@ -392,6 +392,10 @@ class PusherIntegrationTest < ActiveSupport::TestCase
           version_gid: @rubygem.versions.last.to_gid.to_s
         }, @rubygem.events.where(tag: Events::RubygemEvent::VERSION_PUSHED).sole
       end
+
+      should "set success message" do
+        assert_equal "Successfully registered gem: #{@cutter.version.to_title}", @cutter.message
+      end
     end
 
     should "purge gem cache" do
@@ -430,6 +434,67 @@ class PusherIntegrationTest < ActiveSupport::TestCase
           end
         end
       end
+    end
+
+    should "preserve required rubygems version for gems supporting multiple Ruby ABIs" do
+      @cutter.version.update!(required_rubygems_version: ">= 3.0", ruby_abi: nil)
+
+      assert @cutter.save
+
+      assert_equal ">= 3.0", @cutter.version.reload.required_rubygems_version
+    end
+  end
+
+  context "successfully saving a gemcutter scoped to one Ruby ABI" do
+    setup do
+      @rubygem = create(:rubygem, name: "sandworm")
+      @version = create(
+        :version,
+        rubygem: @rubygem,
+        number: "1.0.0",
+        platform: "arm64-darwin-25",
+        required_ruby_version: "~> 3.4.0",
+        required_rubygems_version: ">= 0",
+        ruby_abi: "3.4",
+        sha256: Digest::SHA2.base64digest("sandworm-1.0.0-arm64-darwin-25-3.4"),
+        pusher_api_key: @cutter.api_key
+      )
+
+      @cutter.stubs(:rubygem).returns @rubygem
+      @cutter.stubs(:version).returns @version
+      @cutter.stubs(:spec).returns(mock)
+      @rubygem.stubs(:update_attributes_from_gem_specification!)
+      GemCachePurger.stubs(:call)
+      @cutter.stubs(:write_gem)
+    end
+
+    should "set content addressable required rubygems version floor" do
+      assert @cutter.save
+
+      assert_equal Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, @version.reload.required_rubygems_version
+    end
+
+    should "normalize content addressable required rubygems version after applying gemspec metadata" do
+      sequence = sequence("content addressable metadata normalization")
+
+      @rubygem
+        .expects(:update_attributes_from_gem_specification!)
+        .with(@version, @cutter.spec)
+        .in_sequence(sequence)
+
+      @version
+        .expects(:normalize_content_addressable_gem_metadata!)
+        .in_sequence(sequence)
+
+      AfterVersionWriteJob.any_instance.stubs(:perform)
+
+      assert @cutter.save
+    end
+
+    should "include platform and Ruby ABI in success message" do
+      assert @cutter.save
+
+      assert_equal "Successfully registered gem: #{@version.to_title}", @cutter.message
     end
   end
 

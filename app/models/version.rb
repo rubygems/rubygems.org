@@ -4,6 +4,9 @@ require "digest/sha2"
 
 class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   RUBYGEMS_IMPORT_DATE = Date.parse("2009-07-25")
+  DEFAULT_CONTENT_ADDRESS_LENGTH = 8
+  CONTENT_ADDRESS_FORMAT = /\A[0-9a-f]{#{DEFAULT_CONTENT_ADDRESS_LENGTH},64}\z/
+  CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION = ">= 4.1.0.beta1"
 
   belongs_to :rubygem, touch: true
   has_many :dependencies, lambda {
@@ -49,6 +52,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     length: { minimum: 0, maximum: Gemcutter::MAX_TEXT_FIELD_LENGTH },
     allow_blank: true
   validates :sha256, :spec_sha256, format: { with: Patterns::BASE64_SHA256_PATTERN }, allow_nil: true
+  validates :sha256, presence: true, if: :content_addressable?
 
   validates :number, :platform, :gem_platform, :full_name, :gem_full_name, :canonical_number,
     name_format: { requires_letter: false },
@@ -216,7 +220,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def platformed?
-    platform != "ruby"
+    Version.platformed?(platform)
   end
 
   delegate :reorder_versions, to: :rubygem
@@ -378,7 +382,9 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def to_title
-    if platformed?
+    if content_addressable?
+      "#{rubygem.name} (#{number}-#{content_address}, Platform: #{platform}, Ruby ABI #{ruby_abi})"
+    elsif platformed?
       "#{rubygem.name} (#{number}-#{platform})"
     else
       "#{rubygem.name} (#{number})"
@@ -454,6 +460,67 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     "#{full_name}.gem"
   end
 
+  def content_addressable?
+    platformed? && ruby_abi.present?
+  end
+
+  def derive_ruby_abi
+    return unless platformed?
+    return if required_ruby_version.blank?
+
+    requirements = Gem::Requirement.create(required_ruby_version.split(/\s*,\s*/)).requirements
+    return unless requirements.one?
+
+    operator, requirement_version = requirements.first
+    return unless operator == "~>"
+
+    segments = requirement_version.segments
+    return unless segments.length == 3
+
+    patch = segments[2]
+    return unless patch.is_a?(Integer)
+    return unless patch.zero?
+
+    "#{segments[0]}.#{segments[1]}"
+  rescue Gem::Requirement::BadRequirementError
+    nil
+  end
+
+  def self.platformed?(platform)
+    platform.present? && platform != "ruby"
+  end
+
+  def self.content_address_in(full_name, ruby_abi:, platform:)
+    return if full_name.blank? || ruby_abi.blank?
+    return unless platformed?(platform)
+
+    candidate = full_name.split("-").last
+    candidate if candidate&.match?(CONTENT_ADDRESS_FORMAT)
+  end
+
+  def normalize_content_addressable_gem_metadata!
+    return unless content_addressable?
+    return if required_rubygems_version_satisfies_content_addressable_floor?
+
+    update!(required_rubygems_version: CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION)
+  end
+
+  def required_rubygems_version_satisfies_content_addressable_floor?
+    requirements = required_rubygems_version.presence&.split(/\s*,\s*/) || [">= 0"]
+    requirement = Gem::Requirement.new(requirements)
+
+    requirement.requirements.any? do |operator, required_version|
+      case operator
+      when ">=", "~>", "=", ">"
+        Gem::Requirement.new(CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION).satisfied_by?(required_version)
+      else
+        false
+      end
+    end
+  rescue Gem::Requirement::BadRequirementError
+    false
+  end
+
   private
 
   def update_prerelease
@@ -461,14 +528,27 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def platform_and_number_are_unique
-    return unless Version.exists?(rubygem_id: rubygem_id, number: number, platform: platform)
-    errors.add(:base, "A version already exists with this number or platform.")
+    return unless Version.exists?(rubygem_id: rubygem_id, number: number, platform: platform, ruby_abi: ruby_abi)
+
+    message = if ruby_abi.present?
+                "A version already exists with this number, platform and Ruby ABI."
+              else
+                "A version already exists with this number or platform."
+              end
+
+    errors.add(:base, message)
   end
 
   def gem_platform_and_number_are_unique
-    platforms = Version.where(rubygem_id: rubygem_id, number: number, gem_platform: gem_platform).pluck(:platform)
+    platforms = Version.where(rubygem_id: rubygem_id, number: number, gem_platform: gem_platform, ruby_abi: ruby_abi).pluck(:platform)
     return if platforms.empty?
-    errors.add(:base, "A version already exists with this number and resolved platform #{platforms}")
+
+    message = if ruby_abi.present?
+                "A version already exists with this number, Ruby ABI and resolved platform #{platforms}"
+              else
+                "A version already exists with this number and resolved platform #{platforms}"
+              end
+    errors.add(:base, message)
   end
 
   def original_platform_resolves_to_gem_platform
@@ -487,15 +567,43 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def full_nameify!
     return if rubygem.nil?
-    self.full_name = "#{rubygem.name}-#{number}"
-    full_name << "-#{platform}" if platformed?
+    self.full_name = platform_identity(platform)
   end
 
   def gem_full_nameify!
     return if gem_platform.blank?
     return if rubygem.nil?
-    self.gem_full_name = "#{rubygem.name}-#{number}"
-    gem_full_name << "-#{gem_platform}" unless gem_platform == "ruby"
+
+    self.gem_full_name = platform_identity(gem_platform)
+  end
+
+  def content_address
+    Version.content_address_in(full_name, ruby_abi:, platform:) || generate_content_address
+  end
+
+  def generate_content_address
+    digest = sha256_hex
+    raise ArgumentError, "Could not generate unique content-address" if digest.blank?
+
+    (DEFAULT_CONTENT_ADDRESS_LENGTH..digest.length).each do |length|
+      candidate = digest.first(length)
+      identity = "#{rubygem.name}-#{number}-#{candidate}"
+      return candidate unless Version.where(full_name: identity).where.not(id: id).exists?
+    end
+
+    raise ArgumentError, "Could not generate unique content-address"
+  end
+
+  def content_addressed_full_name
+    "#{rubygem.name}-#{number}-#{content_address}"
+  end
+
+  def platform_identity(platform_value)
+    return content_addressed_full_name if content_addressable? && sha256.present?
+
+    identity = "#{rubygem.name}-#{number}"
+    identity << "-#{platform_value}" unless platform_value == "ruby"
+    identity
   end
 
   def set_canonical_number
@@ -530,7 +638,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def unique_canonical_number
-    version = Version.find_by(canonical_number: canonical_number, rubygem_id: rubygem_id, platform: platform)
+    version = Version.find_by(canonical_number: canonical_number, rubygem_id: rubygem_id, platform: platform, ruby_abi: ruby_abi)
     errors.add(:canonical_number, "has already been taken. Existing version: #{version.number}") unless version.nil?
   end
 
