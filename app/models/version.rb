@@ -5,6 +5,7 @@ require "digest/sha2"
 class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   RUBYGEMS_IMPORT_DATE = Date.parse("2009-07-25")
   DEFAULT_CONTENT_ADDRESS_LENGTH = 8
+  CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION = ">= 4.1.0.beta1"
 
   belongs_to :rubygem, touch: true
   has_many :dependencies, lambda {
@@ -483,6 +484,29 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def content_addressable?
     platformed? && ruby_abi.present?
+  end
+
+  def normalize_content_addressable_gem_metadata!
+    return unless content_addressable?
+    return if required_rubygems_version_satisfies_content_addressable_floor?
+
+    update!(required_rubygems_version: CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION)
+  end
+
+  def required_rubygems_version_satisfies_content_addressable_floor?
+    requirements = required_rubygems_version.presence&.split(/\s*,\s*/) || [">= 0"]
+    requirement = Gem::Requirement.new(requirements)
+
+    requirement.requirements.any? do |operator, required_version|
+      case operator
+      when ">=", "~>", "=", ">"
+        Gem::Requirement.new(CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION).satisfied_by?(required_version)
+      else
+        false
+      end
+    end
+  rescue Gem::Requirement::BadRequirementError
+    false
   end
 
   private

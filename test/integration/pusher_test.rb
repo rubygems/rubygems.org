@@ -471,47 +471,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
     should "set content addressable required rubygems version floor" do
       assert @cutter.save
 
-      assert_equal Pusher::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, @version.reload.required_rubygems_version
-    end
-
-    should "preserve required rubygems version when it is higher than the content addressable floor" do
-      @version.update!(required_rubygems_version: ">= 5.0.0")
-
-      assert @cutter.save
-
-      assert_equal ">= 5.0.0", @version.reload.required_rubygems_version
-    end
-
-    should "preserve compound required rubygems version when its lower bound satisfies the content addressable floor" do
-      @version.update!(required_rubygems_version: ">= 4.2, < 5")
-
-      assert @cutter.save
-
-      assert_equal ">= 4.2, < 5", @version.reload.required_rubygems_version
-    end
-
-    should "set content addressable required rubygems version floor when requirement only has an upper bound and value is greater" do
-      @version.update!(required_rubygems_version: "< 5")
-
-      assert @cutter.save
-
-      assert_equal Pusher::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, @version.reload.required_rubygems_version
-    end
-
-    should "preserve required rubygems version when requirement only has an = operator and value is greater than CA value" do
-      @version.update!(required_rubygems_version: "= 4.2")
-
-      assert @cutter.save
-
-      assert_equal "= 4.2", @version.reload.required_rubygems_version
-    end
-
-    should "preserve required rubygems version when requirement only has a ~> operator and value is greater" do
-      @version.update!(required_rubygems_version: "~> 4.2")
-
-      assert @cutter.save
-
-      assert_equal "~> 4.2", @version.reload.required_rubygems_version
+      assert_equal Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, @version.reload.required_rubygems_version
     end
 
     should "normalize content addressable required rubygems version after applying gemspec metadata" do
@@ -523,10 +483,8 @@ class PusherIntegrationTest < ActiveSupport::TestCase
         .in_sequence(sequence)
 
       @version
-        .expects(:update!)
-        .with(required_rubygems_version: Pusher::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION)
+        .expects(:normalize_content_addressable_gem_metadata!)
         .in_sequence(sequence)
-        .returns(true)
 
       AfterVersionWriteJob.any_instance.stubs(:perform)
 

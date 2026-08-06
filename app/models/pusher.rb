@@ -4,8 +4,6 @@ require "digest/sha2"
 require "gem_validator"
 
 class Pusher
-  CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION = ">= 4.1.0.beta1"
-
   include TraceTagger
   include SemanticLogger::Loggable
 
@@ -212,29 +210,6 @@ class Pusher
     version.platform == spec.original_platform.to_s && version.gem_platform == spec.platform.to_s
   end
 
-  def required_rubygems_version_satisfies_content_addressable_floor?
-    requirements = version.required_rubygems_version.presence&.split(/\s*,\s*/) || [">= 0"]
-    requirement = Gem::Requirement.new(requirements)
-
-    requirement.requirements.any? do |operator, required_version|
-      case operator
-      when ">=", "~>", "=", ">"
-        Gem::Requirement.new(CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION).satisfied_by?(required_version)
-      else
-        false
-      end
-    end
-  rescue Gem::Requirement::BadRequirementError
-    false
-  end
-
-  def normalize_content_addressable_gem_metadata!
-    return unless version.content_addressable?
-    return if required_rubygems_version_satisfies_content_addressable_floor?
-
-    version.update!(required_rubygems_version: CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION)
-  end
-
   def after_write
     GemCachePurger.call(rubygem.name)
     RackAttackReset.gem_push_backoff(@request.remote_ip, owner.to_gid) if @request&.remote_ip.present?
@@ -254,7 +229,7 @@ class Pusher
   def update
     rubygem.disown if rubygem.versions.indexed.none?
     rubygem.update_attributes_from_gem_specification!(version, spec)
-    normalize_content_addressable_gem_metadata!
+    version.normalize_content_addressable_gem_metadata!
 
     if rubygem.unowned?
       if api_key.user?

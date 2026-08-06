@@ -698,6 +698,85 @@ class VersionTest < ActiveSupport::TestCase
       end
     end
 
+    context "#normalize_content_addressable_gem_metadata!" do
+      setup do
+        @rubygem = create(:rubygem, name: "sandworm")
+        @content_addressable_version = create(
+          :version,
+          rubygem: @rubygem,
+          number: "1.0.0",
+          platform: "arm64-darwin-25",
+          gem_platform: "arm64-darwin-25",
+          required_ruby_version: "~> 3.4.0",
+          required_rubygems_version: ">= 0",
+          ruby_abi: "3.4",
+          sha256: Digest::SHA2.base64digest("sandworm-1.0.0-arm64-darwin-25-3.4")
+        )
+      end
+
+      should "set the content addressable required rubygems version floor" do
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "set the floor when required rubygems version is blank" do
+        @content_addressable_version.update!(required_rubygems_version: nil)
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "set the floor when requirement only has an upper bound and value is greater" do
+        @content_addressable_version.update!(required_rubygems_version: "< 5")
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "preserve required rubygems version when it is higher than the content addressable floor" do
+        @content_addressable_version.update!(required_rubygems_version: ">= 5.0.0")
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal ">= 5.0.0", @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "preserve compound required rubygems version when its lower bound satisfies the content addressable floor" do
+        @content_addressable_version.update!(required_rubygems_version: ">= 4.2, < 5")
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal ">= 4.2, < 5", @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "preserve required rubygems version when requirement only has an = operator and value is greater" do
+        @content_addressable_version.update!(required_rubygems_version: "= 4.2")
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal "= 4.2", @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "preserve required rubygems version when requirement only has a ~> operator and value is greater" do
+        @content_addressable_version.update!(required_rubygems_version: "~> 4.2")
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal "~> 4.2", @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "preserve required rubygems version for versions supporting multiple Ruby ABIs" do
+        version = create(:version, rubygem: @rubygem, number: "2.0.0", required_rubygems_version: ">= 3.0", ruby_abi: nil)
+
+        version.normalize_content_addressable_gem_metadata!
+
+        assert_equal ">= 3.0", version.reload.required_rubygems_version
+      end
+    end
+
     %w[x86_64-linux java mswin x86-mswin32-60].each do |platform|
       should "be able to find with platform of #{platform}" do
         version = create(:version, platform: platform)
