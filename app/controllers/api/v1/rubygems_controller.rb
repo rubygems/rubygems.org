@@ -1,18 +1,21 @@
 # frozen_string_literal: true
 
 class Api::V1::RubygemsController < Api::BaseController
+  include Recorder
+
   before_action :deny_shared_cache, only: :index
   before_action :authenticate_with_api_key, except: %i[show reverse_dependencies]
   before_action :verify_user_api_key, except: %i[show reverse_dependencies create]
   before_action :find_rubygem, only: %i[show reverse_dependencies]
   before_action :cors_preflight_check, only: :show
   before_action :verify_with_otp, only: %i[create]
-  after_action  :cors_set_access_control_headers, only: :show
+  after_action :cors_set_access_control_headers, only: :show
 
   def index
     authorize Rubygem, :index?
     @rubygems = @api_key.user.rubygems.with_versions
       .preload(:linkset, :gem_download, most_recent_version: { dependencies: :rubygem, gem_download: nil })
+
     respond_to do |format|
       format.json { render json: @rubygems }
       format.yaml { render yaml: @rubygems }
@@ -42,8 +45,10 @@ class Api::V1::RubygemsController < Api::BaseController
       gem_body = params.expect(:gem)
       return render_bad_request("gem is not a file upload") unless gem_body.is_a?(ActionDispatch::Http::UploadedFile)
       return render_bad_request("missing attestations") unless (attestations = params[:attestations]).is_a?(String)
+
       attestations = ActiveSupport::JSON.decode(attestations)
       return render_bad_request("attestations must be an array, is #{attestations.class}") unless attestations.is_a?(Array)
+
       attestations = attestations&.as_json
     else
       gem_body = request.body
@@ -97,28 +102,6 @@ class Api::V1::RubygemsController < Api::BaseController
 
     logger.info(event, **metadata, actor:, edge_bypassed: request.edge_bypassed?, request_id: request.uuid)
     Datadog::Kit::AppSec::Events.track(event, **metadata, **actor.transform_keys { |key| :"actor.#{key}" })
-  rescue StandardError => e
-    Rails.error.report(e, handled: true)
-  end
-
-  def record_transparency_log_event(gemcutter)
-    rubygem = gemcutter.rubygem
-    version = gemcutter.version
-    return if rubygem.nil? || version.nil?
-
-    TransparencyLog::Recorder.new.record(
-      event_type: "gem_push",
-      resource_type: "rubygem",
-      resource_name: rubygem.name,
-      resource_id: rubygem.id.to_s,
-      subject_type: "gem_version",
-      subject_name: version.full_name,
-      subject_id: version.id.to_s,
-      actor_type: @api_key.user? ? "user" : "unknown",
-      actor_id: @api_key.owner_id.to_s,
-      actor_handle: @api_key.owner&.name,
-      authentication_method: "api_key"
-    )
   rescue StandardError => e
     Rails.error.report(e, handled: true)
   end

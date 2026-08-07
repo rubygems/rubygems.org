@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::OwnersController < Api::BaseController
+  include Recorder
+
   before_action :authenticate_with_api_key, except: %i[show gems]
   before_action :verify_with_otp, except: %i[show gems]
   before_action :find_rubygem, except: :gems
@@ -96,23 +98,5 @@ class Api::V1::OwnersController < Api::BaseController
       .map do |ownership|
         ownership.user.payload.merge("role" => ownership.role)
       end
-  end
-
-  def record_transparency_log_event(owner)
-    TransparencyLog::Recorder.new.record(
-      event_type: "ownership_change",
-      resource_type: "rubygem",
-      resource_name: @rubygem.name,
-      resource_id: @rubygem.id.to_s,
-      subject_type: "user",
-      subject_name: owner.handle,
-      subject_id: owner.id.to_s,
-      actor_type: "user",
-      actor_id: @api_key.user.id.to_s,
-      actor_handle: @api_key.user.handle,
-      authentication_method: "api_key"
-    )
-  rescue StandardError => e
-    Rails.error.report(e, handled: true)
   end
 end
