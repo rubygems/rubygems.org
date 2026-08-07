@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::DeletionsController < Api::BaseController
+  include Recorder
+
   before_action :authenticate_with_api_key
   before_action :verify_user_api_key
   before_action :find_rubygem_by_name
@@ -12,7 +14,9 @@ class Api::V1::DeletionsController < Api::BaseController
   def create
     authorize @rubygem, :yank? # TODO: change to @version
     @deletion = @api_key.user.deletions.build(version: @version)
+
     if @deletion.save
+      record_transparency_log_event("gem_yank", @deletion)
       StatsD.increment "yank.success"
       render plain: response_with_mfa_warning("Successfully deleted gem: #{@version.to_title}")
     elsif @deletion.ineligible?
@@ -25,7 +29,7 @@ class Api::V1::DeletionsController < Api::BaseController
     else
       StatsD.increment "yank.failure"
       render plain: response_with_mfa_warning(@deletion.errors.full_messages.to_sentence),
-             status: :unprocessable_content
+        status: :unprocessable_content
     end
   end
 
@@ -34,7 +38,7 @@ class Api::V1::DeletionsController < Api::BaseController
   def validate_gem_and_version
     if !@rubygem.hosted?
       render plain: response_with_mfa_warning(t(:this_rubygem_could_not_be_found)),
-             status: :not_found
+        status: :not_found
     elsif !@rubygem.owned_by?(@api_key.user)
       render_forbidden response_with_mfa_warning("You do not have permission to delete this gem.")
     else

@@ -22,7 +22,7 @@ class Api::V1::OwnersController < Api::BaseController
     ownership = @rubygem.ownerships.new(user: owner, authorizer: @api_key.user, **ownership_params)
 
     if ownership.save
-      record_transparency_log_event(owner)
+      record_transparency_log_event("owner_add", owner)
       OwnersMailer.ownership_confirmation(ownership).deliver_later
       render plain: response_with_mfa_warning("#{owner.display_handle} was added as an unconfirmed owner. " \
                                               "Ownership access will be enabled after the user clicks on the " \
@@ -44,7 +44,7 @@ class Api::V1::OwnersController < Api::BaseController
     end
 
     if ownership.update(ownership_params)
-      record_transparency_log_event(owner)
+      record_transparency_log_event("owner_update", owner)
       render plain: response_with_mfa_warning("Owner updated successfully.")
     else
       render plain: response_with_mfa_warning(ownership.errors.full_messages.to_sentence), status: :unprocessable_content
@@ -57,7 +57,7 @@ class Api::V1::OwnersController < Api::BaseController
     ownership = @rubygem.ownerships_including_unconfirmed.find_by!(user: owner)
 
     if ownership.safe_destroy
-      record_transparency_log_event(owner)
+      record_transparency_log_event("owner_remove", owner)
       OwnersMailer.owner_removed(ownership.user_id, @api_key.user.id, ownership.rubygem_id).deliver_later
       render plain: response_with_mfa_warning("Owner removed successfully.")
     else

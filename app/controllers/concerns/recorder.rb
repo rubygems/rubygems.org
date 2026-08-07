@@ -5,13 +5,13 @@ module Recorder
 
   private
 
-  def record_transparency_log_event(record)
+  def record_transparency_log_event(event_type, record)
     attributes =
       case record
-      when Pusher
-        gem_push_attributes(record)
+      when Pusher, Deletion
+        gem_version_attributes(event_type, record)
       when User
-        ownership_change_attributes(record)
+        ownership_change_attributes(event_type, record)
       else
         return
       end
@@ -21,12 +21,12 @@ module Recorder
     Rails.error.report(e, handled: true)
   end
 
-  def gem_push_attributes(gemcutter)
-    rubygem = gemcutter.rubygem
-    version = gemcutter.version
+  def gem_version_attributes(event_type, record)
+    version = record.version
+    rubygem = record.is_a?(Pusher) ? record.rubygem : version.rubygem
 
     {
-      event_type: "gem_push",
+      event_type: event_type,
       resource_type: "rubygem",
       resource_name: rubygem.name,
       resource_id: rubygem.id.to_s,
@@ -40,9 +40,9 @@ module Recorder
     }
   end
 
-  def ownership_change_attributes(owner)
+  def ownership_change_attributes(event_type, owner)
     {
-      event_type: "ownership_change",
+      event_type: event_type,
       resource_type: "rubygem",
       resource_name: @rubygem.name,
       resource_id: @rubygem.id.to_s,

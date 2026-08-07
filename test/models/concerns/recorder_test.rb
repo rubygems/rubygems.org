@@ -38,7 +38,7 @@ class RecorderTest < ActiveSupport::TestCase
       authentication_method: "api_key"
     })
 
-    @controller.send(:record_transparency_log_event, pusher)
+    @controller.send(:record_transparency_log_event, "gem_push", pusher)
   end
 
   test "records an ownership change event when record is a User" do
@@ -54,7 +54,7 @@ class RecorderTest < ActiveSupport::TestCase
     TransparencyLog::Recorder.expects(:new).returns(recorder)
 
     recorder.expects(:record).with({
-      event_type: "ownership_change",
+      event_type: "owner_add",
       resource_type: "rubygem",
       resource_name: rubygem.name,
       resource_id: rubygem.id.to_s,
@@ -67,13 +67,13 @@ class RecorderTest < ActiveSupport::TestCase
       authentication_method: "api_key"
     })
 
-    @controller.send(:record_transparency_log_event, owner)
+    @controller.send(:record_transparency_log_event, "owner_add", owner)
   end
 
   test "does not record an event for an unsupported record type" do
     TransparencyLog::Recorder.expects(:new).never
 
-    @controller.send(:record_transparency_log_event, Object.new)
+    @controller.send(:record_transparency_log_event, "unknown_event", Object.new)
   end
 
   test "reports errors without raising them" do
@@ -95,7 +95,7 @@ class RecorderTest < ActiveSupport::TestCase
     Rails.error.expects(:report).with(error, handled: true)
 
     assert_nothing_raised do
-      @controller.send(:record_transparency_log_event, pusher)
+      @controller.send(:record_transparency_log_event, "gem_push", pusher)
     end
   end
 end

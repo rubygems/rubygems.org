@@ -57,7 +57,7 @@ class Api::V1::RubygemsController < Api::BaseController
     gemcutter = Pusher.new(@api_key, gem_body, request:, attestations:)
     gemcutter.process
     track_gem_push(gemcutter)
-    record_transparency_log_event(gemcutter) if gemcutter.code == 200
+    record_transparency_log_event("gem_push", gemcutter) if gemcutter.code == 200
     render plain: response_with_mfa_warning(gemcutter.message), status: gemcutter.code
   rescue Pundit::NotAuthorizedError
     raise # allow rescue_from in base_controller to handle this

@@ -266,7 +266,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
 
           should "record and enqueue a transparency log event" do
             event = TransparencyLogEvent.find_by!(
-              event_type: "ownership_change",
+              event_type: "owner_add",
               resource_type: "rubygem",
               resource_name: @rubygem.name,
               subject_type: "user",
