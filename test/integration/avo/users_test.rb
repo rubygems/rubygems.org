@@ -25,11 +25,11 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
     assert page.has_content? user.name
   end
 
-  test "searching users by active and blocked email" do
+  test "searching users by active and blocked email case-insensitively" do
     requires_avo_pro
     admin_sign_in_as create(:admin_github_user, :is_admin)
-    active_user = create(:user, email: "active-user@rubygems-test.org")
-    blocked_user = create(:user, :blocked, blocked_email: "blocked-user@rubygems-test.org")
+    active_user = create(:user, email: "Active-User@rubygems-test.org")
+    blocked_user = create(:user, :blocked, blocked_email: "Blocked-User@rubygems-test.org")
 
     get avo.avo_api_path(resource_name: "users", q: "active-user")
 

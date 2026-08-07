@@ -5,12 +5,20 @@ require "test_helper"
 class Avo::Resources::UserTest < ActiveSupport::TestCase
   SEARCH_COLUMNS = %w[email blocked_email handle].freeze
 
-  test "search finds users by active and blocked email" do
-    active_user = create(:user, email: "active-user@rubygems-test.org")
-    blocked_user = create(:user, :blocked, blocked_email: "blocked-user@rubygems-test.org")
+  test "search finds users by active and blocked email case-insensitively" do
+    active_user = create(:user, email: "Active-User@rubygems-test.org")
+    blocked_user = create(:user, :blocked, blocked_email: "Blocked-User@rubygems-test.org")
 
     assert_equal [active_user], search("active-user")
     assert_equal [blocked_user], search("blocked-user")
+  end
+
+  test "search requires at least three characters" do
+    user = create(:user, email: "responsive-search@rubygems-test.org")
+
+    assert_empty search("")
+    assert_empty search("re")
+    assert_equal [user], search("res")
   end
 
   test "search columns use trigram indexes" do
