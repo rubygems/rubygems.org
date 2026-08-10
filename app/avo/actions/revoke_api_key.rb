@@ -6,7 +6,7 @@ class Avo::Actions::RevokeApiKey < Avo::Actions::ApplicationAction
     Admin::ApiKeyPolicy.new(current_user, resource.record).act_on? && view == :show
   }
   self.authorize = lambda {
-    Admin::ApiKeyPolicy.new(action.user, action.record).act_on?
+    Admin::ApiKeyPolicy.new(current_user, action.record).act_on?
   }
   self.message = lambda {
     "Are you sure you would like to revoke API key #{record.name.inspect} (##{record.id})?"

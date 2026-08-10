@@ -6,6 +6,7 @@ class RevokeApiKeyTest < ActiveSupport::TestCase
   setup do
     @api_key = create(:api_key, name: "compromised-deploy-key")
     @current_user = create(:admin_github_user, :is_admin)
+    Avo::Current.stubs(:user).returns(@current_user)
     @resource = Avo::Resources::ApiKey.new.hydrate(record: @api_key)
     @action = Avo::Actions::RevokeApiKey.new(record: @api_key, resource: @resource, user: @current_user, view: :show)
   end
@@ -59,6 +60,12 @@ class RevokeApiKeyTest < ActiveSupport::TestCase
 
     assert action_context.instance_exec(&Avo::Actions::RevokeApiKey.visible)
     assert_predicate @action, :authorized?
+  end
+
+  should "authorize the action when hydrated for rendering without an explicit user" do
+    rendered_action = Avo::Actions::RevokeApiKey.new(record: @api_key, resource: @resource, view: :show)
+
+    assert_predicate rendered_action, :authorized?
   end
 
   should "not be visible or authorized for operators outside the rubygems.org team" do
