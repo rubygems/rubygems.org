@@ -71,7 +71,7 @@ gem "zlib", "~> 3.2"
 gem "yaml-schema", "~> 1.2"
 
 # Admin dashboard
-gem "avo", "~> 3.13"
+gem "avo", "~> 3.32"
 gem "pagy", "~> 8.4"
 gem "view_component", "~> 4.12.0"
 gem "pundit", "~> 2.5"
