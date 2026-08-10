@@ -4,7 +4,7 @@ require "test_helper"
 
 # Exercises the model-level invariants for transparency log events.
 class TransparencyLogEventTest < ActiveSupport::TestCase
-  subject { build(:transparency_log_event) }
+  subject { build(:transparency_log_event, :request_built) }
 
   should define_enum_for(:status)
     .with_values(TransparencyLogEvent::STATUSES)
@@ -35,8 +35,36 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
   should validate_uniqueness_of(:payload_digest).scoped_to(:payload_digest_algorithm)
   should validate_numericality_of(:attempt_count).only_integer.is_greater_than_or_equal_to(0)
 
+  should validate_length_of(:event_type).is_at_most(100)
+  should validate_length_of(:resource_type).is_at_most(50)
+  should validate_length_of(:subject_type).is_at_most(50)
+  should validate_length_of(:actor_type).is_at_most(50)
+  should validate_length_of(:resource_name).is_at_most(255)
+  should validate_length_of(:subject_name).is_at_most(255)
+  should validate_length_of(:resource_id).is_at_most(128)
+  should validate_length_of(:subject_id).is_at_most(128)
+  should validate_length_of(:subject_handle).is_at_most(128)
+  should validate_length_of(:actor_id).is_at_most(128)
+  should validate_length_of(:actor_handle).is_at_most(128)
+  should validate_length_of(:public_key_id).is_at_most(128)
+  should validate_length_of(:authentication_method).is_at_most(100)
+  should validate_length_of(:canonicalization_algorithm).is_at_most(64)
+  should validate_length_of(:signing_algorithm).is_at_most(64)
+  should validate_length_of(:canonicalization_version).is_at_most(32)
+  should validate_length_of(:rekor_entry_version).is_at_most(32)
+  should validate_length_of(:spec_version).is_at_most(32)
+  should validate_length_of(:payload_digest_algorithm).is_at_most(32)
+  should validate_length_of(:status).is_at_most(32)
+  should validate_length_of(:signing_mode).is_at_most(50)
+  should validate_length_of(:rekor_entry_kind).is_at_most(50)
+  should validate_length_of(:rekor_log_origin).is_at_most(255)
+
+  should "default status to pending" do
+    assert_predicate build(:transparency_log_event, :request_built), :pending?
+  end
+
   should "require event uuid once persisted" do
-    event = create(:transparency_log_event)
+    event = create(:transparency_log_event, :request_built)
     event.event_uuid = nil
 
     refute_predicate event, :valid?
@@ -44,27 +72,34 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
   end
 
   should "assign an event uuid on create" do
-    event = create(:transparency_log_event)
+    event = create(:transparency_log_event, :request_built, event_uuid: nil)
 
     assert_match(/\A[0-9a-f-]{36}\z/, event.event_uuid)
   end
 
   should "preserve a provided event uuid" do
     event_uuid = SecureRandom.uuid
-    event = create(:transparency_log_event, event_uuid:)
+    event = create(:transparency_log_event, :request_built, event_uuid:)
 
     assert_equal event_uuid, event.event_uuid
   end
 
   should "require canonical payload to be a JSON object" do
-    event = build(:transparency_log_event, canonical_payload: %w[not an object])
+    event = build(:transparency_log_event, :request_built, canonical_payload: %w[not an object])
 
     refute_predicate event, :valid?
     assert_includes event.errors[:canonical_payload], "must be a JSON object"
   end
 
+  should "require Rekor request body to be a JSON object" do
+    event = build(:transparency_log_event, :request_built, rekor_request_body: [])
+
+    refute_predicate event, :valid?
+    assert_includes event.errors[:rekor_request_body], "must be a JSON object"
+  end
+
   should "require canonical payload to include the event contract fields" do
-    event = build(:transparency_log_event, canonical_payload: {})
+    event = build(:transparency_log_event, :request_built, canonical_payload: {})
 
     refute_predicate event, :valid?
     assert_includes event.errors[:canonical_payload], "must include specVersion"
@@ -77,6 +112,7 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
   should "require canonical payload contract fields to match event attributes" do
     event = build(
       :transparency_log_event,
+      :request_built,
       spec_version: "1.0",
       event_type: "rubygem.owner.added",
       resource_type: "rubygem",
@@ -102,6 +138,7 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
   should "allow canonical payloads to identify rubygem resources with the RFC gem field" do
     event = build(
       :transparency_log_event,
+      :request_built,
       resource_name: "rack",
       canonical_payload: {
         "specVersion" => "1.0",
@@ -116,7 +153,7 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
   end
 
   should "require Rekor response details when submitted" do
-    event = build(:transparency_log_event, status: :submitted)
+    event = build(:transparency_log_event, :request_built, status: :submitted)
 
     refute_predicate event, :valid?
     assert_includes event.errors[:rekor_response_body], "can't be blank"
@@ -128,7 +165,7 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
   end
 
   should "require an error when failed" do
-    event = build(:transparency_log_event, status: :failed, last_error: nil)
+    event = build(:transparency_log_event, :request_built, status: :failed, last_error: nil)
 
     refute_predicate event, :valid?
     assert_includes event.errors[:last_error], "can't be blank"
@@ -141,30 +178,20 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
     assert_includes event.errors[:rekor_log_index], "must be greater than or equal to 0"
   end
 
+  should "allow zero Rekor log index" do
+    assert_predicate build(:transparency_log_event, :submitted, rekor_log_index: 0), :valid?
+  end
+
   should "encode binary values as base64" do
-    event = build(
-      :transparency_log_event,
-      payload_digest: Digest::SHA256.digest("payload"),
-      signature: "signature",
-      public_key_der: "public key"
-    )
+    event = build(:transparency_log_event, :signed, payload_digest: Digest::SHA256.digest("payload"), signature: "signature", public_key_der: "public key")
 
     assert_equal Base64.strict_encode64(Digest::SHA256.digest("payload")), event.encoded_payload_digest
     assert_equal Base64.strict_encode64("signature"), event.encoded_signature
     assert_equal Base64.strict_encode64("public key"), event.encoded_public_key_der
   end
 
-  should "return stable subject and actor labels" do
-    event = build(
-      :transparency_log_event,
-      resource_type: "rubygem",
-      resource_name: "rack",
-      subject_type: "rubygem_version",
-      subject_name: "rack-3.0.0",
-      actor_type: "user",
-      actor_id: "123",
-      actor_handle: "gem-author"
-    )
+  should "return stable resource subject and actor labels" do
+    event = build(:transparency_log_event, resource_type: "rubygem", resource_name: "rack", subject_type: "rubygem_version", subject_name: "rack-3.0.0", actor_type: "user", actor_id: "123", actor_handle: "gem-author")
 
     assert_equal "rubygem:rack", event.resource
     assert_equal "rubygem_version:rack-3.0.0", event.subject
@@ -178,44 +205,70 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
   end
 
   should "find events by payload digest" do
-    event = create(:transparency_log_event)
+    event = create(:transparency_log_event, :request_built)
 
     assert_equal event, TransparencyLogEvent.find_by_digest(event.payload_digest_algorithm, event.payload_digest)
   end
 
+  should "return nil when payload digest is not found" do
+    assert_nil TransparencyLogEvent.find_by_digest("SHA-256", "missing")
+  end
+
   should "scope events by resource" do
-    matching = create(:transparency_log_event, resource_name: "rack")
-    create(:transparency_log_event, resource_name: "rails")
+    matching = create(:transparency_log_event, :request_built, resource_name: "rack")
+    create(:transparency_log_event, :request_built, resource_name: "rails")
 
     assert_equal [matching], TransparencyLogEvent.for_resource("rubygem", "rack")
   end
 
   should "scope events by event type" do
-    matching = create(:transparency_log_event, event_type: "rubygem.owner.added")
-    create(:transparency_log_event, event_type: "rubygem.owner.removed")
+    matching = create(:transparency_log_event, :request_built, event_type: "rubygem.owner.added")
+    create(:transparency_log_event, :request_built, event_type: "rubygem.owner.removed")
 
     assert_equal [matching], TransparencyLogEvent.of_event_type("rubygem.owner.added")
   end
 
   should "scope events by actor id and handle" do
-    matching = create(:transparency_log_event, actor_id: "123", actor_handle: "gem-author")
-    create(:transparency_log_event, actor_id: "456", actor_handle: "other-author")
+    matching = create(:transparency_log_event, :request_built, actor_id: "123", actor_handle: "gem-author")
+    create(:transparency_log_event, :request_built, actor_id: "456", actor_handle: "other-author")
 
     assert_equal [matching], TransparencyLogEvent.by_actor(type: "user", id: "123")
     assert_equal [matching], TransparencyLogEvent.by_actor(type: "user", handle: "gem-author")
     assert_equal [matching], TransparencyLogEvent.by_actor(type: "user", id: "123", handle: "gem-author")
   end
 
+  should "scope events by actor type only" do
+    matching = create(:transparency_log_event, :request_built, actor_type: "user")
+    create(:transparency_log_event, :request_built, actor_type: "api_key")
+
+    assert_equal [matching], TransparencyLogEvent.by_actor(type: "user")
+  end
+
   should "scope events by creation range" do
-    inside = create(:transparency_log_event, created_at: 2.days.ago)
-    create(:transparency_log_event, created_at: 4.days.ago)
+    inside = create(:transparency_log_event, :request_built, created_at: 2.days.ago)
+    create(:transparency_log_event, :request_built, created_at: 4.days.ago)
 
     assert_equal [inside], TransparencyLogEvent.created_between(3.days.ago, 1.day.ago)
   end
 
+  should "return pending submissions in creation order" do
+    newer = create(:transparency_log_event, :request_built, created_at: 1.minute.ago)
+    older = create(:transparency_log_event, :request_built, created_at: 2.minutes.ago)
+    create(:transparency_log_event, :submitted)
+
+    assert_equal [older, newer], TransparencyLogEvent.pending_submission.to_a
+  end
+
+  should "scope events submitted to Rekor" do
+    submitted = create(:transparency_log_event, :submitted)
+    create(:transparency_log_event, :request_built)
+
+    assert_equal [submitted], TransparencyLogEvent.submitted_to_rekor
+  end
+
   should "report pending submission health" do
-    oldest = create(:transparency_log_event, created_at: 4.minutes.ago)
-    create(:transparency_log_event, created_at: 2.minutes.ago)
+    oldest = create(:transparency_log_event, :request_built, created_at: 4.minutes.ago)
+    create(:transparency_log_event, :request_built, created_at: 2.minutes.ago)
     submitted = create(:transparency_log_event, :submitted, rekor_submitted_at: 1.minute.ago)
     health = TransparencyLogEvent.submission_health
 
@@ -226,10 +279,16 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
   end
 
   should "scope stale pending submissions" do
-    stale = create(:transparency_log_event, created_at: 31.minutes.ago)
-    create(:transparency_log_event, created_at: 5.minutes.ago)
+    stale = create(:transparency_log_event, :request_built, created_at: 31.minutes.ago)
+    create(:transparency_log_event, :request_built, created_at: 5.minutes.ago)
 
     assert_equal [stale], TransparencyLogEvent.stale_pending_submission(older_than: 30.minutes.ago)
+  end
+
+  should "not include submitted events in stale pending submissions" do
+    create(:transparency_log_event, :submitted, created_at: 1.hour.ago)
+
+    assert_empty TransparencyLogEvent.stale_pending_submission(older_than: 30.minutes.ago)
   end
 
   should "return no submission lag without pending events" do
@@ -239,75 +298,77 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
   end
 
   should "prevent event content from changing after creation" do
-    event = create(:transparency_log_event)
+    event = create(:transparency_log_event, :request_built)
     event.resource_name = "rails"
 
     refute event.save
     assert_includes event.errors[:resource_name], "cannot be changed after creation"
   end
 
+  should "prevent signed content from changing after creation" do
+    event = create(:transparency_log_event, :request_built)
+    event.signature = "different-signature"
+
+    refute event.save
+    assert_includes event.errors[:signature], "cannot be changed after creation"
+  end
+
+  should "prevent Rekor request body from changing after creation" do
+    event = create(:transparency_log_event, :request_built)
+    event.rekor_request_body = { "different" => "request" }
+
+    refute event.save
+    assert_includes event.errors[:rekor_request_body], "cannot be changed after creation"
+  end
+
   should "allow operational submission fields to change after creation" do
-    event = create(:transparency_log_event)
+    event = create(:transparency_log_event, :request_built)
 
     assert event.record_failure(RuntimeError.new("Rekor unavailable"))
-
     assert_predicate event, :failed?
     assert_equal "Rekor unavailable", event.last_error
   end
 
   should "record a successful Rekor submission" do
-    event = create(:transparency_log_event, last_error: "previous error")
+    event = create(:transparency_log_event, :request_built, last_error: "previous error")
     submitted_at = Time.zone.local(2026, 6, 16, 12, 0, 0)
-    response_body = { "uuid" => "rekor-entry-uuid" }
-    inclusion_proof = { "treeSize" => 2, "hashes" => ["abc"] }
-    rekor_response = TransparencyLogEvent::RekorResponse.new(
-      response_body:,
-      origin: "rekor.sigstore.dev",
-      kind: "hashedrekord",
-      version: "0.0.1",
-      index: 123,
-      checkpoint: "checkpoint",
-      inclusion_proof:
-    )
+    response = rekor_response(response_body: { "uuid" => "rekor-entry-uuid" }, inclusion_proof: { "treeSize" => 2, "hashes" => ["abc"] })
 
-    travel_to(submitted_at) { assert event.record_submission(rekor_response) }
+    travel_to(submitted_at) { assert event.record_submission(response) }
     event.reload
 
     assert_predicate event, :submitted?
-    assert_equal response_body, event.rekor_response_body
+    assert_equal({ "uuid" => "rekor-entry-uuid" }, event.rekor_response_body)
     assert_equal "rekor.sigstore.dev", event.rekor_log_origin
     assert_equal "hashedrekord", event.rekor_entry_kind
     assert_equal "0.0.1", event.rekor_entry_version
     assert_equal 123, event.rekor_log_index
     assert_equal "checkpoint", event.rekor_checkpoint
-    assert_equal inclusion_proof, event.rekor_inclusion_proof
+    assert_equal({ "treeSize" => 2, "hashes" => ["abc"] }, event.rekor_inclusion_proof)
     assert_equal submitted_at, event.rekor_submitted_at
     assert_nil event.last_error
   end
 
   should "not record a submission for a failed event" do
     event = create(:transparency_log_event, :failed)
-    rekor_response = TransparencyLogEvent::RekorResponse.new(
-      response_body: { "uuid" => "rekor-entry-uuid" },
-      origin: "rekor.sigstore.dev",
-      kind: "hashedrekord",
-      version: "0.0.1",
-      index: 123,
-      checkpoint: "checkpoint",
-      inclusion_proof: {}
-    )
 
     refute event.record_submission(rekor_response)
     assert_includes event.errors[:status], "cannot transition from failed to submitted"
 
     event.reload
-
     assert_predicate event, :failed?
     assert_nil event.rekor_log_index
   end
 
+  should "not record a submission twice" do
+    event = create(:transparency_log_event, :submitted)
+
+    refute event.record_submission(rekor_response)
+    assert_includes event.errors[:status], "cannot transition from submitted to submitted"
+  end
+
   should "record a submission from a normalized Rekor response" do
-    event = create(:transparency_log_event)
+    event = create(:transparency_log_event, :request_built)
     response_body = {
       "uuid" => "rekor-entry-uuid",
       "logIndex" => 123,
@@ -318,9 +379,9 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
         "checkpoint" => { "envelope" => "checkpoint envelope" }
       }
     }
-    rekor_response = TransparencyLogEvent::RekorResponse.new(
+
+    response = rekor_response(
       response_body:,
-      origin: "rekor.sigstore.dev",
       kind: response_body.dig("kindVersion", "kind"),
       version: response_body.dig("kindVersion", "version"),
       index: response_body["logIndex"],
@@ -328,7 +389,7 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
       inclusion_proof: response_body["inclusionProof"]
     )
 
-    assert event.record_submission(rekor_response)
+    assert event.record_submission(response)
     event.reload
 
     assert_predicate event, :submitted?
@@ -342,10 +403,9 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
   end
 
   should "record a failed submission attempt" do
-    event = create(:transparency_log_event)
+    event = create(:transparency_log_event, :request_built)
 
     assert event.record_failure(RuntimeError.new("Rekor unavailable"))
-
     assert_predicate event, :failed?
     assert_equal 1, event.attempt_count
     assert_equal "Rekor unavailable", event.last_error
@@ -355,18 +415,24 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
     event = create(:transparency_log_event, :submitted, attempt_count: 2)
 
     refute event.record_failure(RuntimeError.new("Rekor unavailable"))
-
     assert_includes event.errors[:status], "cannot transition from submitted to failed"
     assert_predicate event, :submitted?
     assert_equal 2, event.attempt_count
   end
 
+  should "not record failure twice" do
+    event = create(:transparency_log_event, :failed, attempt_count: 2)
+
+    refute event.record_failure(RuntimeError.new("Another failure"))
+    assert_includes event.errors[:status], "cannot transition from failed to failed"
+    assert_equal 2, event.attempt_count
+  end
+
   should "increment failed attempts from the locked database value" do
-    event = create(:transparency_log_event, attempt_count: 2)
+    event = create(:transparency_log_event, :request_built, attempt_count: 2)
     event.update_column(:attempt_count, 5)
 
     assert event.record_failure(RuntimeError.new("Rekor unavailable"))
-
     assert_equal 6, event.attempt_count
   end
 
@@ -374,6 +440,16 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
     event = create(:transparency_log_event, :failed, attempt_count: 3)
 
     assert event.retry_submission
+    assert_predicate event, :pending?
+    assert_equal 3, event.attempt_count
+    assert_nil event.last_error
+  end
+
+  should "persist retry state" do
+    event = create(:transparency_log_event, :failed, attempt_count: 3)
+
+    assert event.retry_submission
+    event.reload
 
     assert_predicate event, :pending?
     assert_equal 3, event.attempt_count
@@ -381,11 +457,25 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
   end
 
   should "not retry an event that has not failed" do
-    event = create(:transparency_log_event)
+    event = create(:transparency_log_event, :request_built)
 
     refute event.retry_submission
-
     assert_includes event.errors[:status], "cannot transition from pending to pending"
     assert_predicate event, :pending?
+  end
+
+  should "not retry a submitted event" do
+    event = create(:transparency_log_event, :submitted)
+
+    refute event.retry_submission
+    assert_includes event.errors[:status], "cannot transition from submitted to pending"
+    assert_predicate event, :submitted?
+  end
+
+  private
+
+  def rekor_response(response_body: { "uuid" => "rekor-entry-uuid" }, origin: "rekor.sigstore.dev", kind: "hashedrekord",
+    version: "0.0.1", index: 123, checkpoint: "checkpoint", inclusion_proof: {})
+    TransparencyLogEvent::RekorResponse.new(response_body:, origin:, kind:, version:, index:, checkpoint:, inclusion_proof:)
   end
 end

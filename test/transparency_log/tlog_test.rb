@@ -7,7 +7,8 @@ class TransparencyLog::TlogTest < ActiveSupport::TestCase
 
   setup do
     @tlog = TransparencyLog::Tlog.new
-    @transparency_log_event = create(:transparency_log_event)
+    @transparency_log_event = create(:transparency_log_event, :request_built)
+    @response = JSON.parse(RESPONSE)
   end
 
   test "creates entry and posts it to transparency log" do
@@ -53,8 +54,9 @@ class TransparencyLog::TlogTest < ActiveSupport::TestCase
     assert_equal "hashedrekord", @transparency_log_event.rekor_entry_kind
     assert_equal "0.0.2", @transparency_log_event.rekor_entry_version
     assert_equal 10, @transparency_log_event.rekor_log_index
-    assert_equal JSON.parse(RESPONSE).dig("inclusionProof", "checkpoint", "envelope"), @transparency_log_event.rekor_checkpoint
-    assert_equal JSON.parse(RESPONSE)["inclusionProof"], @transparency_log_event.rekor_inclusion_proof
+    assert_equal @response.dig("inclusionProof", "checkpoint", "envelope"),
+      @transparency_log_event.rekor_checkpoint
+    assert_equal @response["inclusionProof"], @transparency_log_event.rekor_inclusion_proof
   end
 
   test "persists the complete raw response body" do
@@ -64,6 +66,6 @@ class TransparencyLog::TlogTest < ActiveSupport::TestCase
     @tlog.submit_entry(@transparency_log_event)
     @transparency_log_event.reload
 
-    assert_equal JSON.parse(RESPONSE), @transparency_log_event.rekor_response_body
+    assert_equal @response, @transparency_log_event.rekor_response_body
   end
 end

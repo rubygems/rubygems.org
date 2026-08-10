@@ -16,11 +16,17 @@ class ProcessTransparencyLogEventJobTest < ActiveJob::TestCase
 
       assert_predicate @event.reload, :submitted?
     end
+
+    should "not enqueue a retry" do
+      TransparencyLog::Tlog.any_instance.expects(:submit_entry).never
+
+      assert_no_enqueued_jobs { safely_perform(@job) }
+    end
   end
 
   context "when Rekor is unreachable" do
     setup do
-      @event = create(:transparency_log_event, status: :pending)
+      @event = create(:transparency_log_event, :request_built)
       @job = ProcessTransparencyLogEventJob.new(@event)
       TransparencyLog::Tlog.any_instance.stubs(:submit_entry).raises(TransparencyLog::Tlog::Error, "timeout")
     end
@@ -48,11 +54,21 @@ class ProcessTransparencyLogEventJobTest < ActiveJob::TestCase
         safely_perform(@job)
       end
     end
+
+    should "preserve the failed state before retrying" do
+      safely_perform(@job)
+
+      @event.reload
+
+      assert_predicate @event, :failed?
+      assert_equal 1, @event.attempt_count
+      assert_equal "timeout", @event.last_error
+    end
   end
 
   context "when Rekor rejects the entry as malformed" do
     setup do
-      @event = create(:transparency_log_event, status: :pending)
+      @event = create(:transparency_log_event, :request_built)
       @job = ProcessTransparencyLogEventJob.new(@event)
       TransparencyLog::Tlog.any_instance.stubs(:submit_entry)
         .raises(TransparencyLog::Tlog::FormatError, "Malformed entry (400): Bad Request")
@@ -85,7 +101,7 @@ class ProcessTransparencyLogEventJobTest < ActiveJob::TestCase
 
   context "when Rekor accepts the submission" do
     setup do
-      @event = create(:transparency_log_event, status: :pending)
+      @event = create(:transparency_log_event, :request_built)
       @job = ProcessTransparencyLogEventJob.new(@event)
     end
 
@@ -94,11 +110,17 @@ class ProcessTransparencyLogEventJobTest < ActiveJob::TestCase
 
       @job.perform_now
     end
+
+    should "not enqueue a retry" do
+      TransparencyLog::Tlog.any_instance.stubs(:submit_entry)
+
+      assert_no_enqueued_jobs { @job.perform_now }
+    end
   end
 
   context "when an unexpected error is raised" do
     setup do
-      @event = create(:transparency_log_event, status: :pending)
+      @event = create(:transparency_log_event, :request_built)
       @job = ProcessTransparencyLogEventJob.new(@event)
       TransparencyLog::Tlog.any_instance.stubs(:submit_entry).raises(StandardError, "unexpected")
     end
@@ -113,6 +135,12 @@ class ProcessTransparencyLogEventJobTest < ActiveJob::TestCase
       safely_perform(@job)
 
       assert_nil @event.reload.last_error
+    end
+
+    should "not increment attempt count" do
+      safely_perform(@job)
+
+      assert_equal 0, @event.reload.attempt_count
     end
   end
 

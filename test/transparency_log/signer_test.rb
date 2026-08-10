@@ -4,7 +4,7 @@ require "test_helper"
 
 class TransparencyLog::SignerTest < ActiveSupport::TestCase
   setup do
-    @transparency_log_event = create(:transparency_log_event)
+    @transparency_log_event = build(:transparency_log_event, :canonicalized)
     @signer = TransparencyLog::Signer.new
     @private_key = OpenSSL::PKey.read(
       TransparencyLog.configuration.private_key

@@ -4,7 +4,7 @@ require "test_helper"
 
 class TransparencyLog::ClientTest < ActiveSupport::TestCase
   setup do
-    @transparency_log_event = create(:transparency_log_event)
+    @transparency_log_event = build(:transparency_log_event, :signed)
     @entry = TransparencyLog::EntryBuilder.new.build(@transparency_log_event)
     @client = TransparencyLog::Client.new
   end
