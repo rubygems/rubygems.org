@@ -9,13 +9,12 @@ class Api::V1::RubygemsController < Api::BaseController
   before_action :find_rubygem, only: %i[show reverse_dependencies]
   before_action :cors_preflight_check, only: :show
   before_action :verify_with_otp, only: %i[create]
-  after_action :cors_set_access_control_headers, only: :show
+  after_action  :cors_set_access_control_headers, only: :show
 
   def index
     authorize Rubygem, :index?
     @rubygems = @api_key.user.rubygems.with_versions
       .preload(:linkset, :gem_download, most_recent_version: { dependencies: :rubygem, gem_download: nil })
-
     respond_to do |format|
       format.json { render json: @rubygems }
       format.yaml { render yaml: @rubygems }
@@ -45,10 +44,8 @@ class Api::V1::RubygemsController < Api::BaseController
       gem_body = params.expect(:gem)
       return render_bad_request("gem is not a file upload") unless gem_body.is_a?(ActionDispatch::Http::UploadedFile)
       return render_bad_request("missing attestations") unless (attestations = params[:attestations]).is_a?(String)
-
       attestations = ActiveSupport::JSON.decode(attestations)
       return render_bad_request("attestations must be an array, is #{attestations.class}") unless attestations.is_a?(Array)
-
       attestations = attestations&.as_json
     else
       gem_body = request.body

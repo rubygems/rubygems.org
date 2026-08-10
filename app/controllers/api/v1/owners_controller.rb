@@ -35,11 +35,10 @@ class Api::V1::OwnersController < Api::BaseController
   def update
     owner = User.find_by_name(email_param)
     ownership = @rubygem.ownerships.find_by(user: owner) if owner
-
     if ownership
       authorize(ownership)
     else
-      authorize(@rubygem, :update_owner?)
+      authorize(@rubygem, :update_owner?) # don't leak presence of an email unless authorized
       return render_not_found
     end
 
