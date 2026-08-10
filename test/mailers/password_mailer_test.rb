@@ -3,6 +3,8 @@
 require "test_helper"
 
 class PasswordMailerTest < ActionMailer::TestCase
+  include Rails.application.routes.url_helpers
+
   test "change password with handle" do
     user = create(:user)
     user.forgot_password!
@@ -65,5 +67,23 @@ class PasswordMailerTest < ActionMailer::TestCase
     assert_match user.email, email.html_part.body.to_s
     assert_match "data breach", email.html_part.body.to_s
     assert_match "data breach", email.text_part.body.to_s
+  end
+
+  test "change password renders the change password link as a button" do
+    user = create(:user)
+    user.forgot_password!
+    user.save!
+    PasswordMailer.change_password(user).deliver_now
+
+    assert_cta_button edit_password_url(token: user.confirmation_token, host: Gemcutter::HOST), "CHANGE PASSWORD"
+  end
+
+  test "compromised password reset renders the change password link as a button" do
+    user = create(:user)
+    user.forgot_password!
+    user.save!
+    PasswordMailer.compromised_password_reset(user).deliver_now
+
+    assert_cta_button edit_password_url(token: user.confirmation_token, reason: "compromised", host: Gemcutter::HOST), "CHANGE PASSWORD"
   end
 end
