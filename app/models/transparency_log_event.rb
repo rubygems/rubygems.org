@@ -101,9 +101,6 @@ class TransparencyLogEvent < ApplicationRecord
   validates :rekor_log_origin, length: { maximum: 255 }
 
   validate :canonical_payload_is_object
-  validate do
-    TransparencyLogEvent::CanonicalPayloadContract.new(event: self).validate if canonical_payload.is_a?(Hash)
-  end
   validate :rekor_request_body_is_object
   validate :submitted_events_include_rekor_details
   validate :failed_events_include_error

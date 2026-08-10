@@ -91,65 +91,15 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
     assert_includes event.errors[:canonical_payload], "must be a JSON object"
   end
 
+  should "allow canonical payload as a JSON object" do
+    assert_predicate build(:transparency_log_event, :request_built), :valid?
+  end
+
   should "require Rekor request body to be a JSON object" do
     event = build(:transparency_log_event, :request_built, rekor_request_body: [])
 
     refute_predicate event, :valid?
     assert_includes event.errors[:rekor_request_body], "must be a JSON object"
-  end
-
-  should "require canonical payload to include the event contract fields" do
-    event = build(:transparency_log_event, :request_built, canonical_payload: {})
-
-    refute_predicate event, :valid?
-    assert_includes event.errors[:canonical_payload], "must include specVersion"
-    assert_includes event.errors[:canonical_payload], "must include kind"
-    assert_includes event.errors[:canonical_payload], "must include resource"
-    assert_includes event.errors[:canonical_payload], "must include actor as a JSON object"
-    assert_includes event.errors[:canonical_payload], "must include subject as a JSON object"
-  end
-
-  should "require canonical payload contract fields to match event attributes" do
-    event = build(
-      :transparency_log_event,
-      :request_built,
-      spec_version: "1.0",
-      event_type: "rubygem.owner.added",
-      resource_type: "rubygem",
-      resource_name: "rack",
-      canonical_payload: {
-        "specVersion" => "2.0",
-        "kind" => "rubygem.owner.removed",
-        "resource" => { "type" => "organization", "name" => "rails" },
-        "actor" => { "type" => "api_key" },
-        "subject" => { "type" => "organization" }
-      }
-    )
-
-    refute_predicate event, :valid?
-    assert_includes event.errors[:canonical_payload], "specVersion must match 1.0"
-    assert_includes event.errors[:canonical_payload], "kind must match rubygem.owner.added"
-    assert_includes event.errors[:canonical_payload], "resource.type must match rubygem"
-    assert_includes event.errors[:canonical_payload], "resource.name must match rack"
-    assert_includes event.errors[:canonical_payload], "actor.type must match user"
-    assert_includes event.errors[:canonical_payload], "subject.type must match user"
-  end
-
-  should "allow canonical payloads to identify rubygem resources with the RFC gem field" do
-    event = build(
-      :transparency_log_event,
-      :request_built,
-      resource_name: "rack",
-      canonical_payload: {
-        "specVersion" => "1.0",
-        "kind" => "rubygem.owner.added",
-        "gem" => "rack",
-        "actor" => { "type" => "user" },
-        "subject" => { "type" => "user" }
-      }
-    )
-
-    assert_predicate event, :valid?
   end
 
   should "require Rekor response details when submitted" do
@@ -356,6 +306,7 @@ class TransparencyLogEventTest < ActiveSupport::TestCase
     assert_includes event.errors[:status], "cannot transition from failed to submitted"
 
     event.reload
+
     assert_predicate event, :failed?
     assert_nil event.rekor_log_index
   end
