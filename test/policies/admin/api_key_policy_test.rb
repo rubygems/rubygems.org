@@ -46,4 +46,9 @@ class Admin::ApiKeyPolicyTest < AdminPolicyTestCase
     refute_authorizes @admin, @api_key, :avo_destroy?
     refute_authorizes @non_admin, @api_key, :avo_destroy?
   end
+
+  def test_act_on
+    assert_authorizes @admin, @api_key, :act_on?
+    refute_authorizes @non_admin, @api_key, :act_on?
+  end
 end
