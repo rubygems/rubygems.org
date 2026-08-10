@@ -48,7 +48,7 @@ class InvitationTest < ApplicationSystemTestCase
 
     assert invitation.has_text? "#{@user.handle} has invited you to join the #{@organization.handle} organization on rubygems.org."
 
-    invitation_link = invitation.find(:link, "Accept invitation")[:href]
+    invitation_link = invitation.find(:link, "ACCEPT INVITATION")[:href]
     invitation_path = URI.parse(invitation_link).request_uri
 
     visit invitation_path
