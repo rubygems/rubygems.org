@@ -168,7 +168,7 @@ GEM
     benchmark-ips (2.15.1)
     bigdecimal (4.1.2)
     bindata (2.5.1)
-    blazer (3.5.0)
+    blazer (3.5.1)
       activerecord (>= 7.2)
       csv
       railties (>= 7.2)
@@ -352,14 +352,14 @@ GEM
       logger
     heapy (0.2.0)
       thor
-    herb (0.10.2)
-    herb (0.10.2-aarch64-linux-gnu)
-    herb (0.10.2-arm-linux-gnu)
-    herb (0.10.2-arm-linux-musl)
-    herb (0.10.2-arm64-darwin)
-    herb (0.10.2-x86_64-darwin)
-    herb (0.10.2-x86_64-linux-gnu)
-    herb (0.10.2-x86_64-linux-musl)
+    herb (0.10.3)
+    herb (0.10.3-aarch64-linux-gnu)
+    herb (0.10.3-arm-linux-gnu)
+    herb (0.10.3-arm-linux-musl)
+    herb (0.10.3-arm64-darwin)
+    herb (0.10.3-x86_64-darwin)
+    herb (0.10.3-x86_64-linux-gnu)
+    herb (0.10.3-x86_64-linux-musl)
     honeybadger (6.9.1)
       logger
       ostruct
@@ -920,7 +920,7 @@ DEPENDENCIES
   aws-sdk-s3 (~> 1.228)
   aws-sdk-sqs (~> 1.117)
   bcrypt (~> 3.1)
-  blazer (~> 3.5.0)
+  blazer (~> 3.5.1)
   bootsnap (~> 1.24)
   brakeman (~> 8.0)
   browser (~> 6.2)
@@ -1077,7 +1077,7 @@ CHECKSUMS
   benchmark-ips (2.15.1) sha256=07a1a9f3c6105ecaf68c174fc3fbcddd71a0e9ada6236ae03093a0dcfd812d59
   bigdecimal (4.1.2) sha256=53d217666027eab4280346fba98e7d5b66baaae1b9c3c1c0ffe89d48188a3fbd
   bindata (2.5.1) sha256=53186a1ec2da943d4cb413583d680644eb810aacbf8902497aac8f191fad9e58
-  blazer (3.5.0) sha256=734b883b843fbd6d5c9db7a09ec267a068f504908f2d01b94fce151bd00ad4e2
+  blazer (3.5.1) sha256=50ac3ed5d22e9368cd4b7d4971b302dfb7dec5570f192cf70df420d7cd283fbe
   bootsnap (1.24.6) sha256=c60bab88c70332290f0a2636a288f675299eb4f804a02a3c085b42eca9da164a
   brakeman (8.0.5) sha256=03735f9690d3fd4b32d66aacbf0a6d15a84266bdd06b32c05c8ecc8f6021d2be
   browser (6.2.0) sha256=281d5295788825c9396427c292c2d2be0a5c91875c93c390fde6e5d61a5ace2d
@@ -1151,14 +1151,14 @@ CHECKSUMS
   hashdiff (1.2.1) sha256=9c079dbc513dfc8833ab59c0c2d8f230fa28499cc5efb4b8dd276cf931457cd1
   hashie (5.1.0) sha256=c266471896f323c446ea8207f8ffac985d2718df0a0ba98651a3057096ca3870
   heapy (0.2.0) sha256=74141e845d61ffc7c1e8bf8b127c8cf94544ec7a1181aec613288682543585ea
-  herb (0.10.2) sha256=77c3d93b2a2e9890df345bee30cb1922231dbd4a1740021d15fbba4dafb3b83f
-  herb (0.10.2-aarch64-linux-gnu) sha256=7888e560a9eaede00db65475981858b0d7be287ea72686360a3a11a86d6a8011
-  herb (0.10.2-arm-linux-gnu) sha256=d716692557de6d0441e9b1053f1a953b7025d7555de0e9fd2458e7f2382f0211
-  herb (0.10.2-arm-linux-musl) sha256=09de8e03d686ee32585fafde618ae25f62e5556c1afe3afdb5b55cb2c9f6a151
-  herb (0.10.2-arm64-darwin) sha256=49c89173478c83e3de241fc7d2c52892d1b788fd26076ba25dd2399656d7f561
-  herb (0.10.2-x86_64-darwin) sha256=b79c538c77506e21abeae80fca3eb14a700a35aae8e99a326ea5948a95fc821e
-  herb (0.10.2-x86_64-linux-gnu) sha256=7042322268a83c62bed32a5be4b64e0f4716c88d45a6ac372e839d646711a863
-  herb (0.10.2-x86_64-linux-musl) sha256=c91182c8b75431fe6a77c7a776f8be7db4b9a245ee95821f943e8d3725242664
+  herb (0.10.3) sha256=da76e8bfbb302586ee51a4fb608624f48218fbfea198a9493540b42f7654024b
+  herb (0.10.3-aarch64-linux-gnu) sha256=1eaea87e6577557492a1b0ddaae989fba8a8ddd382e888ee5f939ce6ded06eb8
+  herb (0.10.3-arm-linux-gnu) sha256=d5f007b665a705b5566f1068b54e1600d5ffe6cb0b7d274e27dd7ed5918ca54e
+  herb (0.10.3-arm-linux-musl) sha256=09a0979f64ee3aff0b25a345c2cecd15992a0532295fd00249d73f13a3e313b1
+  herb (0.10.3-arm64-darwin) sha256=1a5bef57d925d775496328e7a01a9c1260e1d83bed8038b60a4f8c81b12c15a3
+  herb (0.10.3-x86_64-darwin) sha256=e02e43b3bb1977f4fd08f3330b5f2aa3292ca2d572a8bd59688eca8b79725f46
+  herb (0.10.3-x86_64-linux-gnu) sha256=cbb49b66f2bdc92d17109d1ea9452e88ba6a8ae52e9ddd5279deff83dcc4c66d
+  herb (0.10.3-x86_64-linux-musl) sha256=c84482d6b57f13c2e1a0fa029649efb0e5fdc876a3fd564bae09cf42bd4d5ae1
   honeybadger (6.9.1) sha256=3e79543ab171f810306bd152b3f470ce2b905b1a27f766f3138568949078cf68
   htmlbeautifier (1.4.3) sha256=b43d08f7e2aa6ae1b5a6f0607b4ed8954c8d4a8e85fd2336f975dda1e4db385b
   htmlentities (4.3.4) sha256=125a73c6c9f2d1b62100b7c3c401e3624441b663762afa7fe428476435a673da
