@@ -159,6 +159,17 @@ class VersionTest < ActiveSupport::TestCase
       refute_predicate @dup_version, :valid?
     end
 
+    should "record the Ruby ABI on the pushed version event" do
+      version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux", gem_platform: "x86_64-linux",
+                       required_ruby_version: "~> 3.4.0", ruby_abi: "3.4",
+                       sha256: Digest::SHA2.base64digest("abi-event-1.0.0"))
+
+      pushed = @rubygem.events.where(tag: Events::RubygemEvent::VERSION_PUSHED).sole
+
+      assert_equal "3.4", pushed.additional.ruby_abi
+      assert_equal version.sha256_hex, pushed.additional.sha256
+    end
+
     should "not allow a ruby_abi that is not a Ruby minor version" do
       version = build(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux", gem_platform: "x86_64-linux",
                       required_ruby_version: "~> 3.4.0", ruby_abi: "banana",
