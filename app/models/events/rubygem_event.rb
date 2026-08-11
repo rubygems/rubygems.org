@@ -19,6 +19,7 @@ class Events::RubygemEvent < ApplicationRecord
   VERSION_YANKED = define_event "rubygem:version:yanked" do
     attribute :number, :string
     attribute :platform, :string
+    attribute :ruby_abi, :string
 
     attribute :yanked_by, :string
 
@@ -30,6 +31,7 @@ class Events::RubygemEvent < ApplicationRecord
   VERSION_YANK_FORBIDDEN = define_event "rubygem:version:yank_forbidden" do
     attribute :number, :string
     attribute :platform, :string
+    attribute :ruby_abi, :string
 
     attribute :yanked_by, :string
 
@@ -41,6 +43,7 @@ class Events::RubygemEvent < ApplicationRecord
   VERSION_UNYANKED = define_event "rubygem:version:unyanked" do
     attribute :number, :string
     attribute :platform, :string
+    attribute :ruby_abi, :string
 
     attribute :version_gid, :global_id
   end
