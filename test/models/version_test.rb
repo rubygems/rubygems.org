@@ -1394,6 +1394,14 @@ class VersionTest < ActiveSupport::TestCase
         number: "0.0.2.pre",
         platform: "java",
         prerelease: true)
+      @content_addressable_version = create(:version,
+        rubygem: @second_rubygem,
+        number: "0.0.2",
+        platform: "x86_64-linux-musl",
+        gem_platform: "x86_64-linux-musl",
+        required_ruby_version: "~> 3.4.0",
+        ruby_abi: "3.4",
+        sha256: Digest::SHA2.base64digest("second-0.0.2-x86_64-linux-musl"))
     end
 
     should "select only name, version, and platform for all gems" do
