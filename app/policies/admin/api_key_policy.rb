@@ -9,6 +9,8 @@ class Admin::ApiKeyPolicy < Admin::ApplicationPolicy
 
   has_association :api_key_rubygem_scope
   has_association :ownership
+  has_association :api_key_organization_scope
+  has_association :membership
   has_association :oidc_id_token
 
   def avo_show?
