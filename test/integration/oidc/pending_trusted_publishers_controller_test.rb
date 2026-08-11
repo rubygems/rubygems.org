@@ -25,6 +25,17 @@ class OIDC::PendingTrustedPublishersControllerTest < ActionDispatch::Integration
       refute page.has_content?(@expired_trusted_publisher.rubygem_name)
     end
 
+    should "show organization name on index when pending publisher targets an organization" do
+      organization = create(:organization, owners: [@user])
+      create(:oidc_pending_trusted_publisher, user: @user, organization: organization, rubygem_name: "org-scoped-gem")
+
+      get profile_oidc_pending_trusted_publishers_url
+
+      assert_response :success
+      assert page.has_content?("org-scoped-gem")
+      assert page.has_content?(organization.name)
+    end
+
     should "get new" do
       get new_profile_oidc_pending_trusted_publisher_url
 
@@ -47,6 +58,27 @@ class OIDC::PendingTrustedPublishersControllerTest < ActionDispatch::Integration
       end
 
       assert_redirected_to profile_oidc_pending_trusted_publishers_url
+    end
+
+    should "create trusted publisher for an organization" do
+      organization = create(:organization, owners: [@user])
+      stub_request(:get, "https://api.github.com/users/example")
+        .to_return(status: 200, body: { id: "54321" }.to_json, headers: { "Content-Type" => "application/json" })
+
+      assert_difference("OIDC::PendingTrustedPublisher.count") do
+        trusted_publisher = build(:oidc_pending_trusted_publisher)
+        post profile_oidc_pending_trusted_publishers_url, params: {
+          oidc_pending_trusted_publisher: {
+            rubygem_name: trusted_publisher.rubygem_name,
+            organization_id: organization.id,
+            trusted_publisher_type: trusted_publisher.trusted_publisher_type,
+            trusted_publisher_attributes: trusted_publisher.trusted_publisher.as_json
+          }
+        }
+      end
+
+      assert_redirected_to profile_oidc_pending_trusted_publishers_url
+      assert_equal organization, OIDC::PendingTrustedPublisher.order(:id).last.organization
     end
 
     should "error creating trusted publisher with type" do

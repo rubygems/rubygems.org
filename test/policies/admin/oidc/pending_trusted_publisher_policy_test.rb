@@ -17,6 +17,10 @@ class Admin::OIDC::PendingTrustedPublisherPolicyTest < AdminPolicyTestCase
     ).to_a
   end
 
+  def test_associations
+    assert_association @admin, @pending_trusted_publisher, :organization, Admin::OrganizationPolicy
+  end
+
   def test_avo_index
     assert_authorizes @admin, OIDC::PendingTrustedPublisher, :avo_index?
 

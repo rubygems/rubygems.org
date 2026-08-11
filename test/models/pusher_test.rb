@@ -469,6 +469,32 @@ class PusherTest < ActiveSupport::TestCase
     end
   end
 
+  context "assigning ownership for unowned gems" do
+    should "reject unexpected owner types" do
+      @cutter.stubs(:rubygem).returns(Rubygem.new(name: "newgem"))
+      @api_key.update_columns(owner_id: 0, owner_type: "stub")
+      @cutter.stubs(:owner).returns(stub("owner", to_gid: nil))
+
+      refute @cutter.send(:assign_ownership_for_unowned_gem)
+      assert_equal "You are not allowed to push this gem.", @cutter.message
+      assert_equal 403, @cutter.code
+    end
+
+    should "reject pending trusted publisher when user cannot add gem to organization" do
+      organization = create(:organization, owners: [@user])
+      pending_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "newgem", user: @user, organization: organization)
+      @user.memberships.find_by!(organization: organization).update!(role: :maintainer)
+
+      api_key = create(:api_key, owner: pending_publisher.trusted_publisher, key: SecureRandom.hex(24), scopes: %i[push_rubygem])
+      cutter = Pusher.new(api_key, @gem)
+      cutter.stubs(:rubygem).returns(Rubygem.new(name: "newgem"))
+
+      refute cutter.send(:reify_pending_trusted_publisher)
+      assert_equal "You are not allowed to push this gem.", cutter.message
+      assert_equal 403, cutter.code
+    end
+  end
+
   context "with attestations" do
     should "not push gem if api key owner is not a trusted publisher" do
       @cutter.stubs(:attestations).returns([{}])

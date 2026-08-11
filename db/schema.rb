@@ -486,11 +486,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_18_000002) do
   create_table "oidc_pending_trusted_publishers", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "expires_at", precision: nil, null: false
+    t.bigint "organization_id"
     t.string "rubygem_name"
     t.bigint "trusted_publisher_id", null: false
     t.string "trusted_publisher_type", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["organization_id"], name: "index_oidc_pending_trusted_publishers_on_organization_id"
     t.index ["trusted_publisher_type", "trusted_publisher_id"], name: "index_oidc_pending_trusted_publishers_on_trusted_publisher"
     t.index ["user_id"], name: "index_oidc_pending_trusted_publishers_on_user_id"
   end
@@ -821,6 +823,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_18_000002) do
   add_foreign_key "oidc_api_key_roles", "users"
   add_foreign_key "oidc_id_tokens", "api_keys"
   add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
+  add_foreign_key "oidc_pending_trusted_publishers", "organizations", on_delete: :nullify
   add_foreign_key "oidc_pending_trusted_publishers", "users"
   add_foreign_key "oidc_rubygem_trusted_publishers", "rubygems"
   add_foreign_key "organization_invites", "users"
