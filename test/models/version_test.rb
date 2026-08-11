@@ -667,6 +667,48 @@ class VersionTest < ActiveSupport::TestCase
       end
     end
 
+    context "#manifest" do
+      setup do
+        @rubygem = create(:rubygem, name: "manifest-iso")
+        @skinny32 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux", gem_platform: "x86_64-linux",
+                            required_ruby_version: "~> 3.2.0", ruby_abi: "3.2",
+                            sha256: Digest::SHA2.base64digest("manifest-iso-1.0.0-x86_64-linux-3.2"))
+        @skinny34 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux", gem_platform: "x86_64-linux",
+                            required_ruby_version: "~> 3.4.0", ruby_abi: "3.4",
+                            sha256: Digest::SHA2.base64digest("manifest-iso-1.0.0-x86_64-linux-3.4"))
+      end
+
+      should "key the manifest by the content address, not the platform" do
+        assert_equal "1.0.0-#{@skinny32.content_address}", @skinny32.manifest.version
+        assert_equal "1.0.0-#{@skinny34.content_address}", @skinny34.manifest.version
+        refute_equal @skinny32.manifest.version, @skinny34.manifest.version
+      end
+
+      should "give each ABI variant an isolated checksums namespace" do
+        @skinny32.manifest.store_checksums("lib/a.rb" => "aaa11111")
+        @skinny34.manifest.store_checksums("lib/a.rb" => "bbb22222")
+
+        assert_equal "aaa11111", @skinny32.manifest.checksums["lib/a.rb"]
+        assert_equal "bbb22222", @skinny34.manifest.checksums["lib/a.rb"]
+      end
+
+      should "yank one ABI variant without removing the other's checksums" do
+        @skinny32.manifest.store_checksums("lib/a.rb" => "aaa11111")
+        @skinny34.manifest.store_checksums("lib/a.rb" => "bbb22222")
+
+        @skinny32.manifest.yank
+
+        assert_empty @skinny32.manifest.checksums
+        assert_equal "bbb22222", @skinny34.manifest.checksums["lib/a.rb"]
+      end
+
+      should "use the platform-keyed manifest for non-content-addressable versions" do
+        fat = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux", gem_platform: "x86_64-linux")
+
+        assert_equal "1.0.0-x86_64-linux", fat.manifest.version
+      end
+    end
+
     should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
       assert_raise ActiveRecord::RecordNotFound do
         @version.rubygem.find_version!(number: "some stupid version 399", platform: @version.platform)

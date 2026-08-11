@@ -462,7 +462,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   alias prerelease prerelease?
 
   def manifest
-    rubygem.version_manifest(number, platformed? ? platform : nil)
+    rubygem.version_manifest(number, platformed? ? platform : nil, content_address: content_address)
   end
 
   def gem_file_name
