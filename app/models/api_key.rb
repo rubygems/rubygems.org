@@ -31,13 +31,16 @@ class ApiKey < ApplicationRecord
   validates :name, presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
   validates :hashed_key, presence: true, uniqueness: true
   validates :expires_at, inclusion: { in: -> { 1.minute.from_now.. } }, allow_nil: true, on: :create
-  validate :rubygem_scope_definition, if: :ownership
+  validate :gem_or_organization_scope_definition, if: -> { ownership || membership }
+  validate :exclusive_gem_and_organization_scope
   validate :known_scopes
   validate :not_soft_deleted?
   validate :not_expired?
 
+  validate :organization_manageable_by_owner, if: :organization_scope_requested?
+
   delegate :rubygem_id, :rubygem, to: :ownership, allow_nil: true
-  delegate :organization_id, to: :membership, allow_nil: true
+  delegate :organization_id, :organization, to: :membership, allow_nil: true
 
   scope :unexpired, -> { where(arel_table[:expires_at].eq(nil).or(arel_table[:expires_at].gt(Time.now.utc))) }
   scope :expired, -> { where(arel_table[:expires_at].lteq(Time.now.utc)) }
@@ -59,11 +62,30 @@ class ApiKey < ApplicationRecord
 
   def scope?(scope, scoped_gem = nil)
     scope_enabled = scopes.include?(scope)
-    # TODO: once all calls to scope checks are changed, this check should
-    # fail if the api_key has a rubygem but scope? is called without a scoped_gem
-    scope_enabled = false if scoped_gem && rubygem_id && rubygem_id != scoped_gem.id
+    scope_enabled = false if scoped_gem && !scoped_to?(scoped_gem)
     return scope_enabled if !scope_enabled || new_record?
     touch :last_accessed_at
+  end
+
+  def scoped_to?(rubygem)
+    if rubygem_id
+      rubygem_id == rubygem.id
+    elsif membership
+      organization_allows_gem?(rubygem)
+    else
+      true
+    end
+  end
+
+  def organization_allows_gem?(rubygem)
+    return false if membership && organization.nil?
+    return true unless organization
+
+    if rubygem.owned_by_organization?
+      rubygem.organization == organization
+    else
+      rubygem.ownerships.none?
+    end
   end
 
   API_SCOPES.each do |scope|
@@ -115,15 +137,41 @@ class ApiKey < ApplicationRecord
     errors.add :rubygem, "must be a gem that you are an owner of"
   end
 
+  def organization_id=(id)
+    @requested_organization_id = id.presence
+
+    if id.blank?
+      self.membership = nil
+      association(:membership).reset
+      return
+    end
+
+    unless user?
+      errors.add :organization, "must be an organization you can manage"
+      return
+    end
+
+    self.membership = user.memberships.confirmed.with_minimum_role(:admin).find_by(organization_id: id)
+  end
+
+  def organization_handle=(handle)
+    self.organization_id = handle.blank? ? nil : Organization.find_by_handle!(handle).id
+  rescue ActiveRecord::RecordNotFound
+    errors.add :organization, "could not be found"
+  end
+
   def rubygem_name=(name)
     self.rubygem_id = name.blank? ? nil : Rubygem.find_by_name!(name).id
   rescue ActiveRecord::RecordNotFound
     errors.add :rubygem, "could not be found"
   end
 
-  def soft_delete!(ownership: nil)
-    update_attribute(:soft_deleted_at, Time.now.utc)
-    update_attribute(:soft_deleted_rubygem_name, ownership.rubygem.name) if ownership
+  def soft_delete!(ownership: nil, membership: nil)
+    update_columns(
+      soft_deleted_at: Time.now.utc,
+      soft_deleted_rubygem_name: ownership&.rubygem&.name,
+      soft_deleted_organization_name: membership&.organization&.name
+    )
   end
 
   def soft_deleted?
@@ -132,6 +180,10 @@ class ApiKey < ApplicationRecord
 
   def soft_deleted_by_ownership?
     soft_deleted? && soft_deleted_rubygem_name.present?
+  end
+
+  def soft_deleted_by_organization?
+    soft_deleted? && soft_deleted_organization_name.present?
   end
 
   def expired?
@@ -159,9 +211,28 @@ class ApiKey < ApplicationRecord
     errors.add :base, "Please enable at least one scope" if scopes.blank?
   end
 
-  def rubygem_scope_definition
+  def gem_or_organization_scope_definition
     return if APPLICABLE_GEM_API_SCOPES.intersect?(scopes)
-    errors.add :rubygem, "scope can only be set for push/yank rubygem, and add/remove owner scopes"
+
+    attribute = membership ? :organization : :rubygem
+    errors.add attribute, "scope can only be set for push/yank rubygem, and add/remove owner scopes"
+  end
+
+  def exclusive_gem_and_organization_scope
+    return unless ownership && membership
+
+    errors.add :base, "An API key cannot be scoped to both a gem and an organization"
+  end
+
+  def organization_scope_requested?
+    @requested_organization_id.present?
+  end
+
+  def organization_manageable_by_owner
+    return unless user?
+    return if user.manageable_organizations.exists?(id: @requested_organization_id)
+
+    errors.add :organization, "must be an organization you can manage"
   end
 
   def known_scopes
@@ -185,7 +256,7 @@ class ApiKey < ApplicationRecord
     case owner
     when User
       user.record_event!(Events::UserEvent::API_KEY_CREATED,
-          name:, scopes:, gem: rubygem&.name, mfa:, api_key_gid: to_gid)
+          name:, scopes:, gem: rubygem&.name, organization: organization&.handle, mfa:, api_key_gid: to_gid)
     end
   end
 

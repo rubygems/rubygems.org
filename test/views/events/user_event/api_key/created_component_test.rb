@@ -8,4 +8,11 @@ class Events::UserEvent::ApiKey::CreatedComponentTest < ComponentTest
 
     assert_text "Name: example\nScopes: push\nMFA: Not required", exact: true, normalize_ws: false
   end
+
+  should "render organization when present" do
+    preview(organization: "rubygems")
+
+    assert_text "Organization: rubygems"
+    assert_link "rubygems", href: "/organizations/rubygems"
+  end
 end

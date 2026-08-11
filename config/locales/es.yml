@@ -182,6 +182,8 @@ es:
       rubygem_scope: Ámbito de aplicación
       rubygem_scope_info: Este alcance restringe los comandos de añadir/eliminar gemas
         y añadir/eliminar propietarios a una gema específica.
+      organization_scope:
+      organization_scope_info:
       multifactor_auth: Autenticación multifactor
       enable_mfa: Activar AMF
       expiration:
@@ -234,8 +236,11 @@ es:
         y crea una nueva.
       expired_key:
     all_gems: Todas las gemas
+    no_organization:
+    unavailable_organization:
     gem_ownership_removed: Se ha eliminado la propiedad de %{rubygem_name} tras haber
       sido añadida a esta clave.
+    organization_membership_removed:
   dashboards:
     show:
       creating_link_text: crear
@@ -1219,6 +1224,8 @@ es:
         workflow_repository_name_help_html:
       pending:
         rubygem_name_help_html:
+        organization_scope:
+        organization_scope_info:
   duration:
     minutes:
       other: "%{count} minutos"
@@ -1280,6 +1287,7 @@ es:
         api_key_name:
         api_key_scopes:
         api_key_gem_html:
+        api_key_organization_html:
         api_key_mfa:
         not_required:
       password:
