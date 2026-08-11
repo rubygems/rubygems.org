@@ -13,7 +13,6 @@ class Pusher
 
   def initialize(api_key, body, request: nil, attestations: nil)
     @api_key = api_key
-    @scoped_rubygem = api_key.rubygem
 
     @body = StringIO.new(body.read)
     @attestations = attestations
@@ -27,7 +26,7 @@ class Pusher
       pull_spec &&
         find &&
         authorize &&
-        verify_gem_scope &&
+        verify_api_key_scope &&
         verify_mfa_requirement &&
         validate &&
         save
@@ -42,8 +41,8 @@ class Pusher
     notify_unauthorized
   end
 
-  def verify_gem_scope
-    return true unless @scoped_rubygem && rubygem != @scoped_rubygem
+  def verify_api_key_scope
+    return true if api_key.scoped_to?(rubygem)
 
     notify("This API key cannot perform the specified action on this gem.", 403)
   end
@@ -221,28 +220,35 @@ class Pusher
   def update
     rubygem.disown if rubygem.versions.indexed.none?
     rubygem.update_attributes_from_gem_specification!(version, spec)
+    return true unless rubygem.unowned?
 
-    if rubygem.unowned?
-      if api_key.user?
-        rubygem.create_ownership(owner)
-      elsif api_key.trusted_publisher?
-        pending_publisher = find_pending_trusted_publisher
-        return notify("No pending publisher found", 404) if pending_publisher.blank?
-
-        rubygem.transaction do
-          logger.info { "Reifying pending publisher" }
-          rubygem.create_ownership(pending_publisher.user)
-          owner.rubygem_trusted_publishers.create!(rubygem: rubygem)
-        end
-      else
-        return notify_unauthorized
-      end
-    end
-
-    true
+    assign_ownership_for_unowned_gem
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback, ActiveRecord::RecordNotUnique => e
     logger.info { { message: "Error updating rubygem", exception: e } }
     false
+  end
+
+  def assign_ownership_for_unowned_gem
+    if api_key.organization
+      return notify_unauthorized unless OrganizationPolicy.new(owner, api_key.organization).add_gem?
+
+      rubygem.update!(organization_id: api_key.organization.id)
+    elsif api_key.user?
+      rubygem.create_ownership(owner)
+    elsif api_key.trusted_publisher?
+      pending_publisher = find_pending_trusted_publisher
+      return notify("No pending publisher found", 404) if pending_publisher.blank?
+
+      rubygem.transaction do
+        logger.info { "Reifying pending publisher" }
+        rubygem.create_ownership(pending_publisher.user)
+        owner.rubygem_trusted_publishers.create!(rubygem: rubygem)
+      end
+    else
+      return notify_unauthorized
+    end
+
+    true
   end
 
   def republish_notification(version)

@@ -49,7 +49,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns true
         @cutter.stubs(:verify_mfa_requirement).returns true
-        @cutter.stubs(:verify_gem_scope).returns true
+        @cutter.stubs(:verify_api_key_scope).returns true
         @cutter.stubs(:validate).returns true
         @cutter.stubs(:verify_sigstore).returns true
         @cutter.stubs(:sign_sigstore).returns true
@@ -62,7 +62,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns false
         @cutter.stubs(:find).never
         @cutter.stubs(:authorize).never
-        @cutter.stubs(:verify_gem_scope).never
+        @cutter.stubs(:verify_api_key_scope).never
         @cutter.stubs(:verify_mfa_requirement).never
         @cutter.stubs(:save).never
         @cutter.process
@@ -72,18 +72,18 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find)
         @cutter.stubs(:authorize).never
-        @cutter.stubs(:verify_gem_scope).never
+        @cutter.stubs(:verify_api_key_scope).never
         @cutter.stubs(:verify_mfa_requirement).never
         @cutter.stubs(:save).never
 
         @cutter.process
       end
 
-      should "not attempt to check gem scope if not authorized" do
+      should "not attempt to check api key scope if not authorized" do
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns false
-        @cutter.stubs(:verify_gem_scope).never
+        @cutter.stubs(:verify_api_key_scope).never
         @cutter.stubs(:verify_mfa_requirement).never
         @cutter.stubs(:validate).never
         @cutter.stubs(:save).never
@@ -91,11 +91,11 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.process
       end
 
-      should "not attempt to check mfa requirement if scoped to another gem" do
+      should "not attempt to check mfa requirement if api key scope check failed" do
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns true
-        @cutter.stubs(:verify_gem_scope).returns false
+        @cutter.stubs(:verify_api_key_scope).returns false
         @cutter.stubs(:verify_mfa_requirement).never
         @cutter.stubs(:validate).never
         @cutter.stubs(:save).never
@@ -107,7 +107,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns true
-        @cutter.stubs(:verify_gem_scope).returns true
+        @cutter.stubs(:verify_api_key_scope).returns true
         @cutter.stubs(:verify_mfa_requirement).returns false
         @cutter.stubs(:validate).never
         @cutter.stubs(:save).never
@@ -119,7 +119,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns true
-        @cutter.stubs(:verify_gem_scope).returns true
+        @cutter.stubs(:verify_api_key_scope).returns true
         @cutter.stubs(:verify_mfa_requirement).returns true
         @cutter.stubs(:validate).returns false
         @cutter.stubs(:save).never
@@ -408,7 +408,7 @@ class PusherTest < ActiveSupport::TestCase
       cutter = Pusher.new(@api_key, @gem)
       cutter.stubs(:rubygem).returns @rubygem
 
-      assert cutter.verify_gem_scope
+      assert cutter.verify_api_key_scope
     end
 
     should "does not push gem if scoped to another gem" do
@@ -417,7 +417,55 @@ class PusherTest < ActiveSupport::TestCase
       cutter = Pusher.new(@api_key, @gem)
       cutter.stubs(:rubygem).returns @rubygem
 
-      refute cutter.verify_gem_scope
+      refute cutter.verify_api_key_scope
+    end
+  end
+
+  context "organization scope" do
+    setup do
+      @user = create(:user)
+      @organization = create(:organization, owners: [@user])
+      @api_key = create(:api_key, owner: @user, scoped_organization: @organization, scopes: %i[push_rubygem])
+      @rubygem = Rubygem.new(name: "org-gem")
+      @cutter = Pusher.new(@api_key, @gem)
+      @cutter.stubs(:rubygem).returns(@rubygem)
+    end
+
+    should "allow pushing unowned gems" do
+      @rubygem.stubs(:owned_by_organization?).returns(false)
+      @rubygem.stubs(:ownerships).returns(stub(none?: true))
+
+      assert @cutter.verify_api_key_scope
+    end
+
+    should "allow pushing gems owned by the scoped organization" do
+      @rubygem.stubs(:owned_by_organization?).returns(true)
+      @rubygem.stubs(:organization).returns(@organization)
+      @rubygem.stubs(:ownerships).returns(stub(any?: false))
+
+      assert @cutter.verify_api_key_scope
+    end
+
+    should "reject gems owned by another organization" do
+      @rubygem.stubs(:owned_by_organization?).returns(true)
+      @rubygem.stubs(:organization).returns(create(:organization))
+      @rubygem.stubs(:ownerships).returns(stub(any?: false))
+
+      refute @cutter.verify_api_key_scope
+    end
+
+    should "reject personally owned gems" do
+      @rubygem.stubs(:owned_by_organization?).returns(false)
+      @rubygem.stubs(:ownerships).returns(stub(none?: false))
+
+      refute @cutter.verify_api_key_scope
+    end
+
+    should "reject gems when the scoped organization is soft-deleted" do
+      @organization.update!(deleted_at: Time.current)
+      @api_key.reload
+
+      refute @cutter.verify_api_key_scope
     end
   end
 
