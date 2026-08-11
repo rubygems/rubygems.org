@@ -43,12 +43,12 @@
       </div>
     <% end %>
     <div class="mb-4">
-      <%= f.label :user, t(".handle"), class: 'form__label block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
-      <%= f.text_field :user, value: @membership.user&.handle, class: "form__input block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:focus:border-indigo-400", placeholder: "user handle" %>
+      <%= f.label :user, t(".handle"), class: 'block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
+      <%= f.text_field :user, value: @membership.user&.handle, class: "block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:focus:border-indigo-400", placeholder: "user handle" %>
     </div>
     <div class="mb-4">
-      <%= f.label :role, t(".role"), class: 'form__label block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
-      <%= f.select :role, options_for_select(@roles), {}, { class: "form__input form__select block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:focus:border-indigo-400" } %>
+      <%= f.label :role, t(".role"), class: 'block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
+      <%= f.select :role, options_for_select(@roles), {}, { class: "block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:focus:border-indigo-400" } %>
     </div>
     <div class="flex justify-end">
       <%= render ButtonComponent.new t(".invite"), type: :submit, style: :outline, class: "px-4 py-2 dark:border-gray-400 dark:text-gray-100" %>

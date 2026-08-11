@@ -48,8 +48,8 @@
       </div>
     <% end %>
     <div class="mb-4">
-      <%= f.label :role, class: 'form__label block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
-      <%= f.select :role, options_for_select(@roles, @membership.role), {}, class: "form__input form__select block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:focus:border-indigo-400"  %>
+      <%= f.label :role, class: 'block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
+      <%= f.select :role, options_for_select(@roles, @membership.role), {}, class: "block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:focus:border-indigo-400"  %>
     </div>
     <div class="flex justify-end">
       <% if !@membership.confirmed? %>

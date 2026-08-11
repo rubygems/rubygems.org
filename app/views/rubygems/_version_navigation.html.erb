@@ -1,11 +1,11 @@
-<div class="gem__navigation flex flex-wrap justify-between gap-4 border-t border-neutral-200 dark:border-neutral-800 pt-6">
+<div class="flex flex-wrap justify-between gap-4 border-t border-neutral-200 dark:border-neutral-800 pt-6">
   <% if latest_version.previous.present? %>
     <%= link_to t(".previous_version"), rubygem_version_path(rubygem.slug, latest_version.previous.number),
-          class: "gem__previous__version text-b3 text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300" %>
+          class: "text-b3 text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300" %>
   <% end %>
 
   <% if latest_version.next.present? %>
     <%= link_to t(".next_version"), rubygem_version_path(rubygem.slug, latest_version.next.number),
-          class: "gem__next__version ml-auto text-b3 text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300" %>
+          class: "ml-auto text-b3 text-orange-500 hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300" %>
   <% end %>
 </div>

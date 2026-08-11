@@ -1,38 +1,38 @@
 <% @title = t('.title') %>
+<% add_breadcrumb @title %>
 
-<% if @only_owner_gems.any? %>
-  <div class="t-body">
-    <p class="page__subheading"><%= (t '.list_only_owner_html', command_link: link_to('gem owner', 'https://guides.rubygems.org/command-reference/#gem-owner')) %></p>
-  </div>
-  <div id="profile">
-    <div class="profile-list">
-      <ul>
-        <%= render partial: 'rubygem', collection: @only_owner_gems, locals: {owners: true}  %>
+<div class="flex items-center justify-center">
+  <div class="max-w-lg w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">
+    <h1 class="text-xl font-semibold text-neutral-900 dark:text-white mb-6"><%= t('.title') %></h1>
+
+    <% if @only_owner_gems.any? %>
+      <p class="mb-4 text-b3 text-neutral-700 dark:text-neutral-300">
+        <%= t '.list_only_owner_html', command_link: link_to('gem owner', 'https://guides.rubygems.org/command-reference/#gem-owner', class: "text-orange-500 hover:underline dark:text-orange-400") %>
+      </p>
+      <ul id="profile" class="mb-6 flex flex-col gap-3">
+        <%= render partial: 'rubygem', collection: @only_owner_gems, locals: { owners: true } %>
       </ul>
-    </div>
-  </div>
-<% end %>
+    <% end %>
 
-<% if @multi_owner_gems.any? %>
-  <div class="t-body">
-    <p class="page__subheading push--s"><%= t '.list_multi_owner' %></p>
-  </div>
-  <div id="profile">
-    <div class="profile-list">
-      <ul>
-        <%= render partial: 'rubygem', collection: @multi_owner_gems, locals: {owners: true}  %>
+    <% if @multi_owner_gems.any? %>
+      <p class="mb-4 text-b3 text-neutral-700 dark:text-neutral-300"><%= t '.list_multi_owner' %></p>
+      <ul class="mb-6 flex flex-col gap-3">
+        <%= render partial: 'rubygem', collection: @multi_owner_gems, locals: { owners: true } %>
       </ul>
-    </div>
-  </div>
-<% end %>
+    <% end %>
 
-<div class="t-body push--s">
-  <p><%= t '.instructions' %></p>
-  <%= form_for current_user, url: destroy_profile_path, method: :delete do |form| %>
-    <div class="password_field">
-      <%= form.label :password, t("activerecord.attributes.user.password"), class: 'form__label' %>
-      <%= form.password_field :password, autocomplete: 'current-password', class: 'form__input' %>
-    </div>
-    <%= form.submit t('.confirm'), data: { confirm: "This action can't be UNDONE! Are you sure?" }, class: 'form__submit' %>
-  <% end %>
+    <p class="mb-6 text-b3 text-neutral-700 dark:text-neutral-300"><%= t '.instructions' %></p>
+
+    <%= form_for current_user, url: destroy_profile_path, method: :delete do |form| %>
+      <div class="mb-8">
+        <%= form.label :password, t("activerecord.attributes.user.password"),
+          class: "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2" %>
+        <%= form.password_field :password, autocomplete: 'current-password',
+          class: "w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" %>
+      </div>
+
+      <%= render ButtonComponent.new(t('.confirm'), type: :submit, color: :red,
+            data: { confirm: "This action can't be UNDONE! Are you sure?", disable_with: t("form_disable_with") }) %>
+    <% end %>
+  </div>
 </div>

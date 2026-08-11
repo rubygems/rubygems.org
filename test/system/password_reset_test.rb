@@ -233,7 +233,7 @@ class PasswordResetTest < ApplicationSystemTestCase
 
     assert_equal new_email, @user.reload.unconfirmed_email
 
-    find(:css, ".header__popup-link").click
+    find(:css, "[data-testid='header-popup-link']").click
     click_link "Sign out"
 
     forgot_password_with email

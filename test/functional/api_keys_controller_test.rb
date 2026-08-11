@@ -206,7 +206,8 @@ class ApiKeysControllerTest < ActionController::TestCase
 
           tooltip = "Ownership of the #{ownership.rubygem.name} gem has been removed after being scoped to this key."
 
-          assert page.has_css? "span[title='#{tooltip}']", text: "#{ownership.rubygem.name} [?]"
+          assert page.has_css? "td[data-title='Gem']", text: "#{ownership.rubygem.name} [?]"
+          assert page.has_css? "[role='tooltip']", text: tooltip, visible: :all
           refute page.has_css? "tr.opacity-60"
         end
       end

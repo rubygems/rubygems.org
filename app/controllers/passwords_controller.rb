@@ -5,8 +5,6 @@ class PasswordsController < ApplicationController
   include RequireMfa
   include WebauthnVerifiable
 
-  layout "hammy"
-
   before_action :ensure_email_present, only: %i[create]
 
   before_action :no_referrer, only: %i[edit otp_edit webauthn_edit]

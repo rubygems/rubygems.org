@@ -205,6 +205,7 @@ ja:
       reset: リセット
       save_key: キーを二度と表示できなくなるためご注意ください。新しいAPIキー：
       mfa: MFA
+      mfa_enabled_notice:
       expiration: 期限
       update_owner: 所有者を更新
       view_expired:

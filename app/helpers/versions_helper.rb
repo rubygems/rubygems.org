@@ -2,17 +2,9 @@
 
 module VersionsHelper
   def version_date_tag(version, prefix: nil)
-    data = {}
-    klass = ["gem__version__date"]
-    date = version_authored_date(version, prefix:)
-    if version.rely_on_built_at?
-      klass << "tooltip__text"
-      data.merge!(tooltip: t("versions.index.imported_gem_version_notice", import_date: nice_date_for(Version::RUBYGEMS_IMPORT_DATE)))
-    end
-
-    content_tag(:small, class: klass, data: data) do
-      concat date
-      concat content_tag(:sup, "*") if version.rely_on_built_at?
+    tag.span(data: { testid: "version-date" }) do
+      concat version_authored_date(version, prefix:)
+      concat imported_version_tooltip if version.rely_on_built_at?
     end
   end
 
@@ -29,15 +21,10 @@ module VersionsHelper
 
   def version_date_component(version, **options)
     options[:class] = "flex text-b3 text-neutral-700 dark:text-neutral-400 #{options[:class]}"
-    options[:data] ||= {}
-
-    if version.rely_on_built_at?
-      options[:data].merge!(tooltip: t("versions.index.imported_gem_version_notice", import_date: nice_date_for(Version::RUBYGEMS_IMPORT_DATE)))
-    end
 
     tag.div(**options) do
       concat version_authored_date(version)
-      concat content_tag(:sup, "*") if version.rely_on_built_at?
+      concat imported_version_tooltip if version.rely_on_built_at?
     end
   end
 
@@ -50,5 +37,14 @@ module VersionsHelper
       concat icon_tag("arrow-circle-down", size: 5)
       concat tag.span(downloads)
     end
+  end
+
+  private
+
+  def imported_version_tooltip
+    render TooltipComponent.new(
+      text: t("versions.index.imported_gem_version_notice", import_date: nice_date_for(Version::RUBYGEMS_IMPORT_DATE)),
+      trigger_class: "text-orange-500"
+    ) { tag.sup("*") }
   end
 end
