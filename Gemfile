@@ -12,7 +12,7 @@ gem "aws-sdk-sqs", "~> 1.117"
 gem "bootsnap", "~> 1.24"
 gem "clearance", "~> 2.12"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.39"
+gem "datadog", "~> 2.40"
 gem "dogstatsd-ruby", "~> 5.7"
 gem "google-protobuf", "~> 4.35"
 gem "faraday", "~> 2.14"
@@ -119,7 +119,7 @@ group :development, :test do
   gem "pg_query", "~> 6.2"
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
-  gem "rubocop", "~> 1.88", require: false
+  gem "rubocop", "~> 1.89", require: false
   gem "rubocop-rails", "~> 2.36", require: false
   gem "rubocop-performance", "~> 1.26", require: false
   gem "rubocop-minitest", "~> 0.40", require: false
