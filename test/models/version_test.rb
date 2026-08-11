@@ -15,7 +15,7 @@ class VersionTest < ActiveSupport::TestCase
       json = @version.as_json
 
       fields = %w[number built_at summary description authors platform
-                  ruby_version rubygems_version prerelease downloads_count licenses
+                  ruby_version rubygems_version prerelease ruby_abi downloads_count licenses
                   requirements sha spec_sha metadata created_at]
 
       assert_equal fields.sort, json.keys.sort
@@ -44,7 +44,7 @@ class VersionTest < ActiveSupport::TestCase
     should "only have relevant API fields" do
       xml = Nokogiri.parse(@version.to_xml)
       fields = %w[number built-at summary description authors platform
-                  ruby-version rubygems-version prerelease downloads-count licenses
+                  ruby-version rubygems-version prerelease ruby-abi downloads-count licenses
                   requirements sha spec-sha metadata created-at]
 
       assert_equal fields.map(&:to_s).sort,
