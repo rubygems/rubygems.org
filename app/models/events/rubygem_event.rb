@@ -8,6 +8,7 @@ class Events::RubygemEvent < ApplicationRecord
   VERSION_PUSHED = define_event "rubygem:version:pushed" do
     attribute :number, :string
     attribute :platform, :string
+    attribute :ruby_abi, :string
     attribute :sha256, :string
 
     attribute :pushed_by, :string

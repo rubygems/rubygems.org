@@ -2,6 +2,6 @@
 
 class Events::RubygemEvent::Version::UnyankedComponent < Events::TableDetailsComponent
   def view_template
-    raw t(".version_html", version: link_to_version_from_gid(additional.version_gid, additional.number, additional.platform))
+    raw t(".version_html", version: link_to_version_from_gid(additional.version_gid, additional.number, additional.platform, additional.ruby_abi))
   end
 end

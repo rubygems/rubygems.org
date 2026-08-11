@@ -669,8 +669,8 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def record_push_event
-    rubygem.record_event!(Events::RubygemEvent::VERSION_PUSHED, number: number, platform: platform, sha256: sha256_hex,
-      pushed_by: pusher&.display_handle, version_gid: to_gid, actor_gid: pusher&.to_gid)
+    rubygem.record_event!(Events::RubygemEvent::VERSION_PUSHED, number: number, platform: platform, ruby_abi: ruby_abi,
+      sha256: sha256_hex, pushed_by: pusher&.display_handle, version_gid: to_gid, actor_gid: pusher&.to_gid)
   end
 
   def enqueue_web_hook_jobs
