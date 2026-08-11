@@ -4,6 +4,8 @@ class Membership < ApplicationRecord
   belongs_to :user
   belongs_to :organization
 
+  has_many :api_key_organization_scopes, dependent: :destroy
+
   belongs_to :invited_by, class_name: "User", optional: true
 
   scope :unconfirmed, -> { where(confirmed_at: nil) }

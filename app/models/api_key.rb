@@ -15,6 +15,9 @@ class ApiKey < ApplicationRecord
 
   has_one :api_key_rubygem_scope, dependent: :destroy
   has_one :ownership, through: :api_key_rubygem_scope
+  has_one :api_key_organization_scope, dependent: :destroy
+  has_one :membership, through: :api_key_organization_scope
+  has_one :organization, through: :membership
   has_one :oidc_id_token, class_name: "OIDC::IdToken", dependent: :restrict_with_error
   has_one :oidc_api_key_role, class_name: "OIDC::ApiKeyRole", through: :oidc_id_token, source: :api_key_role, inverse_of: :api_keys
   has_many :pushed_versions, class_name: "Version", inverse_of: :pusher_api_key, foreign_key: :pusher_api_key_id, dependent: :nullify
@@ -34,6 +37,7 @@ class ApiKey < ApplicationRecord
   validate :not_expired?
 
   delegate :rubygem_id, :rubygem, to: :ownership, allow_nil: true
+  delegate :organization_id, to: :membership, allow_nil: true
 
   scope :unexpired, -> { where(arel_table[:expires_at].eq(nil).or(arel_table[:expires_at].gt(Time.now.utc))) }
   scope :expired, -> { where(arel_table[:expires_at].lteq(Time.now.utc)) }
