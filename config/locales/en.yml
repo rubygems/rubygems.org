@@ -177,6 +177,8 @@ en:
       exclusive_scopes: Exclusive Scopes
       rubygem_scope: Gem Scope
       rubygem_scope_info: This scope restricts gem push/yank and owner add/remove commands to a specific gem.
+      organization_scope: Organization Scope
+      organization_scope_info: New gems pushed with this key are owned by the selected organization.
       multifactor_auth: Multi-factor authentication
       enable_mfa: Enable MFA
       expiration: Expiration
@@ -226,7 +228,10 @@ en:
       invalid_key: An invalid API key cannot be edited. Please delete it and create a new one.
       expired_key: An expired API key cannot be edited. Please create a new one.
     all_gems: All Gems
+    no_organization: No Organization
+    unavailable_organization: Unavailable Organization
     gem_ownership_removed: Ownership of the %{rubygem_name} gem has been removed after being scoped to this key.
+    organization_membership_removed: Membership in the %{organization_name} organization has been removed after being scoped to this key.
   dashboards:
     show:
       creating_link_text: creating
@@ -1104,6 +1109,8 @@ en:
           Leave blank if the workflow is defined in the same repository as above (the common case).
       pending:
         rubygem_name_help_html: "The gem (on RubyGems.org) that will be created when this publisher is used"
+        organization_scope: Organization Scope
+        organization_scope_info: New gems published with this trusted publisher are owned by the selected organization.
   duration:
     minutes:
       other: "%{count} minutes"
@@ -1165,6 +1172,7 @@ en:
         api_key_name: "Name: %{name}"
         api_key_scopes: "Scopes: %{scopes}"
         api_key_gem_html: "Gem: %{gem}"
+        api_key_organization_html: "Organization: %{organization}"
         api_key_mfa: "MFA: %{mfa}"
         not_required: "Not required"
       password:

@@ -178,6 +178,8 @@ pt-BR:
       exclusive_scopes:
       rubygem_scope:
       rubygem_scope_info:
+      organization_scope:
+      organization_scope_info:
       multifactor_auth:
       enable_mfa:
       expiration:
@@ -227,7 +229,10 @@ pt-BR:
       invalid_key:
       expired_key:
     all_gems:
+    no_organization:
+    unavailable_organization:
     gem_ownership_removed:
+    organization_membership_removed:
   dashboards:
     show:
       creating_link_text: Criar
@@ -1108,6 +1113,8 @@ pt-BR:
         workflow_repository_name_help_html:
       pending:
         rubygem_name_help_html:
+        organization_scope:
+        organization_scope_info:
   duration:
     minutes:
       other:
@@ -1169,6 +1176,7 @@ pt-BR:
         api_key_name:
         api_key_scopes:
         api_key_gem_html:
+        api_key_organization_html:
         api_key_mfa:
         not_required:
       password:

@@ -401,6 +401,50 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         end
       end
 
+      context "with api key organization scoped" do
+        setup do
+          @organization = create(:organization, owners: [@user])
+          @api_key = create(:api_key, key: "org123", scopes: %i[add_owner], owner: @user, scoped_organization: @organization)
+          @request.env["HTTP_AUTHORIZATION"] = "org123"
+        end
+
+        context "to an organization gem" do
+          setup do
+            @rubygem.update!(organization: @organization)
+            @ownership.destroy!
+            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
+          end
+
+          should respond_with :success
+
+          should "add other user as gem owner" do
+            assert_includes @rubygem.owners_including_unconfirmed, @second_user
+          end
+        end
+
+        context "to a personal gem" do
+          setup do
+            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
+          end
+
+          should respond_with :forbidden
+
+          should "not add other user as gem owner" do
+            refute_includes @rubygem.owners_including_unconfirmed, @second_user
+          end
+        end
+
+        context "to a gem in another organization" do
+          setup do
+            @rubygem.update!(organization: create(:organization))
+            @ownership.destroy!
+            post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.email }
+          end
+
+          should respond_with :forbidden
+        end
+      end
+
       context "with a soft deleted api key" do
         setup do
           @api_key.soft_delete!
