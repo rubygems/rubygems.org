@@ -1,54 +1,49 @@
 version: 2
 updates:
-- package-ecosystem: bundler
-  directory: "/"
-  schedule:
-    interval: weekly
-  open-pull-requests-limit: 99
-  cooldown:
-    default-days: 7
-  versioning-strategy: increase
-  groups:
-    avo:
-      patterns: ["avo", "avo-*"]
-    rubocop:
-      patterns: ["rubocop", "rubocop-*"]
-    rails:
-      patterns: ["rails", "active*", "action*", "railties"]
-    aws:
-      patterns: ["aws-*"]
-    flipper:
-      patterns: ["flipper*"]
-    minor-and-patch:
-      patterns: ["*"]
-      update-types:
-        - minor
-        - patch
-- package-ecosystem: github-actions
-  directories:
-    - "/"
-    - "/.github/actions/setup-rubygems.org"
-  schedule:
-    interval: weekly
-  open-pull-requests-limit: 99
-  cooldown:
-    default-days: 7
-  groups:
-    setup-ruby:
-      patterns: ["ruby/setup-ruby"]
-      update-types:
-        - patch
-        - minor
-      group-by: dependency-name
-    github-actions-patch-minor:
-      patterns: ["*"]
-      update-types:
-        - patch
-        - minor
-- package-ecosystem: devcontainers
-  directory: "/"
-  schedule:
-    interval: weekly
-  open-pull-requests-limit: 99
-  cooldown:
-    default-days: 7
+  - package-ecosystem: bundler
+    directory: "/"
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      bundler:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: devcontainers
+    directory: "/"
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      devcontainers:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directories:
+      - "/"
+      - "/.github/actions/setup-rubygems.org"
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      setup-ruby:
+        patterns:
+          - ruby/setup-ruby
+        group-by: dependency-name
+      github-actions:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+          - patch
