@@ -537,6 +537,7 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal @rubygem.most_recent_version.created_at.as_json, hash["version_created_at"]
       assert_equal @rubygem.most_recent_version.downloads_count, hash["version_downloads"]
       assert_equal @rubygem.most_recent_version.platform, hash["platform"]
+      assert_nil hash.fetch("ruby_abi")
       assert_equal @rubygem.most_recent_version.authors, hash["authors"]
       assert_equal @rubygem.most_recent_version.info, hash["info"]
       assert_equal @rubygem.most_recent_version.metadata, hash["metadata"]

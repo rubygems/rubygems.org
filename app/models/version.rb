@@ -372,6 +372,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
       "rubygems_version"           => required_rubygems_version,
       "ruby_version"               => required_ruby_version,
       "prerelease"                 => prerelease,
+      "ruby_abi"                   => ruby_abi,
       "licenses"                   => licenses,
       "requirements"               => requirements,
       "sha"                        => sha256_hex,

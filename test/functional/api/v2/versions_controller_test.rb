@@ -219,7 +219,7 @@ class Api::V2::VersionsControllerTest < ActionController::TestCase
       assert_equal(
         %w[
           name downloads version version_created_at version_downloads platform
-          authors info licenses metadata yanked sha spec_sha project_uri gem_uri
+          ruby_abi authors info licenses metadata yanked sha spec_sha project_uri gem_uri
           homepage_uri wiki_uri documentation_uri mailing_list_uri
           source_code_uri bug_tracker_uri changelog_uri funding_uri dependencies
           built_at created_at description downloads_count number summary
