@@ -263,6 +263,7 @@ class Rubygem < ApplicationRecord
       "version_created_at" => version.created_at,
       "version_downloads"  => version.downloads_count,
       "platform"           => version.platform,
+      "ruby_abi"           => version.ruby_abi,
       "authors"            => version.authors,
       "info"               => version.info,
       "licenses"           => version.licenses,
