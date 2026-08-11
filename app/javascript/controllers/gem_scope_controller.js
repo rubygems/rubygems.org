@@ -1,44 +1,79 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["checkbox", "selector"];
+  static targets = ["checkbox", "gemSelector", "orgSelector"];
 
   connect() {
-    this.toggleSelector();
+    this.hiddenFields = {};
+    this.toggleSelectors();
   }
 
   checkboxTargetConnected(el) {
-    el.addEventListener("change", () => this.toggleSelector());
+    el.addEventListener("change", () => this.toggleSelectors());
   }
 
-  toggleSelector() {
+  gemSelectorTargetConnected(el) {
+    el.addEventListener("change", () => {
+      if (el.value && this.hasOrgSelectorTarget) {
+        this.orgSelectorTarget.value = "";
+      }
+    });
+  }
+
+  orgSelectorTargetConnected(el) {
+    el.addEventListener("change", () => {
+      if (el.value && this.hasGemSelectorTarget) {
+        this.gemSelectorTarget.value = "";
+      }
+    });
+  }
+
+  toggleSelectors() {
     const selected = this.checkboxTargets.find((target) => target.checked);
 
-    if (selected) {
-      this.selectorTarget.disabled = false;
-      this.removeHiddenRubygemField();
-    } else {
-      this.selectorTarget.value = "";
-      this.selectorTarget.disabled = true;
-      this.addHiddenRubygemField();
+    if (this.hasGemSelectorTarget) {
+      this.toggleSelector(
+        "api_key[rubygem_id]",
+        this.gemSelectorTarget,
+        selected,
+      );
+    }
+    if (this.hasOrgSelectorTarget) {
+      this.toggleSelector(
+        "api_key[organization_id]",
+        this.orgSelectorTarget,
+        selected,
+      );
     }
   }
 
-  addHiddenRubygemField() {
-    if (this.hiddenField) {
+  toggleSelector(fieldName, selectorTarget, enabled) {
+    if (enabled) {
+      selectorTarget.disabled = false;
+      this.removeHiddenField(fieldName);
+    } else {
+      selectorTarget.value = "";
+      selectorTarget.disabled = true;
+      this.addHiddenField(fieldName);
+    }
+  }
+
+  addHiddenField(fieldName) {
+    if (this.hiddenFields[fieldName]) {
       return;
     }
-    this.hiddenField = document.createElement("input");
-    this.hiddenField.type = "hidden";
-    this.hiddenField.name = "api_key[rubygem_id]";
-    this.hiddenField.value = "";
-    this.element.appendChild(this.hiddenField);
+
+    this.hiddenFields[fieldName] = document.createElement("input");
+    this.hiddenFields[fieldName].type = "hidden";
+    this.hiddenFields[fieldName].name = fieldName;
+    this.hiddenFields[fieldName].value = "";
+    this.element.appendChild(this.hiddenFields[fieldName]);
   }
 
-  removeHiddenRubygemField() {
-    if (this.hiddenField) {
-      this.hiddenField.remove();
-      this.hiddenField = null;
+  removeHiddenField(fieldName) {
+    if (this.hiddenFields[fieldName]) {
+      this.hiddenFields[fieldName].remove();
+      this.hiddenFields[fieldName] = null;
     }
   }
 }
