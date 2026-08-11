@@ -243,22 +243,40 @@ class Pusher
 
   def assign_ownership_for_unowned_gem
     if api_key.organization
-      return notify_unauthorized unless OrganizationPolicy.new(owner, api_key.organization).add_gem?
-
-      rubygem.update!(organization_id: api_key.organization.id)
+      assign_organization_ownership
     elsif api_key.user?
       rubygem.create_ownership(owner)
+      true
     elsif api_key.trusted_publisher?
-      pending_publisher = find_pending_trusted_publisher
-      return notify("No pending publisher found", 404) if pending_publisher.blank?
-
-      rubygem.transaction do
-        logger.info { "Reifying pending publisher" }
-        rubygem.create_ownership(pending_publisher.user)
-        owner.rubygem_trusted_publishers.create!(rubygem: rubygem)
-      end
+      reify_pending_trusted_publisher
     else
+      notify_unauthorized
+    end
+  end
+
+  def assign_organization_ownership
+    return notify_unauthorized unless OrganizationPolicy.new(owner, api_key.organization).add_gem?
+
+    rubygem.update!(organization_id: api_key.organization.id)
+    true
+  end
+
+  def reify_pending_trusted_publisher
+    pending_publisher = find_pending_trusted_publisher
+    return notify("No pending publisher found", 404) if pending_publisher.blank?
+
+    if pending_publisher.organization && !OrganizationPolicy.new(pending_publisher.user, pending_publisher.organization).add_gem?
       return notify_unauthorized
+    end
+
+    rubygem.transaction do
+      logger.info { "Reifying pending publisher" }
+      if pending_publisher.organization
+        rubygem.update!(organization_id: pending_publisher.organization.id)
+      else
+        rubygem.create_ownership(pending_publisher.user)
+      end
+      owner.rubygem_trusted_publishers.create!(rubygem: rubygem)
     end
 
     true
