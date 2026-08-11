@@ -3,8 +3,15 @@
 module ApiKeysHelper
   def gem_scope(api_key)
     return invalid_gem_tooltip(api_key.soft_deleted_rubygem_name) if api_key.soft_deleted_by_ownership?
+    return invalid_organization_tooltip(api_key.soft_deleted_organization_name) if api_key.soft_deleted_by_organization?
 
-    api_key.rubygem ? api_key.rubygem.name : t("api_keys.all_gems")
+    if api_key.membership
+      api_key.organization&.name || t("api_keys.unavailable_organization")
+    elsif api_key.rubygem
+      api_key.rubygem.name
+    else
+      t("api_keys.all_gems")
+    end
   end
 
   def api_key_checkbox(form, api_scope)
@@ -34,6 +41,7 @@ module ApiKeysHelper
       end
     end
     params[:scopes] = scopes.sort
+    params[:organization_handle] = params.delete(:organization) if params.key?(:organization)
     params
   end
 
@@ -44,5 +52,14 @@ module ApiKeysHelper
                 name,
                 render(TooltipComponent.new(text: t("api_keys.gem_ownership_removed", rubygem_name: name))) { "[?]" }
               ], " ")
+  end
+
+  def invalid_organization_tooltip(name)
+    content_tag(
+      :span,
+      "#{name} [?]",
+      class: "cursor-help",
+      title: t("api_keys.organization_membership_removed", organization_name: name)
+    )
   end
 end

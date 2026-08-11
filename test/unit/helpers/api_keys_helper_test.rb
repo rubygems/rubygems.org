@@ -29,6 +29,29 @@ class ApiKeysHelperTest < ActionView::TestCase
       assert_equal "[?]", trigger.text
       assert_equal "Ownership of the #{rubygem_name} gem has been removed after being scoped to this key.", bubble.text
     end
+
+    should "return error tooltip if organization membership is removed" do
+      user = create(:user)
+      organization = create(:organization, owners: [user])
+      membership = user.memberships.find_by!(organization: organization)
+      api_key = create(:api_key, scopes: %i[push_rubygem], owner: user, scoped_organization: organization)
+      api_key.soft_delete!(membership: membership)
+
+      dom = Capybara.string(gem_scope(api_key.reload))
+
+      assert_equal "#{organization.name} [?]", dom.text
+      assert_equal "cursor-help", dom.find("span")[:class]
+      assert_equal "Membership in the #{organization.name} organization has been removed after being scoped to this key.",
+        dom.find("span")[:title]
+    end
+
+    should "return organization name when scoped to an organization" do
+      user = create(:user)
+      organization = create(:organization, owners: [user])
+      api_key = create(:api_key, scopes: %i[push_rubygem], owner: user, scoped_organization: organization)
+
+      assert_equal organization.name, gem_scope(api_key)
+    end
   end
 
   def expected_checkbox(scope, exclusive: false, gem_scope: false)
