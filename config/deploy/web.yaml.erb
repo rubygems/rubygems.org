@@ -340,7 +340,7 @@ kind: PodDisruptionBudget
 metadata:
   name: web
 spec:
-  maxUnavailable: "10%"
+  minAvailable: 1
   unhealthyPodEvictionPolicy: AlwaysAllow
   selector:
     matchLabels:
