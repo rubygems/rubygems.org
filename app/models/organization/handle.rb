@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Organization::Handle # rubocop:disable Metrics/ClassLength
+class Organization::Handle
   # Handles are compared without separators
   # ex "rubygems" reserves "ruby-gems" and "ruby_gems"
   def self.normalize(handle)
@@ -332,79 +332,6 @@ class Organization::Handle # rubocop:disable Metrics/ClassLength
     void
   ].freeze
 
-  # Reserved names held until we can verify
-  HELD_FOR_CLAIM = %w[
-    amazon
-    anthropic
-    apple
-    auth0
-    azure
-    bitbucket
-    capybara
-    cloudflare
-    crates
-    cucumber
-    datadog
-    debian
-    devise
-    digitalocean
-    docker
-    dryrb
-    facebook
-    falcon
-    faraday
-    github
-    gitlab
-    google
-    grape
-    hanami
-    hashicorp
-    heroku
-    ibm
-    jekyll
-    jetbrains
-    kubernetes
-    maven
-    meta
-    microsoft
-    minitest
-    mongoid
-    netlify
-    nokogiri
-    npm
-    nuget
-    okta
-    openai
-    oracle
-    puma
-    pundit
-    pypi
-    rack
-    railsfoundation
-    redhat
-    redis
-    resque
-    rspec
-    rubocop
-    rubylsp
-    salesforce
-    sendgrid
-    sentry
-    sequel
-    sidekiq
-    sinatra
-    solargraph
-    sorbet
-    standardrb
-    stripe
-    thoughtbot
-    trailblazer
-    twilio
-    ubuntu
-    unicorn
-    vercel
-  ].freeze
-
   RESERVED = [
     *RESTFUL_ACTIONS,
     *ROUTES,
@@ -414,8 +341,7 @@ class Organization::Handle # rubocop:disable Metrics/ClassLength
     *RUBY_CORE,
     *TRUST_AND_SAFETY,
     *INFRASTRUCTURE,
-    *RESERVED_WORDS,
-    *HELD_FOR_CLAIM
+    *RESERVED_WORDS
   ].freeze
 
   # Indexed on the normalized form so lookups stay O(1) and every separator
