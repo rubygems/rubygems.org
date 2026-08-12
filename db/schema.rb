@@ -692,6 +692,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_233055) do
     t.string "actor_type", limit: 50, null: false
     t.integer "attempt_count", default: 0, null: false
     t.string "authentication_method", limit: 100, null: false
+    t.uuid "baseline_id"
     t.jsonb "canonical_payload", default: {}, null: false
     t.string "canonicalization_algorithm", limit: 64, null: false
     t.string "canonicalization_version", limit: 32, null: false
@@ -700,6 +701,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_233055) do
     t.string "event_type", limit: 100, null: false
     t.uuid "event_uuid", null: false
     t.text "last_error"
+    t.datetime "observed_at"
+    t.jsonb "payload_attributes", default: {}, null: false
     t.binary "payload_digest", null: false
     t.string "payload_digest_algorithm", limit: 32, null: false
     t.binary "public_key_der", null: false
@@ -728,6 +731,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_233055) do
     t.datetime "updated_at", null: false
     t.index ["actor_type", "actor_handle", "created_at"], name: "idx_on_actor_type_actor_handle_created_at_68ba253fe2"
     t.index ["actor_type", "actor_id", "created_at"], name: "idx_on_actor_type_actor_id_created_at_9dea14a582"
+    t.index ["baseline_id", "event_type"], name: "index_transparency_log_events_on_baseline_id_and_event_type", where: "(baseline_id IS NOT NULL)"
     t.index ["corrects_event_uuid"], name: "index_transparency_log_events_on_corrects_event_uuid"
     t.index ["event_type", "created_at"], name: "index_transparency_log_events_on_event_type_and_created_at"
     t.index ["event_uuid"], name: "index_transparency_log_events_on_event_uuid", unique: true

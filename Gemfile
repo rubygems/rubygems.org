@@ -95,6 +95,7 @@ gem "pp", "0.6.4"
 # Former default gems
 gem "csv", "~> 3.3" # zeitwerk-2.6.12
 gem "observer", "~> 0.1.2" # launchdarkly-server-sdk-8.0.0
+gem "openssl"
 
 # TODO: Remove this when the rails upstream merges the patch
 # json 3.0 dropped the positional options hash from JSON.parse, which

@@ -2,6 +2,13 @@
 
 # Captures the signed payload and Rekor submission state for a RubyGems transparency log event.
 class TransparencyLogEvent < ApplicationRecord
+  BASELINE_EVENT_TYPES = %w[
+    gem.baseline
+    gem.version.baseline
+    gem.ownership.baseline
+    organization.baseline
+  ].freeze
+
   STATUSES = {
     pending: "pending",
     submitted: "submitted",
@@ -31,6 +38,9 @@ class TransparencyLogEvent < ApplicationRecord
     actor_id
     actor_handle
     authentication_method
+    baseline_id
+    observed_at
+    payload_attributes
     canonical_payload
     canonicalization_algorithm
     canonicalization_version
@@ -101,6 +111,8 @@ class TransparencyLogEvent < ApplicationRecord
   validates :rekor_log_origin, length: { maximum: 255 }
 
   validate :canonical_payload_is_object
+  validate :payload_attributes_is_object
+  validates :baseline_id, :observed_at, presence: true, if: :baseline_event?
   validate :rekor_request_body_is_object
   validate :submitted_events_include_rekor_details
   validate :failed_events_include_error
@@ -115,6 +127,10 @@ class TransparencyLogEvent < ApplicationRecord
 
   def self.submission_health
     TransparencyLogEvent::SubmissionHealth.new(relation: all)
+  end
+
+  def baseline_event?
+    event_type.in?(BASELINE_EVENT_TYPES)
   end
 
   def encoded_payload_digest
@@ -191,6 +207,10 @@ class TransparencyLogEvent < ApplicationRecord
 
   def canonical_payload_is_object
     errors.add(:canonical_payload, "must be a JSON object") unless canonical_payload.is_a?(Hash)
+  end
+
+  def payload_attributes_is_object
+    errors.add(:payload_attributes, "must be a JSON object") unless payload_attributes.is_a?(Hash)
   end
 
   def rekor_request_body_is_object

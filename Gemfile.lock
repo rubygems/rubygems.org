@@ -991,6 +991,7 @@ DEPENDENCIES
   omniauth-rails_csrf_protection (~> 2.0)
   openid_connect (~> 2.5)
   opensearch-ruby (~> 3.4)
+  openssl
   pagy (~> 8.4)
   pg (~> 1.7)
   pg_query (~> 6.2)

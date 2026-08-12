@@ -34,6 +34,7 @@ require "helpers/password_helpers"
 require "helpers/policy_helpers"
 require "helpers/feature_flag_helpers"
 require "helpers/rake_task_helper"
+require "helpers/transparency_log_helpers"
 require "helpers/webauthn_helpers"
 require "helpers/oauth_helpers"
 require "helpers/avo_helpers"
@@ -82,6 +83,7 @@ class ActiveSupport::TestCase
   include PasswordHelpers
   include FeatureFlagHelpers
   include DatadogHelpers
+  include TransparencyLogHelpers
 
   cattr_accessor :parallel_worker_number
 

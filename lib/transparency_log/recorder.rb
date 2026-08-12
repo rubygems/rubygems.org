@@ -6,7 +6,7 @@ class TransparencyLog::Recorder
     @entry_builder = TransparencyLog::EntryBuilder.new
   end
 
-  def record(attributes)
+  def record(attributes, enqueue: true)
     event = TransparencyLogEvent.new(attributes)
 
     event.assign_attributes(
@@ -24,6 +24,7 @@ class TransparencyLog::Recorder
     event.rekor_request_body = @entry_builder.build(event)
 
     event.save!
-    ProcessTransparencyLogEventJob.perform_later(event)
+    ProcessTransparencyLogEventJob.perform_later(event) if enqueue
+    event
   end
 end

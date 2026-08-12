@@ -2,7 +2,6 @@
 
 require "base64"
 require "digest"
-require "openssl"
 
 class TransparencyLog::EntryBuilder
   KEY_DETAILS = "PKIX_ECDSA_P256_SHA_256"

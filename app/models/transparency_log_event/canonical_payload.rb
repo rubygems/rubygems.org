@@ -17,10 +17,20 @@ TransparencyLogEvent::CanonicalPayload = Data.define(:event) do
     }
     payload["gem"] = event.resource_name if event.resource_type == "rubygem"
     payload["corrects"] = corrects_event_uuid if corrects_event_uuid.present?
+    payload["baseline"] = baseline_payload if event.baseline_event?
+    payload["attributes"] = event.payload_attributes if event.payload_attributes.present?
     payload
   end
 
   private
+
+  def baseline_payload
+    {
+      "id" => event.baseline_id,
+      "observedAt" => event.observed_at.utc.iso8601(6),
+      "eventId" => event.event_uuid
+    }
+  end
 
   def resource_payload
     resource_id = event.resource_id

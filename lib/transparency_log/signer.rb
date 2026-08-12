@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "digest"
-require "openssl"
 
 class TransparencyLog::Signer
   DIGEST_ALGORITHM = "SHA-256"

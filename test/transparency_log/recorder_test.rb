@@ -42,4 +42,15 @@ class TransparencyLog::RecorderTest < ActiveSupport::TestCase
 
     assert_nil transparency_log_event.rekor_response_body
   end
+
+  test "can prepare and save an event without enqueueing it" do
+    event = nil
+
+    assert_no_enqueued_jobs only: ProcessTransparencyLogEventJob do
+      event = @recorder.record(@attributes, enqueue: false)
+    end
+
+    assert_predicate event, :persisted?
+    assert_predicate event, :pending?
+  end
 end
