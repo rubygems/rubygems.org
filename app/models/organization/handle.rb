@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Organization::Handle # rubocop:disable Metrics/ClassLength
+class Organization::Handle
   # Handles are compared without separators
   # ex "rubygems" reserves "ruby-gems" and "ruby_gems"
   def self.normalize(handle)
@@ -334,6 +334,7 @@ class Organization::Handle # rubocop:disable Metrics/ClassLength
 
   RESERVED = [
     *FUTURE_ROUTES,
+    *HELD_FOR_CLAIM
     *INFRASTRUCTURE,
     *REGISTRY_IDENTITY,
     *RESERVED_WORDS,
