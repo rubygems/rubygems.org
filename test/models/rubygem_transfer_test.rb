@@ -133,4 +133,82 @@ class RubygemTransferTest < ActiveSupport::TestCase
     assert_not @transfer.valid?
     assert_includes @transfer.errors[:rubygems], "#{@rubygem.name} is already owned by an organization"
   end
+
+  test "skips existing members instead of creating a duplicate or changing their role" do
+    co_owner = create(:user)
+    create(:ownership, rubygem: @rubygem, user: co_owner, role: :owner)
+    membership = create(:membership, :maintainer, user: co_owner, organization: @organization)
+    @transfer.invites.create!(user: co_owner, role: :admin)
+
+    OrganizationMailer.expects(:user_invited).never
+
+    assert_no_difference -> { Membership.unscoped.where(organization: @organization).count } do
+      @transfer.transfer!
+    end
+
+    assert_predicate @transfer, :completed?
+    assert_equal "maintainer", membership.reload.role
+    assert_not Ownership.exists?(user: co_owner, rubygem: @rubygem)
+    assert_equal @organization, @rubygem.reload.organization
+  end
+
+  test "removes ownership for existing members even when invite is outside contributor" do
+    co_owner = create(:user)
+    create(:ownership, rubygem: @rubygem, user: co_owner, role: :owner)
+    membership = create(:membership, :admin, user: co_owner, organization: @organization)
+    @transfer.invites.create!(user: co_owner, role: :outside_contributor)
+
+    @transfer.transfer!
+
+    assert_equal "admin", membership.reload.role
+    assert_not Ownership.exists?(user: co_owner, rubygem: @rubygem)
+  end
+
+  test "creates membership for new invitee and leaves existing member unchanged" do
+    existing_member = create(:user)
+    new_invitee = create(:user)
+    create(:ownership, rubygem: @rubygem, user: existing_member, role: :owner)
+    create(:ownership, rubygem: @rubygem, user: new_invitee, role: :owner)
+    membership = create(:membership, :maintainer, user: existing_member, organization: @organization)
+    @transfer.invites.create!(user: existing_member, role: :owner)
+    @transfer.invites.create!(user: new_invitee, role: :admin)
+
+    OrganizationMailer.expects(:user_invited).once.returns(stub(deliver_later: true))
+
+    assert_difference -> { Membership.unscoped.where(organization: @organization).count }, 1 do
+      @transfer.transfer!
+    end
+
+    assert_equal "maintainer", membership.reload.role
+    assert Membership.exists?(user: new_invitee, organization: @organization, role: :admin)
+    assert_not Ownership.exists?(user: existing_member, rubygem: @rubygem)
+    assert_not Ownership.exists?(user: new_invitee, rubygem: @rubygem)
+  end
+
+  test "removes ownership for existing members even without an invite role" do
+    co_owner = create(:user)
+    create(:ownership, rubygem: @rubygem, user: co_owner, role: :owner)
+    membership = create(:membership, :admin, user: co_owner, organization: @organization)
+    @transfer.invites.create!(user: co_owner, role: nil)
+
+    @transfer.transfer!
+
+    assert_equal "admin", membership.reload.role
+    assert_not Ownership.exists?(user: co_owner, rubygem: @rubygem)
+  end
+
+  test "does not review existing organization members on the users step" do
+    co_owner = create(:user)
+    outsider = create(:user)
+    other_rubygem = create(:rubygem, owners: [@owner, co_owner, outsider])
+    create(:membership, :admin, user: co_owner, organization: @organization)
+
+    @transfer.rubygems = [other_rubygem.id]
+    @transfer.save!
+
+    reviewable_user_ids = @transfer.reviewable_invites.map(&:user_id)
+
+    assert_includes reviewable_user_ids, outsider.id
+    assert_not_includes reviewable_user_ids, co_owner.id
+  end
 end
