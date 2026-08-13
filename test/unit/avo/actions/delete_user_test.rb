@@ -23,7 +23,7 @@ class DeleteUserTest < ActiveSupport::TestCase
       query: nil
     }
 
-    assert_enqueued_with(job: DeleteUserJob, args: [user: @user, actor: @current_user]) do
+    assert_enqueued_with(job: DeleteUserJob, args: [user: @user, actor: @current_user, keep_gems_published: false]) do
       @action.handle(**args)
     end
   end
@@ -45,6 +45,25 @@ class DeleteUserTest < ActiveSupport::TestCase
       @action.handle(**args)
     end
     assert_equal Avo::Actions::DeleteUser.blocked_reason, @action.response.dig(:messages, 0, :body)
+  end
+
+  should "enqueue deletion for a sole owner when keeping gems published" do
+    rubygem = create(:rubygem, name: "old-gem-preserved-for-deleted-user", owners: [@user])
+    create(:version, rubygem:, created_at: 31.days.ago)
+    args = {
+      current_user: @current_user,
+      resource: @resource,
+      records: [@user],
+      fields: {
+        comment: "Deleting at the user's request",
+        keep_gems_published: "1"
+      },
+      query: nil
+    }
+
+    assert_enqueued_with(job: DeleteUserJob, args: [user: @user, actor: @current_user, keep_gems_published: true]) do
+      @action.handle(**args)
+    end
   end
 
   should "not enqueue deletion when the user is the sole owner of a gem version with too many downloads" do

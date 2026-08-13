@@ -33,7 +33,7 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
     assert page.has_content? "Delete User"
   end
 
-  test "disabling the delete action when the user is the sole owner of an old gem version" do
+  test "enabling the delete action when the user is the sole owner of an old gem version" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
     user = create(:user)
     rubygem = create(:rubygem, name: "admin-delete-blocked-old-gem", owners: [user])
@@ -42,14 +42,10 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
     get avo.resources_user_path(user)
 
     assert_response :success
-    assert page.has_content?(
-      "Delete User — Blocked because this user is the sole owner of gem versions published more than 30 days ago " \
-      "or with more than 100,000 downloads."
-    )
-    assert_select "a[data-action-name^='Delete User'][data-disabled='true']", count: 1
+    assert_select "a[data-action-name='Delete User'][data-disabled='false']", count: 1
   end
 
-  test "disabling the delete action when the user is the sole owner of a gem version with too many downloads" do
+  test "enabling the delete action when the user is the sole owner of a gem version with too many downloads" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
     user = create(:user)
     rubygem = create(:rubygem, name: "admin-delete-blocked-popular-gem", owners: [user])
@@ -59,11 +55,7 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
     get avo.resources_user_path(user)
 
     assert_response :success
-    assert page.has_content?(
-      "Delete User — Blocked because this user is the sole owner of gem versions published more than 30 days ago " \
-      "or with more than 100,000 downloads."
-    )
-    assert_select "a[data-action-name^='Delete User'][data-disabled='true']", count: 1
+    assert_select "a[data-action-name='Delete User'][data-disabled='false']", count: 1
   end
 
   test "enabling the delete action when an old gem version has another owner" do

@@ -21,7 +21,7 @@ class User < ApplicationRecord
   after_update :record_email_verified_event, if: -> { saved_change_to_email? && email_confirmed? }
   after_update :record_password_update_event, if: :saved_change_to_encrypted_password?
   after_update :record_policies_acknowledged_event, if: :saved_change_to_policies_acknowledged_at?
-  before_discard :yank_gems
+  before_discard :yank_gems, unless: :keep_gems_published?
   before_discard :expire_all_api_keys
   before_discard :destroy_associations_for_discard
   before_discard :clear_personal_attributes
@@ -255,6 +255,13 @@ class User < ApplicationRecord
       .exists?
   end
 
+  def delete_account!(keep_gems_published: false)
+    @keep_gems_published = keep_gems_published
+    discard!
+  ensure
+    @keep_gems_published = false
+  end
+
   def remember_me!
     self.remember_token = Clearance::Token.new
     self.remember_token_expires_at = Gemcutter::REMEMBER_FOR.from_now
@@ -309,6 +316,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def keep_gems_published?
+    @keep_gems_published == true
+  end
 
   def update_email
     update(email: unconfirmed_email, unconfirmed_email: nil, mail_fails: 0)
