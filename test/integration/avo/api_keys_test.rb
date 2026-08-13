@@ -7,13 +7,14 @@ class Avo::ApiKeysTest < ActionDispatch::IntegrationTest
 
   setup { requires_avo_pro }
 
-  test "showing the revoke action to rubygems.org operators on the API key page" do
+  test "showing API key actions to rubygems.org operators on the API key page" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
     api_key = create(:api_key, name: "compromised-deploy-key")
 
     get avo.resources_api_key_path(api_key)
 
     assert_response :success
+    assert_select "a[data-action-name='Change API Key Name'][data-disabled='false']", count: 1
     assert_select "a[data-action-name='Revoke API Key'][data-disabled='false']", count: 1
   end
 
@@ -25,6 +26,7 @@ class Avo::ApiKeysTest < ActionDispatch::IntegrationTest
     get avo.resources_api_key_path(api_key)
 
     assert_response :success
+    assert_select "a[data-action-name='Change API Key Name'][data-disabled='false']", count: 1
     assert page.has_content?("Revoke API Key — #{Avo::Actions::RevokeApiKey.already_revoked_reason}")
     assert_select "a[data-action-name^='Revoke API Key'][data-disabled='true']", count: 1
   end
