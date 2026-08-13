@@ -8,6 +8,7 @@ class Avo::Resources::ApiKey < Avo::BaseResource
   class TrustedPublisherFilter < Avo::Filters::ScopeBooleanFilter; end
 
   def actions
+    action Avo::Actions::ChangeApiKeyName
     action Avo::Actions::RevokeApiKey
   end
 
