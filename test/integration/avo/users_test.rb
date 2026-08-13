@@ -7,22 +7,20 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
 
   test "getting users as admin" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
-
-    get avo.resources_users_path
-
-    assert_response :success
-
-    user = create(:user)
+    user = create(:user, created_at: Time.zone.local(1997, 4, 15, 12, 30))
 
     get avo.resources_users_path
 
     assert_response :success
     assert page.has_content? user.name
+    assert_not page.has_content? "Created at"
 
     get avo.resources_user_path(user)
 
     assert_response :success
     assert page.has_content? user.name
+    assert page.has_content? "Created at"
+    assert page.has_content? user.created_at.utc.iso8601
   end
 
   test "showing the delete action to rubygems.org operators on the user page" do

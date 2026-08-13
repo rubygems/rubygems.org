@@ -22,6 +22,7 @@ class Avo::Resources::User < Avo::BaseResource
 
   def fields # rubocop:disable Metrics
     field :id, as: :id
+    field :created_at, as: :date_time, readonly: true, only_on: :show
 
     field :email, as: :text
     field :gravatar,
