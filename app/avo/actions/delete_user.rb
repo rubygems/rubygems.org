@@ -14,7 +14,8 @@ class Avo::Actions::DeleteUser < Avo::Actions::ApplicationAction
 
   self.message = lambda {
     "Are you sure you would like to delete user #{record.display_handle} with #{record.email}? " \
-      "This action can't be undone. By default, gems for which this user is the only owner will be yanked."
+      "This action can't be undone. By default, gems for which this user is the only owner will be yanked. " \
+      "Check 'Keep gems published' to preserve those gems as published without an owner."
   }
 
   self.confirm_button_label = "Delete User"
