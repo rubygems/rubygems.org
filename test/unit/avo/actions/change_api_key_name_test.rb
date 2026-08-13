@@ -60,6 +60,15 @@ class ChangeApiKeyNameTest < ActiveSupport::TestCase
     assert_equal "Change API Key Name", Audit.sole.action
   end
 
+  should "change the name of a soft-deleted API key" do
+    @api_key.update_column(:soft_deleted_at, 1.hour.ago)
+
+    @action.handle(**action_args(new_name: "redacted-key", comment: "Removing PII from a soft-deleted API key"))
+
+    assert_equal "redacted-key", @api_key.reload.name
+    assert_equal "Change API Key Name", Audit.sole.action
+  end
+
   should "reject an invalid API key name" do
     @action.handle(**action_args(new_name: "", comment: "Attempting to remove PII from this API key"))
 
