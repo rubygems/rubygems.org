@@ -41,6 +41,22 @@ class DeleteUserJobTest < ActiveJob::TestCase
     assert_predicate user.reload, :discarded?
   end
 
+  test "admin can delete sole owner while keeping gem published" do
+    user = create(:user)
+    actor = create(:admin_github_user, :is_admin)
+    rubygem = create(:rubygem, name: "admin-preserved-unowned-gem", owners: [user])
+    version = create(:version, rubygem:, created_at: 31.days.ago)
+
+    Mailer.expects(:deletion_complete).never
+    User.any_instance.expects(:yank_gems).never
+    DeleteUserJob.new(user:, actor:, keep_gems_published: true).perform(user:, actor:, keep_gems_published: true)
+
+    assert_predicate user.reload, :discarded?
+    assert_predicate rubygem.reload, :indexed?
+    assert_predicate rubygem, :unowned?
+    assert_predicate version.reload, :indexed?
+  end
+
   test "does not send deletion failed when deletion is initiated by an admin" do
     user = create(:user)
     actor = create(:admin_github_user, :is_admin)
