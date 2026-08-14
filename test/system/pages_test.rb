@@ -44,7 +44,7 @@ class PagesTest < ApplicationSystemTestCase
 
     assert_text("Security")
     assert_text("gem-security@rubygems.org")
-    assert_text("159558E35BCCF820A48DDB7CD170F9A9E4FB3D7A")
+    assert_text("1595 58E3 5BCC F820 A48D DB7C D170 F9A9 E4FB 3D7A")
     assert_link(href: "/pages/security-engineers-in-residence-faq#our-public-key")
   end
 
