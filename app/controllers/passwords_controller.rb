@@ -7,13 +7,11 @@ class PasswordsController < ApplicationController
 
   before_action :ensure_email_present, only: %i[create]
 
-  before_action :no_referrer, only: %i[edit otp_edit webauthn_edit]
-  before_action :validate_confirmation_token, only: %i[edit otp_edit webauthn_edit]
-  before_action :require_mfa, only: %i[edit], unless: -> { params[:reason] == "compromised" }
+  before_action :no_referrer, only: :edit
+  before_action :begin_password_reset, only: :edit
+  before_action :load_password_reset, only: %i[reset otp_edit webauthn_edit update]
   before_action :validate_otp, only: %i[otp_edit]
   before_action :validate_webauthn, only: %i[webauthn_edit]
-  before_action :password_reset_session_verified, only: %i[edit otp_edit webauthn_edit]
-  before_action :set_compromised_flag, only: %i[edit otp_edit webauthn_edit]
   after_action :delete_mfa_expiry_session, only: %i[otp_edit webauthn_edit]
 
   before_action :validate_password_reset_session, only: :update
@@ -23,6 +21,14 @@ class PasswordsController < ApplicationController
   end
 
   def edit
+    redirect_to reset_password_path
+  end
+
+  def reset
+    return require_mfa if password_reset_requires_mfa?
+
+    verify_password_reset_session unless password_reset_session_verified?
+    set_compromised_flag
     render :edit
   end
 
@@ -30,7 +36,7 @@ class PasswordsController < ApplicationController
     user = User.find_by_normalized_email(@email)
 
     if user
-      user.forgot_password!
+      user.invalidate_password_reset!
       ::PasswordMailer.change_password(user).deliver_later
     end
 
@@ -38,25 +44,29 @@ class PasswordsController < ApplicationController
   end
 
   def update
-    if @user.update_password reset_params[:password]
+    case @user.update_password_with_token(reset_params[:password], token: session[:password_reset_token])
+    when :updated
       @user.reset_api_key! if reset_params[:reset_api_key] == "true" # singular
       @user.api_keys.expire_all! if reset_params[:reset_api_keys] == "true" # plural
       StatsD.increment "login.password_compromised.reset_completed" if session[:password_reset_reason] == "compromised"
       delete_password_reset_session
       flash[:notice] = t(".success")
       redirect_to signed_in? ? dashboard_path : sign_in_path
-    else
+    when :invalid_password
+      set_compromised_flag
       flash.now[:alert] = t(".failure")
       render :edit, status: :unprocessable_content
+    else
+      login_failure(t("passwords.edit.token_failure"))
     end
   end
 
   def otp_edit
-    render :edit
+    complete_password_reset_verification
   end
 
   def webauthn_edit
-    render :edit
+    complete_password_reset_verification
   end
 
   private
@@ -73,37 +83,54 @@ class PasswordsController < ApplicationController
     render template: "passwords/new", status: :unprocessable_content
   end
 
-  def validate_confirmation_token
-    confirmation_token = params.permit(:token).fetch(:token, "").to_s
-    return login_failure(t("passwords.edit.token_failure")) if confirmation_token.blank?
-    @user = User.find_by(confirmation_token:)
-    return login_failure(t("passwords.edit.token_failure")) unless @user&.valid_confirmation_token?
-    session[:password_reset_reason] = "compromised" if params[:reason] == "compromised"
+  def begin_password_reset
+    token = params.permit(:token).fetch(:token, "").to_s
+    @user = User.find_by_password_reset_token(token)
+    return login_failure(t("passwords.edit.token_failure")) unless @user&.valid_password_reset_token?(token)
+
+    compromised = @user.valid_compromised_password_reset_reason?(params[:reason], token:)
     sign_out if signed_in? && @user != current_user
+    reset_session
+    session[:password_reset_user] = @user.id
+    session[:password_reset_token] = token
+    session[:password_reset_reason] = "compromised" if compromised
   end
 
-  # The order of these methods intends to leave the session fully reset if we
-  # fail to invalidate the token for some reason, since this would indicate
-  # something is wrong with the user, necessitating help from an admin.
-  def password_reset_session_verified
-    reason = session[:password_reset_reason]
-    reset_session
-    @user.update!(confirmation_token: nil)
-    session[:password_reset_verified_user] = @user.id
+  def load_password_reset
+    token = session[:password_reset_token]
+    @user = User.find_by_password_reset_token(token)
+    return if @user && @user.id == session[:password_reset_user] && @user.valid_password_reset_token?(token)
+
+    login_failure(t("passwords.edit.token_failure"))
+  end
+
+  def password_reset_requires_mfa?
+    @user.mfa_enabled? && session[:password_reset_reason] != "compromised" && !password_reset_session_verified?
+  end
+
+  def verify_password_reset_session
     session[:password_reset_verified] = Gemcutter::PASSWORD_VERIFICATION_EXPIRY.from_now
-    session[:password_reset_reason] = reason if reason.present?
+  end
+
+  def complete_password_reset_verification
+    delete_mfa_session
+    verify_password_reset_session
+    redirect_to reset_password_path
+  end
+
+  def password_reset_session_verified?
+    session[:password_reset_verified].present? && Time.current.before?(session[:password_reset_verified])
   end
 
   def validate_password_reset_session
     return login_failure(t("passwords.edit.token_failure")) if session[:password_reset_verified].nil?
-    return login_failure(t("verification_expired")) if Time.current.after?(session[:password_reset_verified])
-    @user = User.find_by(id: session[:password_reset_verified_user])
-    login_failure(t("verification_expired")) unless @user
+    login_failure(t("verification_expired")) if Time.current.after?(session[:password_reset_verified])
   end
 
   def delete_password_reset_session
     delete_mfa_session
-    session.delete(:password_reset_verified_user)
+    session.delete(:password_reset_user)
+    session.delete(:password_reset_token)
     session.delete(:password_reset_verified)
     session.delete(:password_reset_reason)
   end
@@ -122,10 +149,10 @@ class PasswordsController < ApplicationController
   end
 
   def otp_verification_url
-    otp_edit_password_url(token: @user.confirmation_token)
+    otp_edit_password_url
   end
 
   def webauthn_verification_url
-    webauthn_edit_password_url(token: @user.confirmation_token)
+    webauthn_edit_password_url
   end
 end

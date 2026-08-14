@@ -128,9 +128,9 @@ class Rack::Attack
         # otp_create doesn't have remember_token set. use session[:mfa_user]
         if protected_route?([otp_create_action], req.path, req.request_method)
           action_dispatch_req.session.fetch("mfa_user", "").presence
-        # password#otp_edit has unique confirmation token
+        # password#otp_edit has the reset user bound to the session
         elsif protected_route?([mfa_password_edit_action], req.path, req.request_method)
-          req.params.fetch("token", "").presence
+          action_dispatch_req.session.fetch("password_reset_user", "").presence
         else
           User.find_by_remember_token(action_dispatch_req.cookie_jar.signed["remember_token"])&.email.presence
         end

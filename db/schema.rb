@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_23_061553) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_14_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -666,6 +666,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_061553) do
     t.integer "mail_fails", default: 0
     t.string "mfa_hashed_recovery_codes", default: [], array: true
     t.integer "mfa_level", default: 0
+    t.string "password_reset_token_digest"
+    t.datetime "password_reset_token_expires_at"
     t.datetime "policies_acknowledged_at"
     t.boolean "public_email", default: false, null: false
     t.string "remember_token", limit: 128
@@ -684,6 +686,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_061553) do
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token"
     t.index ["id", "token"], name: "index_users_on_id_and_token"
     t.index ["id"], name: "index_users_on_policies_not_acknowledged", where: "(policies_acknowledged_at IS NULL)"
+    t.index ["password_reset_token_digest"], name: "index_users_on_password_reset_token_digest", unique: true
     t.index ["remember_token"], name: "index_users_on_remember_token"
     t.index ["token"], name: "index_users_on_token"
     t.index ["webauthn_id"], name: "index_users_on_webauthn_id", unique: true

@@ -21,7 +21,6 @@ class Avo::Actions::CreateUser < Avo::Actions::ApplicationAction
         password: SecureRandom.hex(16),
         email_confirmed: true
       )
-      user.generate_confirmation_token
       user.save!
 
       ::PasswordMailer.change_password(user).deliver_later

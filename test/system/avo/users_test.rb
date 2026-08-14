@@ -569,9 +569,14 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     end
 
     page.assert_text "Action ran successfully!"
+    user = User.sole
+    created_user_attributes = user.attributes
+
+    assert_nil created_user_attributes["confirmation_token"]
+
     perform_enqueued_jobs
 
-    user = User.sole
+    user.reload
     audit = user.audits.sole
     event = user.events.where(tag: Events::UserEvent::CREATED).sole
 
@@ -583,7 +588,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       {
         "records" => {
           "gid://gemcutter/User/#{user.id}" => {
-            "changes" =>   user.attributes.transform_values { [nil, it.as_json] },
+            "changes" =>   created_user_attributes.transform_values { [nil, it.as_json] },
             "unchanged" => {}
           },
           event.to_gid.as_json => {
