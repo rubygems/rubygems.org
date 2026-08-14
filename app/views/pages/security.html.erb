@@ -49,6 +49,36 @@
     </small>
   </p>
 
+  <h2>Gem Security Outreach</h2>
+
+  <p>
+    Sometimes the contact goes the other way. If our
+    <%= link_to "security team", page_path("security-engineers-in-residence-faq") %>
+    confirms a vulnerability in a gem you maintain, or receives a report about one,
+    we will contact you privately before anything is made public. <strong>If we need
+    to reach out to you about a gem security issue, we will use
+    <a href="mailto:gem-security@rubygems.org">gem-security@rubygems.org</a>.</strong>
+    We will never ask you for a password, an API key, or any other credential.
+  </p>
+
+  <p>
+    Mail from that address is <a href="https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail">
+      DKIM signed</a> under <code>rubygems.org</code>, so your mail provider can
+    verify that a message really came from us. If something claiming to be from
+    the team fails that check, or simply feels off, don’t act on the message
+    itself — email us separately and ask.
+  </p>
+
+  <p>
+    Where a conversation calls for encrypted or signed email, we use the GPG
+    key for <code>gem-security@rubygems.org</code>, with the fingerprint
+    <code>159558E35BCCF820A48DDB7CD170F9A9E4FB3D7A</code>. Please encrypt anything
+    sensitive, such as proof-of-concept code, to that key, and check the
+    fingerprint matches the above before you trust it. The full public key is published in
+    <%= link_to "our security team’s FAQ",
+          page_path("security-engineers-in-residence-faq", anchor: "our-public-key") %>.
+  </p>
+
   <h2>Reporting RubyGems.org Website Problems</h2>
   <p>
     If you're having trouble pushing a gem, or otherwise need help with your
