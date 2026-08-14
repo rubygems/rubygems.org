@@ -4,10 +4,9 @@ class AddPasswordResetTokenDigestToUsers < ActiveRecord::Migration[8.1]
   disable_ddl_transaction!
 
   def change
-    change_table :users, bulk: true do |t|
-      t.string :password_reset_token_digest
-      t.datetime :password_reset_token_expires_at
-    end
+    # Strong Migrations cannot inspect change_table blocks.
+    add_column :users, :password_reset_token_digest, :string
+    add_column :users, :password_reset_token_expires_at, :datetime
     add_index :users, :password_reset_token_digest, unique: true, algorithm: :concurrently
   end
 end
