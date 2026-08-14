@@ -260,6 +260,7 @@ Rails.application.routes.draw do
     end
 
     resource :password, only: %i[new create edit update] do
+      get 'reset', to: 'passwords#reset', as: :reset
       post 'otp_edit', to: 'passwords#otp_edit', as: :otp_edit
       post 'webauthn_edit', to: 'passwords#webauthn_edit', as: :webauthn_edit
     end

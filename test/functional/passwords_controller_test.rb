@@ -25,16 +25,38 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     end
 
     context "with valid params" do
-      should "set a valid confirmation_token" do
+      should "enqueue the mail without putting the raw token in job arguments" do
+        @user = create(:user)
+
+        assert_enqueued_email_with PasswordMailer, :change_password, args: [@user] do
+          post password_path, params: { password: { email: @user.email } }
+        end
+      end
+
+      should "invalidate an existing reset token before the mail job runs" do
+        @user = create(:user)
+        token = @user.issue_password_reset!
+
+        post password_path, params: { password: { email: @user.email } }
+
+        refute @user.reload.valid_password_reset_token?(token)
+        assert_nil @user.password_reset_token_digest
+        assert_nil @user.password_reset_token_expires_at
+      end
+
+      should "store only a digest of the password reset token" do
         @user = create(:user)
 
         assert_nil @user.confirmation_token
 
-        post password_path, params: { password: { email: @user.email } }
+        perform_enqueued_jobs do
+          post password_path, params: { password: { email: @user.email } }
+        end
 
         assert_select "p", "You will receive an email within the next few minutes. It contains instructions for changing your password."
-        assert_not_nil @user.reload.confirmation_token
-        assert_predicate @user, :valid_confirmation_token?
+        assert_not_nil @user.reload.password_reset_token_digest
+        assert_nil @user.confirmation_token
+        assert_in_delta 3.hours.from_now, @user.password_reset_token_expires_at, 2.seconds
       end
     end
   end
@@ -42,7 +64,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   context "on GET to edit" do
     setup do
       @user = create(:user)
-      @user.forgot_password!
+      @token = @user.issue_password_reset!
     end
 
     context "with incorrect token" do
@@ -55,33 +77,28 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       end
     end
 
-    context "with valid confirmation_token" do
+    context "with a valid password reset token" do
       context "when not signed in" do
         should "presents the password edit form" do
-          get edit_password_path, params: { token: @user.confirmation_token }
+          begin_password_reset
 
           assert_response :success
           assert_new_password_form
 
-          assert_nil @user.reload.confirmation_token
+          assert @user.reload.valid_password_reset_token?(@token)
           refute_signed_in
-
-          # instruct the browser not to send referrer that contains the token" do
-          assert_equal "no-referrer", response.headers["Referrer-Policy"]
+          assert_equal reset_password_path, request.path
         end
       end
 
       context "when signed in as the user" do
         should "presents the password edit form" do
-          get edit_password_path(as: @user), params: { token: @user.confirmation_token }
+          begin_password_reset(as: @user)
 
           assert_response :success
           assert_new_password_form
 
-          assert_nil @user.reload.confirmation_token
-
-          # instruct the browser not to send referrer that contains the token" do
-          assert_equal "no-referrer", response.headers["Referrer-Policy"]
+          assert @user.reload.valid_password_reset_token?(@token)
         end
       end
 
@@ -89,42 +106,58 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         should "presents the password edit form for the token identified user, signing the other user out" do
           @other_user = create(:user, api_key: "otheruserkey")
 
-          get edit_password_path(as: @other_user), params: { token: @user.confirmation_token }
+          begin_password_reset(as: @other_user)
 
           assert_response :success
           assert_new_password_form
 
           refute_signed_in
-          assert_nil @user.reload.confirmation_token
-
-          # instruct the browser not to send referrer that contains the token" do
-          assert_equal "no-referrer", response.headers["Referrer-Policy"]
+          assert @user.reload.valid_password_reset_token?(@token)
         end
       end
     end
 
-    context "with reason=compromised param" do
+    context "with a signed compromised reason" do
       should "show compromised warning banner" do
-        get edit_password_path, params: { token: @user.confirmation_token, reason: "compromised" }
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+        begin_password_reset(reason: @user.compromised_password_reset_reason_for(@token))
 
         assert_response :success
+        assert_new_password_form
         assert page.has_content?(I18n.t("passwords.edit.compromised_heading"))
+      end
+    end
+
+    context "with an unsigned compromised reason" do
+      should "not treat the reset as compromised" do
+        begin_password_reset(reason: "compromised")
+
+        assert_response :success
+        assert_not page.has_content?(I18n.t("passwords.edit.compromised_heading"))
+      end
+
+      should "not bypass enabled MFA" do
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+        begin_password_reset(reason: "compromised")
+
+        assert_response :success
+        assert_otp_form
       end
     end
 
     context "without reason param" do
       should "not show compromised warning banner" do
-        get edit_password_path, params: { token: @user.confirmation_token }
+        begin_password_reset
 
         assert_response :success
         assert_not page.has_content?(I18n.t("passwords.edit.compromised_heading"))
       end
     end
 
-    context "with expired confirmation_token" do
+    context "with an expired password reset token" do
       should "redirect to the sign in page" do
-        @user.update_attribute(:token_expires_at, 1.minute.ago)
-        get edit_password_path, params: { token: @user.confirmation_token }
+        @user.update_attribute(:password_reset_token_expires_at, 1.minute.ago)
+        get edit_password_path, params: { token: @token }
 
         assert_redirected_to sign_in_path
         assert_equal I18n.t("passwords.edit.token_failure"), flash[:alert]
@@ -135,7 +168,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     context "with totp enabled" do
       should "display otp form" do
         @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
-        get edit_password_path, params: { token: @user.confirmation_token }
+        begin_password_reset
 
         assert_response :success
         assert_otp_form
@@ -148,7 +181,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         create(:webauthn_credential, user: @user)
         @user.update!(new_mfa_recovery_codes: nil, mfa_hashed_recovery_codes: [])
 
-        get edit_password_path, params: { token: @user.confirmation_token }
+        begin_password_reset
 
         assert_response :success
         assert_webauthn_form
@@ -160,11 +193,11 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     context "when user has webauthn credentials and recovery codes" do
       should "display webauthn prompt and recovery code prompt" do
         create(:webauthn_credential, user: @user)
-        get edit_password_path, params: { token: @user.confirmation_token }
+        begin_password_reset
 
         assert_response :success
         assert_webauthn_form
-        assert_select "form[action=?]", otp_edit_password_url(token: @user.confirmation_token) do
+        assert_select "form[action=?]", otp_edit_password_url do
           assert_select "input[type=text][autocomplete=off]" # no autocomplete for recovery code only
           assert_select "input[type=submit][value=?]", I18n.t("authenticate")
         end
@@ -178,7 +211,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
         create(:webauthn_credential, user: @user)
 
-        get edit_password_path, params: { token: @user.confirmation_token }
+        begin_password_reset
 
         assert_response :success
         assert_webauthn_form
@@ -192,7 +225,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   context "on POST to otp_edit" do
     setup do
       @user = create(:user)
-      @user.forgot_password!
+      @token = @user.issue_password_reset!
     end
 
     context "when providing incorrect token" do
@@ -211,22 +244,23 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
       context "when OTP is correct" do
         should "display edit form" do
-          get edit_password_path, params: { token: @user.confirmation_token }
-          post otp_edit_password_path, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
+          begin_password_reset
+          post otp_edit_password_path, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+          follow_redirect!
 
           assert_response :success
           assert_new_password_form
 
           refute_signed_in
-          assert_nil @user.reload.confirmation_token
+          assert @user.reload.valid_password_reset_token?(@token)
           assert_nil session[:mfa_expires_at]
         end
       end
 
       context "when OTP is incorrect" do
         should "display error message and prompt for MFA again" do
-          get edit_password_path, params: { token: @user.confirmation_token }
-          post otp_edit_password_path, params: { token: @user.confirmation_token, otp: "wrong" }
+          begin_password_reset
+          post otp_edit_password_path, params: { otp: "wrong" }
 
           assert_response :unauthorized
           assert page.has_content?("Your OTP code is incorrect.")
@@ -238,9 +272,9 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
       context "when the OTP session is expired" do
         should "redirect to the sign in page" do
-          get edit_password_path, params: { token: @user.confirmation_token }
+          begin_password_reset
           travel 16.minutes do
-            post otp_edit_password_path, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
+            post otp_edit_password_path, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
           end
 
           assert_redirected_to sign_in_path
@@ -256,7 +290,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   context "on POST to webauthn_edit" do
     setup do
       @user = create(:user)
-      @user.forgot_password!
+      @token = @user.issue_password_reset!
       @webauthn_credential = create(:webauthn_credential, user: @user)
 
       @origin = WebAuthn.configuration.allowed_origins.first
@@ -266,26 +300,27 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     context "with correct webauthn" do
       should "display edit form" do
-        get edit_password_path, params: { token: @user.confirmation_token }
+        begin_password_reset
         post webauthn_edit_password_path, params: {
-          token: @user.confirmation_token, credentials: webauthn_result
+          credentials: webauthn_result
         }
+        follow_redirect!
 
         assert_response :success
         assert_new_password_form
 
         refute_signed_in
-        assert_nil @user.reload.confirmation_token
+        assert @user.reload.valid_password_reset_token?(@token)
         assert_nil session[:mfa_expires_at]
       end
     end
 
-    context "when providing incorrect confirmation_token" do
+    context "when the password reset token has been invalidated" do
       should "redirect to the sign in page" do
-        get edit_password_path, params: { token: @user.confirmation_token }
-        post webauthn_edit_password_path, params: {
-          token: "wrongtoken", credentials: webauthn_result
-        }
+        begin_password_reset
+        credentials = webauthn_result
+        @user.invalidate_password_reset!
+        post webauthn_edit_password_path, params: { credentials: }
 
         assert_redirected_to sign_in_path
         assert_equal "Please double check the URL or try submitting a new password reset.", flash[:alert]
@@ -297,8 +332,8 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     context "when not providing credentials" do
       should "display error message and prompt for MFA again" do
-        get edit_password_path, params: { token: @user.confirmation_token }
-        post webauthn_edit_password_path, params: { token: @user.confirmation_token }
+        begin_password_reset
+        post webauthn_edit_password_path
 
         assert_response :unauthorized
         assert page.has_content?("Credentials required")
@@ -310,10 +345,10 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     context "when providing wrong credential" do
       should "display error message and prompt for MFA again" do
-        get edit_password_path, params: { token: @user.confirmation_token }
+        begin_password_reset
         wrong_challenge = SecureRandom.hex
         post webauthn_edit_password_path, params: {
-          token: @user.confirmation_token, credentials: webauthn_result(wrong_challenge)
+          credentials: webauthn_result(wrong_challenge)
         }
 
         assert_response :unauthorized
@@ -326,10 +361,10 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     context "when webauthn session is expired" do
       should "redirect to the sign in page" do
-        get edit_password_path, params: { token: @user.confirmation_token }
+        begin_password_reset
         travel 16.minutes do
           post webauthn_edit_password_path, params: {
-            token: @user.confirmation_token, credentials: webauthn_result
+            credentials: webauthn_result
           }
         end
 
@@ -344,7 +379,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   context "on PUT to update" do
     setup do
       @user = create(:user)
-      @user.forgot_password!
+      @token = @user.issue_password_reset!
       @api_key = @user.api_key
       @new_api_key = create(:api_key, owner: @user)
       @old_encrypted_password = @user.encrypted_password
@@ -370,7 +405,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     context "when verification has expired" do
       should "redirect to the sign in page" do
-        get edit_password_path, params: { token: @user.confirmation_token }
+        begin_password_reset
         travel 16.minutes do
           put password_path, params: {
             password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
@@ -388,9 +423,26 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       end
     end
 
+    context "when the reset token expires after opening the form" do
+      should "reject the password update" do
+        @user.update!(password_reset_token_expires_at: 1.minute.from_now)
+        begin_password_reset
+
+        travel 2.minutes do
+          put password_path, params: {
+            password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
+          }
+        end
+
+        assert_redirected_to sign_in_path
+        assert_equal I18n.t("passwords.edit.token_failure"), flash[:alert]
+        assert_equal @old_encrypted_password, @user.reload.encrypted_password
+      end
+    end
+
     context "with invalid password" do
       should "redisplay edit form and not change password" do
-        get edit_password_path, params: { token: @user.confirmation_token }
+        begin_password_reset
         put password_path, params: {
           password_reset: { reset_api_key: "true", password: "pass" }
         }
@@ -412,7 +464,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     context "with valid password without reset_api_key" do
       should "change password but not change api_key" do
-        get edit_password_path, params: { token: @user.confirmation_token }
+        begin_password_reset
         put password_path, params: {
           password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
@@ -429,7 +481,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     context "with valid password with reset_api_key false" do
       should "change password but not change api_key" do
-        get edit_password_path, params: { token: @user.confirmation_token }
+        begin_password_reset
         put password_path, params: {
           password_reset: { reset_api_key: "false", password: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
@@ -446,7 +498,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     context "with valid password with reset_api_key" do
       should "change password and reset api_key" do
-        get edit_password_path, params: { token: @user.confirmation_token }
+        begin_password_reset
         put password_path, params: {
           password_reset: { reset_api_key: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
         }
@@ -466,7 +518,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     context "with valid password with reset_api_key and reset_api_keys" do
       should "change password, reset legacy api_key, and expire all api_keys" do
-        get edit_password_path, params: { token: @user.confirmation_token }
+        begin_password_reset
         put password_path, params: {
           password_reset: { reset_api_key: "true", reset_api_keys: "true",
                             password: PasswordHelpers::SECURE_TEST_PASSWORD }
@@ -487,6 +539,18 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
   private
 
+  def begin_password_reset(as: nil, reason: nil)
+    path = as ? edit_password_path(as:) : edit_password_path
+    reset_params = { token: @token }
+    reset_params[:reason] = reason if reason
+
+    get path, params: reset_params
+
+    assert_equal "no-referrer", response.headers["Referrer-Policy"]
+    assert_redirected_to reset_password_path
+    follow_redirect!
+  end
+
   def webauthn_result(challenge = nil)
     challenge ||= session["webauthn_authentication"]["challenge"]
     WebauthnHelpers.create_credential(webauthn_credential: @webauthn_credential, client: @client)
@@ -495,7 +559,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
   def assert_otp_form
     assert_select "h2", I18n.t("multifactor_auths.prompt.otp_code")
-    assert_select "form[action=?]", otp_edit_password_url(token: @user.confirmation_token) do
+    assert_select "form[action=?]", otp_edit_password_url do
       assert_select "input[type=text][autocomplete=one-time-code]"
       assert_select "input[type=submit][value=?]", I18n.t("authenticate")
     end
@@ -504,7 +568,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   def assert_webauthn_form
     assert_select "h2", I18n.t("multifactor_auths.prompt.security_device")
     assert_select "p", I18n.t("multifactor_auths.prompt.webauthn_credential_note")
-    assert_select "form.js-webauthn-session--form[action=?]", webauthn_edit_password_url(token: @user.confirmation_token) do
+    assert_select "form.js-webauthn-session--form[action=?]", webauthn_edit_password_url do
       assert_select "input[type=submit][value=?]", I18n.t("multifactor_auths.prompt.sign_in_with_webauthn_credential")
     end
   end

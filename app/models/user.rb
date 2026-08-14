@@ -6,6 +6,7 @@ class User < ApplicationRecord
   include Events::Recordable
   include Gravtastic
   include UserMultifactorMethods
+  include PasswordResettable
 
   is_gravtastic default: "retro"
 
@@ -15,7 +16,7 @@ class User < ApplicationRecord
   default_scope { not_deleted }
 
   before_save :_generate_confirmation_token_no_reset_unconfirmed_email, if: :will_save_change_to_unconfirmed_email?
-  before_create :_generate_confirmation_token_no_reset_unconfirmed_email
+  before_create :_generate_confirmation_token_no_reset_unconfirmed_email, unless: :email_confirmed?
   after_create :record_create_event
   after_update :record_email_update_event, if: :email_was_updated?
   after_update :record_email_verified_event, if: -> { saved_change_to_email? && email_confirmed? }

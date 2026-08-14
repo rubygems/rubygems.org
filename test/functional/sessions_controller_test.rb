@@ -864,7 +864,8 @@ class SessionsControllerTest < ActionController::TestCase
     context "when user has no MFA" do
       context "on POST to create" do
         setup do
-          @original_confirmation_token = @user.confirmation_token
+          @original_password_reset_token = @user.issue_password_reset!
+          @original_password_reset_token_digest = @user.password_reset_token_digest
           post :create, params: { session: { who: "compromised_user", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
         end
 
@@ -890,8 +891,16 @@ class SessionsControllerTest < ActionController::TestCase
           assert_enqueued_email_with PasswordMailer, :compromised_password_reset, args: [@user]
         end
 
-        should "rotate the password reset confirmation token" do
-          assert_not_equal @original_confirmation_token, @user.reload.confirmation_token
+        should "invalidate the existing reset token before the mail job runs" do
+          refute @user.reload.valid_password_reset_token?(@original_password_reset_token)
+          assert_nil @user.password_reset_token_digest
+          assert_nil @user.password_reset_token_expires_at
+        end
+
+        should "rotate the password reset token digest" do
+          perform_enqueued_jobs
+
+          assert_not_equal @original_password_reset_token_digest, @user.reload.password_reset_token_digest
         end
       end
     end
@@ -935,7 +944,8 @@ class SessionsControllerTest < ActionController::TestCase
 
       context "after successful MFA" do
         setup do
-          @original_confirmation_token = @user.confirmation_token
+          @original_password_reset_token = @user.issue_password_reset!
+          @original_password_reset_token_digest = @user.password_reset_token_digest
           post :create, params: { session: { who: "compromised_user", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
           @controller.session[:mfa_user] = @user.id
           post :otp_create, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
@@ -955,8 +965,16 @@ class SessionsControllerTest < ActionController::TestCase
           assert_enqueued_email_with PasswordMailer, :compromised_password_reset, args: [@user]
         end
 
-        should "rotate the password reset confirmation token after MFA succeeds" do
-          assert_not_equal @original_confirmation_token, @user.reload.confirmation_token
+        should "invalidate the existing reset token before the mail job runs" do
+          refute @user.reload.valid_password_reset_token?(@original_password_reset_token)
+          assert_nil @user.password_reset_token_digest
+          assert_nil @user.password_reset_token_expires_at
+        end
+
+        should "rotate the password reset token digest after MFA succeeds" do
+          perform_enqueued_jobs
+
+          assert_not_equal @original_password_reset_token_digest, @user.reload.password_reset_token_digest
         end
       end
     end
@@ -980,7 +998,7 @@ class SessionsControllerTest < ActionController::TestCase
 
       context "after successful WebAuthn" do
         setup do
-          @original_confirmation_token = @user.confirmation_token
+          @original_password_reset_token_digest = @user.password_reset_token_digest
           post :create, params: { session: { who: "compromised_user", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
 
           @challenge = session[:webauthn_authentication]["challenge"]
@@ -1018,8 +1036,10 @@ class SessionsControllerTest < ActionController::TestCase
           assert_enqueued_email_with PasswordMailer, :compromised_password_reset, args: [@user]
         end
 
-        should "rotate the password reset confirmation token after WebAuthn succeeds" do
-          assert_not_equal @original_confirmation_token, @user.reload.confirmation_token
+        should "issue a password reset token digest after WebAuthn succeeds" do
+          perform_enqueued_jobs
+
+          assert_not_equal @original_password_reset_token_digest, @user.reload.password_reset_token_digest
         end
       end
     end

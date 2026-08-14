@@ -237,7 +237,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def initiate_compromised_password_reset!(user)
-    user.forgot_password!
+    user.invalidate_password_reset!
     PasswordMailer.compromised_password_reset(user).deliver_later
   end
 

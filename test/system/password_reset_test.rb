@@ -38,7 +38,7 @@ class PasswordResetTest < ApplicationSystemTestCase
 
     visit password_reset_link
 
-    assert_current_path edit_password_path, ignore_query: true
+    assert_current_path reset_password_path
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
@@ -51,6 +51,27 @@ class PasswordResetTest < ApplicationSystemTestCase
     click_button "Sign in"
 
     assert_text "Dashboard"
+  end
+
+  test "opening the reset link more than once does not consume it" do
+    forgot_password_with @user.email
+    link = password_reset_link
+
+    visit link
+
+    assert_current_path reset_password_path
+    assert_text "Reset password"
+
+    visit link
+
+    assert_current_path reset_password_path
+    assert_text "Reset password"
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Save this password"
+
+    assert_current_path sign_in_path
+    assert @user.reload.authenticated?(PasswordHelpers::SECURE_TEST_PASSWORD)
   end
 
   test "resetting a password with a blank or short password" do

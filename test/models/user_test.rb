@@ -534,6 +534,59 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
+    context "password reset tokens" do
+      should "store only a digest and expire the token after three hours" do
+        @user.update!(unconfirmed_email: "pending@rubygems-test.org")
+
+        token = @user.issue_password_reset!
+
+        refute_equal token, @user.reload.password_reset_token_digest
+        assert_equal User.password_reset_token_digest(token), @user.password_reset_token_digest
+        assert_in_delta 3.hours.from_now, @user.password_reset_token_expires_at, 2.seconds
+        assert_nil @user.unconfirmed_email
+        assert_equal @user, User.find_by_password_reset_token(token)
+        assert @user.valid_password_reset_token?(token)
+      end
+
+      should "reject an expired password reset token" do
+        token = @user.issue_password_reset!
+        @user.update!(password_reset_token_expires_at: 1.second.ago)
+
+        refute @user.valid_password_reset_token?(token)
+      end
+
+      should "reject an email confirmation token" do
+        @user.update!(unconfirmed_email: "pending@rubygems-test.org")
+        token = @user.confirmation_token
+
+        assert_nil User.find_by_password_reset_token(token)
+        refute @user.valid_password_reset_token?(token)
+      end
+
+      should "consume the token only after a valid password is saved" do
+        token = @user.issue_password_reset!
+
+        assert_equal :invalid_password, @user.update_password_with_token("short", token:)
+        assert @user.reload.valid_password_reset_token?(token)
+
+        assert_equal :updated, @user.update_password_with_token(PasswordHelpers::SECURE_TEST_PASSWORD, token:)
+        assert_nil @user.reload.password_reset_token_digest
+        assert_nil @user.password_reset_token_expires_at
+        assert @user.authenticated?(PasswordHelpers::SECURE_TEST_PASSWORD)
+        assert_equal :invalid_token,
+          @user.update_password_with_token(PasswordHelpers::SECURE_TEST_PASSWORD, token:)
+      end
+
+      should "bind the compromised-reset authorization to the reset token" do
+        token = @user.issue_password_reset!
+        reason = @user.compromised_password_reset_reason_for(token)
+
+        assert @user.valid_compromised_password_reset_reason?(reason, token:)
+        refute @user.valid_compromised_password_reset_reason?("compromised", token:)
+        refute @user.valid_compromised_password_reset_reason?(reason, token: "different-token")
+      end
+    end
+
     context "two factor authentication" do
       should "disable mfa by default" do
         refute_predicate @user, :mfa_enabled?
