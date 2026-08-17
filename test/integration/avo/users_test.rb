@@ -25,10 +25,10 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
 
   test "searching users by blocked email" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
-    blocked_user = create(:user, :blocked, blocked_email: "blocked-user@example.com")
-    create(:user)
+    blocked_user = create(:user, :blocked, blocked_email: "blocked_user@rubygems-test.org")
+    create(:user, email: "blockedXuser@rubygems-test.org")
 
-    get avo.avo_api_path(resource_name: "users"), params: { q: "user@example" }
+    get avo.avo_api_path(resource_name: "users"), params: { q: "blocked_user@rubygems-test" }
 
     assert_response :success
     assert_equal [blocked_user.to_param], response.parsed_body.dig("users", "results").pluck("_id")
