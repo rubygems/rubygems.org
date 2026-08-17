@@ -9,6 +9,39 @@ class Avo::Resources::User < Avo::BaseResource
            }
   }
 
+  class ApiKeyNameFilter < Avo::Filters::TextFilter
+    self.name = "API key name"
+    self.button_label = "Filter by API key name"
+
+    def apply(_request, query, value)
+      return query if value.blank?
+
+      api_keys = ApiKey.where(owner_type: "User")
+        .where("name ILIKE ?", "%#{ActiveRecord::Base.sanitize_sql_like(value)}%")
+      query.where(id: api_keys.select(:owner_id))
+    end
+  end
+
+  class CreatedAtFilter < Avo::Filters::DateTimeFilter
+    self.name = "Account creation time (UTC)"
+    self.button_label = "Filter by creation time"
+
+    def apply(_request, query, value)
+      return query if value.blank?
+
+      start_value, end_value = value.split(" to ", 2)
+      return query.none if start_value.blank? || end_value.blank?
+
+      start_at = Time.zone.strptime(start_value, "%Y-%m-%d %H:%M:%S")
+      end_at = Time.zone.strptime(end_value, "%Y-%m-%d %H:%M:%S")
+      return query.none if start_at > end_at
+
+      query.where(created_at: start_at..end_at)
+    rescue ArgumentError
+      query.none
+    end
+  end
+
   def actions
     action Avo::Actions::BlockUser
     action Avo::Actions::CreateUser
@@ -19,6 +52,11 @@ class Avo::Resources::User < Avo::BaseResource
     action Avo::Actions::UnblockUser
     action Avo::Actions::YankRubygemsForUser
     action Avo::Actions::YankUser
+  end
+
+  def filters
+    filter ApiKeyNameFilter
+    filter CreatedAtFilter
   end
 
   def fields # rubocop:disable Metrics

@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_14_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_17_043732) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "pg_trgm"
   enable_extension "pgcrypto"
 
   create_table "admin_github_users", force: :cascade do |t|
@@ -50,6 +51,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_14_000000) do
     t.string "soft_deleted_rubygem_name"
     t.datetime "updated_at", precision: nil, null: false
     t.index ["hashed_key"], name: "index_api_keys_on_hashed_key", unique: true
+    t.index ["name"], name: "index_api_keys_on_name_trigram_for_users", opclass: :gin_trgm_ops, where: "((owner_type)::text = 'User'::text)", using: :gin
     t.index ["owner_type", "owner_id"], name: "index_api_keys_on_owner"
     t.check_constraint "owner_id IS NOT NULL", name: "api_keys_owner_id_null"
     t.check_constraint "owner_type IS NOT NULL", name: "api_keys_owner_type_null"
