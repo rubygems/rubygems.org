@@ -16,6 +16,14 @@ class GemNameReservationTest < ActiveSupport::TestCase
     should allow_value("abc").for(:name)
     should validate_uniqueness_of(:name).case_insensitive
     should validate_length_of(:name).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
+
+    should "not save when there's an existing rubygem with the same name" do
+      create(:rubygem, name: "bounce-haus")
+
+      reservation = build(:gem_name_reservation, name: "bounce-haus")
+
+      refute reservation.save
+    end
   end
 
   context "#reserved?" do
