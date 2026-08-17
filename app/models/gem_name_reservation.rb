@@ -7,6 +7,8 @@ class GemNameReservation < ApplicationRecord
 
   has_many :audits, as: :auditable, inverse_of: :auditable, dependent: :nullify
 
+  belongs_to :organization, optional: true
+
   def self.reserved?(name)
     where(name: name.downcase).any?
   end

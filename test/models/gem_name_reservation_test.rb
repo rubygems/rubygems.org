@@ -24,6 +24,14 @@ class GemNameReservationTest < ActiveSupport::TestCase
 
       refute reservation.save
     end
+
+    should "not save when there's an existing rubygem with the case matched name" do
+      create(:rubygem, name: "bounce-haus")
+
+      reservation = build(:gem_name_reservation, name: "BoUnCe-HAaus")
+
+      refute reservation.save
+    end
   end
 
   context "#reserved?" do
