@@ -5,7 +5,8 @@ class Avo::Resources::User < Avo::BaseResource
   self.includes = []
   self.search = {
     query: lambda {
-             query.where("email LIKE ? OR handle LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
+             search_term = "%#{params[:q]}%"
+             query.where("email LIKE ? OR handle LIKE ? OR blocked_email LIKE ?", search_term, search_term, search_term)
            }
   }
 
