@@ -85,13 +85,13 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
     refute page.has_content? Avo::Actions::DeleteUser.blocked_reason
   end
 
-  test "not showing the delete action on the users index" do
+  test "showing the delete action to rubygems.org operators on the users index" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
 
     get avo.resources_users_path
 
     assert_response :success
-    refute page.has_content? "Delete User"
+    assert page.has_content? "Delete User"
   end
 
   test "redirecting operators outside the rubygems.org team" do

@@ -7,6 +7,98 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
   include ActiveJob::TestHelper
 
+  test "bulk delete users" do
+    admin_user = create(:admin_github_user, :is_admin)
+    users = create_list(:user, 2)
+    avo_sign_in_as admin_user
+
+    visit avo.resources_users_path
+
+    users.each do |user|
+      find("tr[data-resource-id='#{user.id}'] input[type='checkbox']").check
+    end
+    click_button "Actions"
+    click_on "Delete User"
+
+    within("[role='dialog']") do
+      assert_text "delete 2 selected users"
+      fill_in "Comment", with: "Deleting users from a malicious campaign"
+      click_button "Delete Users"
+    end
+
+    assert_text "Account deletion has been scheduled for 2 users"
+    assert_enqueued_jobs 2, only: DeleteUserJob
+  end
+
+  test "bulk delete confirmation counts all matching users across pages" do
+    admin_user = create(:admin_github_user, :is_admin)
+    # Cross-page behavior requires more than Avo's 24-row page size.
+    users = create_list(:user, 25) # rubocop:disable FactoryBot/ExcessiveCreateList
+    users.each { |user| create(:api_key, owner: user, name: "cross-page-campaign-key") }
+    unrelated_user = create(:user)
+    avo_sign_in_as admin_user
+
+    visit avo.resources_users_path
+    click_on "Filters"
+    fill_in id: "avo_filters_api_key_name", with: "cross-page-campaign"
+    click_on "Filter by API key name"
+
+    assert_no_text unrelated_user.email
+    find("input[type='checkbox'][name='Select all']").check
+
+    assert_text "Select all matching"
+    click_on "Select all matching"
+
+    assert_text "25 records selected from all pages"
+    click_button "Actions"
+    click_on "Delete User"
+
+    within("[role='dialog']") do
+      assert_text "delete 25 selected users"
+    end
+  end
+
+  test "filter users by campaign API key and creation time" do
+    admin_user = create(:admin_github_user, :is_admin)
+    matching_created_at = 1.day.ago.change(hour: 11)
+    range_start = 2.days.ago.to_date
+    range_end = Time.zone.today
+    matching_user = create(:user, created_at: matching_created_at)
+    create(:api_key, owner: matching_user, name: "recent-campaign-key")
+
+    old_user = create(:user, created_at: 3.days.ago.change(hour: 11))
+    create(:api_key, owner: old_user, name: "recent-campaign-key")
+
+    unrelated_user = create(:user, created_at: matching_created_at)
+    create(:api_key, owner: unrelated_user, name: "unrelated-key")
+    avo_sign_in_as admin_user
+
+    visit avo.resources_users_path
+
+    click_on "Filters"
+
+    assert_text "Account creation time (UTC)"
+    fill_in id: "avo_filters_api_key_name", with: "recent-campaign"
+    click_on "Filter by API key name"
+
+    assert_text matching_user.email
+    assert_text old_user.email
+    assert_no_text unrelated_user.email
+
+    click_on "Filters"
+    find("[data-controller='date-time-filter'] input").click
+    within ".flatpickr-calendar.open" do
+      find(".flatpickr-day[aria-label='#{range_start.strftime('%B %-d, %Y')}']").click
+      find(".flatpickr-day[aria-label='#{range_end.strftime('%B %-d, %Y')}']").click
+    end
+    find("body").send_keys(:escape)
+    click_on "Filter by creation time"
+
+    assert_text matching_user.email
+    assert_no_text old_user.email
+    assert_no_text unrelated_user.email
+  end
+
   test "reset mfa" do
     Minitest::Test.make_my_diffs_pretty!
     admin_user = create(:admin_github_user, :is_admin)
