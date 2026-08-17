@@ -43,6 +43,9 @@ class PagesTest < ApplicationSystemTestCase
     visit "/pages/security"
 
     assert_text("Security")
+    assert_text("gem-security@rubygems.org")
+    assert_text("1595 58E3 5BCC F820 A48D DB7C D170 F9A9 E4FB 3D7A")
+    assert_link(href: "/pages/security-engineers-in-residence-faq#our-public-key")
   end
 
   test "renders /pages/security-engineers-in-residence-faq" do
@@ -51,6 +54,8 @@ class PagesTest < ApplicationSystemTestCase
     assert_selector "nav[aria-label='Breadcrumb'] a[href='/pages']", text: "Pages"
     assert_text("Security Engineers in Residence: FAQ")
     assert_text("gem-security@rubygems.org")
+    # anchor target for the public key link on /pages/security
+    assert_selector "h2#our-public-key"
   end
 
   test "renders /pages/supporters" do
