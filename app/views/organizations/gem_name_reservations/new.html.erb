@@ -1,0 +1,50 @@
+<%
+  add_breadcrumb "Dashboard", dashboard_path
+  add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle), organization_path(@organization)
+  add_breadcrumb t("breadcrumbs.reservations"), organization_gem_name_reservations_path(@organization)
+  add_breadcrumb t("breadcrumbs.reserve_gem_name")
+%>
+
+<% content_for :subject do %>
+  <%= render "organizations/subject", organization: @organization, current: :gem_name_reservations %>
+<% end %>
+
+<h1 class="text-h2 mb-10"><%= t("organizations.show.reservations") %></h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title t(".title"), icon: "description" %>
+  <% end %>
+
+  <%= form_with(model: @gem_name_reservation, url: organization_gem_name_reservations_path(@organization), method: :post) do |f| %>
+    <% if @gem_name_reservation.errors.any? %>
+      <div class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <%= icon_tag("error", size: 5, class: "text-red-400") %>
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
+              <%= pluralize(@gem_name_reservation.errors.count, "error") %> prohibited this reservation from being saved:
+            </h3>
+            <div class="mt-2 text-sm text-red-700 dark:text-red-300">
+              <ul class="list-disc pl-5 space-y-1">
+                <% @gem_name_reservation.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div class="mb-4">
+      <%= f.label :name, t(".name"), class: 'block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
+      <%= f.text_field :name, class: "block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:focus:border-indigo-400", placeholder: "my-gem-name", data: { testid: "gem-name-reservation-name" } %>
+      <p class="mt-2 text-b3 text-neutral-600 dark:text-neutral-400"><%= t(".name_hint") %></p>
+    </div>
+    <div class="flex justify-end">
+      <%= render ButtonComponent.new t(".reserve"), type: :submit, style: :outline, class: "px-4 py-2 dark:border-gray-400 dark:text-gray-100" %>
+    </div>
+  <% end %>
+<% end %>

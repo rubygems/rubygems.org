@@ -333,6 +333,8 @@ zh-CN:
     gems:
     members:
     invite_member:
+    reservations:
+    reserve_gem_name:
   mailer:
     confirm_your_email: 请在发送到您的邮件中点击链接，确认您的邮箱地址。
     confirmation_subject: 请确认您的邮箱地址
@@ -481,6 +483,7 @@ zh-CN:
       add_member:
       invite:
       transfer:
+      reservations:
     members:
       create:
         user_already_invited:
@@ -506,6 +509,22 @@ zh-CN:
         role:
         create:
         invite:
+    gem_name_reservations:
+      create:
+        gem_name_reserved:
+      destroy:
+        gem_name_reservation_removed:
+      index:
+        description:
+        no_reservations:
+        reserve:
+        remove:
+        confirm_remove:
+      new:
+        title:
+        name:
+        name_hint:
+        reserve:
     invitations:
       show:
         accept:

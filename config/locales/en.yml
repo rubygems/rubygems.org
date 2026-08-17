@@ -337,6 +337,8 @@ en:
     gems: Gems
     members: Members
     invite_member: Invite Member
+    reservations: Reserved Names
+    reserve_gem_name: Reserve a Name
   mailer:
     confirm_your_email: Please confirm your email address with the link sent to your email.
     confirmation_subject: Please confirm your email address with %{host}
@@ -475,6 +477,7 @@ en:
       add_member: Invite Member
       invite: Invite
       transfer: Transfer
+      reservations: Reserved Names
     members:
       create:
         user_already_invited: User already invited to the organization.
@@ -500,6 +503,22 @@ en:
         role: Role
         create: Create
         invite: Invite
+    gem_name_reservations:
+      create:
+        gem_name_reserved: Gem name reserved.
+      destroy:
+        gem_name_reservation_removed: Gem name reservation removed.
+      index:
+        description: Reserved names cannot be pushed by anyone else. Reserve a name to hold it for your organization.
+        no_reservations: No reserved names yet
+        reserve: Reserve a Name
+        remove: Remove
+        confirm_remove: Are you sure you want to remove the reservation for %{name}?
+      new:
+        title: Reserve a Name
+        name: Gem name
+        name_hint: Lowercase letters, numbers, dashes and underscores only. The name must not already be taken by an existing gem.
+        reserve: Reserve
     invitations:
       show:
         accept: Accept

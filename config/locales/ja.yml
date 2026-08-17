@@ -334,6 +334,8 @@ ja:
     gems: gem
     members: メンバー
     invite_member: メンバーを招待
+    reservations:
+    reserve_gem_name:
   mailer:
     confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
     confirmation_subject: "%{host}に登録されたメールアドレスを確認してください"
@@ -478,6 +480,7 @@ ja:
       add_member: メンバーを招待
       invite: 招待
       transfer: 移動
+      reservations:
     members:
       create:
         user_already_invited: ユーザーは既に組織に招待されています。
@@ -503,6 +506,22 @@ ja:
         role: ロール
         create: 作成
         invite: 招待
+    gem_name_reservations:
+      create:
+        gem_name_reserved:
+      destroy:
+        gem_name_reservation_removed:
+      index:
+        description:
+        no_reservations:
+        reserve:
+        remove:
+        confirm_remove:
+      new:
+        title:
+        name:
+        name_hint:
+        reserve:
     invitations:
       show:
         accept: 承認
