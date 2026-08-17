@@ -344,18 +344,24 @@ class PusherTest < ActiveSupport::TestCase
         assert @cutter.authorize
       end
 
+      # TODO BRIAN; we are changing this assumption, is that cool?
       should "be false if gem is pushable but is reserved" do
-        create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
-        create(:gem_name_reservation, name: @rubygem.name.downcase)
+        rubygem_name = "geminino"
+        create(:gem_name_reservation, name: rubygem_name)
+        rubygem = create(:rubygem, name: rubygem_name)
+        create(:version, rubygem:, number: "0.1.1", indexed: false)
 
         refute @cutter.authorize
         assert_equal "This gem name is reserved. You are not allowed to push this gem.", @cutter.message
         assert_equal 403, @cutter.code
       end
 
+      # TODO BRIAN this one also
       should "be false if gem is owned by user but is reserved" do
-        create(:ownership, rubygem: @rubygem, user: @user)
-        create(:gem_name_reservation, name: @rubygem.name.downcase)
+        rubygem_name = "geminino"
+        create(:gem_name_reservation, name: rubygem_name)
+        rubygem = create(:rubygem, name: rubygem_name)
+        create(:ownership, rubygem:, user: @user)
 
         refute @cutter.authorize
         assert_equal "This gem name is reserved. You are not allowed to push this gem.", @cutter.message
