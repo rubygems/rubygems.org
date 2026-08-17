@@ -202,6 +202,12 @@ class DeleteUserTest < ActiveSupport::TestCase
     assert_equal "Delete Users", action.confirm_button_label
   end
 
+  should "ask for confirmation without a selection query" do
+    action = Avo::Actions::DeleteUser.new(record: nil, resource: @resource, user: @current_user, view: :index, query: nil)
+
+    assert_includes action.get_message, "delete the selected users"
+  end
+
   private
 
   def stub_audit_redirect

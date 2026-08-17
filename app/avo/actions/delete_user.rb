@@ -13,7 +13,13 @@ class Avo::Actions::DeleteUser < Avo::Actions::ApplicationAction
   end
 
   self.message = lambda {
-    users = record ? "user #{record.display_handle} with #{record.email}" : "#{query.count} selected users"
+    users = if record
+              "user #{record.display_handle} with #{record.email}"
+            elsif query
+              "#{query.count} selected users"
+            else
+              "the selected users"
+            end
     owner = record ? "this user is" : "a selected user is"
     "Are you sure you would like to delete #{users}? " \
       "This action can't be undone. By default, gems for which #{owner} the only owner will be yanked. " \
