@@ -33,6 +33,16 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
     assert page.has_content? "Delete User"
   end
 
+  test "showing the unblock action for a blocked user" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+    user = create(:user, :blocked)
+
+    get avo.resources_user_path(user)
+
+    assert_response :success
+    assert page.has_content? "Unblock User"
+  end
+
   test "enabling the delete action when the user is the sole owner of an old gem version" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
     user = create(:user)
