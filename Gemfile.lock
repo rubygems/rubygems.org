@@ -591,7 +591,7 @@ GEM
     pg (1.6.3-x86_64-linux-musl)
     pg_query (6.2.2)
       google-protobuf (>= 3.25.3)
-    pghero (3.8.0)
+    pghero (4.0.0)
       activerecord (>= 7.2)
     phlex (2.4.1)
       refract (~> 1.0)
@@ -979,7 +979,7 @@ DEPENDENCIES
   pagy (~> 8.4)
   pg (~> 1.6)
   pg_query (~> 6.2)
-  pghero (~> 3.8)
+  pghero (~> 4.0)
   phlex-rails (~> 2.4)
   pp (= 0.6.4)
   prop_initializer (~> 0.4)
@@ -1254,7 +1254,7 @@ CHECKSUMS
   pg (1.6.3-x86_64-linux) sha256=5d9e188c8f7a0295d162b7b88a768d8452a899977d44f3274d1946d67920ae8d
   pg (1.6.3-x86_64-linux-musl) sha256=9c9c90d98c72f78eb04c0f55e9618fe55d1512128e411035fe229ff427864009
   pg_query (6.2.2) sha256=316c194160ccfac8af9a7aff55cdc5b2d13bdd8bd8734976c6bddc477e779b6f
-  pghero (3.8.0) sha256=f6fda87a095c2bd153954cb895366a3ffc4c8f7785b2b9234a5dbd1cbcabb360
+  pghero (4.0.0) sha256=b3fb400ec89a0d2cf35d2524567e55a68d70aaae64b626a0c5a6be5727c024d7
   phlex (2.4.1) sha256=e596717fbfe38b5271840266758779ebe75092e02629f0c170287e6290a70b12
   phlex-rails (2.4.0) sha256=2bcddbd488681acb25753bab1887d3ac150e644244ff8ba307f2171a4d0195f5
   playwright-ruby-client (1.61.0) sha256=1f5c5f0307a2f6bd70b4fa797020a30eef5680caf8d5bd9ccc8d3937f6666e08
