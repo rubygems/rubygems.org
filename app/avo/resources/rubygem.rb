@@ -5,7 +5,8 @@ class Avo::Resources::Rubygem < Avo::BaseResource
   self.includes = []
   self.search = {
     query: lambda {
-             query.where("name LIKE ?", "%#{params[:q]}%")
+             search_term = ActiveRecord::Base.sanitize_sql_like(params[:q])
+             query.name_starts_with(search_term)
            }
   }
 
