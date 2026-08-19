@@ -4,7 +4,7 @@ class Events::RubygemEvent::Version::YankForbiddenComponent < Events::TableDetai
   def view_template
     div do
       t(".version_html", version:
-        link_to_version_from_gid(additional.version_gid, additional.number, additional.platform))
+        link_to_version_from_gid(additional.version_gid, additional.number, additional.platform, additional.ruby_abi))
     end
     return if additional.yanked_by.blank?
     div do

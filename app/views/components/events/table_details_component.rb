@@ -26,13 +26,16 @@ class Events::TableDetailsComponent < ApplicationComponent
     end
   end
 
-  def link_to_version_from_gid(gid, number, platform)
+  def link_to_version_from_gid(gid, number, platform, ruby_abi = nil)
     version = load_gid(gid, only: Version)
 
     if version
       view_context.link_to version.to_title, rubygem_version_path(version.rubygem.slug, version.slug)
     else
-      "#{rubygem.name} (#{number}#{"-#{platform}" unless platform.blank? || platform == 'ruby'})"
+      title = "#{rubygem.name} (#{number}#{"-#{platform}" unless platform.blank? || platform == 'ruby'}"
+      title << ", Ruby ABI #{ruby_abi}" if ruby_abi.present?
+      title << ")"
+      title
     end
   end
 

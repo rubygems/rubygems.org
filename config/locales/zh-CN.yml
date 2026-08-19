@@ -890,6 +890,7 @@ zh-CN:
       requirements_header: 要求
       show_all_versions: 显示所有版本 (共 %{count} 个)
       versions_header: 版本列表
+      ruby_abi:
       yanked_notice: 这个 Gem 版本已经撤回了，无法直接下载，也无法被其他 Gem 依赖。
     show_yanked:
       not_hosted_notice: 这个 Gem 目前没有被托管在 RubyGems.org 中。这个 Gem 撤回的版本可能已经存在了。
@@ -995,6 +996,7 @@ zh-CN:
         gemspec 中指定。
     version:
       yanked: 已撤回
+      ruby_abi:
   webauthn_credentials:
     callback:
       success: 您已成功注册一个安全设备。

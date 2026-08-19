@@ -15,7 +15,7 @@ class VersionTest < ActiveSupport::TestCase
       json = @version.as_json
 
       fields = %w[number built_at summary description authors platform
-                  ruby_version rubygems_version prerelease downloads_count licenses
+                  ruby_version rubygems_version prerelease ruby_abi downloads_count licenses
                   requirements sha spec_sha metadata created_at]
 
       assert_equal fields.sort, json.keys.sort
@@ -44,7 +44,7 @@ class VersionTest < ActiveSupport::TestCase
     should "only have relevant API fields" do
       xml = Nokogiri.parse(@version.to_xml)
       fields = %w[number built-at summary description authors platform
-                  ruby-version rubygems-version prerelease downloads-count licenses
+                  ruby-version rubygems-version prerelease ruby-abi downloads-count licenses
                   requirements sha spec-sha metadata created-at]
 
       assert_equal fields.map(&:to_s).sort,
@@ -157,6 +157,105 @@ class VersionTest < ActiveSupport::TestCase
       assert @number_version.save
       assert @platform_version.save
       refute_predicate @dup_version, :valid?
+    end
+
+    should "record the Ruby ABI on the pushed version event" do
+      version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux", gem_platform: "x86_64-linux",
+                       required_ruby_version: "~> 3.4.0", ruby_abi: "3.4",
+                       sha256: Digest::SHA2.base64digest("abi-event-1.0.0"))
+
+      pushed = @rubygem.events.where(tag: Events::RubygemEvent::VERSION_PUSHED).sole
+
+      assert_equal "3.4", pushed.additional.ruby_abi
+      assert_equal version.sha256_hex, pushed.additional.sha256
+    end
+
+    should "not allow a ruby_abi that is not a Ruby minor version" do
+      version = build(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux", gem_platform: "x86_64-linux",
+                      required_ruby_version: "~> 3.4.0", ruby_abi: "banana",
+                      sha256: Digest::SHA2.base64digest("abi-format-1.0.0"))
+
+      refute_predicate version, :valid?
+      assert_includes version.errors[:ruby_abi], "is invalid"
+    end
+
+    should "not allow a ruby_abi on an unplatformed version" do
+      version = build(:version, rubygem: @rubygem, number: "1.0.0", platform: "ruby", gem_platform: "ruby",
+                      required_ruby_version: "~> 3.4.0", ruby_abi: "3.4")
+
+      refute_predicate version, :valid?
+      assert_includes version.errors[:ruby_abi], "must be blank"
+    end
+
+    should "allow duplicate versions with different Ruby ABIs" do
+      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25",
+        required_ruby_version: "~> 3.3.0", ruby_abi: "3.3")
+
+      version = build(:version, rubygem: @rubygem, number: existing_version.number, platform: existing_version.platform,
+        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.4.0", ruby_abi: "3.4")
+
+      assert_predicate version, :valid?
+    end
+
+    should "not allow duplicate versions with the same Ruby ABI" do
+      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25",
+        required_ruby_version: "~> 3.3.0", ruby_abi: "3.3")
+
+      version = build(:version, rubygem: @rubygem, number: existing_version.number, platform: existing_version.platform,
+        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.3.0", ruby_abi: "3.3")
+
+      refute_predicate version, :valid?
+
+      assert_raises ActiveRecord::RecordNotUnique do
+        version.save!(validate: false)
+      end
+    end
+
+    should "not allow duplicate versions with nil Ruby ABIs" do
+      create(
+        :version,
+        rubygem: @rubygem,
+        number: "1.0.0",
+        platform: "arm64-darwin-25",
+        gem_platform: "arm64-darwin-25",
+        required_ruby_version: ">= 3.2"
+      )
+
+      duplicate = build(
+        :version,
+        rubygem: @rubygem,
+        number: "1.0.0",
+        platform: "arm64-darwin-25",
+        gem_platform: "arm64-darwin-25",
+        required_ruby_version: ">= 3.0"
+      )
+
+      refute_predicate duplicate, :valid?
+      assert_nil duplicate.ruby_abi
+
+      assert_raises ActiveRecord::RecordNotUnique do
+        duplicate.save!(validate: false)
+      end
+    end
+
+    should "allow canonical number duplicates with different Ruby ABIs" do
+      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25",
+        required_ruby_version: "~> 3.3.0", ruby_abi: "3.3")
+
+      version = build(:version, rubygem: @rubygem, number: "1.0", platform: existing_version.platform,
+        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.4.0", ruby_abi: "3.4")
+
+      assert_predicate version, :valid?
+    end
+
+    should "not allow canonical number duplicates with the same Ruby ABI" do
+      existing_version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "arm64-darwin-25",
+        required_ruby_version: "~> 3.3.0", ruby_abi: "3.3")
+
+      version = build(:version, rubygem: @rubygem, number: "1.0", platform: existing_version.platform,
+        gem_platform: existing_version.gem_platform, required_ruby_version: "~> 3.3.0", ruby_abi: "3.3")
+
+      refute_predicate version, :valid?
     end
 
     should "be able to find dependencies" do
@@ -485,6 +584,142 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal "abc-1.1.1.gem", @version.gem_file_name
     end
 
+    context "#derive_ruby_abi" do
+      should "return the Ruby ABI when required_ruby_version targets a single Ruby minor version" do
+        assert_equal "3.2", derived_abi("~> 3.2.0")
+      end
+
+      should "return nil for versions without a platform" do
+        assert_nil derived_abi("~> 3.2.0", platform: "ruby")
+        assert_nil derived_abi("~> 3.2.0", platform: nil)
+      end
+
+      should "return nil when required_ruby_version is broad" do
+        assert_nil derived_abi(">= 3.2")
+      end
+
+      should "return nil for clean requirements with more than three segments" do
+        assert_nil derived_abi("~> 3.2.0.0")
+      end
+
+      should "return nil when required_ruby_version has multiple requirements" do
+        assert_nil derived_abi(">= 3.2, < 3.4")
+      end
+
+      should "return nil when required_ruby_version is malformed" do
+        assert_nil derived_abi("not a requirement")
+      end
+
+      should "return nil when required_ruby_version indicates multiple Ruby ABIs" do
+        assert_nil derived_abi("~> 3.2")
+      end
+
+      should "return nil when required_ruby_version is blank" do
+        assert_nil derived_abi("")
+      end
+
+      should "return nil for patch-specific pessimistic requirements" do
+        assert_nil derived_abi("~> 3.2.1")
+      end
+    end
+
+    context "#content_addressify!" do
+      should "store the content address for versions targeting a single Ruby ABI" do
+        version = create(:version, rubygem: create(:rubygem, name: "addressed"), number: "1.0.0",
+                         platform: "x86_64-linux", gem_platform: "x86_64-linux",
+                         required_ruby_version: "~> 3.4.0", ruby_abi: "3.4",
+                         sha256: Digest::SHA2.base64digest("addressed-1.0.0"))
+
+        assert_equal version.sha256_hex.first(Version::DEFAULT_CONTENT_ADDRESS_LENGTH), version.content_address
+      end
+
+      should "not store a content address for versions supporting multiple Ruby ABIs" do
+        version = create(:version, rubygem: create(:rubygem, name: "plain"), number: "1.0.0",
+                         platform: "x86_64-linux", gem_platform: "x86_64-linux",
+                         required_ruby_version: ">= 3.2")
+
+        assert_nil version.content_address
+      end
+
+      should "not store a content address for unplatformed versions" do
+        version = create(:version, rubygem: create(:rubygem, name: "unplat"), number: "20260101",
+                         platform: "ruby", gem_platform: "ruby",
+                         required_ruby_version: "~> 3.2.0")
+
+        assert_nil version.content_address
+      end
+
+      should "not attempt to derive a content address without a rubygem" do
+        version = Version.new(number: "1.0.0", platform: "x86_64-linux", gem_platform: "x86_64-linux",
+                              ruby_abi: "3.4", sha256: Digest::SHA2.base64digest("orphan-1.0.0"))
+
+        refute_predicate version, :valid?
+        assert_nil version.content_address
+      end
+
+      should "be invalid when a platformed version with no ruby_abi has a content address" do
+        version = build(:version, rubygem: create(:rubygem, name: "inconsistent"), number: "1.0.0",
+                        platform: "x86_64-linux", gem_platform: "x86_64-linux",
+                        ruby_abi: nil, content_address: "abcdef12")
+
+        refute_predicate version, :valid?
+        assert_includes version.errors[:content_address], "must be blank"
+      end
+
+      should "reject content addresses that do not match the address format" do
+        version = build(:version, rubygem: create(:rubygem, name: "badaddr"), number: "1.0.0",
+                        platform: "x86_64-linux", gem_platform: "x86_64-linux",
+                        required_ruby_version: "~> 3.4.0", ruby_abi: "3.4",
+                        sha256: Digest::SHA2.base64digest("badaddr-1.0.0"))
+        version.content_address = "not hex!"
+
+        refute_predicate version, :valid?
+        assert_includes version.errors[:content_address], "is invalid"
+      end
+    end
+
+    context "#manifest" do
+      setup do
+        @rubygem = create(:rubygem, name: "manifest-iso")
+        @skinny32 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux", gem_platform: "x86_64-linux",
+                            required_ruby_version: "~> 3.2.0", ruby_abi: "3.2",
+                            sha256: Digest::SHA2.base64digest("manifest-iso-1.0.0-x86_64-linux-3.2"))
+        @skinny34 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux", gem_platform: "x86_64-linux",
+                            required_ruby_version: "~> 3.4.0", ruby_abi: "3.4",
+                            sha256: Digest::SHA2.base64digest("manifest-iso-1.0.0-x86_64-linux-3.4"))
+      end
+
+      should "key the manifest by the content address, not the platform" do
+        assert_equal "1.0.0-#{@skinny32.content_address}", @skinny32.manifest.version
+        assert_equal "1.0.0-#{@skinny34.content_address}", @skinny34.manifest.version
+        refute_equal @skinny32.manifest.version, @skinny34.manifest.version
+      end
+
+      should "give each ABI variant an isolated checksums namespace" do
+        @skinny32.manifest.store_checksums("lib/a.rb" => "aaa11111")
+        @skinny34.manifest.store_checksums("lib/a.rb" => "bbb22222")
+
+        assert_equal "aaa11111", @skinny32.manifest.checksums["lib/a.rb"]
+        assert_equal "bbb22222", @skinny34.manifest.checksums["lib/a.rb"]
+      end
+
+      should "yank one ABI variant without removing the other's checksums" do
+        @skinny32.manifest.store_checksums("lib/a.rb" => "aaa11111")
+        @skinny34.manifest.store_checksums("lib/a.rb" => "bbb22222")
+
+        @skinny32.manifest.yank
+
+        assert_empty @skinny32.manifest.checksums
+        assert_equal "bbb22222", @skinny34.manifest.checksums["lib/a.rb"]
+      end
+
+      should "use the platform-keyed manifest for non-content-addressable versions" do
+        fat = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux", gem_platform: "x86_64-linux")
+
+        assert_equal "1.0.0-x86_64-linux", fat.manifest.version
+      end
+    end
+
     should "raise an ActiveRecord::RecordNotFound if an invalid slug is given" do
       assert_raise ActiveRecord::RecordNotFound do
         @version.rubygem.find_version!(number: "some stupid version 399", platform: @version.platform)
@@ -496,6 +731,233 @@ class VersionTest < ActiveSupport::TestCase
       create(:version, rubygem: build(:rubygem, name: "foo-bar"), number: "0.1.0", platform: "ruby")
       assert_raise ActiveRecord::RecordNotFound do
         prefix.rubygem.find_version!(number: "bar-0.1.0", platform: prefix.platform)
+      end
+    end
+
+    context "with content-addressable naming" do
+      setup do
+        @rubygem = create(:rubygem, name: "nokogiri")
+      end
+
+      should "use platform identity for versions targeting multiple Ruby ABIs" do
+        version = create(
+          :version,
+          rubygem: @rubygem,
+          number: "1.18.9",
+          platform: "arm64-darwin-25",
+          gem_platform: "arm64-darwin-25",
+          required_ruby_version: ">= 3.2"
+        )
+
+        assert_equal("nokogiri-1.18.9-arm64-darwin-25", version.full_name)
+        assert_equal("nokogiri-1.18.9-arm64-darwin-25", version.gem_full_name)
+        assert_equal("#{version.full_name}.gem", version.gem_file_name)
+      end
+
+      should "use sha256 identity for versions targeting a single Ruby ABI" do
+        version = build(
+          :version,
+          rubygem: @rubygem,
+          number: "1.18.9",
+          platform: "arm64-darwin-25",
+          gem_platform: "arm64-darwin-25",
+          required_ruby_version: "~> 3.4.0",
+          ruby_abi: "3.4",
+          sha256: Digest::SHA2.base64digest("content addressable gem")
+        )
+
+        version.save!
+
+        expected_identity = "nokogiri-1.18.9-#{version.sha256_hex.first(8)}"
+
+        assert_equal(expected_identity, version.full_name)
+        assert_equal(expected_identity, version.gem_full_name)
+        assert_equal("#{version.full_name}.gem", version.gem_file_name)
+      end
+
+      should "extend sha256 identity when another version already uses the first eight characters" do
+        shared_hex_prefix = "abc12345"
+        existing_sha256 = encoded_sha256_with_hex_prefix(shared_hex_prefix + ("0" * 56))
+        colliding_sha256 = encoded_sha256_with_hex_prefix(shared_hex_prefix + ("1" * 56))
+
+        existing_version = build(
+          :version,
+          rubygem: @rubygem,
+          number: "1.18.9",
+          platform: "arm64-darwin-25",
+          gem_platform: "arm64-darwin-25",
+          required_ruby_version: "~> 3.3.0",
+          sha256: existing_sha256,
+          ruby_abi: "3.3"
+        )
+        existing_version.save!
+
+        version = build(
+          :version,
+          rubygem: @rubygem,
+          number: "1.18.9",
+          platform: "x86_64-darwin-25",
+          gem_platform: "x86_64-darwin-25",
+          required_ruby_version: "~> 3.4.0",
+          sha256: colliding_sha256,
+          ruby_abi: "3.4"
+        )
+        version.save!
+
+        expected_identity = "nokogiri-1.18.9-#{version.sha256_hex.first(9)}"
+
+        assert_equal(expected_identity, version.full_name)
+        assert_equal(expected_identity, version.gem_full_name)
+        assert_not_equal(existing_version.full_name, version.full_name)
+        assert_includes version.reload.to_title, "1.18.9-#{version.sha256_hex.first(9)}"
+      end
+
+      should "derive the content address from full_name without a uniqueness query once computed" do
+        version = create(
+          :version,
+          rubygem: @rubygem,
+          number: "1.18.9",
+          platform: "arm64-darwin-25",
+          gem_platform: "arm64-darwin-25",
+          required_ruby_version: "~> 3.4.0",
+          ruby_abi: "3.4",
+          sha256: Digest::SHA2.base64digest("content addressable gem")
+        )
+        version.reload
+
+        Version.expects(:where).never
+
+        assert_includes version.to_title, "1.18.9-#{version.sha256_hex.first(8)}"
+      end
+
+      should "be invalid when content-addressable version has no sha256" do
+        version = build(
+          :version,
+          rubygem: @rubygem,
+          number: "1.18.9",
+          platform: "x86_64-darwin-25",
+          gem_platform: "x86_64-darwin-25",
+          required_ruby_version: "~> 3.4.0",
+          sha256: nil,
+          ruby_abi: "3.4"
+        )
+
+        refute_predicate version, :valid?
+        assert_includes version.errors[:sha256], "can't be blank"
+      end
+    end
+
+    context "#normalize_content_addressable_gem_metadata!" do
+      setup do
+        @rubygem = create(:rubygem, name: "sandworm")
+        @content_addressable_version = create(
+          :version,
+          rubygem: @rubygem,
+          number: "1.0.0",
+          platform: "arm64-darwin-25",
+          gem_platform: "arm64-darwin-25",
+          required_ruby_version: "~> 3.4.0",
+          required_rubygems_version: ">= 0",
+          ruby_abi: "3.4",
+          sha256: Digest::SHA2.base64digest("sandworm-1.0.0-arm64-darwin-25-3.4")
+        )
+      end
+
+      should "set the content addressable required rubygems version floor" do
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "set the floor when required rubygems version is blank" do
+        @content_addressable_version.update!(required_rubygems_version: nil)
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "set the floor and preserve an explicit upper bound when only an upper bound is present" do
+        @content_addressable_version.update!(required_rubygems_version: "< 5")
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal "#{Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION}, < 5", @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "raise the lower bound to the floor while preserving an existing upper bound" do
+        @content_addressable_version.update!(required_rubygems_version: ">= 3.0, < 5")
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal "#{Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION}, < 5", @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "preserve required rubygems version when it is higher than the content addressable floor" do
+        @content_addressable_version.update!(required_rubygems_version: ">= 5.0.0")
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal ">= 5.0.0", @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "preserve compound required rubygems version when its lower bound satisfies the content addressable floor" do
+        @content_addressable_version.update!(required_rubygems_version: ">= 4.2, < 5")
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal ">= 4.2, < 5", @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "preserve required rubygems version when requirement only has an = operator and value is greater" do
+        @content_addressable_version.update!(required_rubygems_version: "= 4.2")
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal "= 4.2", @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "preserve required rubygems version when requirement only has a ~> operator and value is greater" do
+        @content_addressable_version.update!(required_rubygems_version: "~> 4.2")
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal "~> 4.2", @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "preserve the implied upper bound from a ~> requirement whose lower bound is below the floor" do
+        @content_addressable_version.update!(required_rubygems_version: "~> 4.0")
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal "#{Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION}, < 5",
+                     @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "preserve the implied upper bound from a three-segment ~> requirement" do
+        @content_addressable_version.update!(required_rubygems_version: "~> 4.0.1")
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal "#{Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION}, < 4.1",
+                     @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "preserve exclusions alongside the implied upper bound" do
+        @content_addressable_version.update!(required_rubygems_version: "~> 4.0, != 4.1.1")
+
+        @content_addressable_version.normalize_content_addressable_gem_metadata!
+
+        assert_equal "#{Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION}, < 5, != 4.1.1",
+                     @content_addressable_version.reload.required_rubygems_version
+      end
+
+      should "preserve required rubygems version for versions supporting multiple Ruby ABIs" do
+        version = create(:version, rubygem: @rubygem, number: "2.0.0", required_rubygems_version: ">= 3.0", ruby_abi: nil)
+
+        version.normalize_content_addressable_gem_metadata!
+
+        assert_equal ">= 3.0", version.reload.required_rubygems_version
       end
     end
 
@@ -620,6 +1082,23 @@ class VersionTest < ActiveSupport::TestCase
       @version.platform = "zomg"
 
       assert_equal "#{@version.rubygem.name} (#{@version.number}-zomg)", @version.to_title
+    end
+
+    should "give content address, platform and Ruby ABI for #to_title" do
+      rubygem = create(:rubygem, name: "nokogiri")
+      version = create(
+        :version,
+        rubygem: rubygem,
+        number: "1.18.9",
+        platform: "arm64-darwin-25",
+        gem_platform: "arm64-darwin-25",
+        required_ruby_version: "~> 3.4.0",
+        ruby_abi: "3.4",
+        sha256: Digest::SHA2.base64digest("content addressable gem")
+      )
+      expected_content_address = version.sha256_hex.first(Version::DEFAULT_CONTENT_ADDRESS_LENGTH).to_s
+
+      assert_equal "nokogiri (1.18.9-#{expected_content_address}, Platform: arm64-darwin-25, Ruby ABI 3.4)", version.to_title
     end
 
     should "have description for info" do
@@ -968,6 +1447,14 @@ class VersionTest < ActiveSupport::TestCase
         number: "0.0.2.pre",
         platform: "java",
         prerelease: true)
+      @content_addressable_version = create(:version,
+        rubygem: @second_rubygem,
+        number: "0.0.2",
+        platform: "x86_64-linux-musl",
+        gem_platform: "x86_64-linux-musl",
+        required_ruby_version: "~> 3.4.0",
+        ruby_abi: "3.4",
+        sha256: Digest::SHA2.base64digest("second-0.0.2-x86_64-linux-musl"))
     end
 
     should "select only name, version, and platform for all gems" do
@@ -1116,5 +1603,15 @@ class VersionTest < ActiveSupport::TestCase
         end
       end
     end
+  end
+
+  private
+
+  def derived_abi(required_ruby_version, platform: "x86_64-linux")
+    Version.new(platform:, required_ruby_version:).derive_ruby_abi
+  end
+
+  def encoded_sha256_with_hex_prefix(hex_sha256)
+    [[hex_sha256].pack("H*")].pack("m0")
   end
 end

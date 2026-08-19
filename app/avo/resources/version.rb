@@ -34,6 +34,8 @@ class Avo::Resources::Version < Avo::BaseResource
     field :slug, as: :text, hide_on: :index
     field :number, as: :text
     field :platform, as: :text
+    field :ruby_abi, as: :text, title: "Ruby ABI"
+    field :content_address, as: :text
 
     field :canonical_number, as: :text
 

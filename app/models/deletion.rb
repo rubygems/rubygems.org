@@ -54,6 +54,7 @@ class Deletion < ApplicationRecord
       reason: ineligible_reason,
       number: version.number,
       platform: version.platform,
+      ruby_abi: version.ruby_abi,
       yanked_by: user.display_handle,
       actor_gid: user.to_gid,
       version_gid: version.to_gid
@@ -75,6 +76,7 @@ class Deletion < ApplicationRecord
     errors.add(:rubygem, "does not match version rubygem name") unless rubygem == version.rubygem.name
     errors.add(:number, "does not match version number") unless number == version.number
     errors.add(:platform, "does not match version platform") unless platform == version.platform
+    errors.add(:ruby_abi, "does not match version Ruby ABI") unless ruby_abi == version.ruby_abi
   end
 
   def rubygem_name
@@ -85,6 +87,7 @@ class Deletion < ApplicationRecord
     self.rubygem = rubygem_name
     self.number = version.number
     self.platform = version.platform
+    self.ruby_abi = version.ruby_abi
   end
 
   def expire_cache
@@ -155,11 +158,11 @@ class Deletion < ApplicationRecord
 
   def record_yank_event
     version.rubygem.record_event!(Events::RubygemEvent::VERSION_YANKED, number: version.number, platform: version.platform,
-yanked_by: user&.display_handle, actor_gid: user&.to_gid, version_gid: version.to_gid, force:)
+      ruby_abi: version.ruby_abi, yanked_by: user&.display_handle, actor_gid: user&.to_gid, version_gid: version.to_gid, force:)
   end
 
   def record_unyank_event
     version.rubygem.record_event!(Events::RubygemEvent::VERSION_UNYANKED, number: version.number, platform: version.platform,
-version_gid: version.to_gid)
+      ruby_abi: version.ruby_abi, version_gid: version.to_gid)
   end
 end
