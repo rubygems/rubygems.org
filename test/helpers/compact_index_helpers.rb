@@ -13,9 +13,7 @@ module CompactIndexHelpers
       args[:dependencies],
       args[:ruby_version],
       args[:rubygems_version],
-      args[:created_at],
-      args[:ruby_abi],
-      args[:content_address]
+      args[:created_at]
     )
   end
 end
