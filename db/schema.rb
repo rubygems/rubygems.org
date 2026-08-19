@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_18_000002) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_19_155903) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -150,6 +150,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_18_000002) do
     t.datetime "created_at", precision: nil, null: false
     t.string "number"
     t.string "platform"
+    t.string "ruby_abi"
     t.string "rubygem"
     t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id"
@@ -702,6 +703,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_18_000002) do
     t.datetime "built_at", precision: nil
     t.string "canonical_number"
     t.text "cert_chain"
+    t.string "content_address"
     t.datetime "created_at", precision: nil
     t.text "description"
     t.string "full_name"
@@ -744,6 +746,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_18_000002) do
     t.index ["prerelease"], name: "index_versions_on_prerelease"
     t.index ["pusher_api_key_id"], name: "index_versions_on_pusher_api_key_id"
     t.index ["pusher_id"], name: "index_versions_on_pusher_id"
+    t.index ["rubygem_id", "number", "content_address"], name: "index_versions_number_content_address", unique: true, where: "(content_address IS NOT NULL)"
     t.index ["rubygem_id", "number", "platform", "ruby_abi"], name: "index_versions_number_platform_abi", unique: true, where: "(ruby_abi IS NOT NULL)"
     t.index ["rubygem_id", "number", "platform"], name: "index_versions_number_platform_no_abi", unique: true, where: "(ruby_abi IS NULL)"
     t.index ["rubygem_id", "number", "platform"], name: "index_versions_on_rubygem_id_and_number_and_platform", unique: true
