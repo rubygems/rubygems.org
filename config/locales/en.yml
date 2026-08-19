@@ -113,6 +113,10 @@ en:
           attributes:
             expires_at:
               inclusion: "must be in the future"
+        gem_name_reservation:
+          attributes:
+            base:
+              organization_limit_reached: "Your organization has reached its limit of %{count} reserved gem names."
         organization:
           attributes:
             handle:
@@ -519,6 +523,10 @@ en:
         name: Gem name
         name_hint: Lowercase letters, numbers, dashes and underscores only. The name must not already be taken by an existing gem.
         reserve: Reserve
+        limit_html: Your organization can reserve up to <b>%{limit}</b> gem names and has <b>%{remaining}</b> left. Email %{support_email} if you need more.
+        limit_reached_html: Your organization has used all <b>%{limit}</b> of its gem name reservations. Email %{support_email} if you need more.
+        unlimited: Your organization can reserve an unlimited number of gem names.
+        disclaimer: The RubyGems.org team reserves the right to deny any requested name reservation.
     invitations:
       show:
         accept: Accept
