@@ -109,6 +109,10 @@ ja:
           attributes:
             expires_at:
               inclusion: 未来でなければなりません
+        gem_name_reservation:
+          attributes:
+            base:
+              organization_limit_reached:
         organization:
           attributes:
             handle:
@@ -522,6 +526,10 @@ ja:
         name:
         name_hint:
         reserve:
+        limit_html:
+        limit_reached_html:
+        unlimited:
+        disclaimer:
     invitations:
       show:
         accept: 承認

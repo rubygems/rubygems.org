@@ -38,6 +38,19 @@
         </div>
       </div>
     <% end %>
+    <div class="mb-4 text-b3 text-neutral-600 dark:text-neutral-400 space-y-2" data-testid="gem-name-reservation-limit">
+      <p>
+        <% if @organization.gem_name_reservations_unlimited? %>
+          <%= t(".unlimited") %>
+        <% elsif @organization.gem_name_reservations_remaining.zero? %>
+          <%= t(".limit_reached_html", limit: @organization.gem_name_reservation_limit, support_email: mail_to("support@rubygems.org", class: "text-orange-600 underline hover:text-orange-800")) %>
+        <% else %>
+          <%= t(".limit_html", limit: @organization.gem_name_reservation_limit, remaining: @organization.gem_name_reservations_remaining, support_email: mail_to("support@rubygems.org", class: "text-orange-600 underline hover:text-orange-800")) %>
+        <% end %>
+      </p>
+      <p data-testid="gem-name-reservation-disclaimer"><%= t(".disclaimer") %></p>
+    </div>
+
     <div class="mb-4">
       <%= f.label :name, t(".name"), class: 'block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
       <%= f.text_field :name, class: "block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:focus:border-indigo-400", placeholder: "my-gem-name", data: { testid: "gem-name-reservation-name" } %>
