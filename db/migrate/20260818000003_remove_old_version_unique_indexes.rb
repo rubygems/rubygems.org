@@ -6,12 +6,10 @@ class RemoveOldVersionUniqueIndexes < ActiveRecord::Migration[8.1]
   def up
     remove_index :versions,
       name: "index_versions_on_canonical_number_and_rubygem_id_and_platform",
-      if_exists: true,
       algorithm: :concurrently
 
     remove_index :versions,
       name: "index_versions_on_rubygem_id_and_number_and_platform",
-      if_exists: true,
       algorithm: :concurrently
   end
 
