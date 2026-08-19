@@ -8,9 +8,14 @@ class VersionManifest
 
   delegate :gem, :fs, to: :contents
 
-  def initialize(gem:, number:, platform: nil)
-    platform = nil if platform == "ruby"
-    @version = [number, platform.presence].compact.join("-")
+  def initialize(gem:, number:, platform: nil, content_address: nil)
+    @version = if content_address.present?
+                 "#{number}-#{content_address}"
+               elsif platform.nil? || platform == "ruby"
+                 number
+               else
+                 "#{number}-#{platform}"
+               end
     raise ArgumentError, "version number-platform must be valid: #{@version.inspect}" unless @version.match?(Rubygem::NAME_PATTERN)
     @contents = RubygemContents.new(gem: gem)
   end

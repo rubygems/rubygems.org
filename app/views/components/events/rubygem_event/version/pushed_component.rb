@@ -6,7 +6,7 @@ class Events::RubygemEvent::Version::PushedComponent < Events::TableDetailsCompo
   def view_template
     div do
       t(".version_html", version:
-        link_to_version_from_gid(additional.version_gid, additional.number, additional.platform))
+        link_to_version_from_gid(additional.version_gid, additional.number, additional.platform, additional.ruby_abi))
     end
     if additional.sha256.present?
       sha256 = capture { code(class: "break-all") { additional.sha256 } }

@@ -101,7 +101,7 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
               "updated_at" => [deletion.updated_at.as_json, nil],
               "version_id" => [version.id, nil]
             },
-            "unchanged" => {}
+            "unchanged" => { "ruby_abi" => nil }
           },
           version_unyank_event.to_gid.to_s => {
             "changes" => version_unyank_event.attributes.transform_values { [nil, it] }.as_json,

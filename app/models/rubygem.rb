@@ -186,22 +186,22 @@ class Rubygem < ApplicationRecord
 
   # NB: this intentionally does not default the platform to ruby.
   # Without platform, finds the most recent version by (position, created_at) ignoring platform.
-  def find_public_version(number, platform = nil)
+  def find_public_version(number, platform = nil, ruby_abi = nil)
     if platform
-      public_versions.find_by(number:, platform:)
+      public_versions.find_by(number:, platform:, ruby_abi:)
     else
-      public_versions.find_by(number:)
+      public_versions.find_by(number:, ruby_abi:)
     end
   end
 
-  def public_version_payload(number, platform = nil)
-    version = find_public_version(number, platform)
+  def public_version_payload(number, platform = nil, ruby_abi = nil)
+    version = find_public_version(number, platform, ruby_abi)
     payload(version).merge!(version.as_json) if version
   end
 
-  def find_version!(number:, platform:)
+  def find_version!(number:, platform:, ruby_abi: nil)
     platform = platform.presence || "ruby"
-    versions.find_by!(number: number, platform: platform)
+    versions.find_by!(number: number, platform: platform, ruby_abi: ruby_abi)
   end
 
   def find_version_by_slug!(slug)
@@ -263,6 +263,7 @@ class Rubygem < ApplicationRecord
       "version_created_at" => version.created_at,
       "version_downloads"  => version.downloads_count,
       "platform"           => version.platform,
+      "ruby_abi"           => version.ruby_abi,
       "authors"            => version.authors,
       "info"               => version.info,
       "licenses"           => version.licenses,
@@ -329,7 +330,7 @@ class Rubygem < ApplicationRecord
     versions_of_platforms = versions
       .release
       .indexed
-      .group_by(&:platform)
+      .group_by { |version| [version.platform, version.ruby_abi] }
 
     Version.default_scoped.where(id: versions_of_platforms.values.map! { |v| v.max.id }).update_all(latest: true)
   end
@@ -373,8 +374,8 @@ class Rubygem < ApplicationRecord
     user.mfa_enabled? || !metadata_mfa_required?
   end
 
-  def version_manifest(number, platform = nil)
-    VersionManifest.new(gem: name, number: number, platform: platform)
+  def version_manifest(number, platform = nil, content_address: nil)
+    VersionManifest.new(gem: name, number: number, platform: platform, content_address: content_address)
   end
 
   def file_content(fingerprint)

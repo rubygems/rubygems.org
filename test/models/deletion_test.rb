@@ -185,6 +185,16 @@ class DeletionTest < ActiveSupport::TestCase
 
     assert_equal deletion.rubygem, @version.rubygem.name
     assert_equal @version.id, deletion.version_id
+    assert_nil deletion.ruby_abi
+  end
+
+  should "record the Ruby ABI for versions targeting a single Ruby ABI" do
+    version = create(:version, rubygem: @version.rubygem, number: "2.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
+                     required_ruby_version: "~> 3.4.0", ruby_abi: "3.4", sha256: Digest::SHA2.base64digest("test-2.0.0-3.4"))
+    deletion = Deletion.new(version: version, user: @user)
+    deletion.valid?
+
+    assert_equal "3.4", deletion.ruby_abi
   end
 
   context "with restored gem" do

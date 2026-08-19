@@ -8,6 +8,47 @@ class CompactIndexVersionsTest < ActiveSupport::TestCase
   end
 
   context ".compact_index_versions" do
+    should "include Ruby ABI and content address for created versions" do
+      rubygem = create(:rubygem, name: "skinny")
+      version = create(
+        :version,
+        rubygem:,
+        number: "2.9.0",
+        platform: "x86_64-linux-musl",
+        gem_platform: "x86_64-linux-musl",
+        required_ruby_version: "~> 3.2.0",
+        sha256: Digest::SHA2.base64digest("skinny-2.9.0-x86_64-linux-musl"),
+        created_at: 2.days.ago,
+        info_checksum_v2: "skinny-info",
+        ruby_abi: "3.2"
+      )
+
+      versions = GemInfo.compact_index_versions(3.days.ago)
+      gem = versions.find { |compact_index_gem| compact_index_gem.name == "skinny" }
+
+      assert_equal "3.2", gem.versions.first.ruby_abi
+      assert_equal version.content_address, gem.versions.first.content_address
+    end
+
+    should "return no content address for unplatformed versions" do
+      rubygem = create(:rubygem, name: "datestamped")
+      create(
+        :version,
+        rubygem:,
+        number: "20260101",
+        platform: "ruby",
+        required_ruby_version: "~> 3.2.0",
+        created_at: 2.days.ago,
+        info_checksum_v2: "datestamped-info"
+      )
+
+      versions = GemInfo.compact_index_versions(3.days.ago)
+      gem = versions.find { |compact_index_gem| compact_index_gem.name == "datestamped" }
+
+      assert_nil gem.versions.first.content_address
+      assert_equal "20260101", gem.versions.first.version_token
+    end
+
     should "return all versions created after given date" do
       create(:version, number: "0.0.1", created_at: 10.days.ago)
       rubygem = create(:rubygem, name: "foo")
@@ -34,9 +75,44 @@ class CompactIndexVersionsTest < ActiveSupport::TestCase
       assert_includes versions,
         CompactIndex::Gem.new("bar", [CompactIndex::GemVersionV2.new("-1.0.0", "ruby", nil, "v2yanked")])
     end
+
+    should "return yanked content-addressable versions with a content-addressed token" do
+      rubygem = create(:rubygem, name: "skinny-yanked")
+      version = create(:version, :yanked, rubygem: rubygem, number: "1.0.0", platform: "x86_64-linux-musl",
+        gem_platform: "x86_64-linux-musl", required_ruby_version: "~> 3.2.0", ruby_abi: "3.2",
+        sha256: Digest::SHA2.base64digest("skinny-yanked-1.0.0"), created_at: 10.days.ago,
+        yanked_at: 1.day.ago, yanked_info_checksum_v2: "v2yanked")
+
+      versions = GemInfo.compact_index_versions(4.days.ago)
+      gem = versions.find { |candidate| candidate.name == "skinny-yanked" }
+
+      assert_equal "-1.0.0-#{version.content_address}", gem.versions.first.version_token
+    end
   end
 
   context ".compact_index_public_versions" do
+    should "include Ruby ABI and content address for public versions" do
+      rubygem = create(:rubygem, name: "skinny-public")
+      version = create(
+        :version,
+        rubygem:,
+        number: "2.9.0",
+        platform: "x86_64-linux-musl",
+        gem_platform: "x86_64-linux-musl",
+        required_ruby_version: "~> 3.2.0",
+        sha256: Digest::SHA2.base64digest("skinny-public-2.9.0-x86_64-linux-musl"),
+        created_at: @ts,
+        info_checksum_v2: "skinny-public-info",
+        ruby_abi: "3.2"
+      )
+
+      versions = GemInfo.compact_index_public_versions(@ts)
+      gem = versions.find { |compact_index_gem| compact_index_gem.name == "skinny-public" }
+
+      assert_equal "3.2", gem.versions.first.ruby_abi
+      assert_equal version.content_address, gem.versions.first.content_address
+    end
+
     should "not return version updated after timestamp" do
       version = create(:version, number: "0.0.1", created_at: @ts, info_checksum_v2: "v2qw2dwe")
       _updated_after_ts = create(:version, number: "2.0.0", created_at: @ts + 1.second, info_checksum_v2: "v2qw2dwe")

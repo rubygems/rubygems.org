@@ -982,6 +982,7 @@ es:
       requirements_header: Requerimientos
       show_all_versions: Mostrar todas las versiones (%{count} total)
       versions_header: Versiones
+      ruby_abi:
       yanked_notice: Esta versión fue borrada, y no está disponible para su descarga
         directa ni por otras gemas que puedan haber dependido de la misma.
     show_yanked:
@@ -1098,6 +1099,7 @@ es:
         el archivo gemspec.
     version:
       yanked: borrada
+      ruby_abi:
   webauthn_credentials:
     callback:
       success: Has dado de alta con éxito un dispositivo de seguridad.
