@@ -3,8 +3,8 @@
 require "test_helper"
 
 class Api::V2::ContentsControllerTest < ActionController::TestCase
-  def get_index(rubygem, version_number, platform = nil, ruby_abi: nil, format: :sha256)
-    get :index, params: { rubygem_name: rubygem.name, version_number:, platform:, ruby_abi:, format: }.compact
+  def get_index(rubygem, version_number, platform = nil, format: :sha256)
+    get :index, params: { rubygem_name: rubygem.name, version_number:, platform:, format: }.compact
   end
 
   def set_cache_header
@@ -198,83 +198,6 @@ class Api::V2::ContentsControllerTest < ActionController::TestCase
       get_index(@rubygem, "2.0.0")
 
       assert_response :not_found
-    end
-
-    should "return bad request when ruby_abi is given without a platform" do
-      get :index, params: { rubygem_name: @rubygem.name, version_number: "2.0.0", ruby_abi: "3.2", format: :sha256 }
-
-      assert_response :bad_request
-      assert_equal "The platform param is required when ruby_abi is specified.", @response.body
-    end
-
-    should "return bad request when ruby_abi has an invalid format" do
-      get :index, params: { rubygem_name: @rubygem.name, version_number: "2.0.0", platform: "x86_64-linux", ruby_abi: "invalid", format: :sha256 }
-
-      assert_response :bad_request
-      assert_equal "The ruby_abi param must be in the format X.Y (e.g., 3.2).", @response.body
-    end
-
-    should "treat empty ruby_abi as absent" do
-      get_index(@rubygem, "2.0.0", nil, ruby_abi: "")
-
-      assert_response :success
-    end
-
-    should "reject boundary near-misses for ruby_abi format" do
-      %w[3 3.2.1 3.].each do |invalid|
-        get :index, params: { rubygem_name: @rubygem.name, version_number: "2.0.0", platform: "x86_64-linux", ruby_abi: invalid, format: :sha256 }
-
-        assert_response :bad_request
-        assert_equal "The ruby_abi param must be in the format X.Y (e.g., 3.2).", @response.body
-      end
-    end
-
-    should "return format error when ruby_abi is invalid and platform is missing" do
-      get :index, params: { rubygem_name: @rubygem.name, version_number: "2.0.0", ruby_abi: "invalid", format: :sha256 }
-
-      assert_response :bad_request
-      assert_equal "The ruby_abi param must be in the format X.Y (e.g., 3.2).", @response.body
-    end
-
-    should "return bad request for invalid ruby_abi even when version does not exist" do
-      get :index, params: { rubygem_name: @rubygem.name, version_number: "999.0.0", platform: "x86_64-linux", ruby_abi: "invalid", format: :sha256 }
-
-      assert_response :bad_request
-      assert_equal "The ruby_abi param must be in the format X.Y (e.g., 3.2).", @response.body
-    end
-  end
-
-  context "on GET to index for content-addressable variants" do
-    setup do
-      @rubygem = create(:rubygem, name: "skinny-contents")
-      @skinny32 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux", gem_platform: "x86_64-linux",
-                          required_ruby_version: "~> 3.2.0", ruby_abi: "3.2",
-                          sha256: Digest::SHA2.base64digest("skinny-contents-1.0.0-x86_64-linux-3.2"))
-      @skinny34 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux", gem_platform: "x86_64-linux",
-                          required_ruby_version: "~> 3.4.0", ruby_abi: "3.4",
-                          sha256: Digest::SHA2.base64digest("skinny-contents-1.0.0-x86_64-linux-3.4"))
-
-      @skinny32.manifest.store_checksums("lib/a.rb" => "aaa11111")
-      @skinny34.manifest.store_checksums("lib/a.rb" => "bbb22222")
-    end
-
-    should "serve each ABI variant its own checksums" do
-      get_index @rubygem, "1.0.0", "x86_64-linux", ruby_abi: "3.2"
-
-      assert_response :success
-      assert_equal "aaa11111  lib/a.rb\n", @response.body
-
-      get_index @rubygem, "1.0.0", "x86_64-linux", ruby_abi: "3.4"
-
-      assert_response :success
-      assert_equal "bbb22222  lib/a.rb\n", @response.body
-    end
-
-    should "return 404 for a non-matching Ruby ABI" do
-      get_index @rubygem, "1.0.0", "x86_64-linux", ruby_abi: "3.3"
-
-      assert_response :not_found
-      assert_equal "This version could not be found.", @response.body
     end
   end
 

@@ -881,7 +881,6 @@ nl:
       requirements_header: Requirements
       show_all_versions: Toon alle versies (%{count} totaal)
       versions_header: Versies
-      ruby_abi:
       yanked_notice:
     show_yanked:
       not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org.
@@ -982,7 +981,6 @@ nl:
       imported_gem_version_notice:
     version:
       yanked: verwijderd
-      ruby_abi:
   webauthn_credentials:
     callback:
       success:

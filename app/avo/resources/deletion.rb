@@ -10,7 +10,6 @@ class Avo::Resources::Deletion < Avo::BaseResource
     field :rubygem, as: :text
     field :number, as: :text
     field :platform, as: :text
-    field :ruby_abi, as: :text, title: "Ruby ABI"
     field :user, as: :belongs_to
     field :version, as: :belongs_to
   end

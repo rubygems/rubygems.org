@@ -392,10 +392,6 @@ class PusherIntegrationTest < ActiveSupport::TestCase
           version_gid: @rubygem.versions.last.to_gid.to_s
         }, @rubygem.events.where(tag: Events::RubygemEvent::VERSION_PUSHED).sole
       end
-
-      should "set success message" do
-        assert_equal "Successfully registered gem: #{@cutter.version.to_title}", @cutter.message
-      end
     end
 
     should "purge gem cache" do
@@ -434,116 +430,6 @@ class PusherIntegrationTest < ActiveSupport::TestCase
           end
         end
       end
-    end
-
-    should "preserve required rubygems version for gems supporting multiple Ruby ABIs" do
-      @cutter.version.update!(required_rubygems_version: ">= 3.0", ruby_abi: nil)
-
-      assert @cutter.save
-
-      assert_equal ">= 3.0", @cutter.version.reload.required_rubygems_version
-    end
-  end
-
-  context "successfully saving a gemcutter scoped to one Ruby ABI" do
-    setup do
-      @rubygem = create(:rubygem, name: "sandworm")
-      @version = create(
-        :version,
-        rubygem: @rubygem,
-        number: "1.0.0",
-        platform: "arm64-darwin-25",
-        required_ruby_version: "~> 3.4.0",
-        required_rubygems_version: ">= 0",
-        ruby_abi: "3.4",
-        sha256: Digest::SHA2.base64digest("sandworm-1.0.0-arm64-darwin-25-3.4"),
-        pusher_api_key: @cutter.api_key
-      )
-
-      @cutter.stubs(:rubygem).returns @rubygem
-      @cutter.stubs(:version).returns @version
-      @cutter.stubs(:spec).returns(mock)
-      @rubygem.stubs(:update_attributes_from_gem_specification!)
-      GemCachePurger.stubs(:call)
-      @cutter.stubs(:write_gem)
-    end
-
-    should "set content addressable required rubygems version floor" do
-      assert @cutter.save
-
-      assert_equal Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, @version.reload.required_rubygems_version
-    end
-
-    should "normalize content addressable required rubygems version after applying gemspec metadata" do
-      sequence = sequence("content addressable metadata normalization")
-
-      @rubygem
-        .expects(:update_attributes_from_gem_specification!)
-        .with(@version, @cutter.spec)
-        .in_sequence(sequence)
-
-      @version
-        .expects(:normalize_content_addressable_gem_metadata!)
-        .in_sequence(sequence)
-
-      AfterVersionWriteJob.any_instance.stubs(:perform)
-
-      assert @cutter.save
-    end
-
-    should "roll back version changes when normalize raises" do
-      original = @version.required_rubygems_version
-      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec) do |version, _spec|
-        version.update!(required_rubygems_version: "99.0.0")
-      end
-      @version.stubs(:normalize_content_addressable_gem_metadata!)
-        .raises(ActiveRecord::RecordInvalid.new(@version))
-
-      refute @cutter.save
-      assert_equal original, @version.reload.required_rubygems_version
-    end
-
-    should "include platform and Ruby ABI in success message" do
-      assert @cutter.save
-
-      assert_equal "Successfully registered gem: #{@version.to_title}", @cutter.message
-    end
-
-    should "retry the persist on a content_address unique collision" do
-      sequence = sequence("content address collision retry")
-      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec)
-        .in_sequence(sequence)
-        .raises(ActiveRecord::RecordNotUnique.new(
-                  'duplicate key value violates unique constraint "index_versions_number_content_address"'
-                ))
-      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec)
-        .in_sequence(sequence)
-
-      assert @cutter.save
-    end
-
-    should "not retry on an unrelated unique violation" do
-      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec).once
-        .raises(ActiveRecord::RecordNotUnique.new(
-                  'duplicate key value violates unique constraint "index_versions_full_name"'
-                ))
-
-      refute @cutter.save
-    end
-
-    should "fail with an error after exhausting content_address retries" do
-      StatsD.stubs(:increment)
-      StatsD.expects(:increment).with("push.content_address_collision", tags: { rubygem: @rubygem.name }).times(3)
-      StatsD.expects(:increment).with("push.content_address_collision_exhausted", tags: { rubygem: @rubygem.name }).once
-
-      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec).times(4)
-        .raises(ActiveRecord::RecordNotUnique.new(
-                  'duplicate key value violates unique constraint "index_versions_number_content_address"'
-                ))
-
-      refute @cutter.save
-      assert_equal 409, @cutter.code
-      assert_includes @cutter.message, "could not generate a unique content address"
     end
   end
 

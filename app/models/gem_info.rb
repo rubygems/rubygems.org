@@ -49,9 +49,9 @@ class GemInfo
 
   private
 
-  DEPENDENCY_NAMES_INDEX = 10
+  DEPENDENCY_NAMES_INDEX = 8
 
-  DEPENDENCY_REQUIREMENTS_INDEX = 9
+  DEPENDENCY_REQUIREMENTS_INDEX = 7
 
   # Marshal.load of pre-deploy cache entries fails when GemVersion grows a Struct field.
   def read_cache(cache_key)
@@ -72,20 +72,11 @@ class GemInfo
         end
       end
 
-      number, platform, checksum, info_checksum, ruby_version, rubygems_version, created_at, ruby_abi, content_address, = row
+      number, platform, checksum, info_checksum, ruby_version, rubygems_version, created_at, = row
       version_class = VERSIONS.dig(version, :klass)
       checksum = Version._sha256_hex(checksum)
       created_at = created_at&.utc&.iso8601
-      args = { number:,
-              platform:,
-              checksum:,
-              info_checksum:,
-              dependencies:,
-              ruby_version:,
-              rubygems_version:,
-              created_at:,
-              ruby_abi:,
-              content_address: }
+      args = { number:, platform:, checksum:, info_checksum:, dependencies:, ruby_version:, rubygems_version:, created_at: }
       args = args.slice(*version_class.members)
       version_class.new(**args)
     end
@@ -100,7 +91,7 @@ class GemInfo
     checksum_column = VERSIONS.fetch(version).fetch(:checksum_column)
     group_by_columns = [
       "number", "platform", "sha256", checksum_column,
-      "required_ruby_version", "required_rubygems_version", "versions.created_at", "ruby_abi", "content_address"
+      "required_ruby_version", "required_rubygems_version", "versions.created_at"
     ]
 
     dep_req_agg = "string_agg(dependencies.requirements, '@' ORDER BY rubygems_dependencies.name, dependencies.id)"
@@ -114,7 +105,7 @@ class GemInfo
           AND dependencies.scope = 'runtime'")
       .where("rubygems.name = ? AND versions.indexed = true", @rubygem_name)
       .group(*group_by_columns)
-      .order(Arel.sql("versions.created_at, number, platform, ruby_abi, content_address, dep_name"))
+      .order(Arel.sql("versions.created_at, number, platform, dep_name"))
       .pluck(*group_by_columns, Arel.sql(dep_req_agg), Arel.sql(dep_name_agg))
   end
 end
