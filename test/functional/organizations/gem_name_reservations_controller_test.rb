@@ -104,7 +104,9 @@ class Organizations::GemNameReservationsControllerTest < ActionDispatch::Integra
 
   test "GET /organizations/:organization_handle/reservations paginates after 50" do
     names = Array.new(51) { |i| format("gem-%02d", i) }
-    names.each { |name| create(:gem_name_reservation, organization: @organization, name: name) }
+    with_feature(FeatureFlag::UNLIMITED_GEM_NAME_RESERVATIONS, actor: @organization) do
+      names.each { |name| create(:gem_name_reservation, organization: @organization, name: name) }
+    end
 
     get organization_gem_name_reservations_path(@organization)
 
@@ -183,6 +185,27 @@ class Organizations::GemNameReservationsControllerTest < ActionDispatch::Integra
 
     assert_response :unprocessable_content
     assert_empty @organization.gem_name_reservations
+  end
+
+  test "POST /organizations/:organization_handle/reservations beyond the limit" do
+    create_list(:gem_name_reservation, GemNameReservation::ORGANIZATION_LIMIT, organization: @organization)
+
+    post organization_gem_name_reservations_path(@organization), params: { gem_name_reservation: { name: "sandworm" } }
+
+    assert_response :unprocessable_content
+    assert page.has_content? "Your organization has reached its limit of 25 reserved gem names."
+    refute GemNameReservation.reserved?("sandworm")
+  end
+
+  test "POST /organizations/:organization_handle/reservations beyond the limit with the feature flag enabled" do
+    create_list(:gem_name_reservation, GemNameReservation::ORGANIZATION_LIMIT, organization: @organization)
+
+    with_feature(FeatureFlag::UNLIMITED_GEM_NAME_RESERVATIONS, actor: @organization) do
+      post organization_gem_name_reservations_path(@organization), params: { gem_name_reservation: { name: "sandworm" } }
+    end
+
+    assert_redirected_to organization_gem_name_reservations_path(@organization)
+    assert GemNameReservation.reserved?("sandworm")
   end
 
   test "POST /organizations/:organization_handle/reservations as a maintainer" do

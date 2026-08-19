@@ -2,6 +2,7 @@
 
 class FeatureFlag
   ORGANIZATIONS = :organizations
+  UNLIMITED_GEM_NAME_RESERVATIONS = :unlimited_gem_name_reservations
 
   class << self
     def enabled?(flag_name, actor = nil)
