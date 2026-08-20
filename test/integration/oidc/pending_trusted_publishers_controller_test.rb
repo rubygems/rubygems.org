@@ -40,6 +40,26 @@ class OIDC::PendingTrustedPublishersControllerTest < ActionDispatch::Integration
       get new_profile_oidc_pending_trusted_publisher_url
 
       assert_response :success
+      refute page.has_select?("oidc_pending_trusted_publisher_organization_id")
+    end
+
+    should "show organization field on new when user can manage an organization" do
+      organization = create(:organization, owners: [@user])
+
+      get new_profile_oidc_pending_trusted_publisher_url
+
+      assert_response :success
+      assert page.has_select?("oidc_pending_trusted_publisher_organization_id",
+        options: ["No Organization", organization.name])
+    end
+
+    should "hide organization field on new when user is only a maintainer" do
+      create(:organization, maintainers: [@user])
+
+      get new_profile_oidc_pending_trusted_publisher_url
+
+      assert_response :success
+      refute page.has_select?("oidc_pending_trusted_publisher_organization_id")
     end
 
     should "create trusted publisher" do
