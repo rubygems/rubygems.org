@@ -2,6 +2,7 @@
 
 class Version::ProvenanceComponent < ApplicationComponent
   include Phlex::Rails::Helpers::LinkTo
+  include Phlex::Rails::Helpers::ImageTag
 
   prop :attestation
 
@@ -49,6 +50,11 @@ class Version::ProvenanceComponent < ApplicationComponent
             </defs>
           </svg>
         SVG
+      end
+    when "GitLab CI"
+      div(class: "flex shrink-0 items-center justify-center p-2 " \
+                 "rounded-md border border-orange-500 bg-orange-100 dark:bg-orange-950") do
+        image_tag "gitlab_icon.png", width: 48, height: 48, alt: "GitLab"
       end
     else
       plain "Unknown"
