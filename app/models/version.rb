@@ -473,8 +473,8 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     platformed? && ruby_abi.present?
   end
 
-  def derive_ruby_abi
-    return unless platformed?
+  def self.ruby_abi_for(platform, required_ruby_version)
+    return unless platformed?(platform)
     return if required_ruby_version.blank?
 
     requirements = Gem::Requirement.create(required_ruby_version.split(/\s*,\s*/)).requirements

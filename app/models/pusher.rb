@@ -117,12 +117,18 @@ class Pusher
     sha256 = Digest::SHA2.base64digest(body.string)
     spec_sha256 = Digest::SHA2.base64digest(spec_contents)
 
+    ruby_abi =
+      if FeatureFlag.enabled?(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, api_key.user)
+        Version.ruby_abi_for(spec.original_platform.to_s, spec.required_ruby_version.to_s)
+      end
+
     version = @rubygem.versions
       .create_with(indexed: false, cert_chain: spec.cert_chain)
       .find_or_initialize_by(
         number: spec.version.to_s,
         platform: spec.original_platform.to_s,
         gem_platform: spec.platform.to_s,
+        ruby_abi: ruby_abi,
         size: size,
         sha256: sha256,
         spec_sha256: spec_sha256,
@@ -131,7 +137,6 @@ class Pusher
       )
 
     version.required_ruby_version = spec.required_ruby_version.to_s
-    version.ruby_abi = version.derive_ruby_abi if FeatureFlag.enabled?(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, owner)
     unless @rubygem.new_record?
       # Return success for idempotent pushes
       return notify("Gem was already pushed: #{version.to_title}", 200) if version.indexed?

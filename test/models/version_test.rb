@@ -584,7 +584,7 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal "abc-1.1.1.gem", @version.gem_file_name
     end
 
-    context "#derive_ruby_abi" do
+    context ".ruby_abi_for" do
       should "return the Ruby ABI when required_ruby_version targets a single Ruby minor version" do
         assert_equal "3.2", derived_abi("~> 3.2.0")
       end
@@ -1608,7 +1608,7 @@ class VersionTest < ActiveSupport::TestCase
   private
 
   def derived_abi(required_ruby_version, platform: "x86_64-linux")
-    Version.new(platform:, required_ruby_version:).derive_ruby_abi
+    Version.ruby_abi_for(platform, required_ruby_version)
   end
 
   def encoded_sha256_with_hex_prefix(hex_sha256)
