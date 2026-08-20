@@ -170,7 +170,8 @@ class ApiKey < ApplicationRecord
     update_columns(
       soft_deleted_at: Time.now.utc,
       soft_deleted_rubygem_name: ownership&.rubygem&.name,
-      soft_deleted_organization_name: membership&.organization&.name
+      soft_deleted_organization_name: membership&.organization&.name,
+      touch: true
     )
   end
 
