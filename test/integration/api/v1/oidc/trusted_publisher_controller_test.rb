@@ -398,7 +398,7 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       @gitlab_claims = {
         "namespace_id" => "72",
         "namespace_path" => "my-group",
-        "project_id" => "20",
+        "project_id" => "123456",
         "project_path" => "my-group/my-project",
         "user_id" => "1",
         "user_login" => "sample-user",

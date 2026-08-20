@@ -8,18 +8,21 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
   has_many :rubygems, through: :rubygem_trusted_publishers
   has_many :api_keys, dependent: :destroy, inverse_of: :owner, as: :owner
 
-  validates :project_path, :ci_config_path,
+  before_validation :find_gitlab_project_id
+
+  validates :project_path, :project_id, :ci_config_path,
     presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
   validates :environment, :branch_name, allow_nil: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
   validates :ref_type, inclusion: { in: %w[branch tag], allow_nil: true }, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
 
-  validates :project_path, uniqueness: { scope: %i[ci_config_path environment ref_type branch_name], message: :publisher_already_exists }
+  validates :project_path, uniqueness: { scope: %i[project_id ci_config_path environment ref_type branch_name], message: :publisher_already_exists }
   validate :ci_config_path_format
   validate :branch_name_required_for_branch_ref_type
 
   def self.for_claims(claims)
     required = {
-      project_path: claims.fetch(:project_path)
+      project_path: claims.fetch(:project_path),
+      project_id: claims.fetch(:project_id)
     }
 
     base = where(required)
@@ -67,6 +70,7 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
     {
       name:,
       project_path:,
+      project_id:,
       ci_config_path:,
       environment:,
       ref_type:,
@@ -79,6 +83,7 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
   def to_access_policy(jwt)
     common_conditions = [
       project_path_condition,
+      project_id_condition,
       environment_condition,
       audience_condition,
       *ref_conditions
@@ -128,6 +133,14 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
       operator: "string_equals",
       claim: "project_path",
       value: project_path
+    )
+  end
+
+  def project_id_condition
+    OIDC::AccessPolicy::Statement::Condition.new(
+      operator: "string_equals",
+      claim: "project_id",
+      value: project_id
     )
   end
 
@@ -193,6 +206,24 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
     else
       []
     end
+  end
+
+  def find_gitlab_project_id
+    return if project_path.blank?
+    return if project_id.present?
+
+    self.project_id = fetch_gitlab_project_id
+  end
+
+  def fetch_gitlab_project_id
+    host = URI(OIDC::Provider::GITLAB_ISSUER).host
+    connection = Faraday.new("https://#{host}", request: { timeout: 5 }, headers: { "Accept" => "application/json" }) do |f|
+      f.response :json, content_type: //
+    end
+    response = connection.get("/api/v4/projects/#{CGI.escape(project_path)}")
+    return unless response.success?
+
+    response.body["id"]&.to_s
   end
 
   def ci_config_path_format

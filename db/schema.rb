@@ -523,10 +523,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_18_000002) do
     t.string "ci_config_path", null: false
     t.datetime "created_at", null: false
     t.string "environment"
+    t.string "project_id", null: false
     t.string "project_path", null: false
     t.string "ref_type"
     t.datetime "updated_at", null: false
-    t.index ["project_path", "ci_config_path", "environment", "ref_type", "branch_name"], name: "index_oidc_trusted_publisher_gitlabs_on_claims", unique: true
+    t.index ["project_path", "project_id", "ci_config_path", "environment", "ref_type", "branch_name"], name: "index_oidc_trusted_publisher_gitlabs_on_claims", unique: true
   end
 
   create_table "organization_invites", force: :cascade do |t|

@@ -9,6 +9,9 @@ class OIDC::PendingTrustedPublishersControllerTest < ActionDispatch::Integration
 
     @trusted_publisher = create(:oidc_pending_trusted_publisher, user: @user, rubygem_name: "pending-gem-name")
     @expired_trusted_publisher = create(:oidc_pending_trusted_publisher, user: @user, expires_at: 1.day.ago, rubygem_name: "expired-gem-name")
+
+    stub_request(:get, %r{\Ahttps://gitlab\.com/api/v4/projects/})
+      .to_return(status: 200, body: { id: 123_456 }.to_json, headers: { "Content-Type" => "application/json" })
   end
 
   context "with a verified session" do
