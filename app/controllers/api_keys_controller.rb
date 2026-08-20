@@ -62,14 +62,8 @@ class ApiKeysController < ApplicationController
 
   def update
     @api_key = current_user.api_keys.find(params.expect(:id))
-    @api_key.assign_attributes(api_key_update_params(@api_key))
 
-    if @api_key.errors.present?
-      flash.now[:error] = @api_key.errors.full_messages.to_sentence
-      return render :edit
-    end
-
-    if @api_key.save
+    if save_api_key_updates
       redirect_to profile_api_keys_path, flash: { notice: t(".success") }
     else
       flash.now[:error] = @api_key.errors.full_messages.to_sentence
@@ -122,5 +116,12 @@ class ApiKeysController < ApplicationController
     ApiKeysHelper.api_key_params(
       params.expect(api_key: [*ApiKey::API_SCOPES, :mfa, :rubygem_id, :organization_id, scopes: ApiKey::API_SCOPES]), existing_api_key
     )
+  end
+
+  def save_api_key_updates
+    @api_key.with_transaction_returning_status do
+      @api_key.assign_attributes(api_key_update_params(@api_key))
+      @api_key.errors.empty? && @api_key.save
+    end
   end
 end

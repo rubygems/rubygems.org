@@ -211,6 +211,18 @@ class ApiKeyTest < ActiveSupport::TestCase
       assert_contains api_key.errors[:base], "An API key cannot be scoped to both a gem and an organization"
     end
 
+    should "not persist either new scope when a gem and an organization are assigned together" do
+      ownership = create(:ownership, user: @user)
+      api_key = create(:api_key, scopes: %i[push_rubygem], owner: @user, rubygem: ownership.rubygem)
+
+      refute api_key.update(rubygem_id: ownership.rubygem.id, organization_id: @organization.id)
+
+      api_key.reload
+
+      assert_equal ownership.rubygem, api_key.rubygem
+      assert_nil api_key.organization
+    end
+
     should "be invalid when user cannot manage the organization" do
       api_key = build(:api_key, scopes: %w[push_rubygem], owner: @user, scoped_organization: @other_organization)
 
