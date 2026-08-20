@@ -221,6 +221,33 @@ class ApiKeysControllerTest < ActionController::TestCase
       should "render new api key form" do
         assert page.has_content? "New API key"
       end
+
+      should "hide organization field when user has no manageable organizations" do
+        refute page.has_select?("api_key_organization_id")
+      end
+    end
+
+    context "on GET to new when user can manage an organization" do
+      setup do
+        @organization = create(:organization, owners: [@user])
+        get :new
+      end
+
+      should "show organization field" do
+        assert page.has_select?("api_key_organization_id",
+          options: ["No Organization", @organization.name])
+      end
+    end
+
+    context "on GET to new when user is only a maintainer" do
+      setup do
+        create(:organization, maintainers: [@user])
+        get :new
+      end
+
+      should "hide organization field" do
+        refute page.has_select?("api_key_organization_id")
+      end
     end
 
     context "on POST to create" do

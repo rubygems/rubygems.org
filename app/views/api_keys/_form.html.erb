@@ -47,11 +47,14 @@
     <%= f.collection_select :rubygem_id, current_user.rubygems.by_name, :id, :name, { include_blank: t("api_keys.all_gems") }, class: field_class, data: { gem_scope_target: "gemSelector" } %>
   </div>
 
-  <div>
-    <%= f.label :organization_id, t(".organization_scope"), class: label_class %>
-    <p class="mb-2 text-b4 text-neutral-600 dark:text-neutral-400"><%= t(".organization_scope_info") %></p>
-    <%= f.collection_select :organization_id, current_user.manageable_organizations, :id, :name, { include_blank: t("api_keys.no_organization") }, class: field_class, data: { gem_scope_target: "orgSelector" } %>
-  </div>
+  <% organizations = current_user.manageable_organizations %>
+  <% if organizations.any? %>
+    <div>
+      <%= f.label :organization_id, t(".organization_scope"), class: label_class %>
+      <p class="mb-2 text-b4 text-neutral-600 dark:text-neutral-400"><%= t(".organization_scope_info") %></p>
+      <%= f.collection_select :organization_id, organizations, :id, :name, { include_blank: t("api_keys.no_organization") }, class: field_class, data: { gem_scope_target: "orgSelector" } %>
+    </div>
+  <% end %>
 
   <div>
     <%= f.label :expires_at, t(".expiration"), class: label_class %>

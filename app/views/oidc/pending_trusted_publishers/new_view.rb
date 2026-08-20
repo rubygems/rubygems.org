@@ -39,9 +39,12 @@ class OIDC::PendingTrustedPublishers::NewView < ApplicationView
   end
 
   def organization_field(form)
+    organizations = current_user.manageable_organizations
+    return if organizations.none?
+
     div class: "py-4" do
       form.label :organization_id, t("oidc.trusted_publisher.pending.organization_scope"), class: label_class
-      form.collection_select :organization_id, current_user.manageable_organizations, :id, :name,
+      form.collection_select :organization_id, organizations, :id, :name,
         { include_blank: t("api_keys.no_organization") }, class: field_class
       p(class: note_class) { t("oidc.trusted_publisher.pending.organization_scope_info") }
     end
