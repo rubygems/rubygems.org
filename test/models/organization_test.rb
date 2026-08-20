@@ -116,6 +116,49 @@ class OrganizationTest < ActiveSupport::TestCase
     end
   end
 
+  context "discarding" do
+    setup do
+      @user = create(:user)
+      @organization = create(:organization, owners: [@user])
+      @api_key = create(:api_key, owner: @user, scopes: %i[push_rubygem], scoped_organization: @organization)
+      @other_organization = create(:organization, owners: [@user])
+      @other_api_key = create(:api_key, owner: @user, scopes: %i[push_rubygem], scoped_organization: @other_organization)
+      @unscoped_api_key = create(:api_key, owner: @user, scopes: %i[push_rubygem])
+    end
+
+    should "soft delete organization-scoped API keys" do
+      @organization.discard!
+
+      assert_predicate @organization, :discarded?
+      assert_nil @api_key.reload.api_key_organization_scope
+      assert_predicate @api_key, :soft_deleted?
+      assert_predicate @api_key, :soft_deleted_by_organization?
+      assert_equal @organization.name, @api_key.soft_deleted_organization_name
+    end
+
+    should "keep memberships" do
+      @organization.discard!
+
+      assert Membership.exists?(organization_id: @organization.id, user: @user)
+    end
+
+    should "not affect keys scoped to other organizations or unscoped keys" do
+      @organization.discard!
+
+      refute_predicate @other_api_key.reload, :soft_deleted?
+      assert_predicate @other_api_key.api_key_organization_scope, :present?
+      refute_predicate @unscoped_api_key.reload, :soft_deleted?
+    end
+
+    should "not restore API keys when the organization is undiscarded" do
+      @organization.discard!
+      @organization.undiscard!
+
+      assert_predicate @api_key.reload, :soft_deleted?
+      assert_nil @api_key.api_key_organization_scope
+    end
+  end
+
   context "#flipper_id" do
     should "return org:handle" do
       organization = create(:organization)

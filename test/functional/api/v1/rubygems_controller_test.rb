@@ -943,6 +943,19 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with :success
     end
 
+    context "when the organization is discarded" do
+      setup do
+        @organization.discard!
+        post :create, body: gem_file(&:read)
+      end
+
+      should respond_with :forbidden
+
+      should "#render_soft_deleted_api_key and display an error" do
+        assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+      end
+    end
+
     context "when membership is only maintainer" do
       setup do
         @user = create(:user)

@@ -282,7 +282,7 @@ class ApiKeyTest < ActiveSupport::TestCase
       end
 
       should "reject all gems when the scoped organization is soft-deleted" do
-        @organization.update!(deleted_at: Time.current)
+        @organization.update_column(:deleted_at, Time.current)
         rubygem = create(:rubygem, owners: [@user])
 
         refute @api_key.reload.scoped_to?(rubygem)

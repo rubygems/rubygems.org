@@ -18,7 +18,7 @@ class Membership < ApplicationRecord
   validates :user, uniqueness: { scope: :organization }
 
   before_create :set_invitation_expire_time
-  after_update :revoke_org_scoped_api_keys!, if: :saved_change_to_role?
+  after_update :revoke_org_scoped_api_keys_on_role_change!, if: :saved_change_to_role?
 
   def confirm!
     update_attribute(:confirmed_at, Time.zone.now)
@@ -33,15 +33,19 @@ class Membership < ApplicationRecord
     save!
   end
 
-  private
-
   def revoke_org_scoped_api_keys!
-    return if admin? || owner?
-
     api_key_organization_scopes.includes(:api_key).find_each do |scope|
       scope.api_key.soft_delete!(membership: self)
       scope.destroy!
     end
+  end
+
+  private
+
+  def revoke_org_scoped_api_keys_on_role_change!
+    return if admin? || owner?
+
+    revoke_org_scoped_api_keys!
   end
 
   def set_invitation_expire_time
