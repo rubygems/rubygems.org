@@ -98,6 +98,8 @@ en:
         repository_owner_id: GitHub Repository Owner ID
         workflow_repository_owner: Workflow Repository Owner
         workflow_repository_name: Workflow Repository Name
+      oidc/trusted_publisher/gitlab:
+        project_id: GitLab Project ID
       oidc/pending_trusted_publisher:
         rubygem_name: RubyGem name
     errors:
