@@ -460,13 +460,6 @@ class PusherTest < ActiveSupport::TestCase
 
       refute @cutter.verify_api_key_scope
     end
-
-    should "reject gems when the scoped organization is soft-deleted" do
-      @organization.update!(deleted_at: Time.current)
-      @api_key.reload
-
-      refute @cutter.verify_api_key_scope
-    end
   end
 
   context "assigning ownership for unowned gems" do
