@@ -738,7 +738,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_19_160003) do
     t.index ["canonical_number", "rubygem_id", "platform", "ruby_abi"], name: "index_versions_canonical_platform_abi", unique: true, where: "(ruby_abi IS NOT NULL)"
     t.index ["canonical_number", "rubygem_id", "platform"], name: "index_versions_canonical_platform"
     t.index ["canonical_number", "rubygem_id", "platform"], name: "index_versions_canonical_platform_no_abi", unique: true, where: "(ruby_abi IS NULL)"
-
     t.index ["created_at"], name: "index_versions_on_created_at"
     t.index ["full_name"], name: "index_versions_on_full_name"
     t.index ["indexed", "yanked_at"], name: "index_versions_on_indexed_and_yanked_at"
@@ -751,7 +750,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_19_160003) do
     t.index ["rubygem_id", "number", "platform", "ruby_abi"], name: "index_versions_number_platform_abi", unique: true, where: "(ruby_abi IS NOT NULL)"
     t.index ["rubygem_id", "number", "platform"], name: "index_versions_number_platform"
     t.index ["rubygem_id", "number", "platform"], name: "index_versions_number_platform_no_abi", unique: true, where: "(ruby_abi IS NULL)"
-
     t.index ["rubygem_id", "position", "created_at"], name: "index_versions_on_rubygem_id_and_position_and_created_at", order: { created_at: :desc }, where: "(indexed = true)", include: ["full_name", "number", "platform"]
   end
 

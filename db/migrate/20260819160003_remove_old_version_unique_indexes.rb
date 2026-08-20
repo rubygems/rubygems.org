@@ -15,6 +15,10 @@ class RemoveOldVersionUniqueIndexes < ActiveRecord::Migration[8.1]
       if_exists: true
   end
 
+  # To revert: remove all content-addressable (ruby_abi) variants first —
+  # recreating these full uniques fails with PG::UniqueViolation once fat and
+  # skinny rows coexist at the same (gem, number, platform). Irreversible
+  # after any content-addressable push has landed.
   def down
     add_index :versions,
       %i[canonical_number rubygem_id platform],
