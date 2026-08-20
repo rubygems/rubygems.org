@@ -1,0 +1,54 @@
+<%
+  add_breadcrumb "Dashboard", dashboard_path
+  add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle), organization_path(@organization)
+  add_breadcrumb t("breadcrumbs.reservations"), organization_gem_name_reservations_path(@organization)
+%>
+
+<% content_for :subject do %>
+  <%= render "organizations/subject", organization: @organization, current: :gem_name_reservations %>
+<% end %>
+
+<h1 class="text-h2 mb-10"><%= t("organizations.show.reservations") %></h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title t("organizations.show.reservations"), icon: "description", count: @gem_name_reservations_count %>
+    <% if policy(@organization).manage_gem_name_reservations? %>
+      <%= render ButtonComponent.new t(".reserve"), new_organization_gem_name_reservation_path(@organization), type: :link, size: :small, data: { testid: "reserve-gem-name" } %>
+    <% end %>
+  <% end %>
+
+  <p class="text-b3 text-neutral-600 dark:text-neutral-400 mb-6"><%= t(".description") %></p>
+
+  <% if @gem_name_reservations.empty? %>
+    <%= prose do %>
+      <i><%= t(".no_reservations") %></i>
+    <% end %>
+  <% else %>
+    <%= c.divided_list do %>
+      <% @gem_name_reservations.each do |gem_name_reservation| %>
+        <%= c.list_item(data: { testid: "gem-name-reservation" }) do %>
+          <div class="flex flex-row w-full items-center justify-between">
+            <p class="text-neutral-800 dark:text-white"><%= gem_name_reservation.name %></p>
+            <% if policy(gem_name_reservation).destroy? %>
+              <%= render ButtonComponent.new(
+                t(".remove"),
+                organization_gem_name_reservation_path(@organization, gem_name_reservation),
+                method: :delete,
+                style: :plain,
+                color: :red,
+                size: :small,
+                data: {
+                  testid: "remove-gem-name-reservation",
+                  turbo_confirm: t(".confirm_remove", name: gem_name_reservation.name)
+                }
+              ) %>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <div class="mt-6"><%= paginate @gem_name_reservations, theme: "hammy" %></div>
+  <% end %>
+<% end %>

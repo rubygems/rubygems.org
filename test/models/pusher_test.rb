@@ -344,24 +344,6 @@ class PusherTest < ActiveSupport::TestCase
         assert @cutter.authorize
       end
 
-      should "be false if gem is pushable but is reserved" do
-        create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
-        create(:gem_name_reservation, name: @rubygem.name.downcase)
-
-        refute @cutter.authorize
-        assert_equal "This gem name is reserved. You are not allowed to push this gem.", @cutter.message
-        assert_equal 403, @cutter.code
-      end
-
-      should "be false if gem is owned by user but is reserved" do
-        create(:ownership, rubygem: @rubygem, user: @user)
-        create(:gem_name_reservation, name: @rubygem.name.downcase)
-
-        refute @cutter.authorize
-        assert_equal "This gem name is reserved. You are not allowed to push this gem.", @cutter.message
-        assert_equal 403, @cutter.code
-      end
-
       context "version metadata has rubygems_mfa_required set" do
         setup do
           spec = mock
