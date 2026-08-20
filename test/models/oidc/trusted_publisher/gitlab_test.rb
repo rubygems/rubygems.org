@@ -10,8 +10,15 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
   should have_many(:api_keys).inverse_of(:owner)
 
   context "validations" do
+    setup do
+      stub_request(:get, %r{\Ahttps://gitlab\.com/api/v4/projects/})
+        .to_return(status: 404, body: "", headers: {})
+    end
+
     should validate_presence_of(:project_path)
     should validate_length_of(:project_path).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
+    should validate_presence_of(:project_id)
+    should validate_length_of(:project_id).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
     should validate_presence_of(:ci_config_path)
     should validate_length_of(:ci_config_path).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
     should validate_length_of(:environment).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
@@ -51,10 +58,24 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
     create(:oidc_trusted_publisher_gitlab, project_path: "ns/foo")
 
     claims = {
-      project_path: "ns/bar"
+      project_path: "ns/bar",
+      project_id: "123456"
     }
 
     assert_equal bar, OIDC::TrustedPublisher::GitLab.for_claims(claims)
+  end
+
+  test ".for_claims does not match a publisher with a different project_id" do
+    create(:oidc_trusted_publisher_gitlab, project_path: "ns/bar", project_id: "123456")
+
+    claims = {
+      project_path: "ns/bar",
+      project_id: "999999"
+    }
+
+    assert_raises ActiveRecord::RecordNotFound do
+      OIDC::TrustedPublisher::GitLab.for_claims(claims)
+    end
   end
 
   test ".for_claims with branch ref" do
@@ -65,6 +86,7 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
 
     claims = {
       project_path: "ns/bar",
+      project_id: "123456",
       ref_type: "branch",
       ref: "main",
       ref_path: "refs/heads/main"
@@ -80,6 +102,7 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
 
     claims = {
       project_path: "ns/bar",
+      project_id: "123456",
       ref_type: "tag",
       ref: "v1.0.0",
       ref_path: "refs/tags/v1.0.0"
@@ -93,6 +116,7 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
 
     claims = {
       project_path: "ns/bar",
+      project_id: "123456",
       ref_type: "tag",
       ref: "v1.0.0",
       ref_path: "refs/tags/v1.0.0"
@@ -110,7 +134,7 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
       ci_config_path: "deploy.yml",
       environment: "production")
 
-    claims = { project_path: "ns/bar", environment: "production" }
+    claims = { project_path: "ns/bar", project_id: "123456", environment: "production" }
 
     assert_equal specific_env_publisher, OIDC::TrustedPublisher::GitLab.for_claims(claims)
   end
@@ -120,7 +144,7 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
       project_path: "ns/bar",
       environment: nil)
 
-    claims = { project_path: "ns/bar", environment: "staging" }
+    claims = { project_path: "ns/bar", project_id: "123456", environment: "staging" }
 
     assert_equal any_env_publisher, OIDC::TrustedPublisher::GitLab.for_claims(claims)
   end
@@ -128,7 +152,7 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
   test ".for_claims raises RecordNotFound when no publisher matches" do
     create(:oidc_trusted_publisher_gitlab, project_path: "ns/other")
 
-    claims = { project_path: "ns/bar" }
+    claims = { project_path: "ns/bar", project_id: "123456" }
 
     assert_raises ActiveRecord::RecordNotFound do
       OIDC::TrustedPublisher::GitLab.for_claims(claims)
@@ -140,7 +164,8 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
       project_path: "company/dept/team/repo")
 
     claims = {
-      project_path: "company/dept/team/repo"
+      project_path: "company/dept/team/repo",
+      project_id: "123456"
     }
 
     assert_equal nested, OIDC::TrustedPublisher::GitLab.for_claims(claims)
@@ -233,6 +258,7 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
     conditions = policy.statements.first["conditions"]
 
     assert_includes conditions.pluck("claim"), "project_path"
+    assert_includes conditions.pluck("claim"), "project_id"
     assert_includes conditions.pluck("claim"), "ci_config_ref_uri"
     assert_includes conditions.pluck("claim"), "aud"
     assert_includes conditions.pluck("claim"), "ref"
@@ -243,6 +269,12 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
 
     assert_equal "string_equals", ci_condition["operator"]
     assert_equal "gitlab.com/myns/rubygem1//.gitlab-ci.yml@refs/heads/main", ci_condition["value"]
+
+    # Check project_id condition
+    project_id_condition = conditions.find { |c| c["claim"] == "project_id" }
+
+    assert_equal "string_equals", project_id_condition["operator"]
+    assert_equal publisher.project_id, project_id_condition["value"]
 
     # Check ref condition
     ref_condition = conditions.find { |c| c["claim"] == "ref" }
@@ -265,5 +297,49 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
     nested_conditions = nested_policy.statements.first["conditions"]
 
     assert_equal "a/b/c", nested_conditions.find { |c| c["claim"] == "project_path" }["value"]
+  end
+
+  test "resolves project_id from the GitLab API when not set" do
+    stub_request(:get, "https://gitlab.com/api/v4/projects/ns%2Fbar")
+      .to_return(status: 200, body: { id: 85_578_356 }.to_json, headers: { "Content-Type" => "application/json" })
+
+    publisher = build(:oidc_trusted_publisher_gitlab, project_path: "ns/bar", project_id: nil)
+
+    assert_predicate publisher, :valid?
+    assert_equal "85578356", publisher.project_id
+  end
+
+  test "does not call the GitLab API when project_id is already set" do
+    publisher = build(:oidc_trusted_publisher_gitlab, project_path: "ns/bar", project_id: "42")
+
+    assert_predicate publisher, :valid?
+    assert_equal "42", publisher.project_id
+    assert_not_requested :get, %r{\Ahttps://gitlab\.com/api/v4/projects/}
+  end
+
+  test "is invalid when the GitLab project does not exist" do
+    stub_request(:get, "https://gitlab.com/api/v4/projects/ns%2Fmissing")
+      .to_return(status: 404, body: { message: "404 Project Not Found" }.to_json, headers: { "Content-Type" => "application/json" })
+
+    publisher = build(:oidc_trusted_publisher_gitlab, project_path: "ns/missing", project_id: nil)
+
+    refute_predicate publisher, :valid?
+    assert_includes publisher.errors[:project_id], "can't be blank"
+  end
+
+  test ".build_trusted_publisher does not accept project_id from params" do
+    stub_request(:get, "https://gitlab.com/api/v4/projects/ns%2Fbar")
+      .to_return(status: 200, body: { id: 111 }.to_json, headers: { "Content-Type" => "application/json" })
+
+    publisher = OIDC::TrustedPublisher::GitLab.build_trusted_publisher(
+      project_path: "ns/bar",
+      project_id: "999999",
+      ci_config_path: ".gitlab-ci.yml"
+    )
+
+    assert_nil publisher.project_id
+    publisher.validate
+
+    assert_equal "111", publisher.project_id
   end
 end

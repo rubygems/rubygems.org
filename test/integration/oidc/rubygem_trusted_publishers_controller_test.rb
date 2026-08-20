@@ -10,6 +10,9 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
     @rubygem = create(:rubygem, owners: [@user])
     create(:version, rubygem: @rubygem)
     @trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: @rubygem)
+
+    stub_request(:get, %r{\Ahttps://gitlab\.com/api/v4/projects/})
+      .to_return(status: 200, body: { id: 123_456 }.to_json, headers: { "Content-Type" => "application/json" })
   end
 
   context "with a verified session" do

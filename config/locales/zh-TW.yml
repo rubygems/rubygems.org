@@ -93,6 +93,8 @@ zh-TW:
         repository_owner_id:
         workflow_repository_owner:
         workflow_repository_name:
+      oidc/trusted_publisher/gitlab:
+        project_id:
       oidc/pending_trusted_publisher:
         rubygem_name:
     errors:
