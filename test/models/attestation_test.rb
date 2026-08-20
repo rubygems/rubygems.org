@@ -282,4 +282,36 @@ class AttestationTest < ActiveSupport::TestCase
       assert(changes.any? { |c| c.include?("Failed to repair certificate") })
     end
   end
+
+  context "#display_data" do
+    should "return GitHub Actions platform for a GitHub Actions attestation" do
+      attestation = build(:attestation)
+
+      display_data = attestation.display_data
+
+      assert_equal "GitHub Actions", display_data[:ci_platform]
+      assert display_data[:log_index]
+    end
+
+    should "return GitLab CI display data for a GitLab attestation" do
+      certificate = build(:sigstore_x509_certificate,
+        x509_certificate: build(:x509_certificate, :key_usage, :gitlab_fulcio))
+      bundle = build(:sigstore_bundle,
+        verification_material: build(:sigstore_verification_material, certificate:))
+      attestation = build(:attestation, body: bundle)
+
+      display_data = attestation.display_data
+
+      assert_equal "GitLab CI", display_data[:ci_platform]
+      assert_equal "my-group/my-project@7c2dc26", display_data[:source_commit_string]
+      assert_equal "https://gitlab.com/my-group/my-project/-/commit/7c2dc26bb549c2d5bc14f5a7e0e9b762dad60bc8",
+        display_data[:source_commit_url]
+      assert_equal ".gitlab-ci.yml", display_data[:build_file_string]
+      assert_equal "https://gitlab.com/my-group/my-project/-/blob/7c2dc26bb549c2d5bc14f5a7e0e9b762dad60bc8/.gitlab-ci.yml",
+        display_data[:build_file_url]
+      assert_equal "https://gitlab.com/my-group/my-project/-/jobs/16001544219",
+        display_data[:build_summary_url]
+      assert display_data[:log_index]
+    end
+  end
 end

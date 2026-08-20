@@ -116,14 +116,23 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
 
   def owns_gem?(rubygem) = rubygem_trusted_publishers.exists?(rubygem: rubygem)
 
-  class UnsupportedSigstorePolicy
-    def verify(_cert)
-      Sigstore::VerificationFailure.new("Attestation verification is not supported for GitLab trusted publishers")
+  class SigstorePolicy
+    def initialize(trusted_publisher)
+      @trusted_publisher = trusted_publisher
+    end
+
+    def verify(cert)
+      ref = cert.openssl.find_extension("1.3.6.1.4.1.57264.1.14")&.value_der&.then { OpenSSL::ASN1.decode(it).value }
+      host = URI(OIDC::Provider::GITLAB_ISSUER).host
+      Sigstore::Policy::Identity.new(
+        identity: "https://#{host}/#{@trusted_publisher.project_path}//#{@trusted_publisher.ci_config_path}@#{ref}",
+        issuer: OIDC::Provider::GITLAB_ISSUER
+      ).verify(cert)
     end
   end
 
   def to_sigstore_identity_policy
-    UnsupportedSigstorePolicy.new
+    SigstorePolicy.new(self)
   end
 
   private

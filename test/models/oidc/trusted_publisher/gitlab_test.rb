@@ -327,6 +327,28 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
     assert_includes publisher.errors[:project_id], "can't be blank"
   end
 
+  test "#to_sigstore_identity_policy verifies a matching GitLab Fulcio certificate" do
+    publisher = create(:oidc_trusted_publisher_gitlab,
+      project_path: "my-group/my-project",
+      ci_config_path: ".gitlab-ci.yml")
+
+    cert = Sigstore::Internal::X509::Certificate.new(build(:x509_certificate, :key_usage, :gitlab_fulcio))
+    policy = publisher.to_sigstore_identity_policy
+
+    assert_predicate policy.verify(cert), :verified?
+  end
+
+  test "#to_sigstore_identity_policy rejects a certificate for a different project" do
+    publisher = create(:oidc_trusted_publisher_gitlab,
+      project_path: "other-group/other-project",
+      ci_config_path: ".gitlab-ci.yml")
+
+    cert = Sigstore::Internal::X509::Certificate.new(build(:x509_certificate, :key_usage, :gitlab_fulcio))
+    policy = publisher.to_sigstore_identity_policy
+
+    refute_predicate policy.verify(cert), :verified?
+  end
+
   test ".build_trusted_publisher does not accept project_id from params" do
     stub_request(:get, "https://gitlab.com/api/v4/projects/ns%2Fbar")
       .to_return(status: 200, body: { id: 111 }.to_json, headers: { "Content-Type" => "application/json" })
