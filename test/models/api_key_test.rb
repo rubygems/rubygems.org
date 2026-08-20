@@ -341,10 +341,12 @@ class ApiKeyTest < ActiveSupport::TestCase
     should "set soft_deleted_at" do
       api_key = create(:api_key)
 
+      travel 1.second
       freeze_time do
         api_key.soft_delete!
 
         assert_equal Time.now.utc, api_key.soft_deleted_at
+        assert_equal Time.now.utc, api_key.updated_at
       end
     end
   end
