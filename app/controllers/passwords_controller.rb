@@ -7,29 +7,25 @@ class PasswordsController < ApplicationController
 
   before_action :ensure_email_present, only: %i[create]
 
-  before_action :no_referrer, only: :edit
+  prepend_before_action :protect_password_reset_response, only: %i[edit reset otp_edit webauthn_edit update]
   before_action :begin_password_reset, only: :edit
   before_action :load_password_reset, only: %i[reset otp_edit webauthn_edit update]
   before_action :validate_otp, only: %i[otp_edit]
   before_action :validate_webauthn, only: %i[webauthn_edit]
   after_action :delete_mfa_expiry_session, only: %i[otp_edit webauthn_edit]
 
-  before_action :validate_password_reset_session, only: :update
+  before_action :validate_password_reset_verification, only: :update
 
   def new
     render :new
   end
 
   def edit
-    redirect_to reset_password_path
+    render_password_reset
   end
 
   def reset
-    return require_mfa if password_reset_requires_mfa?
-
-    verify_password_reset_session unless password_reset_session_verified?
-    set_compromised_flag
-    render :edit
+    render_password_reset
   end
 
   def create
@@ -71,6 +67,21 @@ class PasswordsController < ApplicationController
 
   private
 
+  def render_password_reset
+    return require_mfa if password_reset_requires_mfa?
+
+    mark_password_reset_verified unless password_reset_verification_active?
+    set_compromised_flag
+    render :edit
+  end
+
+  def protect_password_reset_response
+    disable_cache
+    no_referrer
+    response.headers["Cache-Control"] = "private, no-store"
+    response.headers["Surrogate-Control"] = "no-store"
+  end
+
   def set_compromised_flag
     @compromised = session[:password_reset_reason] == "compromised"
   end
@@ -105,24 +116,24 @@ class PasswordsController < ApplicationController
   end
 
   def password_reset_requires_mfa?
-    @user.mfa_enabled? && session[:password_reset_reason] != "compromised" && !password_reset_session_verified?
+    @user.mfa_enabled? && session[:password_reset_reason] != "compromised" && !password_reset_verification_active?
   end
 
-  def verify_password_reset_session
+  def mark_password_reset_verified
     session[:password_reset_verified] = Gemcutter::PASSWORD_VERIFICATION_EXPIRY.from_now
   end
 
   def complete_password_reset_verification
     delete_mfa_session
-    verify_password_reset_session
+    mark_password_reset_verified
     redirect_to reset_password_path
   end
 
-  def password_reset_session_verified?
+  def password_reset_verification_active?
     session[:password_reset_verified].present? && Time.current.before?(session[:password_reset_verified])
   end
 
-  def validate_password_reset_session
+  def validate_password_reset_verification
     return login_failure(t("passwords.edit.token_failure")) if session[:password_reset_verified].nil?
     login_failure(t("verification_expired")) if Time.current.after?(session[:password_reset_verified])
   end

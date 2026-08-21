@@ -79,6 +79,14 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     context "with a valid password reset token" do
       context "when not signed in" do
+        should "present the password edit form directly without relying on JavaScript" do
+          get edit_password_path, params: { token: @token }
+
+          assert_response :success
+          assert_new_password_form
+          assert_password_reset_response_headers
+        end
+
         should "presents the password edit form" do
           begin_password_reset
 
@@ -87,7 +95,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
           assert @user.reload.valid_password_reset_token?(@token)
           refute_signed_in
-          assert_equal reset_password_path, request.path
+          assert_equal edit_password_path, request.path
         end
       end
 
@@ -403,6 +411,24 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       end
     end
 
+    context "with an invalid authenticity token" do
+      should "reject the update with password reset security headers" do
+        original_allow_forgery_protection = ActionController::Base.allow_forgery_protection
+        begin_password_reset
+        ActionController::Base.allow_forgery_protection = true
+
+        put password_path, params: {
+          password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
+        }
+
+        assert_response :forbidden
+        assert_password_reset_response_headers
+        assert_equal @old_encrypted_password, @user.reload.encrypted_password
+      ensure
+        ActionController::Base.allow_forgery_protection = original_allow_forgery_protection
+      end
+    end
+
     context "when verification has expired" do
       should "redirect to the sign in page" do
         begin_password_reset
@@ -546,9 +572,14 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     get path, params: reset_params
 
+    assert_response :success
+    assert_password_reset_response_headers
+  end
+
+  def assert_password_reset_response_headers
+    assert_equal "private, no-store", response.headers["Cache-Control"]
+    assert_includes %w[no-store max-age=0], response.headers["Surrogate-Control"]
     assert_equal "no-referrer", response.headers["Referrer-Policy"]
-    assert_redirected_to reset_password_path
-    follow_redirect!
   end
 
   def webauthn_result(challenge = nil)
