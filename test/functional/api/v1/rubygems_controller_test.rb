@@ -971,6 +971,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
       should "deny creating a new org gem" do
         assert_match "You do not have permission to push to this gem.", @response.body
+        assert_nil Rubygem.find_by(name: "test")
       end
     end
   end

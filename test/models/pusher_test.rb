@@ -486,6 +486,40 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal "You are not allowed to push this gem.", cutter.message
       assert_equal 403, cutter.code
     end
+
+    should "not persist the rubygem or version when organization ownership is denied" do
+      organization = create(:organization, owners: [@user])
+      api_key = create(:api_key, owner: @user, scoped_organization: organization, scopes: %i[push_rubygem])
+      @user.memberships.find_by!(organization: organization).update_columns(role: Access::MAINTAINER)
+
+      cutter = Pusher.new(api_key, build_gem(new_gemspec("sandworm", "1.0.0", "summary", "ruby")))
+
+      refute cutter.process
+      assert_equal 403, cutter.code
+      assert_nil Rubygem.find_by(name: "sandworm")
+    end
+
+    should "not disown an existing gem when organization ownership is denied" do
+      original_owner = create(:user)
+      rubygem = create(:rubygem, name: "sandworm")
+      create(:ownership, rubygem: rubygem, user: original_owner)
+      create(:version, rubygem: rubygem, number: "0.1.0", indexed: false)
+
+      organization = create(:organization, owners: [@user])
+      api_key = create(:api_key, owner: @user, scoped_organization: organization, scopes: %i[push_rubygem])
+      @user.memberships.find_by!(organization: organization).update_columns(role: Access::MAINTAINER)
+
+      cutter = Pusher.new(api_key, build_gem(new_gemspec("sandworm", "1.0.0", "summary", "ruby")))
+      cutter.stubs(:verify_api_key_scope).returns(true)
+
+      refute cutter.process
+      assert_equal 403, cutter.code
+
+      rubygem.reload
+
+      assert_includes rubygem.owners, original_owner
+      assert_nil rubygem.versions.find_by(number: "1.0.0")
+    end
   end
 
   context "with attestations" do

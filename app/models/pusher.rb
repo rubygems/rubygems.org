@@ -218,12 +218,14 @@ class Pusher
   end
 
   def update
-    rubygem.disown if rubygem.versions.indexed.none?
-    rubygem.update_attributes_from_gem_specification!(version, spec)
-    return true unless rubygem.unowned?
+    Rubygem.transaction do
+      rubygem.disown if rubygem.versions.indexed.none?
+      rubygem.update_attributes_from_gem_specification!(version, spec)
+      next true unless rubygem.unowned?
 
-    assign_ownership_for_unowned_gem
-  rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback, ActiveRecord::RecordNotUnique => e
+      assign_ownership_for_unowned_gem || raise(ActiveRecord::Rollback)
+    end
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique => e
     logger.info { { message: "Error updating rubygem", exception: e } }
     false
   end
