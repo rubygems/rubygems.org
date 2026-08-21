@@ -210,7 +210,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           token = @user.issue_password_reset!
           get "/password/edit",
             params: { token:, user_id: @user.id }
-          follow_redirect!
+
+          assert_response :success
           post "/password/otp_edit",
             params: { otp: ROTP::TOTP.new(@user.totp_seed).now },
             headers: { REMOTE_ADDR: @ip_address }
