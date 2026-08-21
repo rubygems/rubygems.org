@@ -30,4 +30,18 @@ class Avo::ApiKeysTest < ActionDispatch::IntegrationTest
     assert page.has_content?("Revoke API Key — #{Avo::Actions::RevokeApiKey.already_revoked_reason}")
     assert_select "a[data-action-name^='Revoke API Key'][data-disabled='true']", count: 1
   end
+
+  test "showing an organization-scoped API key without a rubygem ownership" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+    organization = create(:organization)
+    user = create(:user)
+    create(:membership, :admin, organization: organization, user: user)
+    api_key = create(:api_key, name: "org-push", owner: user, scopes: %w[push_rubygem],
+      scoped_organization: organization)
+
+    get avo.resources_api_key_path(api_key)
+
+    assert_response :success
+    assert_includes response.body, "org-push"
+  end
 end

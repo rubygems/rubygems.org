@@ -885,4 +885,94 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "push with api key scoped to an organization" do
+    setup do
+      @user = create(:user)
+      @organization = create(:organization, owners: [@user])
+      @api_key = create(:api_key, key: "12345", owner: @user, scoped_organization: @organization, scopes: %i[push_rubygem])
+      @request.env["HTTP_AUTHORIZATION"] = "12345"
+    end
+
+    context "for a new gem" do
+      setup do
+        post :create, body: gem_file(&:read)
+      end
+
+      should respond_with :success
+
+      should "assign the gem to the organization" do
+        rubygem = Rubygem.last
+
+        assert_equal @organization, rubygem.organization
+        assert_empty rubygem.ownerships
+      end
+    end
+
+    context "for a personal gem" do
+      setup do
+        create(:ownership, user: create(:user), rubygem: create(:rubygem, name: "test"))
+        post :create, body: gem_file("test-1.0.0.gem", &:read)
+      end
+
+      should respond_with :forbidden
+
+      should "say organization scope is invalid" do
+        assert_equal "This API key cannot perform the specified action on this gem.", @response.body
+      end
+    end
+
+    context "for a gem in another organization" do
+      setup do
+        other_org = create(:organization)
+        create(:rubygem, name: "test", organization: other_org)
+        post :create, body: gem_file("test-1.0.0.gem", &:read)
+      end
+
+      should respond_with :forbidden
+    end
+
+    context "for an existing org gem" do
+      setup do
+        create(:rubygem, name: "test", organization: @organization)
+        post :create, body: gem_file("test-1.0.0.gem", &:read)
+      end
+
+      should respond_with :success
+    end
+
+    context "when the organization is discarded" do
+      setup do
+        @organization.discard!
+        post :create, body: gem_file(&:read)
+      end
+
+      should respond_with :forbidden
+
+      should "#render_soft_deleted_api_key and display an error" do
+        assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+      end
+    end
+
+    context "when membership is only maintainer" do
+      setup do
+        @user = create(:user)
+        @organization = create(:organization, maintainers: [@user])
+        @membership = @user.memberships.find_by!(organization: @organization)
+        key = SecureRandom.hex(24)
+        @api_key = create(:api_key, key: key, owner: @user, scopes: %i[push_rubygem])
+        create(:api_key_organization_scope, api_key: @api_key, membership: @membership)
+        @request.env["HTTP_AUTHORIZATION"] = key
+
+        post :create, body: gem_file(&:read)
+      end
+
+      should respond_with :forbidden
+
+      should "deny creating a new org gem" do
+        assert_match "You do not have permission to push to this gem.", @response.body
+        assert_nil Rubygem.find_by(name: "test")
+      end
+    end
+  end
 end

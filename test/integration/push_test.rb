@@ -199,6 +199,39 @@ class PushTest < ActionDispatch::IntegrationTest
     assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: pending_trusted_publisher.trusted_publisher)
   end
 
+  test "pushing a new gem with a pending trusted publisher into an organization" do
+    organization = create(:organization, owners: [@user])
+    pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: @user, organization: organization)
+
+    @key = "543321"
+    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :success
+
+    rubygem = Rubygem.find_by!(name: "sandworm")
+
+    assert_equal organization, rubygem.organization
+    assert_empty rubygem.ownerships
+    assert rubygem.owned_by?(@user)
+    assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: pending_trusted_publisher.trusted_publisher)
+  end
+
+  test "pushing a new gem with a pending trusted publisher into an organization is rejected when the user cannot add gems" do
+    organization = create(:organization, owners: [@user])
+    pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: @user, organization: organization)
+    @user.memberships.find_by!(organization: organization).update_columns(role: Access::MAINTAINER)
+
+    @key = "543321"
+    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :forbidden
+    assert_nil Rubygem.find_by(name: "sandworm")
+  end
+
   test "pushing a new gem with a pending trusted publisher case insensitive" do
     pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "SaNdWoRm", user: @user)
 

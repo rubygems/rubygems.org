@@ -186,6 +186,8 @@ de:
       rubygem_scope: Gem-Bereich
       rubygem_scope_info: Dieser Bereich beschränkt die Befehle gem push/yank und
         owner add/remove auf ein bestimmtes Gem.
+      organization_scope:
+      organization_scope_info:
       multifactor_auth: Mehrfaktor-Authentifizierung
       enable_mfa: MFA aktivieren
       expiration:
@@ -237,8 +239,11 @@ de:
         löschen Sie ihn und erstellen Sie einen neuen.
       expired_key:
     all_gems: Alle Gems
+    no_organization:
+    unavailable_organization:
     gem_ownership_removed: Die Eigentümerschaft von %{rubygem_name} wurde nach der
       Zuordnung zu diesem Schlüssel entfernt.
+    organization_membership_removed:
   dashboards:
     show:
       creating_link_text: Erstellen
@@ -1173,6 +1178,8 @@ de:
         workflow_repository_name_help_html:
       pending:
         rubygem_name_help_html:
+        organization_scope:
+        organization_scope_info:
   duration:
     minutes:
       other:
@@ -1234,6 +1241,7 @@ de:
         api_key_name:
         api_key_scopes:
         api_key_gem_html:
+        api_key_organization_html:
         api_key_mfa:
         not_required:
       password:

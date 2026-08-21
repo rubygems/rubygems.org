@@ -49,7 +49,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns true
         @cutter.stubs(:verify_mfa_requirement).returns true
-        @cutter.stubs(:verify_gem_scope).returns true
+        @cutter.stubs(:verify_api_key_scope).returns true
         @cutter.stubs(:validate).returns true
         @cutter.stubs(:verify_sigstore).returns true
         @cutter.stubs(:sign_sigstore).returns true
@@ -62,7 +62,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns false
         @cutter.stubs(:find).never
         @cutter.stubs(:authorize).never
-        @cutter.stubs(:verify_gem_scope).never
+        @cutter.stubs(:verify_api_key_scope).never
         @cutter.stubs(:verify_mfa_requirement).never
         @cutter.stubs(:save).never
         @cutter.process
@@ -72,18 +72,18 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find)
         @cutter.stubs(:authorize).never
-        @cutter.stubs(:verify_gem_scope).never
+        @cutter.stubs(:verify_api_key_scope).never
         @cutter.stubs(:verify_mfa_requirement).never
         @cutter.stubs(:save).never
 
         @cutter.process
       end
 
-      should "not attempt to check gem scope if not authorized" do
+      should "not attempt to check api key scope if not authorized" do
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns false
-        @cutter.stubs(:verify_gem_scope).never
+        @cutter.stubs(:verify_api_key_scope).never
         @cutter.stubs(:verify_mfa_requirement).never
         @cutter.stubs(:validate).never
         @cutter.stubs(:save).never
@@ -91,11 +91,11 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.process
       end
 
-      should "not attempt to check mfa requirement if scoped to another gem" do
+      should "not attempt to check mfa requirement if api key scope check failed" do
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns true
-        @cutter.stubs(:verify_gem_scope).returns false
+        @cutter.stubs(:verify_api_key_scope).returns false
         @cutter.stubs(:verify_mfa_requirement).never
         @cutter.stubs(:validate).never
         @cutter.stubs(:save).never
@@ -107,7 +107,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns true
-        @cutter.stubs(:verify_gem_scope).returns true
+        @cutter.stubs(:verify_api_key_scope).returns true
         @cutter.stubs(:verify_mfa_requirement).returns false
         @cutter.stubs(:validate).never
         @cutter.stubs(:save).never
@@ -119,7 +119,7 @@ class PusherTest < ActiveSupport::TestCase
         @cutter.stubs(:pull_spec).returns true
         @cutter.stubs(:find).returns true
         @cutter.stubs(:authorize).returns true
-        @cutter.stubs(:verify_gem_scope).returns true
+        @cutter.stubs(:verify_api_key_scope).returns true
         @cutter.stubs(:verify_mfa_requirement).returns true
         @cutter.stubs(:validate).returns false
         @cutter.stubs(:save).never
@@ -408,7 +408,7 @@ class PusherTest < ActiveSupport::TestCase
       cutter = Pusher.new(@api_key, @gem)
       cutter.stubs(:rubygem).returns @rubygem
 
-      assert cutter.verify_gem_scope
+      assert cutter.verify_api_key_scope
     end
 
     should "does not push gem if scoped to another gem" do
@@ -417,7 +417,108 @@ class PusherTest < ActiveSupport::TestCase
       cutter = Pusher.new(@api_key, @gem)
       cutter.stubs(:rubygem).returns @rubygem
 
-      refute cutter.verify_gem_scope
+      refute cutter.verify_api_key_scope
+    end
+  end
+
+  context "organization scope" do
+    setup do
+      @user = create(:user)
+      @organization = create(:organization, owners: [@user])
+      @api_key = create(:api_key, owner: @user, scoped_organization: @organization, scopes: %i[push_rubygem])
+      @rubygem = Rubygem.new(name: "org-gem")
+      @cutter = Pusher.new(@api_key, @gem)
+      @cutter.stubs(:rubygem).returns(@rubygem)
+    end
+
+    should "allow pushing unowned gems" do
+      @rubygem.stubs(:owned_by_organization?).returns(false)
+      @rubygem.stubs(:ownerships).returns(stub(none?: true))
+
+      assert @cutter.verify_api_key_scope
+    end
+
+    should "allow pushing gems owned by the scoped organization" do
+      @rubygem.stubs(:owned_by_organization?).returns(true)
+      @rubygem.stubs(:organization).returns(@organization)
+      @rubygem.stubs(:ownerships).returns(stub(any?: false))
+
+      assert @cutter.verify_api_key_scope
+    end
+
+    should "reject gems owned by another organization" do
+      @rubygem.stubs(:owned_by_organization?).returns(true)
+      @rubygem.stubs(:organization).returns(create(:organization))
+      @rubygem.stubs(:ownerships).returns(stub(any?: false))
+
+      refute @cutter.verify_api_key_scope
+    end
+
+    should "reject personally owned gems" do
+      @rubygem.stubs(:owned_by_organization?).returns(false)
+      @rubygem.stubs(:ownerships).returns(stub(none?: false))
+
+      refute @cutter.verify_api_key_scope
+    end
+  end
+
+  context "assigning ownership for unowned gems" do
+    should "reject unexpected owner types" do
+      @cutter.stubs(:rubygem).returns(Rubygem.new(name: "newgem"))
+      @api_key.update_columns(owner_id: 0, owner_type: "stub")
+      @cutter.stubs(:owner).returns(stub("owner", to_gid: nil))
+
+      refute @cutter.send(:assign_ownership_for_unowned_gem)
+      assert_equal "You are not allowed to push this gem.", @cutter.message
+      assert_equal 403, @cutter.code
+    end
+
+    should "reject pending trusted publisher when user cannot add gem to organization" do
+      organization = create(:organization, owners: [@user])
+      pending_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "newgem", user: @user, organization: organization)
+      @user.memberships.find_by!(organization: organization).update!(role: :maintainer)
+
+      api_key = create(:api_key, owner: pending_publisher.trusted_publisher, key: SecureRandom.hex(24), scopes: %i[push_rubygem])
+      cutter = Pusher.new(api_key, @gem)
+      cutter.stubs(:rubygem).returns(Rubygem.new(name: "newgem"))
+
+      refute cutter.send(:reify_pending_trusted_publisher)
+      assert_equal "You are not allowed to push this gem.", cutter.message
+      assert_equal 403, cutter.code
+    end
+
+    should "not persist the rubygem or version when organization ownership is denied" do
+      organization = create(:organization, owners: [@user])
+      api_key = create(:api_key, owner: @user, scoped_organization: organization, scopes: %i[push_rubygem])
+      @user.memberships.find_by!(organization: organization).update_columns(role: Access::MAINTAINER)
+
+      cutter = Pusher.new(api_key, build_gem(new_gemspec("sandworm", "1.0.0", "summary", "ruby")))
+
+      refute cutter.process
+      assert_equal 403, cutter.code
+      assert_nil Rubygem.find_by(name: "sandworm")
+    end
+
+    should "not disown an existing gem when organization ownership is denied" do
+      original_owner = create(:user)
+      rubygem = create(:rubygem, name: "sandworm")
+      create(:ownership, rubygem: rubygem, user: original_owner)
+      create(:version, rubygem: rubygem, number: "0.1.0", indexed: false)
+
+      organization = create(:organization, owners: [@user])
+      api_key = create(:api_key, owner: @user, scoped_organization: organization, scopes: %i[push_rubygem])
+      @user.memberships.find_by!(organization: organization).update_columns(role: Access::MAINTAINER)
+
+      cutter = Pusher.new(api_key, build_gem(new_gemspec("sandworm", "1.0.0", "summary", "ruby")))
+      cutter.stubs(:verify_api_key_scope).returns(true)
+
+      refute cutter.process
+      assert_equal 403, cutter.code
+
+      rubygem.reload
+
+      assert_includes rubygem.owners, original_owner
+      assert_nil rubygem.versions.find_by(number: "1.0.0")
     end
   end
 

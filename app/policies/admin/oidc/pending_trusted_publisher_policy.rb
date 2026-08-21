@@ -8,6 +8,7 @@ class Admin::OIDC::PendingTrustedPublisherPolicy < Admin::ApplicationPolicy
   end
 
   has_association :rubygem
+  has_association :organization
   has_association :trusted_publisher
 
   def avo_index? = rubygems_org_admin?

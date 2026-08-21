@@ -173,6 +173,8 @@ ja:
       exclusive_scopes: 除外するスコープ
       rubygem_scope: gemのスコープ
       rubygem_scope_info: このスコープはgemのプッシュ・ヤンクないし所有者の追加・削除のコマンドを特定のgemに制限します。
+      organization_scope:
+      organization_scope_info:
       multifactor_auth: 多要素認証
       enable_mfa: MFAを有効にする
       expiration: 期限
@@ -222,7 +224,10 @@ ja:
       invalid_key: 正しくないAPIキーは編集できません。削除して新規作成してください。
       expired_key:
     all_gems: 全てのgem
+    no_organization:
+    unavailable_organization:
     gem_ownership_removed: このキーのスコープにあった%{rubygem_name}の所有権が削除されました。
+    organization_membership_removed:
   dashboards:
     show:
       creating_link_text: 作成
@@ -1119,6 +1124,8 @@ ja:
         workflow_repository_name_help_html:
       pending:
         rubygem_name_help_html: "（RubyGems.orgの）gemはこの発行元が使われたときに作られます"
+        organization_scope:
+        organization_scope_info:
   duration:
     minutes:
       other: "%{count}分"
@@ -1180,6 +1187,7 @@ ja:
         api_key_name: 名前：%{name}
         api_key_scopes: スコープ：%{scopes}
         api_key_gem_html: gem：%{gem}
+        api_key_organization_html:
         api_key_mfa: MFA：%{mfa}
         not_required: 必要ではありません
       password:

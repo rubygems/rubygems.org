@@ -15,6 +15,7 @@ class Avo::Resources::OIDCPendingTrustedPublisher < Avo::BaseResource
 
     field :rubygem_name, as: :text
     field :user, as: :belongs_to
+    field :organization, as: :belongs_to
     field :trusted_publisher, as: :belongs_to, polymorphic_as: :trusted_publisher
     field :expires_at, as: :date_time
   end

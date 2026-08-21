@@ -178,6 +178,43 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
         end
       end
 
+      context "with api key organization scoped" do
+        setup do
+          @organization = create(:organization, owners: [@user])
+          @api_key = create(:api_key, name: "org-scoped-delete-key", key: "123456", scopes: %i[yank_rubygem],
+            owner: @user, scoped_organization: @organization)
+          @request.env["HTTP_AUTHORIZATION"] = "123456"
+        end
+
+        context "to an organization gem" do
+          setup do
+            @rubygem.update!(organization: @organization)
+            @ownership.destroy!
+            delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
+          end
+
+          should respond_with :success
+        end
+
+        context "to a personal gem" do
+          setup do
+            delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
+          end
+
+          should respond_with :forbidden
+        end
+
+        context "to a gem in another organization" do
+          setup do
+            @rubygem.update!(organization: create(:organization))
+            @ownership.destroy!
+            delete :create, params: { gem_name: @rubygem.slug, version: @v1.number }
+          end
+
+          should respond_with :forbidden
+        end
+      end
+
       context "when mfa is required" do
         setup do
           User.any_instance.stubs(:mfa_required?).returns true

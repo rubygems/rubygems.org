@@ -172,6 +172,8 @@ zh-TW:
       exclusive_scopes:
       rubygem_scope:
       rubygem_scope_info:
+      organization_scope:
+      organization_scope_info:
       multifactor_auth:
       enable_mfa:
       expiration:
@@ -221,7 +223,10 @@ zh-TW:
       invalid_key: 無法編輯無效的 API 金鑰。請刪除此金鑰並重新建立。
       expired_key:
     all_gems: 所有 Gems
+    no_organization:
+    unavailable_organization:
     gem_ownership_removed:
+    organization_membership_removed:
   dashboards:
     show:
       creating_link_text: Gem 建立
@@ -1087,6 +1092,8 @@ zh-TW:
         workflow_repository_name_help_html:
       pending:
         rubygem_name_help_html:
+        organization_scope:
+        organization_scope_info:
   duration:
     minutes:
       other:
@@ -1148,6 +1155,7 @@ zh-TW:
         api_key_name:
         api_key_scopes:
         api_key_gem_html:
+        api_key_organization_html:
         api_key_mfa:
         not_required:
       password:
