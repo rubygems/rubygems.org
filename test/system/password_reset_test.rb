@@ -38,7 +38,7 @@ class PasswordResetTest < ApplicationSystemTestCase
 
     visit password_reset_link
 
-    assert_current_path reset_password_path
+    assert_current_path edit_password_path, ignore_query: true
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Save this password"
@@ -53,18 +53,35 @@ class PasswordResetTest < ApplicationSystemTestCase
     assert_text "Dashboard"
   end
 
+  test "resetting password from a cross-site email link" do
+    assert_equal :strict, Rails.application.config.session_options[:same_site]
+    forgot_password_with @user.email
+
+    visit_from_cross_site password_reset_link
+
+    assert_current_path edit_password_path, ignore_query: true
+    assert_text "Reset password"
+
+    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
+    click_button "Save this password"
+
+    assert_text "Your password has been changed."
+    assert_current_path sign_in_path
+    assert @user.reload.authenticated?(PasswordHelpers::SECURE_TEST_PASSWORD)
+  end
+
   test "opening the reset link more than once does not consume it" do
     forgot_password_with @user.email
     link = password_reset_link
 
     visit link
 
-    assert_current_path reset_password_path
+    assert_current_path edit_password_path, ignore_query: true
     assert_text "Reset password"
 
     visit link
 
-    assert_current_path reset_password_path
+    assert_current_path edit_password_path, ignore_query: true
     assert_text "Reset password"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
@@ -154,7 +171,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
     forgot_password_with @user.email
 
-    visit password_reset_link
+    visit_from_cross_site password_reset_link
 
     assert_no_text("Sign out")
 
@@ -287,7 +304,7 @@ class PasswordResetTest < ApplicationSystemTestCase
       assert_current_path compromised_password_path
     end
 
-    visit password_reset_link
+    visit_from_cross_site password_reset_link
 
     assert_text "Reset password"
 
@@ -325,7 +342,7 @@ class PasswordResetTest < ApplicationSystemTestCase
       assert_current_path compromised_password_path
     end
 
-    visit password_reset_link
+    visit_from_cross_site password_reset_link
 
     assert_text "Reset password"
 
@@ -346,6 +363,20 @@ class PasswordResetTest < ApplicationSystemTestCase
 
     assert_empty ActionMailer::Base.deliveries
     page.assert_text "instructions for changing your password"
+  end
+
+  def visit_from_cross_site(url)
+    server = Capybara.current_session.server
+    target = URI(url)
+    target_url = "http://localhost:#{server.port}#{target.request_uri}"
+
+    page.driver.with_playwright_page do |pw_page|
+      pw_page.goto("http://127.0.0.1:#{server.port}")
+      pw_page.set_content <<~HTML
+        <a href="#{ERB::Util.html_escape(target_url)}">Open password reset</a>
+      HTML
+      pw_page.get_by_role("link", name: "Open password reset").click
+    end
   end
 
   teardown do
