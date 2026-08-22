@@ -1,6 +1,6 @@
 development:
-  protocol: http
-  host: localhost
+  protocol: https
+  host: bda5-103-177-27-250.ngrok-free.app
   host_display: RubyGems.org
   s3_bucket: s3bucket
   s3_contents_bucket: contents
