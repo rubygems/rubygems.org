@@ -32,6 +32,148 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
       end
     end
 
+    context "for a gem with content-addressable versions across Ruby ABIs" do
+      setup do
+        @rubygem = create(:rubygem, name: "sandworm")
+        @abi32 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
+                        required_ruby_version: "~> 3.2.0", ruby_abi: "3.2", sha256: Digest::SHA2.base64digest("sandworm-1.0.0-3.2"))
+        @abi34 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
+                        required_ruby_version: "~> 3.4.0", ruby_abi: "3.4", sha256: Digest::SHA2.base64digest("sandworm-1.0.0-3.4"))
+        create(:ownership, user: @user, rubygem: @rubygem)
+        RubygemFs.instance.store("gems/#{@abi32.full_name}.gem", "")
+        RubygemFs.instance.store("gems/#{@abi34.full_name}.gem", "")
+      end
+
+      context "ON DELETE with a ruby_abi param" do
+        setup do
+          delete :create, params: { gem_name: @rubygem.slug, version: "1.0.0", platform: "x86_64-linux-musl", ruby_abi: "3.2" }
+        end
+
+        should respond_with :success
+
+        should "yank only the targeted Ruby ABI variant" do
+          refute_predicate @abi32.reload, :indexed?
+          assert_predicate @abi34.reload, :indexed?
+        end
+
+        should "respond with the deleted variant including its content address and Ruby ABI" do
+          assert_includes @response.body, "Successfully deleted gem: sandworm (1.0.0-724c5206, Platform: x86_64-linux-musl, Ruby ABI 3.2)"
+        end
+      end
+
+      context "ON DELETE without a ruby_abi param" do
+        setup do
+          delete :create, params: { gem_name: @rubygem.slug, version: "1.0.0", platform: "x86_64-linux-musl" }
+        end
+
+        should respond_with :not_found
+
+        should "not yank either Ruby ABI variant" do
+          assert_predicate @abi32.reload, :indexed?
+          assert_predicate @abi34.reload, :indexed?
+        end
+
+        should "respond that the version does not exist" do
+          assert_includes @response.body, "The version 1.0.0 (x86_64-linux-musl) does not exist."
+        end
+      end
+
+      context "ON DELETE with a ruby_abi param that does not match any variant" do
+        setup do
+          delete :create, params: { gem_name: @rubygem.slug, version: "1.0.0", platform: "x86_64-linux-musl", ruby_abi: "3.3" }
+        end
+
+        should respond_with :not_found
+
+        should "not yank either Ruby ABI variant" do
+          assert_predicate @abi32.reload, :indexed?
+          assert_predicate @abi34.reload, :indexed?
+        end
+
+        should "respond that the version does not exist" do
+          assert_includes @response.body, "The version 1.0.0 (x86_64-linux-musl) (Ruby ABI 3.3) does not exist."
+        end
+      end
+
+      context "ON DELETE with a ruby_abi param but no platform" do
+        setup do
+          delete :create, params: { gem_name: @rubygem.slug, version: "1.0.0", ruby_abi: "3.2" }
+        end
+
+        should respond_with :bad_request
+
+        should "not yank either Ruby ABI variant" do
+          assert_predicate @abi32.reload, :indexed?
+          assert_predicate @abi34.reload, :indexed?
+        end
+
+        should "respond that the platform param is required" do
+          assert_includes @response.body, "The platform param is required when ruby_abi is specified."
+        end
+      end
+
+      context "ON DELETE with an invalid ruby_abi format" do
+        setup do
+          delete :create, params: { gem_name: @rubygem.slug, version: "1.0.0", platform: "x86_64-linux-musl", ruby_abi: "invalid" }
+        end
+
+        should respond_with :bad_request
+
+        should "not yank either Ruby ABI variant" do
+          assert_predicate @abi32.reload, :indexed?
+          assert_predicate @abi34.reload, :indexed?
+        end
+
+        should "respond that the ruby_abi format is invalid" do
+          assert_includes @response.body, "The ruby_abi param must be in the format X.Y (e.g., 3.2)."
+        end
+      end
+
+      context "when a version supporting multiple Ruby ABIs coexists" do
+        setup do
+          @multi_abi = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
+                              required_ruby_version: ">= 3.2")
+          RubygemFs.instance.store("gems/#{@multi_abi.full_name}.gem", "")
+        end
+
+        context "ON DELETE with only a platform param" do
+          setup do
+            delete :create, params: { gem_name: @rubygem.slug, version: "1.0.0", platform: "x86_64-linux-musl" }
+          end
+
+          should respond_with :success
+
+          should "yank only the version supporting multiple Ruby ABIs and keep the single ABI variants" do
+            refute_predicate @multi_abi.reload, :indexed?
+            assert_predicate @abi32.reload, :indexed?
+            assert_predicate @abi34.reload, :indexed?
+          end
+
+          should "respond with the deleted platform version" do
+            assert_includes @response.body, "Successfully deleted gem: sandworm (1.0.0-x86_64-linux-musl)"
+          end
+        end
+
+        context "ON DELETE with an empty ruby_abi param" do
+          setup do
+            delete :create, params: { gem_name: @rubygem.slug, version: "1.0.0", platform: "x86_64-linux-musl", ruby_abi: "" }
+          end
+
+          should respond_with :success
+
+          should "treat the empty ruby_abi as absent and yank the version supporting multiple Ruby ABIs" do
+            refute_predicate @multi_abi.reload, :indexed?
+            assert_predicate @abi32.reload, :indexed?
+            assert_predicate @abi34.reload, :indexed?
+          end
+
+          should "respond with the deleted platform version" do
+            assert_includes @response.body, "Successfully deleted gem: sandworm (1.0.0-x86_64-linux-musl)"
+          end
+        end
+      end
+    end
+
     context "for a gem SomeGem with a version 0.1.0" do
       setup do
         @rubygem   = create(:rubygem, name: "SomeGem")

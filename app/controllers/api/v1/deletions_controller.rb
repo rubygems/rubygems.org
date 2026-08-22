@@ -5,6 +5,7 @@ class Api::V1::DeletionsController < Api::BaseController
   before_action :verify_user_api_key
   before_action :find_rubygem_by_name
   before_action :verify_api_key_gem_scope
+  before_action :validate_ruby_abi
   before_action :validate_gem_and_version
   before_action :verify_with_otp
 
@@ -40,11 +41,27 @@ class Api::V1::DeletionsController < Api::BaseController
       begin
         version = params.expect(:version)
         platform = params.permit(:platform).fetch(:platform, nil)
-        @version = @rubygem.find_version!(number: version, platform: platform)
+        ruby_abi = params.permit(:ruby_abi).fetch(:ruby_abi, nil).presence
+
+        @version = @rubygem.find_version!(number: version, platform: platform, ruby_abi: ruby_abi)
       rescue ActiveRecord::RecordNotFound
-        render plain: response_with_mfa_warning("The version #{version}#{" (#{platform})" if platform.present?} does not exist."),
+        details = "#{" (#{platform})" if platform.present?}#{" (Ruby ABI #{ruby_abi})" if ruby_abi.present?}"
+        render plain: response_with_mfa_warning("The version #{version}#{details} does not exist."),
                status: :not_found
       end
+    end
+  end
+
+  def validate_ruby_abi
+    ruby_abi = params.permit(:ruby_abi).fetch(:ruby_abi, nil).presence
+    return unless ruby_abi
+
+    if !ruby_abi.match?(/\A\d+\.\d+\z/)
+      render plain: response_with_mfa_warning("The ruby_abi param must be in the format X.Y (e.g., 3.2)."),
+             status: :bad_request
+    elsif params.permit(:platform).fetch(:platform, nil).blank?
+      render plain: response_with_mfa_warning("The platform param is required when ruby_abi is specified."),
+             status: :bad_request
     end
   end
 end
