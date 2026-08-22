@@ -162,7 +162,7 @@ class DeletionTest < ActiveSupport::TestCase
   should "enque job for updating ES index, spec index and purging cdn" do
     assert_enqueued_jobs 1, only: ActionMailer::MailDeliveryJob do
       assert_enqueued_jobs 8, only: FastlyPurgeJob do
-        assert_enqueued_jobs 1, only: Indexer do
+        assert_enqueued_with(job: ReorderVersionsJob, args: [rubygem: @version.rubygem]) do
           assert_enqueued_jobs 1, only: ReindexRubygemJob do
             delete_gem
           end
@@ -213,6 +213,8 @@ class DeletionTest < ActiveSupport::TestCase
       end
 
       should "reorder versions" do
+        perform_enqueued_jobs(only: ReorderVersionsJob)
+
         assert_predicate @version.reload, :latest?
       end
 
@@ -271,7 +273,7 @@ class DeletionTest < ActiveSupport::TestCase
 
     should "enqueue indexing jobs" do
       @deletion = delete_gem
-      assert_enqueued_jobs 1, only: Indexer do
+      assert_enqueued_with(job: ReorderVersionsJob, args: [rubygem: @version.rubygem]) do
         assert_enqueued_jobs 1, only: UploadVersionsFileJob do
           assert_enqueued_with job: UploadInfoFileJob, args: [rubygem_name: @gem_name] do
             @deletion.restore!

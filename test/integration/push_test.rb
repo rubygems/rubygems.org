@@ -79,10 +79,11 @@ class PushTest < ActionDispatch::IntegrationTest
   test "pushing a gem" do
     gem_io = build_gem(new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby"))
 
-    push_gem gem_io
+    perform_enqueued_jobs(only: [ReorderVersionsJob, SetLinksetHomeJob]) do
+      push_gem gem_io
+    end
 
     assert_response :success
-    perform_enqueued_jobs
 
     get rubygem_path("sandworm")
 

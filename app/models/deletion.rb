@@ -105,7 +105,7 @@ class Deletion < ApplicationRecord
   end
 
   def reindex
-    Indexer.perform_later
+    ReorderVersionsJob.perform_later(rubygem: version.rubygem)
     UploadInfoFileJob.perform_later(rubygem_name: rubygem_name)
     UploadVersionsFileJob.perform_later
     UploadNamesFileJob.perform_later

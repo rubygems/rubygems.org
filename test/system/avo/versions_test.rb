@@ -74,7 +74,7 @@ class Avo::VersionsSystemTest < ApplicationSystemTestCase
             },
             "unchanged" => version_attributes
               .except("updated_at", "yanked_info_checksum_v2", "yanked_at", "indexed")
-              .merge("position" => 0, "latest" => false)
+              .merge("position" => 0, "latest" => true)
               .transform_values(&:as_json)
           },
           "gid://gemcutter/Rubygem/#{rubygem.id}" =>
