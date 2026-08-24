@@ -577,6 +577,17 @@ class UserTest < ActiveSupport::TestCase
           @user.update_password_with_token(PasswordHelpers::SECURE_TEST_PASSWORD, token:)
       end
 
+      should "update the password when the persisted WebAuthn ID is missing" do
+        token = @user.issue_password_reset!
+        @user.update_column(:webauthn_id, nil)
+
+        user = User.find(@user.id)
+
+        assert_equal :updated, user.update_password_with_token(PasswordHelpers::SECURE_TEST_PASSWORD, token:)
+        assert user.reload.authenticated?(PasswordHelpers::SECURE_TEST_PASSWORD)
+        assert_nil user.webauthn_id
+      end
+
       should "bind the compromised-reset authorization to the reset token" do
         token = @user.issue_password_reset!
         reason = @user.compromised_password_reset_reason_for(token)
