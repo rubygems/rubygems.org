@@ -47,16 +47,6 @@ Naming/MemoizedInstanceVariableName:
   Exclude:
     - 'lib/rubygem_fs.rb'
 
-# Offense count: 16
-# Configuration parameters: EnforcedStyle, CheckMethodNames, CheckSymbols, AllowedIdentifiers, AllowedPatterns.
-# SupportedStyles: snake_case, normalcase, non_integer
-# AllowedIdentifiers: TLS1_1, TLS1_2, capture3, iso8601, rfc1123_date, rfc822, rfc2822, rfc3339, x86_64
-Naming/VariableNumber:
-  Exclude:
-    - 'test/functional/api/v1/downloads_controller_test.rb'
-    - 'test/models/concerns/rubygem_searchable_test.rb'
-    - 'test/models/gem_download_test.rb'
-
 # Offense count: 2
 # Configuration parameters: Database.
 # SupportedDatabases: mysql, postgresql

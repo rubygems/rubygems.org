@@ -110,17 +110,17 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
 
   context "On GET to all" do
     setup do
-      @rubygem_1 = create(:rubygem)
-      @version_1 = create(:version, rubygem: @rubygem_1)
-      @version_2 = create(:version, rubygem: @rubygem_1)
+      @rubygem1 = create(:rubygem)
+      @version1 = create(:version, rubygem: @rubygem1)
+      @version2 = create(:version, rubygem: @rubygem1)
 
-      @rubygem_2 = create(:rubygem)
-      @version_3 = create(:version, rubygem: @rubygem_2)
+      @rubygem2 = create(:rubygem)
+      @version3 = create(:version, rubygem: @rubygem2)
 
-      @rubygem_3 = create(:rubygem)
-      @version_4 = create(:version, rubygem: @rubygem_3)
+      @rubygem3 = create(:rubygem)
+      @version4 = create(:version, rubygem: @rubygem3)
 
-      GemDownload.bulk_update([[@version_1.full_name, 3], [@version_2.full_name, 2], [@version_3.full_name, 1]])
+      GemDownload.bulk_update([[@version1.full_name, 3], [@version2.full_name, 2], [@version3.full_name, 1]])
     end
 
     context "with json" do
