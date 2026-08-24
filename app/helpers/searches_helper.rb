@@ -13,7 +13,7 @@ module SearchesHelper
 
   def aggregation_match_count(aggregration, field)
     count = aggregration["buckets"][field]["doc_count"]
-    return unless count > 0
+    return unless count.positive?
 
     path = search_path(params: { query: "#{field}:#{params[:query]}" })
     link_to "#{field.capitalize} (#{count})", path, class: CHIP_CLASS
@@ -21,7 +21,7 @@ module SearchesHelper
 
   def aggregation_count(aggregration, duration, buckets_pos)
     count = aggregration["buckets"][buckets_pos]["doc_count"]
-    return unless count > 0
+    return unless count.positive?
 
     time_ago = (Time.zone.today - duration).to_fs(:db)
     path = search_path(params: { query: "#{params[:query]} AND updated:>=#{time_ago}" })
