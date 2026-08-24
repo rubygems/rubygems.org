@@ -138,5 +138,4 @@ Rails.application.configure do
   end
 
   config.hosts << "rubygems.test"
-  config.hosts << "bda5-103-177-27-250.ngrok-free.app"
 end
