@@ -34,6 +34,20 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "GET /organizations/:organization_handle/members with a differently cased handle" do
+    get organization_memberships_path(@organization.handle.upcase)
+
+    assert_response :success
+  end
+
+  test "GET /organizations/:organization_handle/members with an unknown handle when signed out" do
+    delete sign_out_path
+
+    get organization_memberships_path("does-not-exist")
+
+    assert_response :not_found
+  end
+
   test "GET /organizations/:organization_handle/members/new" do
     get new_organization_membership_path(@organization)
 
