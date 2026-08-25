@@ -32,4 +32,8 @@ class Admin::RubygemPolicyTest < AdminPolicyTestCase
 
     refute_authorizes @non_admin, @rubygem, :avo_show?
   end
+
+  def test_associations
+    assert_association @admin, @rubygem, :advisories, Admin::AdvisoryPolicy
+  end
 end

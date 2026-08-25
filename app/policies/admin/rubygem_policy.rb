@@ -24,6 +24,7 @@ class Admin::RubygemPolicy < Admin::ApplicationPolicy
   has_association :audits
   has_association :link_verifications
   has_association :oidc_rubygem_trusted_publishers
+  has_association :advisories
 
   def avo_index?
     rubygems_org_admin?
