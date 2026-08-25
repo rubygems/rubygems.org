@@ -17,9 +17,6 @@ class AdvisoryTest < ActiveSupport::TestCase
     should validate_presence_of(:url)
     should validate_presence_of(:modified_at)
     should validate_uniqueness_of(:identifier).scoped_to(:type, :rubygem_name)
-    should define_enum_for(:severity)
-      .with_values(low: "low", moderate: "moderate", high: "high", critical: "critical")
-      .backed_by_column_of_type(:string)
   end
 
   context "STI" do
@@ -54,27 +51,6 @@ class AdvisoryTest < ActiveSupport::TestCase
 
       assert_predicate advisory, :valid?
       assert_nil advisory.rubygem
-    end
-  end
-
-  context "severity" do
-    should "accept each severity value and allow nil" do
-      %w[low moderate high critical].each do |severity|
-        advisory = build(:advisory, severity: severity)
-
-        assert_predicate advisory, :valid?
-      end
-
-      advisory = build(:advisory, severity: nil)
-
-      assert_predicate advisory, :valid?
-    end
-
-    should "reject an unknown severity" do
-      advisory = build(:advisory, severity: "severe")
-
-      refute_predicate advisory, :valid?
-      assert_includes advisory.errors[:severity], "is not included in the list"
     end
   end
 end

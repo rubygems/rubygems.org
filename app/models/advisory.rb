@@ -3,8 +3,6 @@
 class Advisory < ApplicationRecord
   belongs_to :rubygem, primary_key: :name, foreign_key: :rubygem_name, optional: true, inverse_of: :advisories
 
-  enum :severity, { low: "low", moderate: "moderate", high: "high", critical: "critical" }, validate: { allow_nil: true }
-
   attribute :payload, :jsonb
   attribute :ranges, :jsonb
 
