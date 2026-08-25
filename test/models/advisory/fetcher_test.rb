@@ -98,6 +98,25 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
     end
   end
 
+  context "#download" do
+    setup do
+      @url = "https://example.test/advisories"
+    end
+
+    should "return the response body" do
+      stub_request(:get, @url).to_return(status: 200, body: "ok")
+
+      assert_equal "ok", FakeFetcher.new.download(@url)
+    end
+
+    should "retry a failed GET and succeed" do
+      stub_request(:get, @url).to_return(status: 500, body: "nope").then.to_return(status: 200, body: "ok")
+
+      assert_equal "ok", FakeFetcher.new.download(@url)
+      assert_requested :get, @url, times: 2
+    end
+  end
+
   context "abstract interface" do
     should "require subclasses to define feature_flag" do
       assert_raises(NotImplementedError) { Advisory::Fetcher.feature_flag }
