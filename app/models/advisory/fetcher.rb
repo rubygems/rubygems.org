@@ -2,9 +2,21 @@
 
 class Advisory::Fetcher
   BATCH_SIZE = 500
-  UPDATE_COLUMNS = %i[
-    aliases summary severity url published_at modified_at withdrawn_at ranges payload updated_at
+  OPEN_TIMEOUT = 10
+  READ_TIMEOUT = 60
+
+  RETRY_EXCEPTIONS = [
+    Faraday::ConnectionFailed,
+    Faraday::TimeoutError,
+    Faraday::ServerError,
+    Faraday::TooManyRequestsError
   ].freeze
+
+  UPDATE_COLUMNS = %i[
+    aliases summary severity url published_at modified_at withdrawn_at ranges payload
+  ].freeze
+
+  class Error < StandardError; end
 
   class << self
     def feature_flag
@@ -46,6 +58,10 @@ class Advisory::Fetcher
     raise NotImplementedError, "#{self.class}#map must be implemented"
   end
 
+  def download(url)
+    connection.get(url).body.to_s
+  end
+
   def import(records)
     return 0 if records.empty?
 
@@ -61,5 +77,16 @@ class Advisory::Fetcher
 
     records.size
   end
+
+  private
+
+  def connection
+    @connection ||= Faraday.new(
+      request: { open_timeout: OPEN_TIMEOUT, read_timeout: READ_TIMEOUT },
+      headers: { "User-Agent" => "RubyGems.org Advisory Fetcher/#{AppRevision.version}" }
+    ) do |f|
+      f.request :retry, max: 2, interval: 0.05, backoff_factor: 2, methods: %i[get], exceptions: RETRY_EXCEPTIONS
+      f.response :raise_error
+    end
   end
 end
