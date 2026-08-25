@@ -33,6 +33,12 @@ Rails.application.configure do
       class: "SyncDisposableEmailDomainsJob",
       set: { priority: 10 },
       description: "Syncing disposable email domain blocklist daily at 04:00 UTC"
+    },
+    sync_advisories: {
+      cron: "every hour",
+      class: "SyncAdvisoriesJob",
+      set: { priority: 10 },
+      description: "Syncing security advisories every hour"
     }
   }
 
