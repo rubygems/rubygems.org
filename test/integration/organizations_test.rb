@@ -18,6 +18,15 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
     assert page.has_content? "arrakis"
   end
 
+  test "should show an organization when signed out" do
+    organization = create(:organization, owners: [@user], handle: "arrakis", name: "Arrakis")
+    delete sign_out_path
+
+    get organization_path(organization)
+
+    assert_response :success
+  end
+
   test "should render not found when an organization doesn't exist" do
     get organization_path("nonexistent")
 
