@@ -3,7 +3,7 @@
 require "test_helper"
 
 class Api::V1::DownloadsControllerTest < ActionController::TestCase
-  def self.should_respond_to(format)
+  def self.index_action_should_respond_to(format)
     should "return #{format.to_s.upcase} with the download count" do
       get :index, format: format
 
@@ -23,43 +23,39 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
       assert_equal @count, @response.body.to_i
     end
 
-    should_respond_to(:json) do |body|
+    index_action_should_respond_to(:json) do |body|
       JSON.load(body)["total"]
     end
 
-    should_respond_to(:yaml) do |body|
+    index_action_should_respond_to(:yaml) do |body|
       YAML.safe_load(body, permitted_classes: [Symbol])[:total]
     end
 
-    should_respond_to(:text, &:to_i)
+    index_action_should_respond_to(:text, &:to_i)
   end
 
-  def get_show(version, format = "json")
-    get :show, params: { id: version.full_name }, format: format
-  end
-
-  def self.should_respond_to(format, to_meth = :to_s)
+  def self.show_action_should_respond_to(format, to_meth = :to_s)
     context "with #{format.to_s.upcase}" do
       should "have total downloads for version1" do
-        get_show(@version1, format)
+        get :show, params: { id: @version1.full_name }, format: format
 
         assert_equal 3, yield(@response.body)["total_downloads".send(to_meth)]
       end
 
       should "have downloads for the most recent version of version1" do
-        get_show(@version1, format)
+        get :show, params: { id: @version1.full_name }, format: format
 
         assert_equal 1, yield(@response.body)["version_downloads".send(to_meth)]
       end
 
       should "have total downloads for version2" do
-        get_show(@version2, format)
+        get :show, params: { id: @version2.full_name }, format: format
 
         assert_equal 3, yield(@response.body)["total_downloads".send(to_meth)]
       end
 
       should "have downloads for the most recent version of version2" do
-        get_show(@version2, format)
+        get :show, params: { id: @version2.full_name }, format: format
 
         assert_equal 2, yield(@response.body)["version_downloads".send(to_meth)]
       end
@@ -75,11 +71,11 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
       GemDownload.bulk_update([[@version1.full_name, 1], [@version2.full_name, 2]])
     end
 
-    should_respond_to(:json) do |body|
+    show_action_should_respond_to(:json) do |body|
       JSON.load body
     end
 
-    should_respond_to(:yaml, :to_sym) do |body|
+    show_action_should_respond_to(:yaml, :to_sym) do |body|
       YAML.safe_load(body, permitted_classes: [Symbol])
     end
   end

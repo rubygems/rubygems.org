@@ -13,14 +13,6 @@ Bundler/OrderedGems:
   Exclude:
     - 'Gemfile'
 
-# Offense count: 2
-# Configuration parameters: DelegatingMethods.
-# DelegatingMethods: delegate
-Lint/DuplicateMethods:
-  Exclude:
-    - 'test/functional/api/v1/downloads_controller_test.rb'
-    - 'test/functional/api/v1/rubygems_controller_test.rb'
-
 # Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Lint/UselessMethodDefinition:
