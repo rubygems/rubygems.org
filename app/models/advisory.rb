@@ -10,4 +10,45 @@ class Advisory < ApplicationRecord
   validates :identifier, uniqueness: { scope: %i[type rubygem_name] }
 
   scope :current, -> { where(withdrawn_at: nil) }
+
+  class << self
+    def sources
+      [OSV]
+    end
+
+    def feature_flag
+      raise NotImplementedError, "#{name} must define .feature_flag"
+    end
+
+    def enabled?
+      FeatureFlag.enabled?(feature_flag)
+    end
+
+    def enabled_sources
+      types = sources.select(&:enabled?).map(&:sti_name)
+      return none if types.empty?
+
+      where(type: types)
+    end
+  end
+
+  def affects?(version)
+    gem_version = to_gem_version(version)
+    return false if gem_version.nil? || ranges.blank?
+
+    ranges.any? { |range| range_includes?(range, gem_version) }
+  end
+
+  private
+
+  def to_gem_version(version)
+    number = version.respond_to?(:number) ? version.number : version
+    Gem::Version.new(number.to_s)
+  rescue ArgumentError
+    nil
+  end
+
+  def range_includes?(_range, _gem_version)
+    raise NotImplementedError, "#{self.class} must implement #range_includes?"
+  end
 end

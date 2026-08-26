@@ -881,6 +881,11 @@ ja:
     index:
       downloads: ダウンロード数
       title: gem
+    advisories:
+      title:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: インストール
@@ -1003,6 +1008,7 @@ ja:
     version:
       yanked: ヤンク済み
       ruby_abi:
+      vulnerable:
   webauthn_credentials:
     callback:
       success: セキュリティ機器が正常に登録されました。

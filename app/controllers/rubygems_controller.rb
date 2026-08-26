@@ -30,6 +30,7 @@ class RubygemsController < ApplicationController
 
   def show
     @versions = @rubygem.public_versions.limit(5)
+    @advisories = find_advisories
     if @versions.to_a.any?
       add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
       add_breadcrumb t("breadcrumbs.latest_version", version: @latest_version.slug)
@@ -50,6 +51,10 @@ class RubygemsController < ApplicationController
   end
 
   private
+
+  def find_advisories
+    @rubygem.advisories.current.merge(Advisory.enabled_sources).to_a
+  end
 
   def show_reserved_gem
     return unless GemNameReservation.reserved?(params[:id])
