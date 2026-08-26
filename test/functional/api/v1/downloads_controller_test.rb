@@ -98,7 +98,7 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     setup do
       rubygem = create(:rubygem)
       @version = create(:version, rubygem: rubygem, number: "1.0.0", indexed: false)
-      get_show(@version)
+      get :show, params: { id: @version.full_name }, format: "json"
     end
 
     should respond_with :success
