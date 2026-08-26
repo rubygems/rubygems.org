@@ -25,6 +25,12 @@ FactoryBot.define do
       unconfirmed_email { "#{SecureRandom.hex(8)}#{email}" }
     end
 
+    trait :without_webauthn_id do
+      after :create do |user|
+        user.update_column(:webauthn_id, nil)
+      end
+    end
+
     trait :mfa_enabled do
       totp_seed { "123abc" }
       mfa_level { User.mfa_levels["ui_and_api"] }
