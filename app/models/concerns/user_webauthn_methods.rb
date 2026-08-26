@@ -7,7 +7,7 @@ module UserWebauthnMethods
     has_many :webauthn_credentials, dependent: :destroy
     has_one :webauthn_verification, dependent: :destroy
 
-    after_initialize do
+    before_create do
       self.webauthn_id ||= WebAuthn.generate_user_id
     end
   end

@@ -11,6 +11,15 @@ class UserWebauthnMethodsTest < ActiveSupport::TestCase
     should "set webauthn_id" do
       refute_nil @user.webauthn_id
     end
+
+    should "not modify a persisted user when webauthn_id is missing" do
+      @user.update_column(:webauthn_id, nil)
+
+      user = User.find(@user.id)
+
+      assert_nil user.webauthn_id
+      refute_predicate user, :changed?
+    end
   end
 
   context "#webauthn_enabled?" do
