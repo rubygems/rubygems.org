@@ -12,4 +12,7 @@
   <% if version.yanked? %>
     <span class="text-b4 font-semibold text-red-600 dark:text-red-400"><%= t ".yanked" %></span>
   <% end %>
+  <% if version_advisory?(@advisories, version) %>
+    <span class="text-b4 font-semibold text-red-600 dark:text-red-400"><%= t ".vulnerable" %></span>
+  <% end %>
 </li>

@@ -866,6 +866,11 @@ zh-TW:
     index:
       downloads: 下載
       title: Gems
+    advisories:
+      title:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: 安裝
@@ -985,6 +990,7 @@ zh-TW:
     version:
       yanked: 已被移除
       ruby_abi:
+      vulnerable:
   webauthn_credentials:
     callback:
       success: 您已成功註冊安全裝置。

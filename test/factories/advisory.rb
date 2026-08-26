@@ -20,5 +20,17 @@ FactoryBot.define do
       rubygem
       rubygem_name { rubygem.name }
     end
+
+    trait :unfixed do
+      ranges { ["introduced" => "0"] }
+    end
+
+    trait :range do
+      ranges { ["introduced" => "1.0.0", "fixed" => "1.2.0"] }
+    end
+
+    trait :exact do
+      ranges { ["introduced" => "1.0.0", "last_affected" => "1.0.0"] }
+    end
   end
 end
