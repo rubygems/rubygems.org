@@ -11,6 +11,10 @@ class Avo::Resources::Advisory < Avo::BaseResource
     }
   }
 
+  def actions
+    action Avo::Actions::SyncAdvisories
+  end
+
   def fields
     field :id, as: :id, hide_on: :index
     field :identifier, as: :text, link_to_resource: true

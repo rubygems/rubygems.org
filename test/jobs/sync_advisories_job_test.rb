@@ -36,5 +36,13 @@ class SyncAdvisoriesJobTest < ActiveJob::TestCase
 
       assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
     end
+
+    should "sync when forced even if flags are off" do
+      Advisory::OSV::Fetcher.any_instance.stubs(:fetch).returns([@document])
+
+      SyncAdvisoriesJob.perform_now(force: true)
+
+      assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
+    end
   end
 end
