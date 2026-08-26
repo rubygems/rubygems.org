@@ -39,13 +39,14 @@ class Advisory::Fetcher
       all.select(&:enabled?)
     end
 
-    def sync_all
-      enabled.each { |fetcher| fetcher.new.sync }
+    def sync_all(force: false)
+      fetchers = force ? all : enabled
+      fetchers.each { |fetcher| fetcher.new.sync(force:) }
     end
   end
 
-  def sync
-    return unless self.class.enabled?
+  def sync(force: false)
+    return unless force || self.class.enabled?
 
     import(fetch.flat_map { |document| map(document) })
   end

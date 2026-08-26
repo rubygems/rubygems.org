@@ -69,6 +69,14 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
 
       assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
     end
+
+    should "sync all fetchers when forced even if flags are off" do
+      Advisory::OSV::Fetcher.any_instance.stubs(:fetch).returns([@document])
+
+      Advisory::Fetcher.sync_all(force: true)
+
+      assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
+    end
   end
 
   context "#sync" do
@@ -80,6 +88,15 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
       fetcher.sync
 
       assert_empty Advisory::OSV.where(identifier: "GHSA-test-0001-0001")
+    end
+
+    should "import when forced even if the flag is off" do
+      fetcher = FakeFetcher.new
+      fetcher.documents = [@document]
+
+      fetcher.sync(force: true)
+
+      assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
     end
 
     should "import mapped documents when the flag is on" do

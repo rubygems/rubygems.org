@@ -48,7 +48,7 @@ class Admin::AdvisoryPolicyTest < AdminPolicyTestCase
   end
 
   def test_act_on
-    refute_authorizes @admin, @advisory, :act_on?
+    assert_authorizes @admin, @advisory, :act_on?
     refute_authorizes @non_admin, @advisory, :act_on?
   end
 end
