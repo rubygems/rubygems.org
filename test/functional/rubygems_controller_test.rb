@@ -421,4 +421,60 @@ class RubygemsControllerTest < ActionController::TestCase
       assert page.has_selector?("a[href='#{profile_path(@outside_contributor.display_id)}']")
     end
   end
+
+  context "On GET to show with advisories" do
+    setup do
+      @rubygem = create(:rubygem, name: "actionpack")
+      create(:version, rubygem: @rubygem, number: "1.0.0")
+      create(:version, rubygem: @rubygem, number: "2.0.0")
+      create(:advisory, :with_rubygem, rubygem: @rubygem,
+             ranges: ["introduced" => "1.0.0", "fixed" => "2.0.0"],
+             summary: "XSS in Action Pack",
+             identifier: "GHSA-test-show-0001")
+    end
+
+    should "not show advisories when the source flag is off" do
+      get :show, params: { id: @rubygem.slug }
+
+      refute page.has_css?("[data-testid='gem-advisories']")
+      refute page.has_content?("vulnerable")
+    end
+
+    should "show advisories affecting the latest version when the source is enabled" do
+      create(:advisory, :with_rubygem, :unfixed, rubygem: @rubygem,
+             summary: "RCE in Action Pack",
+             identifier: "GHSA-test-show-0002",
+             severity: :high)
+
+      with_feature FeatureFlag::OSV_ADVISORIES do
+        get :show, params: { id: @rubygem.slug }
+      end
+
+      assert page.has_css?("[data-testid='gem-advisories']")
+      assert page.has_content?("RCE in Action Pack")
+      assert page.has_link?("View advisory")
+      assert page.has_content?("vulnerable")
+    end
+
+    should "not show a patched latest version as vulnerable for older ranges" do
+      with_feature FeatureFlag::OSV_ADVISORIES do
+        get :show, params: { id: @rubygem.slug }
+      end
+
+      refute page.has_css?("[data-testid='gem-advisories']")
+      assert page.has_content?("vulnerable")
+    end
+
+    should "hide withdrawn advisories" do
+      create(:advisory, :with_rubygem, :withdrawn, :unfixed, rubygem: @rubygem,
+             summary: "Withdrawn advisory",
+             identifier: "GHSA-test-show-0003")
+
+      with_feature FeatureFlag::OSV_ADVISORIES do
+        get :show, params: { id: @rubygem.slug }
+      end
+
+      refute page.has_content?("Withdrawn advisory")
+    end
+  end
 end

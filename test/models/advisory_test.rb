@@ -53,4 +53,54 @@ class AdvisoryTest < ActiveSupport::TestCase
       assert_nil advisory.rubygem
     end
   end
+
+  context ".sources" do
+    should "include Advisory::OSV" do
+      assert_includes Advisory.sources, Advisory::OSV
+    end
+  end
+
+  context ".enabled_sources" do
+    setup do
+      @advisory = create(:advisory)
+    end
+
+    should "return none when no source flags are on" do
+      assert_empty Advisory.enabled_sources
+    end
+
+    should "return OSV rows when Advisory::OSV is enabled" do
+      with_feature FeatureFlag::OSV_ADVISORIES do
+        assert_equal [@advisory], Advisory.enabled_sources.to_a
+      end
+    end
+
+    should "merge with current to exclude withdrawn" do
+      create(:advisory, :withdrawn)
+
+      with_feature FeatureFlag::OSV_ADVISORIES do
+        assert_equal [@advisory], Advisory.current.merge(Advisory.enabled_sources).to_a
+      end
+    end
+  end
+
+  context "#affects?" do
+    should "return false when ranges are empty" do
+      advisory = build(:advisory, ranges: [])
+
+      refute advisory.affects?("1.0.0")
+    end
+
+    should "return false for an invalid version string" do
+      advisory = build(:advisory, :range)
+
+      refute advisory.affects?("not-a-version")
+    end
+
+    should "require subclasses to implement range matching" do
+      assert_raises(NotImplementedError) do
+        Advisory.new.send(:range_includes?, {}, Gem::Version.new("1.0.0"))
+      end
+    end
+  end
 end

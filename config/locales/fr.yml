@@ -924,6 +924,11 @@ fr:
     index:
       downloads: Téléchargements
       title: Gems
+    advisories:
+      title:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: installation
@@ -1055,6 +1060,7 @@ fr:
     version:
       yanked: retiré
       ruby_abi:
+      vulnerable:
   webauthn_credentials:
     callback:
       success:
