@@ -11,7 +11,7 @@ class Avo::Actions::SyncAdvisories < Avo::Actions::ApplicationAction
 
   def fields
     field :source, as: :select,
-      options: -> { Advisory.sources.to_h { |klass| [klass.name.demodulize, klass.sti_name] } },
+      options: -> { Advisory::SOURCES.to_h { |klass| [klass.name.demodulize, klass.sti_name] } },
       required: true,
       help: "Which advisory source to fetch."
     super
@@ -19,7 +19,7 @@ class Avo::Actions::SyncAdvisories < Avo::Actions::ApplicationAction
 
   class ActionHandler < Avo::Actions::ActionHandler
     set_callback :handle, :before do
-      error "Unknown advisory source" unless Advisory.sources.map(&:sti_name).include?(fields[:source])
+      error "Unknown advisory source" unless Advisory::SOURCES.map(&:sti_name).include?(fields[:source])
     end
 
     def handle_standalone

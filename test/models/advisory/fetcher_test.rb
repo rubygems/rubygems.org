@@ -6,7 +6,6 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
   class FakeFetcher < Advisory::Fetcher
     attr_writer :documents
 
-    def self.feature_flag = :fake_advisories
     def self.advisory_class = Advisory::OSV
 
     def fetch
@@ -35,20 +34,18 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
     }
   end
 
-  context ".all" do
+  context ".sources" do
     should "include the OSV fetcher" do
-      assert_includes Advisory::Fetcher.all, Advisory::OSV::Fetcher
+      assert_includes Advisory::Fetcher.sources, Advisory::OSV::Fetcher
     end
   end
 
-  context ".enabled" do
-    should "exclude fetchers whose flag is off" do
-      refute_includes Advisory::Fetcher.enabled, Advisory::OSV::Fetcher
-    end
+  context ".enabled?" do
+    should "follow the advisory class flag" do
+      refute_predicate Advisory::OSV::Fetcher, :enabled?
 
-    should "include fetchers whose flag is on" do
       with_feature FeatureFlag::OSV_ADVISORIES do
-        assert_includes Advisory::Fetcher.enabled, Advisory::OSV::Fetcher
+        assert_predicate Advisory::OSV::Fetcher, :enabled?
       end
     end
   end
@@ -85,6 +82,12 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
 
       assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
     end
+
+    should "raise for an unknown source" do
+      error = assert_raises(ArgumentError) { Advisory::Fetcher.sync("Advisory") }
+
+      assert_match(/Unknown advisory source: "Advisory"/, error.message)
+    end
   end
 
   context "#sync" do
@@ -111,7 +114,7 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
       fetcher = FakeFetcher.new
       fetcher.documents = [@document]
 
-      with_feature :fake_advisories do
+      with_feature FeatureFlag::OSV_ADVISORIES do
         fetcher.sync
       end
 
@@ -143,10 +146,6 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
   end
 
   context "abstract interface" do
-    should "require subclasses to define feature_flag" do
-      assert_raises(NotImplementedError) { Advisory::Fetcher.feature_flag }
-    end
-
     should "require subclasses to define advisory_class" do
       assert_raises(NotImplementedError) { Advisory::Fetcher.advisory_class }
     end

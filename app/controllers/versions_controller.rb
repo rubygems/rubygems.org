@@ -11,7 +11,7 @@ class VersionsController < ApplicationController
     @versioned_links     = @rubygem.links(@latest_version) if @latest_version
     @oldest_version_date = @rubygem.versions.oldest_authored_at
     @versions = @rubygem.versions.by_position.page(@page).per(Gemcutter::VERSIONS_PER_PAGE)
-    @advisories = find_advisories
+    @advisories = @rubygem.advisories.visible.to_a
     if @latest_version
       add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
       add_breadcrumb t("breadcrumbs.versions")
@@ -24,7 +24,7 @@ class VersionsController < ApplicationController
     @latest_version  = @rubygem.find_version_by_slug!(params[:id])
     @versions        = @rubygem.public_versions_with_extra_version(@latest_version)
     @versioned_links = @rubygem.links(@latest_version)
-    @advisories = find_advisories
+    @advisories = @rubygem.advisories.visible.to_a
     @on_version_page = true
     add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
     if @latest_version == @rubygem.most_recent_version
@@ -35,11 +35,5 @@ class VersionsController < ApplicationController
     render "rubygems/show"
     set_surrogate_key "gem/#{@rubygem.name}"
     cache_expiry_headers(expiry: 60, fastly_expiry: 60) if cacheable_request?
-  end
-
-  private
-
-  def find_advisories
-    @rubygem.advisories.current.merge(Advisory.enabled_sources).to_a
   end
 end

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Advisory < ApplicationRecord
+  SOURCES = [OSV].freeze
+
   belongs_to :rubygem, primary_key: :name, foreign_key: :rubygem_name, optional: true, inverse_of: :advisories
 
   attribute :payload, :jsonb
@@ -10,12 +12,12 @@ class Advisory < ApplicationRecord
   validates :identifier, uniqueness: { scope: %i[type rubygem_name] }
 
   scope :current, -> { where(withdrawn_at: nil) }
+  scope :visible, lambda {
+    types = enabled_sources.map(&:sti_name)
+    types.empty? ? none : current.where(type: types)
+  }
 
   class << self
-    def sources
-      [OSV]
-    end
-
     def feature_flag
       raise NotImplementedError, "#{name} must define .feature_flag"
     end
@@ -25,10 +27,7 @@ class Advisory < ApplicationRecord
     end
 
     def enabled_sources
-      types = sources.select(&:enabled?).map(&:sti_name)
-      return none if types.empty?
-
-      where(type: types)
+      SOURCES.select(&:enabled?)
     end
   end
 

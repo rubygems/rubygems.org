@@ -19,33 +19,25 @@ class Advisory::Fetcher
   class Error < StandardError; end
 
   class << self
-    def feature_flag
-      raise NotImplementedError, "#{name} must define .feature_flag"
-    end
-
     def advisory_class
       raise NotImplementedError, "#{name} must define .advisory_class"
     end
 
-    def enabled?
-      FeatureFlag.enabled?(feature_flag)
-    end
+    delegate :enabled?, to: :advisory_class
 
-    def all
-      [Advisory::OSV::Fetcher]
-    end
-
-    def enabled
-      all.select(&:enabled?)
+    def sources
+      Advisory::SOURCES.map { |klass| klass::Fetcher }
     end
 
     def sync_all
-      enabled.each { |fetcher| fetcher.new.sync }
+      Advisory.enabled_sources.each { |klass| klass::Fetcher.new.sync }
     end
 
     def sync(source, force: false)
       klass = source.is_a?(Class) ? source : source.constantize
-      all.find { |fetcher| fetcher.advisory_class == klass }.new.sync(force:)
+      raise ArgumentError, "Unknown advisory source: #{source.inspect}" unless Advisory::SOURCES.include?(klass)
+
+      klass::Fetcher.new.sync(force:)
     end
   end
 
