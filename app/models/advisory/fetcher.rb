@@ -39,9 +39,13 @@ class Advisory::Fetcher
       all.select(&:enabled?)
     end
 
-    def sync_all(force: false)
-      fetchers = force ? all : enabled
-      fetchers.each { |fetcher| fetcher.new.sync(force:) }
+    def sync_all
+      enabled.each { |fetcher| fetcher.new.sync }
+    end
+
+    def sync(source, force: false)
+      klass = source.is_a?(Class) ? source : source.constantize
+      all.find { |fetcher| fetcher.advisory_class == klass }.new.sync(force:)
     end
   end
 
