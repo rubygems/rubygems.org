@@ -1,20 +1,24 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-gem_name, version_number, platform = *ARGV
+gem_name, version_number, platform, ruby_abi = *ARGV
 
-abort "Usage: script/restore_version GEM_NAME VESRION_NUMBER [PLATFORM]" if gem_name.nil? || version_number.nil?
+abort "Usage: script/restore_version GEM_NAME VERSION_NUMBER [PLATFORM] [RUBY_ABI]" if gem_name.nil? || version_number.nil?
 
 ENV["RAILS_ENV"] ||= "production"
 require_relative "../config/environment"
 
 rubygem = Rubygem.find_by_name!(gem_name)
-slug = version_number
+slug = version_number.dup
 slug << "-#{platform}" if platform.present?
-version = rubygem.find_version!(number: version_number, platform: platform)
-raise "Version #{slug} for #{gem_name} was not found" unless version
+slug << " (Ruby ABI #{ruby_abi})" if ruby_abi.present?
+begin
+  version = rubygem.find_version!(number: version_number, platform: platform, ruby_abi: ruby_abi.presence)
+rescue ActiveRecord::RecordNotFound
+  abort "Version #{slug} for #{gem_name} was not found"
+end
 
-deletion = Deletion.find_by(rubygem: gem_name, number: version_number, platform: version.platform)
+deletion = Deletion.find_by(rubygem: gem_name, number: version_number, platform: version.platform, ruby_abi: version.ruby_abi)
 raise "Deletion record for version: #{version.full_name} was not found" unless deletion
 
 deletion.version = version

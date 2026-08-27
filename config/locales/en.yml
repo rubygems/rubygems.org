@@ -888,6 +888,7 @@ en:
       requirements_header: Requirements
       show_all_versions: Show all versions (%{count} total)
       versions_header: Versions
+      ruby_abi: Ruby ABI
       yanked_notice: This version has been yanked, and it is not available for download directly or for other gems that may have depended on it.
     show_yanked:
       not_hosted_notice: This gem is not currently hosted on RubyGems.org. Yanked versions of this gem may already exist.
@@ -988,6 +989,7 @@ en:
       imported_gem_version_notice: "This gem version was imported to RubyGems.org on %{import_date}. The date displayed was specified by the author in the gemspec."
     version:
       yanked: yanked
+      ruby_abi: Ruby ABI
   webauthn_credentials:
     callback:
       success: You have successfully registered a security device.

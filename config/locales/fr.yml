@@ -911,6 +911,7 @@ fr:
       requirements_header: Dépendances
       show_all_versions: Voir toutes les versions (%{count})
       versions_header: Versions
+      ruby_abi:
       yanked_notice: 'Retrait de Gem : disponible ni directement, ni pour les gems
         qui en dépendraient.'
     show_yanked:
@@ -1024,6 +1025,7 @@ fr:
       imported_gem_version_notice:
     version:
       yanked: retiré
+      ruby_abi:
   webauthn_credentials:
     callback:
       success:

@@ -12,6 +12,7 @@ class VersionsManifestTest < ActiveSupport::TestCase
     @manifest = VersionManifest.new(number: "0.1.0", gem: "gemname")
     @manifest2 = VersionManifest.new(number: "0.2.0", gem: "gemname")
     @manifest3 = VersionManifest.new(number: "0.2.0", platform: "platform", gem: "gemname")
+    @manifest4 = VersionManifest.new(number: "0.2.0", gem: "gemname", content_address: "1c616c4a")
 
     @files = [
       create_entry("path1", "hex1-A"),
@@ -41,6 +42,11 @@ class VersionsManifestTest < ActiveSupport::TestCase
     should "return a path with a platform" do
       assert_equal "gems/gemname/checksums/0.2.0-platform.sha256", @manifest3.checksums_key
     end
+
+    should "return a content-addressed path distinct from the platform path" do
+      assert_equal "gems/gemname/checksums/0.2.0-1c616c4a.sha256", @manifest4.checksums_key
+      refute_equal @manifest3.checksums_key, @manifest4.checksums_key
+    end
   end
 
   context "#path_root" do
@@ -51,6 +57,11 @@ class VersionsManifestTest < ActiveSupport::TestCase
 
     should "return a path with a platform" do
       assert_equal "gems/gemname/paths/0.2.0-platform/", @manifest3.path_root
+    end
+
+    should "return a content-addressed path distinct from the platform path" do
+      assert_equal "gems/gemname/paths/0.2.0-1c616c4a/", @manifest4.path_root
+      refute_equal @manifest3.path_root, @manifest4.path_root
     end
   end
 
@@ -63,6 +74,11 @@ class VersionsManifestTest < ActiveSupport::TestCase
     should "return a path with a platform" do
       assert_equal "gems/gemname/paths/0.2.0-platform/lib/to/path.rb", @manifest3.path_key("lib/to/path.rb")
     end
+
+    should "return a content-addressed path distinct from the platform path" do
+      assert_equal "gems/gemname/paths/0.2.0-1c616c4a/lib/to/path.rb", @manifest4.path_key("lib/to/path.rb")
+      refute_equal @manifest3.path_key("lib/to/path.rb"), @manifest4.path_key("lib/to/path.rb")
+    end
   end
 
   context "#spec_key" do
@@ -73,6 +89,11 @@ class VersionsManifestTest < ActiveSupport::TestCase
 
     should "return a path with a platform" do
       assert_equal "gems/gemname/specs/gemname-0.2.0-platform.gemspec", @manifest3.spec_key
+    end
+
+    should "return a content-addressed path distinct from the platform path" do
+      assert_equal "gems/gemname/specs/gemname-0.2.0-1c616c4a.gemspec", @manifest4.spec_key
+      refute_equal @manifest3.spec_key, @manifest4.spec_key
     end
   end
 
@@ -302,6 +323,15 @@ class VersionsManifestTest < ActiveSupport::TestCase
 
     should "return true for the same gem and number and platform" do
       assert_equal @manifest3, VersionManifest.new(gem: "gemname", number: "0.2.0", platform: "platform")
+    end
+
+    should "return true for the same gem and number and content address" do
+      assert_equal @manifest4, VersionManifest.new(gem: "gemname", number: "0.2.0", content_address: "1c616c4a")
+    end
+
+    should "return false for content-addressed vs platform manifest sharing number and platform" do
+      refute_equal @manifest3, @manifest4
+      refute_equal @manifest4, VersionManifest.new(gem: "gemname", number: "0.2.0", content_address: "f15c72ce")
     end
 
     should "return false for the same gem and number with different platform" do
