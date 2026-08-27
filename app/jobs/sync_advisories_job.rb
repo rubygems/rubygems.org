@@ -11,7 +11,11 @@ class SyncAdvisoriesJob < ApplicationJob
     key: name
   )
 
-  def perform(force: false)
-    Advisory::Fetcher.sync_all(force:)
+  def perform(source: nil, force: false)
+    if source
+      Advisory::Fetcher.sync(source, force:)
+    else
+      Advisory::Fetcher.sync_all
+    end
   end
 end

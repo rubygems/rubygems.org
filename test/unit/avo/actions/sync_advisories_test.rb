@@ -20,11 +20,19 @@ class SyncAdvisoriesTest < ActiveJob::TestCase
     assert_includes action_classes, Avo::Actions::SyncAdvisories
   end
 
-  should "enqueue a forced advisory sync" do
+  should "enqueue a sync for the selected source" do
     perform_action
 
     assert_enqueued_jobs 1, only: SyncAdvisoriesJob
-    assert_enqueued_with(job: SyncAdvisoriesJob, args: [force: true])
+    assert_enqueued_with(job: SyncAdvisoriesJob, args: [source: "Advisory::OSV", force: true])
+  end
+
+  should "not enqueue when the source is unknown" do
+    perform_action(source: "nope")
+
+    assert_no_enqueued_jobs only: SyncAdvisoriesJob
+    assert_empty Audit.all
+    assert_equal "Unknown advisory source", @action.response.dig(:messages, 0, :body)
   end
 
   should "record an Avo audit against the operator" do
@@ -37,6 +45,7 @@ class SyncAdvisoriesTest < ActiveJob::TestCase
     assert_equal comment, audit.comment
     assert_equal "Sync Advisories", audit.action
     assert_equal @current_user, audit.auditable
+    assert_equal "Advisory::OSV", audit.audited_changes.dig("fields", "source")
     assert_equal "Advisory sync job scheduled", @action.response.dig(:messages, 0, :body)
   end
 
@@ -54,11 +63,11 @@ class SyncAdvisoriesTest < ActiveJob::TestCase
 
   private
 
-  def perform_action(comment: "Warming the advisories table")
+  def perform_action(comment: "Warming the advisories table", source: "Advisory::OSV")
     Advisory::OSV::Fetcher.any_instance.expects(:fetch).never
 
     @action.handle(
-      fields: { comment: },
+      fields: { comment:, source: },
       current_user: @current_user,
       resource: nil,
       records: [],

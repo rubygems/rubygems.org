@@ -16,6 +16,7 @@ class Avo::AdvisoriesSystemTest < ApplicationSystemTestCase
     click_button "Actions"
     click_on "Sync Advisories"
 
+    select "OSV", from: "Source"
     fill_in "Comment", with: "Warming the advisories table before enabling the public flag"
     click_button "Sync"
 
@@ -23,7 +24,7 @@ class Avo::AdvisoriesSystemTest < ApplicationSystemTestCase
     page.assert_text "Sync Advisories"
 
     assert_enqueued_jobs 1, only: SyncAdvisoriesJob
-    assert_enqueued_with(job: SyncAdvisoriesJob, args: [force: true])
+    assert_enqueued_with(job: SyncAdvisoriesJob, args: [source: "Advisory::OSV", force: true])
 
     audit = Audit.where(action: "Sync Advisories").sole
 

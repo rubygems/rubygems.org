@@ -69,11 +69,19 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
 
       assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
     end
+  end
 
-    should "sync all fetchers when forced even if flags are off" do
+  context ".sync" do
+    should "not sync when the source flag is off" do
+      Advisory::OSV::Fetcher.any_instance.expects(:fetch).never
+
+      Advisory::Fetcher.sync("Advisory::OSV")
+    end
+
+    should "sync the given source when forced even if its flag is off" do
       Advisory::OSV::Fetcher.any_instance.stubs(:fetch).returns([@document])
 
-      Advisory::Fetcher.sync_all(force: true)
+      Advisory::Fetcher.sync("Advisory::OSV", force: true)
 
       assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
     end
