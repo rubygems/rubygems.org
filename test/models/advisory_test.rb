@@ -54,32 +54,44 @@ class AdvisoryTest < ActiveSupport::TestCase
     end
   end
 
-  context ".sources" do
+  context ".SOURCES" do
     should "include Advisory::OSV" do
-      assert_includes Advisory.sources, Advisory::OSV
+      assert_includes Advisory::SOURCES, Advisory::OSV
+    end
+  end
+
+  context ".feature_flag" do
+    should "require subclasses to define feature_flag" do
+      assert_raises(NotImplementedError) { Advisory.feature_flag }
     end
   end
 
   context ".enabled_sources" do
+    should "exclude sources whose flag is off" do
+      assert_empty Advisory.enabled_sources
+    end
+
+    should "include Advisory::OSV when its flag is on" do
+      with_feature FeatureFlag::OSV_ADVISORIES do
+        assert_equal [Advisory::OSV], Advisory.enabled_sources
+      end
+    end
+  end
+
+  context ".visible" do
     setup do
       @advisory = create(:advisory)
     end
 
     should "return none when no source flags are on" do
-      assert_empty Advisory.enabled_sources
+      assert_empty Advisory.visible
     end
 
-    should "return OSV rows when Advisory::OSV is enabled" do
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        assert_equal [@advisory], Advisory.enabled_sources.to_a
-      end
-    end
-
-    should "merge with current to exclude withdrawn" do
+    should "return current rows from enabled sources" do
       create(:advisory, :withdrawn)
 
       with_feature FeatureFlag::OSV_ADVISORIES do
-        assert_equal [@advisory], Advisory.current.merge(Advisory.enabled_sources).to_a
+        assert_equal [@advisory], Advisory.visible.to_a
       end
     end
   end
