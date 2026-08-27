@@ -340,7 +340,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       end
 
       should "set info_checksum_v2" do
-        assert_not_nil @rubygem.versions.last.info_checksum_v2
+        refute_nil @rubygem.versions.last.info_checksum_v2
       end
 
       should "indexe rubygem and version" do
@@ -706,8 +706,8 @@ class PusherIntegrationTest < ActiveSupport::TestCase
 
     should "extracts the certificate chain to the version" do
       assert_equal 200, @cutter.code
-      assert_not_nil @cutter.version
-      assert_not_nil @cutter.version.cert_chain
+      refute_nil @cutter.version
+      refute_nil @cutter.version.cert_chain
       assert_equal 1, @cutter.version.cert_chain.size
       assert_equal "DC=invalid,DC=example,CN=snakeoil", @cutter.version.cert_chain.first.subject.to_utf8
     end

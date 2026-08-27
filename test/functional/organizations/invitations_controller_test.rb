@@ -30,7 +30,7 @@ class Organizations::InvitationsControllerTest < ActionDispatch::IntegrationTest
 
     @membership.reload
 
-    assert_not_nil @membership.invitation_expires_at
+    refute_nil @membership.invitation_expires_at
     assert_predicate @membership, :confirmed?
   end
 end

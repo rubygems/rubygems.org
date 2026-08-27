@@ -1061,7 +1061,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "not include gems updated prior to Gemcutter::NEWS_DAYS_LIMIT days ago" do
-        assert_not_includes @news, @rubygem3
+        refute_includes @news, @rubygem3
       end
 
       should "order by created_at of gem version" do
@@ -1077,7 +1077,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "not include gems updated prior to Gemcutter::POPULAR_DAYS_LIMIT days ago" do
-        assert_not_includes @popular_gems, @rubygem3
+        refute_includes @popular_gems, @rubygem3
       end
 
       should "order by number of downloads" do

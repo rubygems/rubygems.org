@@ -288,7 +288,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
     end
 
     should "create an organization with the specified name and handle" do
-      assert_not_nil @onboarding.organization
+      refute_nil @onboarding.organization
       assert_equal @onboarding.organization_name, @onboarding.organization.name
       assert_equal @onboarding.organization_handle, @onboarding.organization.handle
     end
@@ -304,7 +304,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
       membership = @onboarding.organization.unconfirmed_memberships.find_by(user_id: @maintainer.id)
 
       assert_predicate membership, :maintainer?
-      assert_not_predicate membership, :confirmed?
+      refute_predicate membership, :confirmed?
     end
 
     should "set the organization_id for each specified rubygem" do
@@ -318,7 +318,7 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
 
     context "when a user is marked as an Outside Contributor" do
       should "not remove the Ownership record" do
-        assert_not_nil Ownership.find_by(user: @contributor, rubygem: @rubygem)
+        refute_nil Ownership.find_by(user: @contributor, rubygem: @rubygem)
       end
 
       should "demote the ownership from owner to maintainer role" do

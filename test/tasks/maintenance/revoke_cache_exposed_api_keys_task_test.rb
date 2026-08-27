@@ -112,7 +112,7 @@ class Maintenance::RevokeCacheExposedApiKeysTaskTest < ActiveSupport::TestCase
 
       assert_raises(ActiveRecord::StatementInvalid) { @task.process(api_key) }
 
-      assert_not api_key.reload.expired?, "expiration must roll back with the failed incident-event write"
+      refute_predicate api_key.reload, :expired?, "expiration must roll back with the failed incident-event write"
       assert_equal 0, owner.events.where(tag: Events::UserEvent::API_KEY_DELETED).count,
         "expire!'s API_KEY_DELETED must not commit"
       assert_equal 0, owner.events.where(tag: Events::UserEvent::CACHE_EXPOSURE_KEY_REVOKED).count,

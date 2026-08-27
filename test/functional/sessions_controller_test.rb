@@ -407,7 +407,7 @@ class SessionsControllerTest < ActionController::TestCase
       should respond_with :ok
 
       should "set webauthn authentication" do
-        assert_not_nil session[:webauthn_authentication]["challenge"]
+        refute_nil session[:webauthn_authentication]["challenge"]
       end
 
       should "set mfa_user" do
@@ -422,7 +422,7 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "not have mfa forms and have webauthn credentials form" do
         assert page.has_content?("Multi-factor authentication")
-        assert_not page.has_field?("OTP code")
+        refute page.has_field?("OTP code")
         assert page.has_button?("Authenticate with security device")
       end
 
@@ -447,7 +447,7 @@ class SessionsControllerTest < ActionController::TestCase
       should respond_with :ok
 
       should "set webauthn authentication" do
-        assert_not_nil session[:webauthn_authentication]["challenge"]
+        refute_nil session[:webauthn_authentication]["challenge"]
       end
 
       should "set mfa_user" do
@@ -456,8 +456,8 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "not have mfa forms and have webauthn credentials form" do
         assert page.has_content?("Multi-factor authentication")
-        assert_not page.has_field?("OTP code")
-        assert_not page.has_content?("Recovery code")
+        refute page.has_field?("OTP code")
+        refute page.has_content?("Recovery code")
         assert page.has_button?("Authenticate with security device")
       end
     end
@@ -475,7 +475,7 @@ class SessionsControllerTest < ActionController::TestCase
       should respond_with :ok
 
       should "set webauthn authentication" do
-        assert_not_nil session[:webauthn_authentication]["challenge"]
+        refute_nil session[:webauthn_authentication]["challenge"]
       end
 
       should "set mfa_user" do
@@ -900,7 +900,7 @@ class SessionsControllerTest < ActionController::TestCase
         should "rotate the password reset token digest" do
           perform_enqueued_jobs
 
-          assert_not_equal @original_password_reset_token_digest, @user.reload.password_reset_token_digest
+          refute_equal @original_password_reset_token_digest, @user.reload.password_reset_token_digest
         end
       end
     end
@@ -974,7 +974,7 @@ class SessionsControllerTest < ActionController::TestCase
         should "rotate the password reset token digest after MFA succeeds" do
           perform_enqueued_jobs
 
-          assert_not_equal @original_password_reset_token_digest, @user.reload.password_reset_token_digest
+          refute_equal @original_password_reset_token_digest, @user.reload.password_reset_token_digest
         end
       end
     end
@@ -1039,7 +1039,7 @@ class SessionsControllerTest < ActionController::TestCase
         should "issue a password reset token digest after WebAuthn succeeds" do
           perform_enqueued_jobs
 
-          assert_not_equal @original_password_reset_token_digest, @user.reload.password_reset_token_digest
+          refute_equal @original_password_reset_token_digest, @user.reload.password_reset_token_digest
         end
       end
     end

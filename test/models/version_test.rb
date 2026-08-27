@@ -808,7 +808,7 @@ class VersionTest < ActiveSupport::TestCase
 
         assert_equal(expected_identity, version.full_name)
         assert_equal(expected_identity, version.gem_full_name)
-        assert_not_equal(existing_version.full_name, version.full_name)
+        refute_equal(existing_version.full_name, version.full_name)
         assert_includes version.reload.to_title, "1.18.9-#{version.sha256_hex.first(9)}"
       end
 

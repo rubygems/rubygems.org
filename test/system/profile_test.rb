@@ -73,7 +73,7 @@ class ProfileTest < ApplicationSystemTestCase
 
     link = last_email_link
 
-    assert_not_nil link
+    refute_nil link
 
     assert_changes -> { @user.reload.mail_fails }, from: 1, to: 0 do
       visit link

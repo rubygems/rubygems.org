@@ -135,8 +135,8 @@ class PusherTest < ActiveSupport::TestCase
       refute @cutter.pull_spec
 
       assert_includes @cutter.message, "RubyGems.org cannot process this gem"
-      assert_not_includes @cutter.message, "Error:"
-      assert_not_includes @cutter.message, "unexpected internal error"
+      refute_includes @cutter.message, "Error:"
+      refute_includes @cutter.message, "unexpected internal error"
       assert_equal 422, @cutter.code
     end
   end
@@ -201,14 +201,14 @@ class PusherTest < ActiveSupport::TestCase
       @cutter.find
 
       assert_equal @rubygem, @cutter.rubygem
-      assert_not_nil @cutter.version
+      refute_nil @cutter.version
     end
 
     should "error out when changing case with usuable versions" do
       @rubygem = create(:rubygem)
       create(:version, rubygem: @rubygem)
 
-      assert_not_equal @rubygem.name, @rubygem.name.upcase
+      refute_equal @rubygem.name, @rubygem.name.upcase
 
       spec = mock
       spec.expects(:name).returns @rubygem.name.upcase
@@ -228,7 +228,7 @@ class PusherTest < ActiveSupport::TestCase
     should "update the DB to reflect the case in the spec" do
       @rubygem = create(:rubygem)
 
-      assert_not_equal @rubygem.name, @rubygem.name.upcase
+      refute_equal @rubygem.name, @rubygem.name.upcase
 
       spec = mock
       spec.stubs(:name).returns @rubygem.name.upcase
@@ -266,7 +266,7 @@ class PusherTest < ActiveSupport::TestCase
       @cutter.find
 
       assert_equal @rubygem, @cutter.rubygem
-      assert_not_nil @cutter.version
+      refute_nil @cutter.version
 
       assert_equal "universal-darwin-6000", @cutter.version.platform
       assert_equal "universal-darwin-6000", @cutter.version.gem_platform
@@ -292,7 +292,7 @@ class PusherTest < ActiveSupport::TestCase
       assert @cutter.find
 
       assert_equal rubygem, @cutter.rubygem
-      assert_not_predicate @cutter.version, :persisted?
+      refute_predicate @cutter.version, :persisted?
       assert_equal "1.0.0", @cutter.version.number
       assert_equal "arm64-darwin-25", @cutter.version.platform
       assert_equal "~> 3.4.0", @cutter.version.required_ruby_version
@@ -322,7 +322,7 @@ class PusherTest < ActiveSupport::TestCase
       assert @cutter.find
 
       assert_equal rubygem, @cutter.rubygem
-      assert_not_predicate @cutter.version, :persisted?
+      refute_predicate @cutter.version, :persisted?
       assert_equal "1.0.0", @cutter.version.number
       assert_equal "arm64-darwin-25", @cutter.version.platform
       assert_equal "~> 3.4.0", @cutter.version.required_ruby_version

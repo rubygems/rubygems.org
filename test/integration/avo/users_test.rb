@@ -13,7 +13,7 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert page.has_content? user.name
-    assert_not page.has_content? "Created at"
+    refute page.has_content? "Created at"
 
     get avo.resources_user_path(user)
 

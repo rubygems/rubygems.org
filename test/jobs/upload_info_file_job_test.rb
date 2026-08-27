@@ -70,7 +70,7 @@ class UploadInfoFileJobTest < ActiveJob::TestCase
     end
 
     assert_nil RubygemFs.compact_index.get("info/#{version.rubygem.name}")
-    assert_not_nil RubygemFs.compact_index.get("v2/info/#{version.rubygem.name}")
+    refute_nil RubygemFs.compact_index.get("v2/info/#{version.rubygem.name}")
     assert_no_enqueued_jobs only: FastlyPurgeJob
   end
 

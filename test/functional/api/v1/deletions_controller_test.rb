@@ -217,7 +217,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
             assert_predicate @rubygem.versions.indexed.count, :zero?
           end
           should "record the deletion" do
-            assert_not_nil Deletion.where(user: @user,
+            refute_nil Deletion.where(user: @user,
                                           rubygem: @rubygem.name,
                                           number: @v1.number).first
           end
@@ -264,7 +264,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
             assert_predicate @rubygem.versions.indexed.count, :zero?
           end
           should "record the deletion" do
-            assert_not_nil Deletion.where(user: @user,
+            refute_nil Deletion.where(user: @user,
                                           rubygem: @rubygem.name,
                                           number: @v1.number).first
           end
@@ -508,7 +508,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           assert_predicate @rubygem.versions.indexed.count, :zero?
         end
         should "record the deletion" do
-          assert_not_nil Deletion.where(user: @user,
+          refute_nil Deletion.where(user: @user,
                                         rubygem: @rubygem.name,
                                         number: @v1.number).first
         end
@@ -539,7 +539,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
             assert_equal 1, @rubygem.ownerships.count
           end
           should "record the deletion" do
-            assert_not_nil Deletion.where(user: @user,
+            refute_nil Deletion.where(user: @user,
                                           rubygem: @rubygem.name,
                                           number: @v2.number).first
           end
@@ -565,7 +565,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
             assert_equal "Successfully deleted gem: SomeGem (0.1.1-x86-darwin-10)", @response.body
           end
           should "record the deletion" do
-            assert_not_nil Deletion.where(
+            refute_nil Deletion.where(
               user: @user,
               rubygem: @rubygem.name,
               number: @v2.number,

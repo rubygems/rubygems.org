@@ -140,7 +140,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     user.reload
 
     assert_equal "disabled", user.mfa_level
-    assert_not_equal user_attributes[:encrypted_password], user.encrypted_password
+    refute_equal user_attributes[:encrypted_password], user.encrypted_password
     assert_nil user.totp_seed
     assert_empty user.mfa_hashed_recovery_codes
     assert_empty user.webauthn_credentials
@@ -225,7 +225,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     user.reload
 
     assert_equal "disabled", user.mfa_level
-    assert_not_equal user_attributes[:encrypted_password], user.encrypted_password
+    refute_equal user_attributes[:encrypted_password], user.encrypted_password
     assert_nil user.totp_seed
     assert_empty user.mfa_hashed_recovery_codes
 
