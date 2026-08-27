@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Rails.application.configure do
+Rails.application.configure do # rubocop:disable Metrics/BlockLength
   config.good_job.preserve_job_records = true
   config.good_job.retry_on_unhandled_error = false
   config.good_job.on_thread_error = ->(exception) { Rails.error.report(exception, handled: false) }

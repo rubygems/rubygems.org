@@ -155,6 +155,22 @@ class Advisory::OSV::FetcherTest < ActiveSupport::TestCase
         assert_not_requested :get, osv_document_url("GHSA-older-0000-0000")
       end
 
+      should "skip index rows with an unparseable modified timestamp" do
+        newer = @document.merge("id" => "GHSA-new-0000-0000", "modified" => "2026-02-01T00:00:00Z")
+        stub_osv_index(
+          ["not-a-timestamp", "GHSA-bad-0000-0000"],
+          ["2026-02-01T00:00:00Z", newer["id"]],
+          ["2025-12-01T00:00:00Z", "GHSA-older-0000-0000"]
+        )
+        stub_osv_document(newer)
+
+        documents = Advisory::OSV::Fetcher.new.fetch
+
+        assert_equal [newer["id"]], documents.pluck("id")
+        assert_not_requested :get, Advisory::OSV::Fetcher::DUMP_URL
+        assert_not_requested :get, osv_document_url("GHSA-bad-0000-0000")
+      end
+
       should "keep path-like identifiers inside the RubyGems prefix" do
         stub_osv_index(["2026-02-01T00:00:00Z", "../escape"])
         stub_request(:get, "#{Advisory::OSV::Fetcher::BASE_URL}/#{CGI.escapeURIComponent('../escape')}.json")
