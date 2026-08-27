@@ -91,6 +91,30 @@ class Advisory::OSV::MapperTest < ActiveSupport::TestCase
       ], records.first[:ranges]
     end
 
+    should "split a range with multiple introduced/fixed events" do
+      records = Advisory::OSV::Mapper.call(
+        document(
+          "affected" => [
+            "package" => { "name" => "actionpack", "ecosystem" => "RubyGems" },
+            "ranges" => [
+              "type" => "SEMVER",
+              "events" => [
+                { "introduced" => "1.0.0" },
+                { "fixed" => "1.0.2" },
+                { "introduced" => "3.0.0" },
+                { "fixed" => "3.2.5" }
+              ]
+            ]
+          ]
+        )
+      )
+
+      assert_equal [
+        { "introduced" => "1.0.0", "fixed" => "1.0.2" },
+        { "introduced" => "3.0.0", "fixed" => "3.2.5" }
+      ], records.first[:ranges]
+    end
+
     should "skip GIT ranges" do
       records = Advisory::OSV::Mapper.call(
         document(
