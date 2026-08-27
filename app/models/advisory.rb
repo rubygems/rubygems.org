@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Advisory < ApplicationRecord
-  SOURCES = [OSV].freeze
-
   belongs_to :rubygem, primary_key: :name, foreign_key: :rubygem_name, optional: true, inverse_of: :advisories
 
   attribute :payload, :jsonb
@@ -16,6 +14,8 @@ class Advisory < ApplicationRecord
     types = enabled_sources.map(&:sti_name)
     types.empty? ? none : current.where(type: types)
   }
+
+  SOURCES = [OSV].freeze
 
   class << self
     def feature_flag
