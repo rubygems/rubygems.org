@@ -7,7 +7,6 @@ class Advisory::OSV::Fetcher < Advisory::Fetcher
   MAX_INCREMENTAL_IDS = 25
   MAX_ENTRY_BYTES = 1.megabyte
 
-  def self.feature_flag = FeatureFlag::OSV_ADVISORIES
   def self.advisory_class = Advisory::OSV
 
   def fetch

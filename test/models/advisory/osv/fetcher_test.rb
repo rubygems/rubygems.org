@@ -25,15 +25,11 @@ class Advisory::OSV::FetcherTest < ActiveSupport::TestCase
   end
 
   context "feature flag" do
-    should "use the OSV advisories flag" do
-      assert_equal FeatureFlag::OSV_ADVISORIES, Advisory::OSV::Fetcher.feature_flag
-    end
-
-    should "be disabled by default" do
+    should "follow Advisory::OSV" do
       refute_predicate Advisory::OSV::Fetcher, :enabled?
     end
 
-    should "be enabled when the flag is on" do
+    should "be enabled when the advisory source is enabled" do
       with_feature FeatureFlag::OSV_ADVISORIES do
         assert_predicate Advisory::OSV::Fetcher, :enabled?
       end
