@@ -181,9 +181,7 @@ class Pusher
       verification_input.bundle = bundle
       input = Sigstore::VerificationInput.new(verification_input)
       sigstore_verification = sigstore_verifier.verify(input:, policy:, offline: true)
-      logger.info do
-        { message: "verifying sigstore bundles", sigstore_verification: sigstore_verification, policy: policy }
-      end
+      logger.info { sigstore_verification_log(sigstore_verification, policy) }
 
       return notify("Attestation verification failed:\n#{sigstore_verification.reason}", 422) unless sigstore_verification.verified?
       return notify("Must provide at least v0.3 bundles", 422) unless input.sbundle.bundle_type >= Sigstore::BundleType::BUNDLE_0_3
@@ -201,6 +199,14 @@ class Pusher
   end
 
   private
+
+  def sigstore_verification_log(verification, policy)
+    log = { message: "verifying sigstore bundles", sigstore_verification: verification, policy: policy }
+    if verification.respond_to?(:code) && verification.respond_to?(:internal_context)
+      log[:diagnostic] = verification.internal_context.merge(code: verification.code)
+    end
+    log
+  end
 
   def after_write
     GemCachePurger.call(rubygem.name)

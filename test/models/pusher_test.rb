@@ -464,11 +464,38 @@ class PusherTest < ActiveSupport::TestCase
       @api_key.owner = create(:oidc_trusted_publisher_github_action)
       @api_key.oidc_id_token = create(:oidc_id_token)
 
+      diagnostic = OIDC::TrustedPublisher::GitHubAction::SigstorePolicy::DiagnosticFailure.new(
+        code: "attestation.build_signer_uri_mismatch",
+        public_message: "The attestation was created by a different GitHub Actions workflow.",
+        internal_context: {
+          expected_build_signer_uri_prefix: "https://github.com/example/gem/.github/workflows/release.yml@",
+          actual_build_signer_uri: "https://github.com/example/gem/.github/workflows/other.yml@refs/heads/main"
+        }
+      )
+      captured_logger = Class.new do
+        attr_reader :payloads
+
+        def initialize
+          @payloads = []
+        end
+
+        def info
+          @payloads << yield
+        end
+      end.new
+      @cutter.stubs(:logger).returns(captured_logger)
       @cutter.send(:sigstore_verifier).expects(:verify).with(input: anything, policy: anything, offline: true)
-        .returns Sigstore::VerificationFailure.new("Attestation failed to validate")
+        .returns diagnostic
 
       refute @cutter.verify_sigstore
-      assert_equal "Attestation verification failed:\nAttestation failed to validate", @cutter.message
+      assert_equal(
+        "Attestation verification failed:\nThe attestation was created by a different GitHub Actions workflow.",
+        @cutter.message
+      )
+      assert_equal(
+        diagnostic.internal_context.merge(code: diagnostic.code),
+        captured_logger.payloads.first[:diagnostic]
+      )
     end
   end
 end

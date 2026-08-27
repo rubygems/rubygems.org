@@ -492,6 +492,68 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
       github_actions_source_repository_ref: "refs/heads/main")
     cert = Sigstore::Internal::X509::Certificate.new(openssl_cert)
 
-    refute_predicate publisher.to_sigstore_identity_policy.verify(cert), :verified?
+    result = publisher.to_sigstore_identity_policy.verify(cert)
+
+    refute_predicate result, :verified?
+    assert_equal "attestation.build_signer_uri_mismatch", result.code
+    assert_equal(
+      {
+        expected_build_signer_uri_prefix: "https://github.com/shared-org/shared-workflows/.github/workflows/release.yml@",
+        actual_build_signer_uri: "https://github.com/#{workflow_ref}"
+      },
+      result.internal_context
+    )
+    assert_equal <<~MSG.chomp, result.public_message
+      The attestation was created by a different GitHub Actions workflow.
+      Expected workflow: https://github.com/shared-org/shared-workflows/.github/workflows/release.yml@<ref>
+      Actual workflow: "https://github.com/#{workflow_ref}"
+      Check the workflow repository and filename in the trusted publisher configuration.
+    MSG
+  end
+
+  test "#to_sigstore_identity_policy diagnoses a missing Build Signer URI" do
+    publisher = create(:oidc_trusted_publisher_github_action,
+      repository_owner: "sigstore",
+      repository_name: "sigstore-ruby",
+      workflow_filename: "release.yml")
+
+    [nil, ""].each do |build_signer_uri|
+      openssl_cert = build(:x509_certificate, :key_usage, :github_actions_fulcio,
+        github_actions_build_signer_uri: build_signer_uri)
+      cert = Sigstore::Internal::X509::Certificate.new(openssl_cert)
+      result = publisher.to_sigstore_identity_policy.verify(cert)
+
+      refute_predicate result, :verified?
+      assert_equal "attestation.build_signer_uri_missing", result.code
+      assert_equal(
+        {
+          expected_build_signer_uri_prefix: "https://github.com/sigstore/sigstore-ruby/.github/workflows/release.yml@",
+          actual_build_signer_uri: build_signer_uri
+        },
+        result.internal_context
+      )
+      assert_equal(
+        "The certificate is missing the GitHub Actions Build Signer URI. " \
+        "Generate a new attestation in the configured publishing workflow and retry.",
+        result.public_message
+      )
+    end
+  end
+
+  test "#to_sigstore_identity_policy safely displays an invalid Build Signer URI" do
+    publisher = create(:oidc_trusted_publisher_github_action,
+      repository_owner: "sigstore",
+      repository_name: "sigstore-ruby",
+      workflow_filename: "release.yml")
+    build_signer_uri = "https://github.com/attacker/workflow\n#{'a' * 600}"
+    openssl_cert = build(:x509_certificate, :key_usage, :github_actions_fulcio,
+      github_actions_build_signer_uri: build_signer_uri)
+    cert = Sigstore::Internal::X509::Certificate.new(openssl_cert)
+
+    result = publisher.to_sigstore_identity_policy.verify(cert)
+
+    assert_equal 512, result.internal_context.fetch(:actual_build_signer_uri).length
+    assert_includes result.public_message, '"https://github.com/attacker/workflow\\n'
+    refute_includes result.public_message, "Actual workflow: \"https://github.com/attacker/workflow\n"
   end
 end
