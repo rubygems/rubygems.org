@@ -13,6 +13,7 @@ FactoryBot.define do
       extension_factory { OpenSSL::X509::ExtensionFactory.new }
       github_actions_job_workflow_ref { "sigstore/sigstore-ruby/.github/workflows/release.yml@refs/tags/v0.1.1" }
       github_actions_source_repository_ref { "refs/tags/v0.1.1" }
+      github_actions_build_signer_uri { "https://github.com/#{github_actions_job_workflow_ref}" }
     end
 
     trait :key_usage do
@@ -47,7 +48,7 @@ FactoryBot.define do
             "1.3.6.1.4.1.57264.1.8" =>
                 "https://token.actions.githubusercontent.com",
             "1.3.6.1.4.1.57264.1.9" =>
-                "https://github.com/#{ctx.github_actions_job_workflow_ref}",
+                ctx.github_actions_build_signer_uri,
             "1.3.6.1.4.1.57264.1.10" =>
                 ".(f106999a2210a9a17b32b172f95518859a85ffed",
             "1.3.6.1.4.1.57264.1.11" =>
@@ -74,7 +75,7 @@ FactoryBot.define do
                 ".Mhttps://github.com/sigstore/sigstore-ruby/actions/runs/11446323187/attempts/1",
             "1.3.6.1.4.1.57264.1.22" =>
                 "..public"
-        }.each do |oid, value|
+        }.compact.each do |oid, value|
           cert.add_extension(ctx.extension_factory.create_ext(oid, "ASN1:UTF8String:#{value}", false))
         end
       end

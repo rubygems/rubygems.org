@@ -144,6 +144,18 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
   end
 
   class SigstorePolicy
+    class DiagnosticFailure < Sigstore::VerificationFailure
+      attr_reader :code, :internal_context
+
+      alias public_message reason
+
+      def initialize(code:, public_message:, internal_context:)
+        @code = code
+        @internal_context = internal_context
+        super(public_message)
+      end
+    end
+
     def initialize(trusted_publisher)
       @trusted_publisher = trusted_publisher
     end
@@ -151,16 +163,48 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
     def verify(cert)
       build_signer_uri = cert.openssl.find_extension("1.3.6.1.4.1.57264.1.9")&.value_der&.then { OpenSSL::ASN1.decode(it).value }
       expected_prefix = "https://github.com/#{@trusted_publisher.workflow_repository}/#{@trusted_publisher.workflow_slug}@"
-      unless build_signer_uri&.start_with?(expected_prefix) && build_signer_uri != expected_prefix
-        return Sigstore::VerificationFailure.new(
-          "Certificate's Build Signer URI does not match #{expected_prefix}"
-        )
+
+      return missing_build_signer_uri_failure(expected_prefix, build_signer_uri) if build_signer_uri.blank?
+
+      unless build_signer_uri.start_with?(expected_prefix) && build_signer_uri != expected_prefix
+        return build_signer_uri_mismatch_failure(expected_prefix, build_signer_uri)
       end
 
       Sigstore::Policy::Identity.new(
         identity: build_signer_uri,
         issuer: OIDC::Provider::GITHUB_ACTIONS_ISSUER
       ).verify(cert)
+    end
+
+    private
+
+    def missing_build_signer_uri_failure(expected_prefix, build_signer_uri)
+      DiagnosticFailure.new(
+        code: "attestation.build_signer_uri_missing",
+        public_message: "The certificate is missing the GitHub Actions Build Signer URI. " \
+                        "Generate a new attestation in the configured publishing workflow and retry.",
+        internal_context: {
+          expected_build_signer_uri_prefix: expected_prefix,
+          actual_build_signer_uri: build_signer_uri
+        }
+      )
+    end
+
+    def build_signer_uri_mismatch_failure(expected_prefix, build_signer_uri)
+      safe_build_signer_uri = build_signer_uri.scrub.first(512)
+      DiagnosticFailure.new(
+        code: "attestation.build_signer_uri_mismatch",
+        public_message: <<~MSG.chomp,
+          The attestation was created by a different GitHub Actions workflow.
+          Expected workflow: #{expected_prefix}<ref>
+          Actual workflow: #{safe_build_signer_uri.inspect}
+          Check the workflow repository and filename in the trusted publisher configuration.
+        MSG
+        internal_context: {
+          expected_build_signer_uri_prefix: expected_prefix,
+          actual_build_signer_uri: safe_build_signer_uri
+        }
+      )
     end
   end
 
