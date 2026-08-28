@@ -30,6 +30,12 @@ ActiveSupport.on_load(:action_controller) do
       url: request.url
     }
 
+    identity = {
+      user_id: Current.user&.id,
+      api_key_id: @api_key.is_a?(ApiKey) ? @api_key.id : nil
+    }.compact
+    payload[:identity] = identity if identity.any?
+
     method_and_path = [request.method, request.path].compact_blank
     method_and_path_string = method_and_path.empty? ? ' ' : " #{method_and_path.join(' ')} "
 

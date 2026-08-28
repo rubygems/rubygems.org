@@ -63,4 +63,43 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
 
     assert_equal "[404] GET /gems/definitely-not-a-real-gem (RubygemsController#show)", payload[:message]
   end
+
+  test "anonymous request logs no identity" do
+    payload = capture_request_payload { get "/" }
+
+    refute payload.key?(:identity)
+  end
+
+  test "signed-in web request logs the user id only" do
+    user = create(:user, remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
+    post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    payload = capture_request_payload { get dashboard_path }
+
+    assert_equal({ user_id: user.id }, payload[:identity])
+  end
+
+  test "API request logs the user id and api key id" do
+    api_key = create(:api_key, key: "12345", scopes: %w[index_rubygems])
+
+    payload = capture_request_payload do
+      get api_v1_rubygems_path(format: :json), headers: { "HTTP_AUTHORIZATION" => "12345" }
+    end
+
+    assert_response :success
+    assert_equal({ user_id: api_key.user.id, api_key_id: api_key.id }, payload[:identity])
+  end
+
+  test "API request with a trusted-publisher key logs the api key id without a user id" do
+    api_key = create(:api_key, :trusted_publisher, key: "tp-key-12345")
+
+    payload = capture_request_payload do
+      # The response itself may be a 403 (trusted-publisher keys have narrow
+      # scopes); the payload is built after authentication either way.
+      get api_v1_rubygems_path(format: :json), headers: { "HTTP_AUTHORIZATION" => "tp-key-12345" }
+    end
+
+    assert_nil payload[:identity][:user_id]
+    assert_equal api_key.id, payload[:identity][:api_key_id]
+  end
 end
