@@ -1135,7 +1135,7 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
-  context "with a very long authors string." do
+  context "with a very long authors string" do
     should "create without error" do
       version =
         create(:version,
