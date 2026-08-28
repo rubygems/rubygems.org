@@ -77,6 +77,17 @@ Note: Docker compose does not run the rubygems.org application itself.
 
 Follow the instructions below on how to install Bundler and setup the database.
 
+#### Environment (DevContainer)
+
+If you want to run Ruby, Rails, and the test suite inside Docker instead of your host machine,
+you can use this repository's DevContainer configuration.
+
+* Install Docker. See instructions at https://docs.docker.com/get-docker/
+* Install Visual Studio Code and the "Dev Containers" extension.
+* Open this repository in VS Code and run "Dev Containers: Reopen in Container".
+* Wait for the container setup to complete (`bin/setup` runs automatically).
+* Run tests from a terminal in the container, for example: `bin/rails test:all`
+
 #### Environment (OS X)
 
 * Install OpenSearch:
