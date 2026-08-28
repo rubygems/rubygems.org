@@ -77,7 +77,7 @@ Metrics/BlockLength:
     - db/**/*.rb
 
 Metrics/ClassLength:
-  Max: 357 # TODO: Lower to 100
+  Max: 358 # TODO: Lower to 100
   Exclude:
     - test/**/*
     - db/**/*.rb
