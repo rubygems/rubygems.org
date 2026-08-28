@@ -14,7 +14,18 @@ ActiveSupport.on_load(:action_controller) do
       }
     )
     super
-    payload[:rails] = {
+
+    payload[:rails] = log_payload_rails(payload)
+    payload[:http] = log_payload_http
+
+    identity = log_payload_identity
+    payload[:identity] = identity if identity.any?
+
+    payload[:message] ||= log_payload_message(payload)
+  end
+
+  def log_payload_rails(payload)
+    {
       controller: payload.fetch(:controller),
       action: payload.fetch(:action),
       params: request.filtered_parameters.except('controller', 'action', 'format', 'utf8'),
@@ -22,24 +33,32 @@ ActiveSupport.on_load(:action_controller) do
       view_time_ms: payload.fetch(:view_runtime, 0.0),
       db_time_ms: payload.fetch(:db_runtime, 0.0)
     }
-    payload[:http] = {
+  end
+
+  def log_payload_http
+    {
       request_id: request.uuid,
       method: request.method,
       status_code: response.status,
       useragent: request.user_agent,
       url: request.url
     }
+  end
 
-    identity = {
+  def log_payload_identity
+    {
       user_id: Current.user&.id,
       api_key_id: @api_key.is_a?(ApiKey) ? @api_key.id : nil
     }.compact
-    payload[:identity] = identity if identity.any?
+  end
 
-    method_and_path = [request.method, request.path].compact_blank
-    method_and_path_string = method_and_path.empty? ? ' ' : " #{method_and_path.join(' ')} "
+  # e.g. "[200] GET /gems/rails (RubygemsController#show)"
+  def log_payload_message(payload)
+    status = "[#{response.status}]"
+    method_and_path = [request.method, request.path].compact_blank.join(' ').presence
+    controller_action = "(#{payload.fetch(:controller)}##{payload.fetch(:action)})"
 
-    payload[:message] ||= "[#{response.status}]#{method_and_path_string}(#{payload.fetch(:controller)}##{payload.fetch(:action)})"
+    [status, method_and_path, controller_action].compact.join(' ')
   end
 end
 
