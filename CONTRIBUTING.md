@@ -20,9 +20,7 @@ Once you’re ready:
 
 If you’re looking for things to hack on, please check
 [GitHub Issues](https://github.com/rubygems/rubygems.org/issues). If you’ve
-found bugs or have feature ideas don’t be afraid to pipe up and ask the
-[mailing list](https://groups.google.com/group/rubygems-org) or IRC channel
-(`#rubygems` on `irc.freenode.net`) about them.
+found bugs or have feature ideas, use [GitHub Discussions](https://github.com/rubygems/rubygems.org/discussions).
 
 Acceptance
 ----------
