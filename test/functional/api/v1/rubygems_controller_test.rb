@@ -141,7 +141,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       @request.env["HTTP_ORIGIN"] = "https://pages.github.com/"
       get :show, params: { id: "ZenTest" }, format: "json"
 
-      assert_equal 200, @response.status
+      assert_response :ok
       assert_equal "*", @response.headers["Access-Control-Allow-Origin"]
       assert_equal "GET", @response.headers["Access-Control-Allow-Methods"]
       assert_equal "1728000", @response.headers["Access-Control-Max-Age"]
@@ -151,7 +151,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       @request.env["HTTP_ORIGIN"] = "https://pages.github.com/"
       process :show, method: :options, params: { id: "ZenTest" }
 
-      assert_equal 200, @response.status
+      assert_response :ok
       assert_equal "*", @response.headers["Access-Control-Allow-Origin"]
       assert_equal "GET", @response.headers["Access-Control-Allow-Methods"]
       assert_equal "X-Requested-With, X-Prototype-Version", @response.headers["Access-Control-Allow-Headers"]

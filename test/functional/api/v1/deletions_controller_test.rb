@@ -395,7 +395,7 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
           end
 
           should "only render one forbidden response" do
-            assert_equal 403, @response.status
+            assert_response :forbidden
           end
         end
       end
