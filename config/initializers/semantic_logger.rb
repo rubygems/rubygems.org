@@ -26,7 +26,6 @@ ActiveSupport.on_load(:action_controller) do
       request_id: request.uuid,
       method: request.method,
       status_code: response.status,
-      response_time_ms: request.url,
       useragent: request.user_agent,
       url: request.url
     }
