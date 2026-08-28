@@ -977,9 +977,7 @@ class RubygemTest < ActiveSupport::TestCase
       end
 
       should "save the gem" do
-        assert_nothing_raised do
-          @rubygem.update_attributes_from_gem_specification!(@version, @specification)
-        end
+        @rubygem.update_attributes_from_gem_specification!(@version, @specification)
 
         refute_predicate @rubygem, :new_record?
         refute_predicate @version, :new_record?

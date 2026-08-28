@@ -1137,7 +1137,7 @@ class VersionTest < ActiveSupport::TestCase
 
   context "with a very long authors string." do
     should "create without error" do
-      assert_nothing_raised do
+      version =
         create(:version,
           authors: [
             "Fbdoorman: David Pelaez",
@@ -1161,7 +1161,8 @@ class VersionTest < ActiveSupport::TestCase
             "Jon Yurek",
             "Chad Pytel"
           ])
-      end
+
+      assert_predicate version, :persisted?
     end
   end
 

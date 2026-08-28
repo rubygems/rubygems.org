@@ -45,7 +45,7 @@ class YankRubygemsForUserJobTest < ActiveJob::TestCase
   test "handles user with no rubygems" do
     user = create(:user)
 
-    assert_nothing_raised do
+    assert_no_difference -> { Deletion.count } do
       YankRubygemsForUserJob.perform_now(user: user)
     end
   end

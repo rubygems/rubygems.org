@@ -155,8 +155,7 @@ class GemInfoTest < ActiveSupport::TestCase
     should "recompute when v2 cache deserialization fails" do
       Rails.cache.expects(:read).with("info_v2/example").raises(TypeError, "struct size differs")
 
-      info = nil
-      assert_nothing_raised { info = GemInfo.new("example").compact_index_info }
+      info = GemInfo.new("example").compact_index_info
 
       assert_equal @expected_info, info
     end
