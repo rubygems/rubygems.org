@@ -228,6 +228,23 @@ class RubygemFsTest < ActiveSupport::TestCase
         assert_empty(@fs.restore("foo").metadata)
       end
     end
+
+    context "#reconcile_permissions" do
+      should "set the key ACL to public-read" do
+        params = nil
+        @s3.stub_responses(:put_object_acl, lambda { |context|
+          params = context.params.slice(:bucket, :key, :acl)
+          {}
+        })
+
+        @fs.reconcile_permissions("gems/example-1.0.0.gem")
+
+        assert_equal(
+          { bucket: "test.s3.rubygems.org", key: "gems/example-1.0.0.gem", acl: "public-read" },
+          params
+        )
+      end
+    end
   end
 
   context "local filesystem" do
