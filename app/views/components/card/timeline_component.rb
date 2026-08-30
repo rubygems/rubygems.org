@@ -47,6 +47,13 @@ class Card::TimelineComponent < ApplicationComponent
         end
         span { "GitHub Actions" }
       end
+    when OIDC::TrustedPublisher::GitLab
+      div(class: "flex items-center") do
+        span(class: "w-6 h-6 inline-block mr-2 rounded") do
+          image_tag "gitlab_icon.png", width: 48, height: 48, theme: :light, alt: "GitLab", title: api_key_owner.name
+        end
+        span { "GitLab CI" }
+      end
     else
       raise ArgumentError, "unknown api_key_owner type #{api_key_owner.class}"
     end

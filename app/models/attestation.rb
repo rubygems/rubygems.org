@@ -23,7 +23,7 @@ class Attestation < ApplicationRecord
     false
   end
 
-  def display_data # rubocop:disable Metrics/MethodLength
+  def display_data
     bundle = sigstore_bundle
     leaf_certificate = bundle.leaf_certificate
 
@@ -38,28 +38,51 @@ class Attestation < ApplicationRecord
                 end]
     end
 
-    repo = extensions["1.3.6.1.4.1.57264.1.5"]
-    commit = extensions["1.3.6.1.4.1.57264.1.3"]
-    ref  =  extensions["1.3.6.1.4.1.57264.1.14"]
-    san  =  extensions["subjectAltName"]
-    build_summary_url = extensions["1.3.6.1.4.1.57264.1.21"]
-    build_file_url = build_summary_url.sub(%r{attempts/\d+\z}, "workflow")
-
     case issuer
     when "https://token.actions.githubusercontent.com"
-      san =~ %r{\AURI:https://github\.com/#{Regexp.escape(repo)}/(.+)@#{Regexp.escape(ref)}\z}
-      build_file_string = ::Regexp.last_match(1)
-      {
-        ci_platform: "GitHub Actions",
-        source_commit_string: "#{repo}@#{commit[0, 7]}",
-        source_commit_url: "https://github.com/#{repo}/commit/#{commit}",
-        build_file_string:, build_file_url:,
-        build_summary_url:
-      }
+      github_actions_display_data(extensions)
+    when "https://gitlab.com"
+      gitlab_display_data(extensions)
     else
       raise "Unhandled issuer: #{issuer.inspect}"
     end.merge(
       log_index:
     )
+  end
+
+  private
+
+  def github_actions_display_data(extensions)
+    repo = extensions["1.3.6.1.4.1.57264.1.5"]
+    commit = extensions["1.3.6.1.4.1.57264.1.3"]
+    ref = extensions["1.3.6.1.4.1.57264.1.14"]
+    build_summary_url = extensions["1.3.6.1.4.1.57264.1.21"]
+    build_file_url = build_summary_url.sub(%r{attempts/\d+\z}, "workflow")
+    extensions["subjectAltName"] =~ %r{\AURI:https://github\.com/#{Regexp.escape(repo)}/(.+)@#{Regexp.escape(ref)}\z}
+    build_file_string = ::Regexp.last_match(1)
+    {
+      ci_platform: "GitHub Actions",
+      source_commit_string: "#{repo}@#{commit[0, 7]}",
+      source_commit_url: "https://github.com/#{repo}/commit/#{commit}",
+      build_file_string:, build_file_url:,
+      build_summary_url:
+    }
+  end
+
+  def gitlab_display_data(extensions)
+    repo = extensions["1.3.6.1.4.1.57264.1.12"].delete_prefix("https://gitlab.com/")
+    commit = extensions["1.3.6.1.4.1.57264.1.13"]
+    ref = extensions["1.3.6.1.4.1.57264.1.14"]
+    build_summary_url = extensions["1.3.6.1.4.1.57264.1.21"]
+    extensions["subjectAltName"] =~ %r{\AURI:https://gitlab\.com/#{Regexp.escape(repo)}//(.+)@#{Regexp.escape(ref)}\z}
+    build_file_string = ::Regexp.last_match(1)
+    build_file_url = "https://gitlab.com/#{repo}/-/blob/#{commit}/#{build_file_string}"
+    {
+      ci_platform: "GitLab CI",
+      source_commit_string: "#{repo}@#{commit[0, 7]}",
+      source_commit_url: "https://gitlab.com/#{repo}/-/commit/#{commit}",
+      build_file_string:, build_file_url:,
+      build_summary_url:
+    }
   end
 end

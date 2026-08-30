@@ -80,6 +80,52 @@ FactoryBot.define do
       end
     end
 
+    trait :gitlab_fulcio do
+      after(:build) do |cert, ctx|
+        # Add subjectAltName with the CI config URI (required for policy extraction)
+        cert.add_extension(ctx.extension_factory.create_ext(
+                             "subjectAltName",
+          "URI:https://gitlab.com/my-group/my-project//.gitlab-ci.yml@refs/tags/v0.1.0",
+          false
+                           ))
+
+        {
+          "1.3.6.1.4.1.57264.1.8" =>
+              "https://gitlab.com",
+          "1.3.6.1.4.1.57264.1.9" =>
+              "https://gitlab.com/my-group/my-project//.gitlab-ci.yml@refs/tags/v0.1.0",
+          "1.3.6.1.4.1.57264.1.10" =>
+              "7c2dc26bb549c2d5bc14f5a7e0e9b762dad60bc8",
+          "1.3.6.1.4.1.57264.1.11" =>
+              "gitlab-hosted",
+          "1.3.6.1.4.1.57264.1.12" =>
+              "https://gitlab.com/my-group/my-project",
+          "1.3.6.1.4.1.57264.1.13" =>
+              "7c2dc26bb549c2d5bc14f5a7e0e9b762dad60bc8",
+          "1.3.6.1.4.1.57264.1.14" =>
+              "refs/tags/v0.1.0",
+          "1.3.6.1.4.1.57264.1.15" =>
+              "85578356",
+          "1.3.6.1.4.1.57264.1.16" =>
+              "https://gitlab.com/my-group",
+          "1.3.6.1.4.1.57264.1.17" =>
+              "94208",
+          "1.3.6.1.4.1.57264.1.18" =>
+              "https://gitlab.com/my-group/my-project//.gitlab-ci.yml@refs/tags/v0.1.0",
+          "1.3.6.1.4.1.57264.1.19" =>
+              "7c2dc26bb549c2d5bc14f5a7e0e9b762dad60bc8",
+          "1.3.6.1.4.1.57264.1.20" =>
+              "push",
+          "1.3.6.1.4.1.57264.1.21" =>
+              "https://gitlab.com/my-group/my-project/-/jobs/16001544219",
+          "1.3.6.1.4.1.57264.1.22" =>
+              "public"
+        }.each do |oid, value|
+          cert.add_extension(ctx.extension_factory.create_ext(oid, "ASN1:UTF8String:#{value}", false))
+        end
+      end
+    end
+
     after(:build) do |cert, ctx|
       cert.sign(ctx.public_key, OpenSSL::Digest.new("SHA256"))
     end

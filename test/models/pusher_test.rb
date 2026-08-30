@@ -569,6 +569,45 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal "Pushing with an attestation requires trusted publishing", @cutter.message
     end
 
+    should "not push gem if gitlab attestation fails to validate" do
+      @cutter.stubs(:attestations).returns(
+        [
+          "media_type" => Sigstore::BundleType::BUNDLE_0_3.media_type,
+          "verification_material" => {
+            "certificate" => {
+              "rawBytes" => [build(:x509_certificate, :key_usage).to_der].pack("m0")
+            },
+            "tlogEntries" => [
+              "inclusionProof" => {
+                "checkpoint" => { "envelope" => "" }
+              },
+              "canonicalizedBody" => [
+                JSON.dump(
+                  spec: {
+                    signature: {
+                      content: { publicKey: { content: [""].pack("m0") } }
+                    },
+                    kind: "hashedrekord",
+                    apiVersion: "0.0.1"
+                  }
+                )
+              ].pack("m0")
+            ]
+          },
+          "message_signature" => {}
+        ]
+      )
+      @api_key.owner = create(:oidc_trusted_publisher_gitlab)
+
+      @cutter.send(:sigstore_verifier).expects(:verify)
+        .with(input: anything, policy: instance_of(OIDC::TrustedPublisher::GitLab::SigstorePolicy), offline: true)
+        .returns(Sigstore::VerificationFailure.new("Attestation failed to validate"))
+
+      refute @cutter.verify_sigstore
+      assert_equal "Attestation verification failed:\nAttestation failed to validate", @cutter.message
+      assert_equal 422, @cutter.code
+    end
+
     should "not push gem if attestation fails to validate" do
       @cutter.stubs(:attestations).returns(
         [
