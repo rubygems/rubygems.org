@@ -175,7 +175,7 @@ GEM
       safely_block (>= 1)
     bootsnap (1.25.0)
       msgpack (~> 1.5)
-    brakeman (8.0.5)
+    brakeman (8.0.6)
       racc
     browser (6.2.0)
     builder (3.3.0)
@@ -221,14 +221,14 @@ GEM
       ssrf_filter (~> 1.5)
     csv (3.3.6)
     dalli (3.2.8)
-    datadog (2.40.0)
+    datadog (2.41.0)
       cgi
       datadog-ruby_core_source (~> 3.5, >= 3.5.4)
-      libdatadog (~> 36.0.0.1.0)
+      libdatadog (~> 40.0.0.1.0)
       libddwaf (~> 1.30.0.0.0)
       logger
       msgpack
-    datadog-ruby_core_source (3.5.4)
+    datadog-ruby_core_source (3.5.5)
     date (3.5.1)
     debug (1.11.1)
       irb (~> 1.10)
@@ -420,10 +420,10 @@ GEM
       letter_opener (~> 1.9)
       railties (>= 6.1)
       rexml
-    libdatadog (36.0.0.1.0)
-    libdatadog (36.0.0.1.0-aarch64-linux)
-    libdatadog (36.0.0.1.0-arm64-darwin)
-    libdatadog (36.0.0.1.0-x86_64-linux)
+    libdatadog (40.0.0.1.0)
+    libdatadog (40.0.0.1.0-aarch64-linux)
+    libdatadog (40.0.0.1.0-arm64-darwin)
+    libdatadog (40.0.0.1.0-x86_64-linux)
     libddwaf (1.30.0.0.2)
       ffi (~> 1.0)
     libddwaf (1.30.0.0.2-aarch64-linux)
@@ -591,7 +591,7 @@ GEM
     pg (1.6.3-x86_64-linux-musl)
     pg_query (6.2.2)
       google-protobuf (>= 3.25.3)
-    pghero (4.0.0)
+    pghero (4.0.1)
       activerecord (>= 7.2)
     phlex (2.4.1)
       refract (~> 1.0)
@@ -635,7 +635,7 @@ GEM
     pwned (2.4.1)
     raabro (1.4.0)
     racc (1.8.1)
-    rack (3.2.6)
+    rack (3.2.7)
     rack-attack (6.8.0)
       rack (>= 1.0, < 4)
     rack-oauth2 (2.3.0)
@@ -770,15 +770,15 @@ GEM
       lint_roller (~> 1.1)
       rubocop (>= 1.75.0, < 2.0)
       rubocop-ast (>= 1.38.0, < 2.0)
-    rubocop-performance (1.26.1)
+    rubocop-performance (1.27.0)
       lint_roller (~> 1.1)
-      rubocop (>= 1.75.0, < 2.0)
+      rubocop (>= 1.89.0, < 2.0)
       rubocop-ast (>= 1.47.1, < 2.0)
-    rubocop-rails (2.36.0)
+    rubocop-rails (2.37.0)
       activesupport (>= 4.2.0)
       lint_roller (~> 1.1)
       rack (>= 1.1)
-      rubocop (>= 1.75.0, < 2.0)
+      rubocop (>= 1.89.0, < 2.0)
       rubocop-ast (>= 1.44.0, < 2.0)
     ruby-magic (0.6.0)
       mini_portile2 (~> 2.8)
@@ -812,7 +812,7 @@ GEM
       net-http
       protobug_sigstore_protos (~> 0.1.0)
       uri
-    simplecov (1.1.0)
+    simplecov (1.1.1)
     simplecov-cobertura (4.0.0)
       rexml
       simplecov (~> 1.0)
@@ -820,7 +820,7 @@ GEM
       hashie (>= 0.1.0, < 6)
       version_gem (~> 1.1, >= 1.1.14)
     ssrf_filter (1.5.0)
-    statsd-instrument (3.11.1)
+    statsd-instrument (3.11.2)
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
     strong_migrations (2.8.0)
@@ -930,7 +930,7 @@ DEPENDENCIES
   clearance (~> 2.12)
   csv (~> 3.3)
   dalli (~> 3.2)
-  datadog (~> 2.40)
+  datadog (~> 2.41)
   debug (~> 1.0)
   derailed_benchmarks (~> 2.2)
   discard (~> 2.0)
@@ -1009,8 +1009,8 @@ DEPENDENCIES
   rubocop-capybara (~> 3.0)
   rubocop-factory_bot (~> 2.28)
   rubocop-minitest (~> 0.40)
-  rubocop-performance (~> 1.26)
-  rubocop-rails (~> 2.36)
+  rubocop-performance (~> 1.27)
+  rubocop-rails (~> 2.37)
   ruby-magic (~> 0.6)
   searchkick (~> 6.1)
   shoryuken (~> 7.0)
@@ -1079,7 +1079,7 @@ CHECKSUMS
   bindata (2.5.1) sha256=53186a1ec2da943d4cb413583d680644eb810aacbf8902497aac8f191fad9e58
   blazer (3.5.1) sha256=50ac3ed5d22e9368cd4b7d4971b302dfb7dec5570f192cf70df420d7cd283fbe
   bootsnap (1.25.0) sha256=41059e7d0f9cb4023a33465d095f64b913fc9d1b808d6524c307da945fbcffcf
-  brakeman (8.0.5) sha256=03735f9690d3fd4b32d66aacbf0a6d15a84266bdd06b32c05c8ecc8f6021d2be
+  brakeman (8.0.6) sha256=759cc69341115e6c2dcd47b6fd8649a0b9bd540e3585ac8a0a94e31c66fee386
   browser (6.2.0) sha256=281d5295788825c9396427c292c2d2be0a5c91875c93c390fde6e5d61a5ace2d
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
   capybara (3.40.0) sha256=42dba720578ea1ca65fd7a41d163dd368502c191804558f6e0f71b391054aeef
@@ -1099,8 +1099,8 @@ CHECKSUMS
   css_parser (3.0.0) sha256=eaf0e9283fd581d06e815235ceef4f0910c0b394c606355dbc69f93e84443885
   csv (3.3.6) sha256=aba61e7e507a66f03d45cb1f3c4b6359861c3504038b422962875dce099e4456
   dalli (3.2.8) sha256=2e63595084d91fae2655514a02c5d4fc0f16c0799893794abe23bf628bebaaa5
-  datadog (2.40.0) sha256=974fb8ef9e54e4703d310c7de500bf2feafb2fd6c22bd47cbfc27199425ccab5
-  datadog-ruby_core_source (3.5.4) sha256=65b9b1495ec3452bb9775e379e997c22836df333e571dbfb9a13cd810a4ec043
+  datadog (2.41.0) sha256=bd73a5704b7f63299e0b53105fdec821f8146d40b9785e62982d77773f0a07ff
+  datadog-ruby_core_source (3.5.5) sha256=5df55ea06feda22e5d4b7db62a70f19a86660bd06d3a3ff739d2f549eaff45e6
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
   debug (1.11.1) sha256=2e0b0ac6119f2207a6f8ac7d4a73ca8eb4e440f64da0a3136c30343146e952b6
   derailed_benchmarks (2.2.1) sha256=654280664fded41c9cd8fc27fc0fcfaf096023afab90eb4ac1185ba70c5d4439
@@ -1181,10 +1181,10 @@ CHECKSUMS
   launchy (3.1.1) sha256=72b847b5cc961589dde2c395af0108c86ff0119f42d4648d25b5440ebb10059e
   letter_opener (1.10.0) sha256=2ff33f2e3b5c3c26d1959be54b395c086ca6d44826e8bf41a14ff96fdf1bdbb2
   letter_opener_web (3.0.0) sha256=3f391efe0e8b9b24becfab5537dfb17a5cf5eb532038f947daab58cb4b749860
-  libdatadog (36.0.0.1.0) sha256=664f53cff1d1362d46d0043e8cb610dc0bbf65e51e0358344733ac12e851126c
-  libdatadog (36.0.0.1.0-aarch64-linux) sha256=104cb5264f1b7b592d03d84e09da4615506b8e7567eb7edf52cdbb8ec8a17778
-  libdatadog (36.0.0.1.0-arm64-darwin) sha256=8fec056fc39674da51946776c7f59fafe32db2fc2939843a09d79b199494d655
-  libdatadog (36.0.0.1.0-x86_64-linux) sha256=08bdbd2dd66195f9f208984434e51871b26075b9d1ca75eac8e8eb22f9c6ccc6
+  libdatadog (40.0.0.1.0) sha256=47047bb378a5816ec8ce0778e9400087517d6c13ff9fdf23d264e14402799b64
+  libdatadog (40.0.0.1.0-aarch64-linux) sha256=9fe5488133f87a72f1c161121eb407f001b385ce21192c799d2b1bc9e0f80096
+  libdatadog (40.0.0.1.0-arm64-darwin) sha256=afef1077324f4a3614a3a3c4d89aca5298e29a0ae502f82bf4771addf500a8a3
+  libdatadog (40.0.0.1.0-x86_64-linux) sha256=60c66f3dd972b2c36d473ce9f0d39b786ba7d369f6fdb4a1d0e9f1ec9959c8e3
   libddwaf (1.30.0.0.2) sha256=f6dd8d70f1925acce795ad0e974b12cb532c958056ac14e497f13d8c1af143d2
   libddwaf (1.30.0.0.2-aarch64-linux) sha256=f4d8498cce66cb30d81f46bb046b11c3a2202e21ca73c9edb80c3a37939a3dc2
   libddwaf (1.30.0.0.2-arm64-darwin) sha256=cbbec7eee8fe7dbdc6c11bf1429fcfc217fad84e822fc6f252cb1c45daf663cc
@@ -1254,7 +1254,7 @@ CHECKSUMS
   pg (1.6.3-x86_64-linux) sha256=5d9e188c8f7a0295d162b7b88a768d8452a899977d44f3274d1946d67920ae8d
   pg (1.6.3-x86_64-linux-musl) sha256=9c9c90d98c72f78eb04c0f55e9618fe55d1512128e411035fe229ff427864009
   pg_query (6.2.2) sha256=316c194160ccfac8af9a7aff55cdc5b2d13bdd8bd8734976c6bddc477e779b6f
-  pghero (4.0.0) sha256=b3fb400ec89a0d2cf35d2524567e55a68d70aaae64b626a0c5a6be5727c024d7
+  pghero (4.0.1) sha256=5fa794616065f030a9efc64b30ce34ee99f9cd7077e4d312322b7df3a9b7fa17
   phlex (2.4.1) sha256=e596717fbfe38b5271840266758779ebe75092e02629f0c170287e6290a70b12
   phlex-rails (2.4.0) sha256=2bcddbd488681acb25753bab1887d3ac150e644244ff8ba307f2171a4d0195f5
   playwright-ruby-client (1.61.0) sha256=1f5c5f0307a2f6bd70b4fa797020a30eef5680caf8d5bd9ccc8d3937f6666e08
@@ -1275,7 +1275,7 @@ CHECKSUMS
   pwned (2.4.1) sha256=e375b45e1cd78aded2c923737f75e09e64bc66582142c144bd85f4ce1fa0955d
   raabro (1.4.0) sha256=d4fa9ff5172391edb92b242eed8be802d1934b1464061ae5e70d80962c5da882
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
-  rack (3.2.6) sha256=5ed78e1f73b2e25679bec7d45ee2d4483cc4146eb1be0264fc4d94cb5ef212c2
+  rack (3.2.7) sha256=93e13e1c24f93556671d85d2d79fa228c3485815c50d7e2f265b5330c6528fb7
   rack-attack (6.8.0) sha256=f2499fdebf85bcc05573a22dff57d24305ac14ec2e4156cd3c28d47cafeeecf2
   rack-oauth2 (2.3.0) sha256=43e02cf73f13886a0a06499603caeec58aeba6eae1fefc4977c9678b7652c632
   rack-protection (4.2.1) sha256=cf6e2842df8c55f5e4d1a4be015e603e19e9bc3a7178bae58949ccbb58558bac
@@ -1315,8 +1315,8 @@ CHECKSUMS
   rubocop-capybara (3.0.0) sha256=7a64655238acda7f8f3c87e37ac825a64c615a79c17c253f1a28270dc3768c4b
   rubocop-factory_bot (2.28.0) sha256=4b17fc02124444173317e131759d195b0d762844a71a29fe8139c1105d92f0cb
   rubocop-minitest (0.40.0) sha256=353c698199115f12151144cf0b5a96f69bb9d77b660cf6536df2c4250c672a9d
-  rubocop-performance (1.26.1) sha256=cd19b936ff196df85829d264b522fd4f98b6c89ad271fa52744a8c11b8f71834
-  rubocop-rails (2.36.0) sha256=105a5f5b0001ff2ef28a3af90da50862464e0775e8d0016d599079c0ca408bdb
+  rubocop-performance (1.27.0) sha256=eeeb1374d062a368ee1c787b70eb0b0cc4b184cb1f8565f424760946146d61ce
+  rubocop-rails (2.37.0) sha256=6e1645add5060e0328f8ddda0d820f55697c591394398bf14bb9dccb62f14b7e
   ruby-magic (0.6.0) sha256=7b2138877b7d23aff812c95564eba6473b74b815ef85beb0eb792e729a2b6101
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   ruby-statistics (4.1.1) sha256=a9923db9bc4b1bda685fac2c47a9fadcc9a93cfd36465f5782a68dfbdf43c171
@@ -1332,11 +1332,11 @@ CHECKSUMS
   shoulda-context (3.0.0.rc1) sha256=6e0d9d52ab798c13bc2b490c8537d4bf30cfd318a1ea839c39a66d1d293c6a1a
   shoulda-matchers (8.0.1) sha256=5dbb46e5765b9da225111b085e0819e8c8a121ff94bba430a153eb1ea2c60288
   sigstore (0.2.3) sha256=fe60a7b15254eaec765388fc7ad54ee6298f48a36bcea06173e91ecd7ce52c7f
-  simplecov (1.1.0) sha256=30f12f31a659c377ef402d5463a50eaf9037035fe1fac3d263cb389682cae1b4
+  simplecov (1.1.1) sha256=25825ef13f0b2e74694d769817dad6ab8e90131dabdaa666e522fea105521e78
   simplecov-cobertura (4.0.0) sha256=e4fb3159b1ecea545b44f5452a8611305323e78ad23eae8aed35924d072e01ea
   snaky_hash (2.0.7) sha256=7d02c70012a3f932e48860cd024577908300c9aa615e0cb9b450aaa749cbcb4d
   ssrf_filter (1.5.0) sha256=e03dcdb9d1730d7f6710532a606b3543df2a448a0293ce04a2d995523c5a97f6
-  statsd-instrument (3.11.1) sha256=47494bf0bc21076f5555d693707cf387f2159b768e47ece6f4a7598fd1f6518f
+  statsd-instrument (3.11.2) sha256=8c1e83ae1dd4038de26714ce3e20ca05dc84ea187b21ab3ecdb126b434d70ad1
   stimulus-rails (1.3.4) sha256=765676ffa1f33af64ce026d26b48e8ffb2e0b94e0f50e9119e11d6107d67cb06
   strong_migrations (2.8.0) sha256=cb9c0f8160e60f3e9c0e76098d57a6f61825b9618e8eb41cebbd1c1079874439
   swd (2.0.3) sha256=4cdbe2a4246c19f093fce22e967ec3ebdd4657d37673672e621bf0c7eb770655
