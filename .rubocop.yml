@@ -164,6 +164,10 @@ Style/ClassAndModuleChildren:
     - lib/gemcutter/middleware/hostess.rb
     - lib/gemcutter/middleware/redirector.rb
 
+Rails/Present:
+  Exclude:
+    - lib/compact_index/*.rb
+
 Rails/ThreeStateBooleanColumn:
   Enabled: false
 
