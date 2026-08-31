@@ -333,16 +333,15 @@ class Organization::Handle
   ].freeze
 
   RESERVED = [
-    *FUTURE_ROUTES,
-    *HELD_FOR_CLAIM
-    *INFRASTRUCTURE,
-    *REGISTRY_IDENTITY,
-    *RESERVED_WORDS,
     *RESTFUL_ACTIONS,
     *ROUTES,
-    *RUBY_CORE,
     *STATIC_PATHS,
-    *TRUST_AND_SAFETY
+    *FUTURE_ROUTES,
+    *REGISTRY_IDENTITY,
+    *RUBY_CORE,
+    *TRUST_AND_SAFETY,
+    *INFRASTRUCTURE,
+    *RESERVED_WORDS
   ].freeze
 
   # Indexed on the normalized form so lookups stay O(1) and every separator
