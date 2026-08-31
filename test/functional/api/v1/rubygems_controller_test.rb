@@ -27,7 +27,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should "return a hash" do
         response = yield(@response.body) if block_given?
 
-        assert_not_nil response
+        refute_nil response
         assert_kind_of Hash, response
       end
     end
@@ -43,7 +43,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should "return a hash" do
         response = yield(@response.body) if block_given?
 
-        assert_not_nil response
+        refute_nil response
         assert_kind_of Hash, response
       end
     end
@@ -126,7 +126,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with :success
       should "show only dependencies that have rubygem" do
         assert_match(/foo/, @response.body)
-        assert_no_match(/missing/, @response.body)
+        refute_match(/missing/, @response.body)
       end
     end
   end
@@ -141,7 +141,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       @request.env["HTTP_ORIGIN"] = "https://pages.github.com/"
       get :show, params: { id: "ZenTest" }, format: "json"
 
-      assert_equal 200, @response.status
+      assert_response :ok
       assert_equal "*", @response.headers["Access-Control-Allow-Origin"]
       assert_equal "GET", @response.headers["Access-Control-Allow-Methods"]
       assert_equal "1728000", @response.headers["Access-Control-Max-Age"]
@@ -151,7 +151,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       @request.env["HTTP_ORIGIN"] = "https://pages.github.com/"
       process :show, method: :options, params: { id: "ZenTest" }
 
-      assert_equal 200, @response.status
+      assert_response :ok
       assert_equal "*", @response.headers["Access-Control-Allow-Origin"]
       assert_equal "GET", @response.headers["Access-Control-Allow-Methods"]
       assert_equal "X-Requested-With, X-Prototype-Version", @response.headers["Access-Control-Allow-Headers"]
@@ -180,7 +180,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with :success
 
       should "return a hash" do
-        assert_not_nil(yield(@response.body))
+        refute_nil(yield(@response.body))
       end
       should "only return my gems" do
         gem_names = yield(@response.body).pluck("name").sort

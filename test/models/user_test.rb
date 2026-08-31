@@ -388,11 +388,11 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "create api key" do
-      assert_not_nil @user.api_key
+      refute_nil @user.api_key
     end
 
     should "give user if specified name is user handle or email" do
-      assert_not_nil User.find_by_name(@user.handle)
+      refute_nil User.find_by_name(@user.handle)
       assert_equal User.find_by_name(@user.handle), User.find_by_name(@user.handle)
     end
 
@@ -972,7 +972,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "set remember_token" do
-      assert_not_nil @user.remember_token
+      refute_nil @user.remember_token
     end
 
     should "set expiry of remember_token to two weeks from now" do

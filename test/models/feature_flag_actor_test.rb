@@ -26,7 +26,7 @@ class FeatureFlagActorTest < ActiveSupport::TestCase
   test "find returns FeatureFlagActor for existing user" do
     actor = FeatureFlagActor.find("user:user_handle")
 
-    assert_not_nil actor
+    refute_nil actor
     assert_instance_of FeatureFlagActor, actor
     assert_equal @user, actor.record
   end
@@ -34,7 +34,7 @@ class FeatureFlagActorTest < ActiveSupport::TestCase
   test "find returns FeatureFlagActor for existing organization" do
     actor = FeatureFlagActor.find("org:org_handle")
 
-    assert_not_nil actor
+    refute_nil actor
     assert_instance_of FeatureFlagActor, actor
     assert_equal @organization, actor.record
   end

@@ -31,7 +31,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
 
     link = last_email_link
 
-    assert_not_nil link
+    refute_nil link
     visit link
 
     assert_text "Sign in"
@@ -75,7 +75,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
 
     link = last_email_link
 
-    assert_not_nil link
+    refute_nil link
     visit link
 
     fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
@@ -92,7 +92,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
 
     link = last_email_link
 
-    assert_not_nil link
+    refute_nil link
     visit link
 
     assert_text "Multi-factor authentication"
@@ -113,7 +113,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
 
     link = last_email_link
 
-    assert_not_nil link
+    refute_nil link
     visit link
 
     assert_text "Multi-factor authentication"
@@ -132,7 +132,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
 
     link = last_email_link
 
-    assert_not_nil link
+    refute_nil link
     visit link
 
     fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now

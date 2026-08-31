@@ -83,7 +83,7 @@ class SignUpTest < ApplicationSystemTestCase
 
     link = last_email_link
 
-    assert_not_nil link
+    refute_nil link
     visit link
 
     assert_text "Sign in"

@@ -9,9 +9,25 @@ SimpleCov.start "rails" do
     require "simplecov-cobertura"
     formatter SimpleCov::Formatter::CoberturaFormatter
 
-    # Avo tests are super fragile :'(
+    # Avo tests are super fragile :'( — but retrying the whole suite hides
+    # genuine flakes everywhere else, so scope the retries to them.
+    #
+    # minitest-retry compares ancestor names exactly, and every fragile Avo
+    # test is in the Avo:: namespace, so resolve the list lazily: Minitest has
+    # registered every runnable by the time a first failure needs retrying.
+    # The sentinel keeps the list non-empty, because minitest-retry reads an
+    # empty classes_to_retry as "retry everything".
     require "minitest/retry"
     Minitest::Retry.use!
+
+    Minitest::Retry.define_singleton_method(:classes_to_retry) do
+      if @classes_to_retry.empty?
+        @classes_to_retry = ["Avo::NoSuchTestCase"].concat(
+          Minitest::Runnable.runnables.filter_map { |r| r.name if r.name&.start_with?("Avo::") }
+        )
+      end
+      @classes_to_retry
+    end
   end
 end
 
@@ -170,7 +186,7 @@ class ActiveSupport::TestCase
       original = original_attributes[attribute]
       latest = reloaded_object.send(attribute)
 
-      assert_not_equal original, latest,
+      refute_equal original, latest,
         "Expected #{object.class} #{attribute} to change but still #{latest}"
     end
   end

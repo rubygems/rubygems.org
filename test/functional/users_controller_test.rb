@@ -114,7 +114,7 @@ class UsersControllerTest < ActionController::TestCase
       should "create a user but dont assign not valid parameters" do
         post :create, params: { user: { email: "foo@bar.com", password: "secret", api_key: "nonono" } }
 
-        assert_not_equal "nonono", User.where(email: "foo@bar.com").pick(:api_key)
+        refute_equal "nonono", User.where(email: "foo@bar.com").pick(:api_key)
       end
     end
 
@@ -126,7 +126,7 @@ class UsersControllerTest < ActionController::TestCase
       should "set email_confirmation_token" do
         user = User.find_by_name("foo")
 
-        assert_not_nil user.confirmation_token
+        refute_nil user.confirmation_token
       end
 
       should "deliver confirmation mail" do
