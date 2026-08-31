@@ -287,7 +287,7 @@ class Pusher
   def persist_version
     retries = 0
     begin
-      rubygem.transaction do
+      rubygem.transaction(requires_new: true) do
         rubygem.update_attributes_from_gem_specification!(version, spec)
         version.normalize_content_addressable_gem_metadata!
       end

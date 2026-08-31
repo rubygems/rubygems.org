@@ -522,6 +522,43 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       assert @cutter.save
     end
 
+    should "retry a database content_address unique violation inside the outer transaction" do
+      colliding_address = "aabbccdd"
+      occupant = create(
+        :version,
+        rubygem: @rubygem,
+        number: "1.0.0",
+        platform: "x86_64-darwin-25",
+        required_ruby_version: "~> 3.4.0",
+        ruby_abi: "3.4",
+        sha256: Digest::SHA2.base64digest("sandworm-1.0.0-x86_64-darwin-25-3.4"),
+        pusher_api_key: @cutter.api_key
+      )
+      occupant.update_columns(
+        content_address: colliding_address,
+        full_name: "#{@rubygem.name}-1.0.0-occupant"
+      )
+
+      @version.content_address = nil
+      @version.stubs(:generate_content_address).returns(colliding_address, "11223344")
+
+      sequence = sequence("database content address collision retry")
+      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec)
+        .in_sequence(sequence) do |version, _spec|
+          version.save!
+        end
+      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec)
+        .in_sequence(sequence) do |version, _spec|
+          version.save!
+        end
+
+      StatsD.stubs(:increment)
+      StatsD.expects(:increment).with("push.content_address_collision", tags: { rubygem: @rubygem.name }).once
+
+      assert @cutter.save
+      assert_equal "11223344", @version.reload.content_address
+    end
+
     should "not retry on an unrelated unique violation" do
       @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec).once
         .raises(ActiveRecord::RecordNotUnique.new(
