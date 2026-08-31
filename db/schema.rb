@@ -440,6 +440,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_19_160003) do
     t.datetime "invitation_expires_at"
     t.bigint "invited_by_id"
     t.bigint "organization_id", null: false
+    t.boolean "push_notifier", default: true, null: false
     t.integer "role", default: 50, null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
