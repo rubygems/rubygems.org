@@ -513,7 +513,7 @@ en:
       destroy:
         gem_name_reservation_removed: Gem name reservation removed.
       index:
-        description: Reserved names cannot be pushed by anyone else. Reserve a name to hold it for your organization.
+        description: Reserved names cannot be pushed by anyone. Reserve a name to hold it for your organization. Remove the reservation to be able to push a gem with this name.
         no_reservations: No reserved names yet
         reserve: Reserve a Name
         remove: Remove
