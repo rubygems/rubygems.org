@@ -177,7 +177,7 @@ class Rubygem < ApplicationRecord
   def public_versions_with_extra_version(extra_version)
     versions = public_versions.limit(5).to_a
     versions << extra_version
-    versions.uniq.sort_by(&:position)
+    versions.uniq.sort_by { |version| version.position || Float::INFINITY }
   end
 
   # NB: this intentionally does not default the platform to ruby.
@@ -433,7 +433,7 @@ class Rubygem < ApplicationRecord
 
     ids = []
     positions = []
-    versions.each do |version|
+    versions.order(:id).each do |version|
       ids << version.id
       positions << numbers.index(version.number)
     end

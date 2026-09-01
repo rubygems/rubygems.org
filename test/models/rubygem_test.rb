@@ -219,6 +219,11 @@ class RubygemTest < ActiveSupport::TestCase
 
         assert_equal versions, versions.sort_by(&:position)
       end
+      should "sort unpositioned versions last" do
+        @extra_version.update_column(:position, nil)
+
+        assert_equal @extra_version, @rubygem.public_versions_with_extra_version(@extra_version).last
+      end
       should "not duplicate versions" do
         versions = @rubygem.public_versions_with_extra_version(@first_version)
 

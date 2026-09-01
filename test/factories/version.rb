@@ -41,6 +41,8 @@ FactoryBot.define do
         checksum = GemInfo.new(version.rubygem.name).info_checksum
         version.update_attribute :info_checksum_v2, checksum
       end
+
+      version.rubygem.reorder_versions
     end
   end
 end

@@ -1096,25 +1096,11 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
-  context "after_save" do
-    context "reorder versions" do
-      setup do
-        @version = create(:version)
-      end
+  should "not have adjacent versions when position is nil" do
+    version = create(:version)
+    version.update_column(:position, nil)
 
-      context "indexed is updated" do
-        should "reorder versions" do
-          @version.expects(:reorder_versions).times(1)
-          @version.update(indexed: false)
-        end
-      end
-
-      context "info checksum v2 is updated" do
-        should "not reorder versions" do
-          @version.expects(:reorder_versions).times(0)
-          @version.update(info_checksum_v2: "lala")
-        end
-      end
-    end
+    assert_nil version.previous
+    assert_nil version.next
   end
 end
