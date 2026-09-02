@@ -13,6 +13,10 @@ class Admin::OrganizationPolicyTest < AdminPolicyTestCase
     assert_equal [@organization], policy_scope!(@admin, Organization).to_a
   end
 
+  def test_associations
+    assert_association @admin, @organization, :prefix_reservations, Admin::PrefixReservationPolicy
+  end
+
   def test_show
     assert_authorizes @admin, @organization, :avo_show?
     refute_authorizes @non_admin, @organization, :avo_show?
