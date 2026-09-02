@@ -1187,9 +1187,9 @@ class VersionTest < ActiveSupport::TestCase
       assert_equal(1,  @third_version <=> @second_version)
       assert_equal(-1, @third_version <=> @fourth_version)
 
-      assert_equal(1,  @fourth_version <=> @first_version)
-      assert_equal(1,  @fourth_version <=> @second_version)
-      assert_equal(1,  @fourth_version <=> @third_version)
+      assert_equal(1, @fourth_version <=> @first_version)
+      assert_equal(1, @fourth_version <=> @second_version)
+      assert_equal(1, @fourth_version <=> @third_version)
     end
   end
 

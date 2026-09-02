@@ -18,7 +18,7 @@ class Links
 
   # Links available for non-indexed gems
   NON_INDEXED_LINKS = {
-    "docs"      => "documentation_uri"
+    "docs" => "documentation_uri"
   }.freeze
 
   attr_accessor :rubygem, :version, :linkset, :link_verifications

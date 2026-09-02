@@ -40,8 +40,8 @@ class Attestation < ApplicationRecord
 
     repo = extensions["1.3.6.1.4.1.57264.1.5"]
     commit = extensions["1.3.6.1.4.1.57264.1.3"]
-    ref  =  extensions["1.3.6.1.4.1.57264.1.14"]
-    san  =  extensions["subjectAltName"]
+    ref  = extensions["1.3.6.1.4.1.57264.1.14"]
+    san  = extensions["subjectAltName"]
     build_summary_url = extensions["1.3.6.1.4.1.57264.1.21"]
     build_file_url = build_summary_url.sub(%r{attempts/\d+\z}, "workflow")
 
