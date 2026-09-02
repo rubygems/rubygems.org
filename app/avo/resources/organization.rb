@@ -31,6 +31,7 @@ class Avo::Resources::Organization < Avo::BaseResource
       field :unconfirmed_memberships, as: :has_many
       field :users, as: :has_many
       field :rubygems, as: :has_many
+      field :prefix_reservations, as: :has_many
       field :organization_onboarding, as: :belongs_to
     end
   end
