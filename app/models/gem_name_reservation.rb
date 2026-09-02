@@ -3,7 +3,10 @@
 class GemNameReservation < ApplicationRecord
   ORGANIZATION_LIMIT = 25
 
-  validates :name, uniqueness: { case_sensitive: false }, presence: true, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :name,
+    uniqueness: { case_sensitive: false },
+    presence: true,
+    length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
   validate :downcase_name_check
   validate :rubygem_name_available, if: :needs_name_validation?
   validate :organization_within_limit, if: :needs_limit_validation?
@@ -18,8 +21,10 @@ class GemNameReservation < ApplicationRecord
 
   private
 
+  # NOTE: For the Admin purposes we don't need this validation. We want admin
+  # to be able to reserve a gem and have it stop any users from pushing the gem
   def needs_name_validation?
-    new_record? || name_changed?
+    organization.present? && (new_record? || name_changed?)
   end
 
   def needs_limit_validation?
