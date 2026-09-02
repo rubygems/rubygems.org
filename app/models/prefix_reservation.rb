@@ -17,7 +17,6 @@ class PrefixReservation < ApplicationRecord
 
   def downcase_prefix_check
     return unless prefix.to_s != prefix.to_s.downcase
-    errors.add(:name, "must be all lowercase")
+    errors.add(:prefix, "must be all lowercase")
   end
 end
-

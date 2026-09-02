@@ -23,7 +23,7 @@ class PrefixReservationTest < ActiveSupport::TestCase
       prefix_reservation = build(:prefix_reservation, prefix: "ABX")
 
       refute_predicate prefix_reservation, :valid?
-      assert prefix_reservation.errors[:prefix], "must be all lowercase"
+      assert_includes prefix_reservation.errors[:prefix], "must be all lowercase"
     end
   end
 
