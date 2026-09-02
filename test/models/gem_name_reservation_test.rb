@@ -17,12 +17,21 @@ class GemNameReservationTest < ActiveSupport::TestCase
     should validate_uniqueness_of(:name).case_insensitive
     should validate_length_of(:name).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
 
-    should "not save when there's an existing rubygem with the same name" do
+    should "for an organization reservation not save when there's an existing rubygem with the same name " do
+      organization = create(:organization)
+      create(:rubygem, name: "bounce-haus")
+
+      reservation = build(:gem_name_reservation, name: "bounce-haus", organization:)
+
+      refute reservation.save
+    end
+
+    should "reservation save when there's an existing rubygem with the same name " do
       create(:rubygem, name: "bounce-haus")
 
       reservation = build(:gem_name_reservation, name: "bounce-haus")
 
-      refute reservation.save
+      assert reservation.save
     end
 
     should "not save when there's an existing rubygem with the case matched name" do
