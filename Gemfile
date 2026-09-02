@@ -14,7 +14,7 @@ gem "clearance", "~> 2.12"
 gem "dalli", "~> 3.2"
 gem "datadog", "~> 2.41"
 gem "dogstatsd-ruby", "~> 5.7"
-gem "google-protobuf", "~> 4.35"
+gem "google-protobuf", "~> 4.36"
 gem "faraday", "~> 2.14"
 gem "faraday-retry", "~> 2.4"
 gem "faraday-restrict-ip-addresses", "~> 0.3.0", require: "faraday/restrict_ip_addresses"
@@ -73,7 +73,7 @@ gem "yaml-schema", "~> 1.2"
 # Admin dashboard
 gem "avo", "~> 3.32"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 4.12.0"
+gem "view_component", "~> 4.14.0"
 gem "pundit", "~> 2.5"
 gem "chartkick", "~> 5.2"
 gem "groupdate", "~> 6.8"
@@ -119,7 +119,7 @@ group :development, :test do
   gem "pg_query", "~> 6.2"
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
-  gem "rubocop", "~> 1.89", require: false
+  gem "rubocop", "~> 1.90", require: false
   gem "rubocop-rails", "~> 2.37", require: false
   gem "rubocop-performance", "~> 1.27", require: false
   gem "rubocop-minitest", "~> 0.40", require: false
