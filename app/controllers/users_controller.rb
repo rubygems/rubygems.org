@@ -21,7 +21,7 @@ class UsersController < ApplicationController
       flash[:notice] = t(".email_sent")
       redirect_back_or_to root_path
     else
-      render template: "users/new"
+      render template: "users/new", status: :unprocessable_content
     end
   end
 
