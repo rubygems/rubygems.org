@@ -187,7 +187,9 @@ class Pusher
       verification_input.artifact = artifact
       verification_input.bundle = bundle
       input = Sigstore::VerificationInput.new(verification_input)
-      sigstore_verification = sigstore_verifier.verify(input:, policy:, offline: true)
+      sigstore_verification = verify_sigstore_attestation(input:, policy:)
+      return false unless sigstore_verification
+
       logger.info do
         { message: "verifying sigstore bundles", sigstore_verification: sigstore_verification, policy: policy }
       end
@@ -437,5 +439,14 @@ class Pusher
 
   def sigstore_verifier
     @sigstore_verifier ||= Sigstore::Verifier.production
+  end
+
+  def verify_sigstore_attestation(input:, policy:)
+    sigstore_verifier.verify(input:, policy:, offline: true)
+  rescue Sigstore::Error
+    raise
+  rescue StandardError => e
+    Rails.error.report(e, handled: true)
+    notify("Attestation verification failed.", 500)
   end
 end
