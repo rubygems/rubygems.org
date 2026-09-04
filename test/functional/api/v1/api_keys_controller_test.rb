@@ -269,6 +269,58 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
           end
         end
       end
+
+      context "with organization param set" do
+        setup do
+          @organization = create(:organization, owners: [@user])
+        end
+
+        context "with applicable scope enabled" do
+          setup do
+            post :create,
+              params: { name: "org-scoped-key", push_rubygem: "true", organization: @organization.handle },
+              format: "text"
+          end
+
+          should_return_api_key_successfully
+
+          should "have an organization associated" do
+            created_key = @user.api_keys.find_by(name: "org-scoped-key")
+
+            assert_equal @organization, created_key.organization
+          end
+        end
+
+        context "with applicable scope disabled" do
+          setup do
+            post :create,
+              params: { name: "org-scoped-key", index_rubygems: "true", organization: @organization.handle },
+              format: "text"
+          end
+
+          should respond_with :unprocessable_content
+
+          should "respond with an error" do
+            assert_equal "Organization scope can only be set for push/yank rubygem, and add/remove owner scopes", response.body
+          end
+        end
+
+        context "with an organization the user cannot manage" do
+          setup do
+            organization = create(:organization, owners: [create(:user)])
+
+            post :create,
+              params: { name: "org-scoped-key", push_rubygem: "true", organization: organization.handle },
+              format: "text"
+          end
+
+          should respond_with :unprocessable_content
+
+          should "respond with an error" do
+            assert_equal "Organization must be an organization you can manage", response.body
+          end
+        end
+      end
     end
 
     context "when a user provides an OTP code" do

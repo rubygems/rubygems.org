@@ -29,6 +29,7 @@ class OIDC::ApiKeyRole < ApplicationRecord
   attribute :api_key_permissions, Types::JsonDeserializable.new(OIDC::ApiKeyPermissions)
   validates :api_key_permissions, presence: true, nested: true
   validate :gems_belong_to_user
+  validate :organization_manageable_by_user
 
   def github_actions_push?
     provider.github_actions? && api_key_permissions.scopes.include?("push_rubygem")
@@ -38,6 +39,16 @@ class OIDC::ApiKeyRole < ApplicationRecord
     Array.wrap(api_key_permissions&.gems).each_with_index do |name, idx|
       errors.add("api_key_permissions.gems[#{idx}]", "(#{name}) does not belong to user #{user.display_handle}") if user.rubygems.where(name:).empty?
     end
+  end
+
+  def organization_manageable_by_user
+    handle = api_key_permissions&.organization
+    return if handle.blank?
+
+    organization = Organization.find_by_handle(handle)
+    return if organization && user.manageable_organizations.exists?(id: organization.id)
+
+    errors.add("api_key_permissions.organization", "must be an organization you can manage")
   end
 
   before_validation :set_statement_principals

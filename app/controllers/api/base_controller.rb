@@ -27,7 +27,7 @@ class Api::BaseController < ApplicationController
   end
 
   def verify_api_key_gem_scope
-    return unless @api_key.rubygem && @api_key.rubygem != @rubygem
+    return if @api_key.scoped_to?(@rubygem)
 
     render_forbidden t(:api_key_insufficient_scope)
   end

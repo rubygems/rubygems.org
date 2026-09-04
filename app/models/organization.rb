@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class Organization < ApplicationRecord
+  include Discard::Model
   include Events::Recordable
+
+  self.discard_column = :deleted_at
 
   validates :handle, presence: true,
     uniqueness: { case_sensitive: false },
@@ -20,8 +23,11 @@ class Organization < ApplicationRecord
   has_one :organization_onboarding, foreign_key: :onboarded_organization_id, inverse_of: :organization, dependent: :destroy
 
   default_scope { not_deleted }
-  scope :not_deleted, -> { where(deleted_at: nil) }
-  scope :deleted, -> { unscoped.where.not(deleted_at: nil) }
+  scope :not_deleted, -> { kept }
+  scope :deleted, -> { with_discarded.discarded }
+  scope :with_deleted, -> { with_discarded }
+
+  before_discard :revoke_org_scoped_api_keys!
 
   after_create do
     record_event!(Events::OrganizationEvent::CREATED, actor_gid: memberships.first&.to_gid)
@@ -54,6 +60,10 @@ class Organization < ApplicationRecord
   end
 
   private
+
+  def revoke_org_scoped_api_keys!
+    memberships_including_unconfirmed.find_each(&:revoke_org_scoped_api_keys!)
+  end
 
   def handle_not_reserved
     return if handle.blank?

@@ -61,6 +61,23 @@ class ApiKeysTest < ApplicationSystemTestCase
     assert_nil @user.api_keys.last.rubygem
   end
 
+  test "creating new api key scoped to an organization" do
+    organization = create(:organization, owners: [@user])
+
+    visit_profile_api_keys_path
+
+    fill_in "api_key[name]", with: "test"
+    check "api_key[push_rubygem]"
+
+    assert page.has_select? "api_key_organization_id", selected: "No Organization"
+    page.select organization.name
+    click_button "Create API Key"
+
+    assert_text "Note that we won't be able to show the key to you again. New API key:"
+    assert_equal organization.name, page.find('td[data-title="Gem"]').text
+    assert_equal organization, @user.api_keys.last.organization
+  end
+
   test "creating new api key scoped to a gem" do
     visit_profile_api_keys_path
 

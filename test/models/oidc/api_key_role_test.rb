@@ -53,6 +53,20 @@ class OIDC::ApiKeyRoleTest < ActiveSupport::TestCase
     assert_equal ["(does_not_exist) does not belong to user #{@role.user.handle}"], @role.errors.messages[:"api_key_permissions.gems[0]"]
   end
 
+  test "validates organization is manageable by the user" do
+    @role.api_key_permissions.organization = create(:organization).handle
+    @role.validate
+
+    assert_equal ["must be an organization you can manage"], @role.errors.messages[:"api_key_permissions.organization"]
+  end
+
+  test "allows organization the user can manage" do
+    organization = create(:organization, owners: [@role.user])
+    @role.api_key_permissions.organization = organization.handle
+
+    assert_predicate @role, :valid?
+  end
+
   test "validates condition claims are known" do
     @role.access_policy.statements = [OIDC::AccessPolicy::Statement.new(
       effect: "allow",

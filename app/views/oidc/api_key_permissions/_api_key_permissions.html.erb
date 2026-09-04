@@ -18,4 +18,13 @@
       ) %>
     </dd>
   </div>
+  <% if api_key_permissions.organization.present? %>
+    <div>
+      <dt class="<%= heading %>"><%= api_key_permissions.class.human_attribute_name :organization %></dt>
+      <dd class="mt-1">
+        <%= link_to api_key_permissions.organization, organization_path(api_key_permissions.organization),
+              class: "text-orange-500 hover:underline dark:text-orange-400" %>
+      </dd>
+    </div>
+  <% end %>
 </dl>

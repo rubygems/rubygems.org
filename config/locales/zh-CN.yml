@@ -173,6 +173,8 @@ zh-CN:
       exclusive_scopes:
       rubygem_scope: Gem 作用范围
       rubygem_scope_info: 该作用范围仅允许对一个 Gem 进行 [推送/撤回] 以及对所有者的 [添加/移除]
+      organization_scope:
+      organization_scope_info:
       multifactor_auth: 多因素验证（MFA）——身份认证
       enable_mfa: 启用多因素验证（MFA）
       expiration:
@@ -222,7 +224,10 @@ zh-CN:
       invalid_key: 已作废的 API 密钥不能被编辑，请删除它并创建一个新的 API 密钥。
       expired_key:
     all_gems: 所有 Gem
+    no_organization:
+    unavailable_organization:
     gem_ownership_removed: 对 %{rubygem_name} 的所有权已经被移除（在使用此 API 密钥决定作用范围后）
+    organization_membership_removed:
   dashboards:
     show:
       creating_link_text: 创建
@@ -1101,6 +1106,8 @@ zh-CN:
         workflow_repository_name_help_html:
       pending:
         rubygem_name_help_html:
+        organization_scope:
+        organization_scope_info:
   duration:
     minutes:
       other:
@@ -1162,6 +1169,7 @@ zh-CN:
         api_key_name:
         api_key_scopes:
         api_key_gem_html:
+        api_key_organization_html:
         api_key_mfa:
         not_required:
       password:

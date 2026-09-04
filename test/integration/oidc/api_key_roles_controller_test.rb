@@ -38,6 +38,26 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
       get new_profile_oidc_api_key_role_url
 
       assert_response :success
+      refute page.has_select?("oidc_api_key_role_api_key_permissions_organization")
+    end
+
+    should "show organization field on new when user can manage an organization" do
+      organization = create(:organization, owners: [@user])
+
+      get new_profile_oidc_api_key_role_url
+
+      assert_response :success
+      assert page.has_select?("oidc_api_key_role_api_key_permissions_organization",
+        options: ["No Organization", organization.name])
+    end
+
+    should "hide organization field on new when user is only a maintainer" do
+      create(:organization, maintainers: [@user])
+
+      get new_profile_oidc_api_key_role_url
+
+      assert_response :success
+      refute page.has_select?("oidc_api_key_role_api_key_permissions_organization")
     end
 
     should "get new scoped to a rubygem" do

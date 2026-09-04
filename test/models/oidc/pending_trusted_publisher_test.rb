@@ -10,6 +10,7 @@ class OIDC::PendingTrustedPublisherTest < ActiveSupport::TestCase
 
   should belong_to(:trusted_publisher)
   should belong_to(:user)
+  should belong_to(:organization).optional
 
   should validate_presence_of(:rubygem_name)
   should validate_uniqueness_of(:rubygem_name).scoped_to(:trusted_publisher_id, :trusted_publisher_type).case_insensitive
@@ -35,5 +36,20 @@ class OIDC::PendingTrustedPublisherTest < ActiveSupport::TestCase
 
     refute_predicate publisher, :valid?
     assert_equal ["is reserved"], publisher.errors[:rubygem_name]
+  end
+
+  test "validates organization is manageable by the user" do
+    publisher = build(:oidc_pending_trusted_publisher, organization: create(:organization))
+
+    refute_predicate publisher, :valid?
+    assert_equal ["must be an organization you can manage"], publisher.errors[:organization]
+  end
+
+  test "allows organization the user can manage" do
+    user = create(:user)
+    organization = create(:organization, owners: [user])
+    publisher = build(:oidc_pending_trusted_publisher, user: user, organization: organization)
+
+    assert_predicate publisher, :valid?
   end
 end

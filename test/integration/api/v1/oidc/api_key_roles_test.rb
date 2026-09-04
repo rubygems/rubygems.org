@@ -25,7 +25,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
         "token" => @role.token,
         "oidc_provider_id" => @role.oidc_provider_id,
         "user_id" => @user.id,
-        "api_key_permissions" =>   { "scopes" => ["push_rubygem"], "valid_for" => 1800, "gems" => nil },
+        "api_key_permissions" =>   { "scopes" => ["push_rubygem"], "valid_for" => 1800, "gems" => nil, "organization" => nil },
         "name" => @role.name,
         "access_policy" =>  { "statements" => [
           "effect" => "allow",
@@ -63,7 +63,7 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           "token" => @role.token,
           "oidc_provider_id" => @role.oidc_provider_id,
           "user_id" => @user.id,
-          "api_key_permissions" =>   { "scopes" => ["push_rubygem"], "valid_for" => 1800, "gems" => nil },
+          "api_key_permissions" =>   { "scopes" => ["push_rubygem"], "valid_for" => 1800, "gems" => nil, "organization" => nil },
           "name" => @role.name,
           "access_policy" =>  { "statements" => [
             "effect" => "allow",
@@ -295,6 +295,64 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
 
           assert_equal hashed_key, Digest::SHA256.hexdigest(resp["rubygems_api_key"])
           assert_equal gem_name, @user.api_keys.sole.ownership.rubygem.name
+        end
+      end
+
+      context "with permissions scoped to an organization" do
+        should "return API key scoped to the organization" do
+          organization = create(:organization, owners: [@role.user])
+          permissions = @role.api_key_permissions
+          permissions.organization = organization.handle
+          @role.api_key_permissions = permissions
+          @role.save!
+
+          post assume_role_api_v1_oidc_api_key_role_path(@role.token),
+              params: {
+                jwt: jwt.to_s
+              },
+              headers: {}
+
+          assert_response :created
+
+          resp = response.parsed_body
+
+          assert_match(/^rubygems_/, resp["rubygems_api_key"])
+          assert_equal_hash(
+            { "rubygems_api_key" => resp["rubygems_api_key"],
+              "name" => "#{@role.name}-79685b65-945d-450a-a3d8-a36bcf72c23d",
+              "scopes" => ["push_rubygem"],
+              "organization" => organization.handle,
+              "expires_at" => 30.minutes.from_now },
+            resp
+          )
+          api_key = @user.api_keys.sole
+
+          assert_equal Digest::SHA256.hexdigest(resp["rubygems_api_key"]), api_key.hashed_key
+          assert_equal organization, api_key.organization
+        end
+
+        should "return unprocessable when membership is no longer admin" do
+          organization = create(:organization, owners: [@role.user])
+          permissions = @role.api_key_permissions
+          permissions.organization = organization.handle
+          @role.api_key_permissions = permissions
+          @role.save!
+
+          membership = @role.user.memberships.find_by!(organization: organization)
+          membership.update!(role: :maintainer)
+
+          post assume_role_api_v1_oidc_api_key_role_path(@role.token),
+              params: {
+                jwt: jwt.to_s
+              },
+              headers: {}
+
+          assert_response :unprocessable_content
+          assert_equal(
+            { "errors" => ["Unable to create API key: the configured gem or organization scope is no longer valid"] },
+            response.parsed_body
+          )
+          assert_empty @user.api_keys
         end
       end
 

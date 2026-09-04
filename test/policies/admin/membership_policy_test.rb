@@ -13,6 +13,10 @@ class Admin::MembershipPolicyTest < AdminPolicyTestCase
     assert_equal [@membership], policy_scope!(@admin, Membership).to_a
   end
 
+  def test_associations
+    assert_association @admin, @membership, :api_key_organization_scopes, Admin::ApiKeyOrganizationScopePolicy
+  end
+
   def test_avo_index
     refute_authorizes @admin, Membership, :avo_index?
     refute_authorizes @non_admin, Membership, :avo_index?

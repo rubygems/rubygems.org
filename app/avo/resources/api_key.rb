@@ -17,7 +17,7 @@ class Avo::Resources::ApiKey < Avo::BaseResource
     filter TrustedPublisherFilter, arguments: { default: { trusted_publisher: true, not_trusted_publisher: true } }
   end
 
-  def fields
+  def fields # rubocop:disable Metrics/MethodLength
     main_panel do
       field :id, as: :id, hide_on: :index
 
@@ -30,6 +30,7 @@ class Avo::Resources::ApiKey < Avo::BaseResource
       field :last_accessed_at, as: :date_time
       field :soft_deleted_at, as: :date_time
       field :soft_deleted_rubygem_name, as: :text
+      field :soft_deleted_organization_name, as: :text
       field :expires_at, as: :date_time
 
       field :enabled_scopes, as: :tags
@@ -49,7 +50,9 @@ class Avo::Resources::ApiKey < Avo::BaseResource
     end
 
     field :api_key_rubygem_scope, as: :has_one
-    field :ownership, as: :has_one
+    field :ownership, as: :has_one, visible: -> { resource.record.ownership.present? }
+    field :api_key_organization_scope, as: :has_one
+    field :membership, as: :has_one, visible: -> { resource.record.membership.present? }
     field :oidc_id_token, as: :has_one
   end
 end

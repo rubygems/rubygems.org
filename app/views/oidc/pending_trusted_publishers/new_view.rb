@@ -16,36 +16,49 @@ class OIDC::PendingTrustedPublishers::NewView < ApplicationView
     h1(class: "text-h2 mb-10") { t(".title") }
 
     render CardComponent.new do
-      form_with(
-        model: pending_trusted_publisher,
-        url: profile_oidc_pending_trusted_publishers_path
-      ) do |f|
-        div class: "py-4" do
-          f.label :rubygem_name, class: label_class
-          f.text_field :rubygem_name, class: field_class, autocomplete: :off
-          p(class: note_class) { t("oidc.trusted_publisher.pending.rubygem_name_help_html") }
-        end
-
-        div class: "py-4" do
-          f.label :trusted_publisher_type, class: label_class
-          f.select :trusted_publisher_type,
-            OIDC::TrustedPublisher.all.map { |type| [type.publisher_name, type.polymorphic_name] },
-            {},
-            class: field_class
-        end
-
-        render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(
-          github_action_form: f
-        )
-
+      form_with(model: pending_trusted_publisher, url: profile_oidc_pending_trusted_publishers_path) do |form|
+        rubygem_name_field(form)
+        organization_field(form)
+        trusted_publisher_type_field(form)
+        render OIDC::TrustedPublisher::GitHubAction::FormComponent.new(github_action_form: form)
         render ButtonComponent.new do
-          f.submit
+          form.submit
         end
       end
     end
   end
 
   private
+
+  def rubygem_name_field(form)
+    div class: "py-4" do
+      form.label :rubygem_name, class: label_class
+      form.text_field :rubygem_name, class: field_class, autocomplete: :off
+      p(class: note_class) { t("oidc.trusted_publisher.pending.rubygem_name_help_html") }
+    end
+  end
+
+  def organization_field(form)
+    organizations = current_user.manageable_organizations
+    return if organizations.none?
+
+    div class: "py-4" do
+      form.label :organization_id, t("oidc.trusted_publisher.pending.organization_scope"), class: label_class
+      form.collection_select :organization_id, organizations, :id, :name,
+        { include_blank: t("api_keys.no_organization") }, class: field_class
+      p(class: note_class) { t("oidc.trusted_publisher.pending.organization_scope_info") }
+    end
+  end
+
+  def trusted_publisher_type_field(form)
+    div class: "py-4" do
+      form.label :trusted_publisher_type, class: label_class
+      form.select :trusted_publisher_type,
+        OIDC::TrustedPublisher.all.map { |type| [type.publisher_name, type.polymorphic_name] },
+        {},
+        class: field_class
+    end
+  end
 
   def label_class
     "block text-b4 font-semibold text-neutral-800 dark:text-neutral-200 mb-2"
