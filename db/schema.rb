@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_19_160003) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_04_071618) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -684,6 +684,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_19_160003) do
     t.datetime "updated_at", precision: nil
     t.string "webauthn_id"
     t.index "lower((email)::text) varchar_pattern_ops", name: "index_users_on_lower_email"
+    t.index "lower((handle)::text)", name: "index_users_on_lower_handle"
     t.index ["blocked_email"], name: "index_users_on_blocked_email_trigram", opclass: :gin_trgm_ops, where: "(blocked_email IS NOT NULL)", using: :gin
     t.index ["email"], name: "index_users_on_email"
     t.index ["email"], name: "index_users_on_email_trigram", opclass: :gin_trgm_ops, using: :gin
