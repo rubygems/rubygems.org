@@ -4,10 +4,12 @@ class Rack::Attack
   include SemanticLogger::Loggable
 
   REQUEST_LIMIT = 100
+  SIGNUP_LIMIT = 300
   EXP_BASE_REQUEST_LIMIT = 300
   PUSH_LIMIT = 400
   REQUEST_LIMIT_PER_EMAIL = 10
   LIMIT_PERIOD = 10.minutes
+  SIGNUP_LIMIT_PERIOD = 1.minute
   PUSH_LIMIT_PERIOD = 60.minutes
   EXP_BASE_LIMIT_PERIOD = 300.seconds
   EXP_BACKOFF_LEVELS = [1, 2].freeze
@@ -30,7 +32,6 @@ class Rack::Attack
 
   protected_ui_actions = [
     { controller: "sessions",             action: "create" },
-    { controller: "users",                action: "create" },
     { controller: "passwords",            action: "edit" },
     { controller: "sessions",             action: "authenticate" },
     { controller: "passwords",            action: "create" },
@@ -107,6 +108,12 @@ class Rack::Attack
 
   throttle("clearance/ip", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
     req.ip if protected_route?(protected_ui_actions, req.path, req.request_method)
+  end
+
+  protected_signup_action = [controller: "users", action: "create"]
+
+  throttle("signups/global", limit: SIGNUP_LIMIT, period: SIGNUP_LIMIT_PERIOD) do |req|
+    "global" if protected_route?(protected_signup_action, req.path, req.request_method)
   end
 
   # 300 req in 300 seconds
