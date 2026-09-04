@@ -16,6 +16,7 @@ class Organization < ApplicationRecord
   has_many :memberships_including_unconfirmed, class_name: "Membership", dependent: :destroy, inverse_of: :organization
   has_many :users, through: :memberships
   has_many :rubygems, dependent: :nullify
+  has_many :gem_name_reservations, dependent: :destroy
   has_many :audits, as: :auditable, dependent: :nullify
   has_one :organization_onboarding, foreign_key: :onboarded_organization_id, inverse_of: :organization, dependent: :destroy
 
@@ -51,6 +52,20 @@ class Organization < ApplicationRecord
 
   def flipper_id
     "org:#{handle}"
+  end
+
+  def gem_name_reservations_unlimited?
+    FeatureFlag.enabled?(FeatureFlag::UNLIMITED_GEM_NAME_RESERVATIONS, self)
+  end
+
+  def gem_name_reservation_limit
+    GemNameReservation::ORGANIZATION_LIMIT unless gem_name_reservations_unlimited?
+  end
+
+  def gem_name_reservations_remaining
+    return if gem_name_reservations_unlimited?
+
+    [GemNameReservation::ORGANIZATION_LIMIT - gem_name_reservations.count, 0].max
   end
 
   private
