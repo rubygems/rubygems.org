@@ -112,8 +112,8 @@ class Rack::Attack
 
   protected_signup_action = [controller: "users", action: "create"]
 
-  throttle("signups/ip", limit: SIGNUP_LIMIT, period: SIGNUP_LIMIT_PERIOD) do |req|
-    req.ip if protected_route?(protected_signup_action, req.path, req.request_method)
+  throttle("signups/global", limit: SIGNUP_LIMIT, period: SIGNUP_LIMIT_PERIOD) do |req|
+    "global" if protected_route?(protected_signup_action, req.path, req.request_method)
   end
 
   # 300 req in 300 seconds

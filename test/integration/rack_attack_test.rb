@@ -27,7 +27,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "allow sign up" do
-      update_limit_for("signups/ip:#{@ip_address}", Rack::Attack::SIGNUP_LIMIT - 1, Rack::Attack::SIGNUP_LIMIT_PERIOD)
+      update_limit_for("signups/global:global", Rack::Attack::SIGNUP_LIMIT - 1, Rack::Attack::SIGNUP_LIMIT_PERIOD)
 
       user = build(:user)
       post "/users",
@@ -282,7 +282,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     end
 
     should "throttle sign up" do
-      update_limit_for("signups/ip:#{@ip_address}", Rack::Attack::SIGNUP_LIMIT, Rack::Attack::SIGNUP_LIMIT_PERIOD)
+      update_limit_for("signups/global:global", Rack::Attack::SIGNUP_LIMIT, Rack::Attack::SIGNUP_LIMIT_PERIOD)
 
       user = build(:user)
       post "/users",
