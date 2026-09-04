@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_19_160003) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_25_080543) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -27,6 +27,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_19_160003) do
     t.string "oauth_token"
     t.datetime "updated_at", null: false
     t.index ["github_id"], name: "index_admin_github_users_on_github_id", unique: true
+  end
+
+  create_table "advisories", force: :cascade do |t|
+    t.string "aliases", default: [], null: false, array: true
+    t.datetime "created_at", null: false
+    t.string "identifier", null: false
+    t.datetime "modified_at", null: false
+    t.jsonb "payload", default: {}, null: false
+    t.datetime "published_at"
+    t.jsonb "ranges", default: [], null: false
+    t.string "rubygem_name", null: false
+    t.string "severity"
+    t.text "summary", null: false
+    t.string "type", null: false
+    t.datetime "updated_at", null: false
+    t.string "url", null: false
+    t.datetime "withdrawn_at"
+    t.index ["rubygem_name"], name: "index_advisories_on_rubygem_name"
+    t.index ["type", "identifier", "rubygem_name"], name: "index_advisories_on_type_and_identifier_and_rubygem_name", unique: true
   end
 
   create_table "api_key_rubygem_scopes", force: :cascade do |t|

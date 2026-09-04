@@ -30,6 +30,7 @@ class RubygemsController < ApplicationController
 
   def show
     @versions = @rubygem.public_versions.limit(5)
+    @advisories = @rubygem.advisories.visible.to_a
     if @versions.to_a.any?
       add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
       add_breadcrumb t("breadcrumbs.latest_version", version: @latest_version.slug)

@@ -874,6 +874,11 @@ zh-CN:
     index:
       downloads: 下载
       title: Gem
+    advisories:
+      title:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: 安装
@@ -997,6 +1002,7 @@ zh-CN:
     version:
       yanked: 已撤回
       ruby_abi:
+      vulnerable:
   webauthn_credentials:
     callback:
       success: 您已成功注册一个安全设备。

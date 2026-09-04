@@ -239,4 +239,64 @@ class VersionsControllerTest < ActionController::TestCase
       assert page.has_selector?("a[href='#{profile_path('johndoe')}']")
     end
   end
+
+  context "On GET to show with advisories" do
+    setup do
+      @rubygem = create(:rubygem, name: "actionpack")
+      create(:version, rubygem: @rubygem, number: "1.0.0")
+      create(:version, rubygem: @rubygem, number: "2.0.0")
+      create(:advisory, :with_rubygem, rubygem: @rubygem,
+             ranges: ["introduced" => "1.0.0", "fixed" => "2.0.0"],
+             summary: "XSS in Action Pack",
+             identifier: "GHSA-test-vers-0001")
+    end
+
+    should "show the advisory on an affected version page" do
+      with_feature FeatureFlag::OSV_ADVISORIES do
+        get :show, params: { rubygem_id: @rubygem.name, id: "1.0.0" }
+      end
+
+      assert page.has_css?("[data-testid='gem-advisories']")
+      assert page.has_content?("XSS in Action Pack")
+    end
+
+    should "not show the advisory on a patched version page" do
+      with_feature FeatureFlag::OSV_ADVISORIES do
+        get :show, params: { rubygem_id: @rubygem.name, id: "2.0.0" }
+      end
+
+      refute page.has_css?("[data-testid='gem-advisories']")
+    end
+
+    should "not show advisories when the source flag is off" do
+      get :show, params: { rubygem_id: @rubygem.name, id: "1.0.0" }
+
+      refute page.has_css?("[data-testid='gem-advisories']")
+    end
+  end
+
+  context "On GET to index with advisories" do
+    setup do
+      @rubygem = create(:rubygem, name: "actionpack")
+      create(:version, rubygem: @rubygem, number: "1.0.0")
+      create(:version, rubygem: @rubygem, number: "2.0.0")
+      create(:advisory, :with_rubygem, rubygem: @rubygem,
+             ranges: ["introduced" => "1.0.0", "fixed" => "2.0.0"],
+             identifier: "GHSA-test-idx-0001")
+    end
+
+    should "badge affected versions when the source is enabled" do
+      with_feature FeatureFlag::OSV_ADVISORIES do
+        get :index, params: { rubygem_id: @rubygem.name }
+      end
+
+      assert page.has_content?("vulnerable")
+    end
+
+    should "not badge versions when the source flag is off" do
+      get :index, params: { rubygem_id: @rubygem.name }
+
+      refute page.has_content?("vulnerable")
+    end
+  end
 end
