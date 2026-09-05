@@ -23,4 +23,5 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "GitHub"
   inflect.acronym "StatsD"
   inflect.acronym "OIDC"
+  inflect.acronym "GitLab"
 end
