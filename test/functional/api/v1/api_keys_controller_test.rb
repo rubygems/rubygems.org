@@ -461,7 +461,7 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         end
       end
 
-      context "on unsucessful save" do
+      context "on unsuccessful save" do
         setup do
           put :update, params: { api_key: "12345", push_rubygem: "true", show_dashboard: "true" }
           @api_key.reload

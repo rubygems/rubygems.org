@@ -29,7 +29,6 @@ Rails.application.routes.draw do
           post :revoke, to: "github_secret_scanning#revoke", defaults: { format: :json }
         end
       end
-      resource :multifactor_auth, only: :show
       resource :webauthn_verification, only: :create do
         get ':webauthn_token/status', action: :status, as: :status, constraints: { format: :json }
       end
@@ -89,7 +88,7 @@ Rails.application.routes.draw do
           delete :yank, to: "deletions#create"
         end
         constraints rubygem_id: Patterns::ROUTE_PATTERN do
-          resource :owners, only: %i[show create edit update destroy]
+          resource :owners, only: %i[show create update destroy]
           resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy show]
         end
       end
@@ -179,7 +178,7 @@ Rails.application.routes.draw do
         delete :destroy, as: :destroy
       end
 
-      resources :api_keys do
+      resources :api_keys, except: :show do
         delete :reset, on: :collection
       end
 
