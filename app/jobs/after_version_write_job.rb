@@ -9,7 +9,6 @@ class AfterVersionWriteJob < ApplicationJob
       version.rubygem.push_notifiable_owners.each do |notified_user|
         Mailer.gem_pushed(owner, version.id, notified_user.id).deliver_later
       end
-      Indexer.perform_later
       UploadVersionsFileJob.perform_later
       UploadInfoFileJob.perform_later(rubygem_name: rubygem.name)
       UploadNamesFileJob.perform_later
@@ -21,7 +20,7 @@ class AfterVersionWriteJob < ApplicationJob
       version.info_checksum_v2 = gem_info.info_checksum
       version.save(validate: false)
 
-      SetLinksetHomeJob.perform_later(version:)
+      ReorderVersionsJob.perform_later(rubygem:)
     end
   end
 

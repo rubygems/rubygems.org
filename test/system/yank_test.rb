@@ -4,6 +4,8 @@ require "application_system_test_case"
 require "net/http"
 
 class YankTest < ApplicationSystemTestCase
+  include ActiveJob::TestHelper
+
   setup do
     @user = create(:user, password: PasswordHelpers::SECURE_TEST_PASSWORD)
     @rubygem = create(:rubygem, name: "sandworm")
@@ -26,6 +28,7 @@ class YankTest < ApplicationSystemTestCase
     create(:version, rubygem: @rubygem, number: "2.2.2")
 
     yank_gem_via_api(@user_api_key, @rubygem.name, "2.2.2")
+    perform_enqueued_jobs(only: ReorderVersionsJob)
 
     visit dashboard_path
 
@@ -68,6 +71,7 @@ class YankTest < ApplicationSystemTestCase
     assert_text "0.0.0"
 
     yank_gem_via_api(@user_api_key, @rubygem.name, "0.0.0")
+    perform_enqueued_jobs(only: ReorderVersionsJob)
 
     visit rubygem_path(@rubygem.slug)
 
@@ -79,6 +83,7 @@ class YankTest < ApplicationSystemTestCase
 
     gem_io = build_gem(new_gemspec("sandworm", "1.0.0", "Gemcutter", "ruby"))
     push_gem_via_api(other_user_key, gem_io)
+    perform_enqueued_jobs(only: ReorderVersionsJob)
 
     visit rubygem_path(@rubygem.slug)
 
