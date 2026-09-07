@@ -20,7 +20,7 @@ class CompactIndexVersionsTest < ActiveSupport::TestCase
         sha256: Digest::SHA2.base64digest("skinny-2.9.0-x86_64-linux-musl"),
         created_at: 2.days.ago,
         info_checksum_v2: "skinny-info",
-        ruby_abi: "3.2"
+        required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.2"
       )
 
       versions = GemInfo.compact_index_versions(3.days.ago)
@@ -79,7 +79,8 @@ class CompactIndexVersionsTest < ActiveSupport::TestCase
     should "return yanked content-addressable versions with a content-addressed token" do
       rubygem = create(:rubygem, name: "skinny-yanked")
       version = create(:version, :yanked, rubygem: rubygem, number: "1.0.0", platform: "x86_64-linux-musl",
-        gem_platform: "x86_64-linux-musl", required_ruby_version: "~> 3.2.0", ruby_abi: "3.2",
+        gem_platform: "x86_64-linux-musl", required_ruby_version: "~> 3.2.0",
+        required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.2",
         sha256: Digest::SHA2.base64digest("skinny-yanked-1.0.0"), created_at: 10.days.ago,
         yanked_at: 1.day.ago, yanked_info_checksum_v2: "v2yanked")
 
@@ -103,7 +104,7 @@ class CompactIndexVersionsTest < ActiveSupport::TestCase
         sha256: Digest::SHA2.base64digest("skinny-public-2.9.0-x86_64-linux-musl"),
         created_at: @ts,
         info_checksum_v2: "skinny-public-info",
-        ruby_abi: "3.2"
+        required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.2"
       )
 
       versions = GemInfo.compact_index_public_versions(@ts)

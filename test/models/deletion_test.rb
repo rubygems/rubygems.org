@@ -190,7 +190,9 @@ class DeletionTest < ActiveSupport::TestCase
 
   should "record the Ruby ABI for versions targeting a single Ruby ABI" do
     version = create(:version, rubygem: @version.rubygem, number: "2.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
-                     required_ruby_version: "~> 3.4.0", ruby_abi: "3.4", sha256: Digest::SHA2.base64digest("test-2.0.0-3.4"))
+                     required_ruby_version: "~> 3.4.0",
+                     required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.4",
+                     sha256: Digest::SHA2.base64digest("test-2.0.0-3.4"))
     deletion = Deletion.new(version: version, user: @user)
     deletion.valid?
 

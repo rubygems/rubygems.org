@@ -45,7 +45,7 @@ class GemInfoTest < ActiveSupport::TestCase
         required_ruby_version: "~> 3.2.0",
         sha256: Digest::SHA2.base64digest("single-abi-2.9.0-x86_64-linux-musl"),
         info_checksum_v2: "single-abi-info-checksum",
-        ruby_abi: "3.2"
+        required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.2"
       )
 
       info = GemInfo.new("single-abi-info").compact_index_info
@@ -94,6 +94,7 @@ class GemInfoTest < ActiveSupport::TestCase
           platform: "x86_64-linux-musl",
           gem_platform: "x86_64-linux-musl",
           required_ruby_version: "~> #{abi}.0",
+          required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION,
           sha256: Digest::SHA2.base64digest("abi-ordering-#{abi}-x86_64-linux-musl"),
           info_checksum_v2: "abi-ordering-checksum",
           ruby_abi: abi,
