@@ -27,6 +27,20 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
     assert_equal({ client: { ip: "127.0.0.1" } }, payload[:network])
   end
 
+  test "payload flags a request that did not come through the edge" do
+    payload = capture_request_payload { get "/" }
+
+    assert payload[:edge_bypassed]
+  end
+
+  test "payload does not flag a request carrying the edge proxy token" do
+    stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, "abc") do
+      payload = capture_request_payload { get "/", headers: { "RUBYGEMS-PROXY-TOKEN" => "abc" } }
+
+      refute payload[:edge_bypassed]
+    end
+  end
+
   test "rails block carries controller, action, params, format and timings" do
     payload = capture_request_payload { get "/search?query=rails&utf8=%E2%9C%93" }
 
@@ -76,7 +90,13 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
 
     payload = capture_request_payload { get dashboard_path }
 
-    assert_equal({ user_id: user.id }, payload[:identity])
+    identity = payload[:identity]
+
+    assert_equal user.id, identity[:user_id]
+    assert_nil identity[:api_key_id]
+    assert_equal user.to_gid.to_s, identity[:actor_gid]
+    assert_equal "user", identity[:actor_type]
+    assert_kind_of Integer, identity[:account_age_seconds]
   end
 
   test "API request logs the user id and api key id" do
@@ -87,7 +107,14 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :success
-    assert_equal({ user_id: api_key.user.id, api_key_id: api_key.id }, payload[:identity])
+
+    identity = payload[:identity]
+
+    assert_equal api_key.user.id, identity[:user_id]
+    assert_equal api_key.id, identity[:api_key_id]
+    assert_equal api_key.user.to_gid.to_s, identity[:actor_gid]
+    assert_equal "user", identity[:actor_type]
+    assert_kind_of Integer, identity[:account_age_seconds]
   end
 
   test "API request with a trusted-publisher key logs the api key id without a user id" do
@@ -99,7 +126,12 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
       get api_v1_rubygems_path(format: :json), headers: { "HTTP_AUTHORIZATION" => "tp-key-12345" }
     end
 
-    assert_nil payload[:identity][:user_id]
-    assert_equal api_key.id, payload[:identity][:api_key_id]
+    identity = payload[:identity]
+
+    assert_nil identity[:user_id]
+    assert_equal api_key.id, identity[:api_key_id]
+    assert_equal api_key.owner.to_gid.to_s, identity[:actor_gid]
+    assert_equal "trusted_publisher", identity[:actor_type]
+    assert_nil identity[:account_age_seconds]
   end
 end
