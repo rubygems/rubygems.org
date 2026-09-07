@@ -14,7 +14,6 @@ class CreateAdvisories < ActiveRecord::Migration[8.1]
       t.datetime :modified_at, null: false
       t.datetime :withdrawn_at
       t.jsonb :ranges, null: false, default: []
-      t.jsonb :payload, null: false, default: {}
 
       t.timestamps
     end

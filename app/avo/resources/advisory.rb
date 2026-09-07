@@ -29,6 +29,5 @@ class Avo::Resources::Advisory < Avo::BaseResource
     field :modified_at, as: :date_time, sortable: true
     field :withdrawn_at, as: :date_time, sortable: true
     field :ranges, as: :json_viewer, only_on: :show
-    field :payload, as: :json_viewer, only_on: :show
   end
 end

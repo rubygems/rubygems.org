@@ -13,7 +13,7 @@ class Advisory::Fetcher
   ].freeze
 
   UPDATE_COLUMNS = %i[
-    aliases summary severity url published_at modified_at withdrawn_at ranges payload
+    aliases summary severity url published_at modified_at withdrawn_at ranges
   ].freeze
 
   class Error < StandardError; end

@@ -41,7 +41,6 @@ class Advisory::OSV::MapperTest < ActiveSupport::TestCase
         { "introduced" => "5.2.0", "fixed" => "5.2.7.1" },
         "introduced" => "6.0.0", "last_affected" => "6.0.4.7"
       ], record[:ranges]
-      assert_equal "GHSA-mm33-5vfq-3mm3", record[:payload]["id"]
     end
 
     should "emit one row per RubyGems package" do
