@@ -80,14 +80,44 @@ class Api::V1::RubygemsController < Api::BaseController
 
   private
 
+  # Records every push attempt twice: as Datadog AppSec span tags, and as a
+  # structured log line. Cloud SIEM detection rules threshold on the log line,
+  # not the span, so the log carries the fields those rules key on.
   def track_gem_push(gemcutter)
     event = gemcutter.code == 200 ? "gem.push.success" : "gem.push.failure"
-    metadata = {
-      "usr.id": (@api_key.owner_id.to_s if @api_key.user?),
+    metadata = push_actor_metadata.merge(
       "gem.name": gemcutter.rubygem&.name,
       "gem.version": gemcutter.version&.number
-    }.compact
+    ).compact
+
     Datadog::Kit::AppSec::Events.track(event, **metadata)
+    logger.info(event, **metadata, edge_bypassed: request.edge_bypassed?, account_age_seconds: push_account_age_seconds)
+  end
+
+  # `actor.gid` matches `Rack::Attack.api_key_owner_id` so pushes join to
+  # throttle logs. For a trusted publisher the actor is the workflow, and the
+  # numeric repository owner id survives an org or repo rename.
+  def push_actor_metadata
+    owner = @api_key.owner
+    metadata = {
+      "actor.gid": owner.to_gid.to_s,
+      "actor.type": @api_key.user? ? "user" : "trusted_publisher",
+      "usr.id": (owner.id.to_s if @api_key.user?)
+    }
+    return metadata unless @api_key.trusted_publisher?
+
+    metadata.merge(
+      "actor.repository": owner.repository,
+      "actor.workflow": owner.workflow_slug,
+      "actor.repository_owner_id": owner.repository_owner_id
+    )
+  end
+
+  # Nil, never 0, when there is no human: a CI push is not a new account.
+  def push_account_age_seconds
+    return unless @api_key.user?
+
+    (Time.current - @api_key.owner.created_at).to_i
   end
 
   def cors_set_access_control_headers
