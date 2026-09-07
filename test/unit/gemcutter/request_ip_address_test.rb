@@ -100,4 +100,38 @@ class Gemcutter::RequestIpAddressTest < ActiveSupport::TestCase
       assert_predicate @request.ip_address, :persisted?
     end
   end
+
+  context "edge verification" do
+    should "be bypassed without a RUBYGEMS-PROXY-TOKEN header" do
+      stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, "abc") do
+        refute_predicate @request, :edge_verified?
+        assert_predicate @request, :edge_bypassed?
+      end
+    end
+
+    should "be bypassed with a wrong RUBYGEMS-PROXY-TOKEN header" do
+      @request.headers["RUBYGEMS-PROXY-TOKEN"] = "nope"
+
+      stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, "abc") do
+        assert_predicate @request, :edge_bypassed?
+      end
+    end
+
+    should "be bypassed when no PROXY_TOKEN is configured, even with a header" do
+      @request.headers["RUBYGEMS-PROXY-TOKEN"] = "abc"
+
+      stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, nil) do
+        assert_predicate @request, :edge_bypassed?
+      end
+    end
+
+    should "be verified with a matching RUBYGEMS-PROXY-TOKEN header" do
+      @request.headers["RUBYGEMS-PROXY-TOKEN"] = "abc"
+
+      stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, "abc") do
+        assert_predicate @request, :edge_verified?
+        refute_predicate @request, :edge_bypassed?
+      end
+    end
+  end
 end

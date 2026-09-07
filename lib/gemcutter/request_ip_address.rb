@@ -15,6 +15,18 @@ module Gemcutter::RequestIpAddress
   PROXY_TOKEN = ENV["RUBYGEMS_PROXY_TOKEN"].presence.freeze
 
   included do
+    def edge_verified?
+      fetch_header("gemcutter.edge_verified") do |k|
+        token = headers["RUBYGEMS-PROXY-TOKEN"].presence
+        verified = !!(token && PROXY_TOKEN && ActiveSupport::SecurityUtils.secure_compare(token, PROXY_TOKEN))
+        set_header k, verified
+      end
+    end
+
+    def edge_bypassed?
+      !edge_verified?
+    end
+
     def ip_address
       fetch_header("gemcutter.ip_address") do |k|
         return if remote_ip.blank?
@@ -28,9 +40,7 @@ module Gemcutter::RequestIpAddress
         addr = IpAddress.find_or_create_by(ip_address: ip_addr)
         return unless addr
 
-        token = headers["RUBYGEMS-PROXY-TOKEN"].presence
-
-        if token && PROXY_TOKEN && ActiveSupport::SecurityUtils.secure_compare(token, PROXY_TOKEN)
+        if edge_verified?
           values = GEOIP_FIELDS.transform_values { |v| headers[v] }
           geoip_info = GeoipInfo.find_or_create_by(**values)
           addr.update(geoip_info:)
