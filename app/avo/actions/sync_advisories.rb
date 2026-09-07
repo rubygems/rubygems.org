@@ -23,9 +23,11 @@ class Avo::Actions::SyncAdvisories < Avo::Actions::ApplicationAction
     end
 
     def handle_standalone
-      SyncAdvisoriesJob.perform_later(source: fields[:source], force: true)
-
-      succeed("Advisory sync job scheduled")
+      if SyncAdvisoriesJob.perform_later(source: fields[:source], force: true)
+        succeed("Advisory sync job scheduled")
+      else
+        error "Failed to enqueue advisory sync job. Another may already be queued"
+      end
 
       current_user
     end
