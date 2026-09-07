@@ -34,12 +34,6 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
     }
   end
 
-  context ".sources" do
-    should "include the OSV fetcher" do
-      assert_includes Advisory::Fetcher.sources, Advisory::OSV::Fetcher
-    end
-  end
-
   context ".enabled?" do
     should "follow the advisory class flag" do
       refute_predicate Advisory::OSV::Fetcher, :enabled?

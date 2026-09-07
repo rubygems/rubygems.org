@@ -25,10 +25,6 @@ class Advisory::Fetcher
 
     delegate :enabled?, to: :advisory_class
 
-    def sources
-      Advisory::SOURCES.map { |klass| klass::Fetcher }
-    end
-
     def sync_all
       Advisory.enabled_sources.each { |klass| klass::Fetcher.new.sync }
     end
