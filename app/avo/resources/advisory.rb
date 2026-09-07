@@ -3,7 +3,7 @@
 class Avo::Resources::Advisory < Avo::BaseResource
   self.model_class = ::Advisory
   self.title = :identifier
-  self.includes = []
+  self.includes = [:rubygem]
   self.search = {
     query: lambda {
       search_term = ActiveRecord::Base.sanitize_sql_like(params[:q])
