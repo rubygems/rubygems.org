@@ -116,4 +116,4 @@ bin/importmap audit      # JS dependency vulnerability audit
 - For backfills and other updates to existing data, prefer `MaintenanceTasks::Task` over migrations or ad hoc scripts; follow [Maintenance tasks](doc/maintenance-tasks.md) for design and rollout principles.
 - master must stay fast-forwardable; branch off it for every change.
 - Run `bin/ci` locally before pushing — it mirrors CI (lint, security, tests).
-- User-facing strings: add keys to `config/locales/en.yml`, then run `bin/fill-locales` to propagate to other locales.
+- Web-facing strings (views, components, flash messages, mailers): add keys to `config/locales/en.yml`, then run `bin/fill-locales` — CI fails if locale files are out of sync. Not needed for API-only messages (plain English is the pattern), Avo admin strings, or logs.
