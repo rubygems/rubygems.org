@@ -38,17 +38,24 @@ class Rubygem::AdvisoriesComponent < ApplicationComponent
   def affected_advisories
     Array(@advisories)
       .select { |advisory| advisory.affects?(@version) }
-      .sort_by { |advisory| [SEVERITY_RANK.fetch(advisory.severity, 4), advisory.identifier] }
+      .sort_by { |advisory| [sort_rank(advisory), advisory.identifier] }
+  end
+
+  def sort_rank(advisory)
+    return 0 if advisory.malware?
+
+    SEVERITY_RANK.fetch(advisory.severity, 4)
   end
 
   def style_for(list)
-    list.any? { |advisory| HIGH_SEVERITIES.include?(advisory.severity) } ? :error : :alert
+    list.any? { |advisory| advisory.malware? || HIGH_SEVERITIES.include?(advisory.severity) } ? :error : :alert
   end
 
   def advisory_item(advisory)
+    label = advisory_label(advisory)
     li(class: "flex flex-col gap-1") do
       div(class: "flex flex-wrap items-baseline gap-x-2 gap-y-1") do
-        span(class: "font-semibold uppercase text-b4") { advisory.severity } if advisory.severity.present?
+        span(class: "font-semibold uppercase text-b4") { label } if label
         span(class: "font-mono text-c4") { advisory.identifier }
         span(class: "text-b4") { "(#{advisory.aliases.join(', ')})" } if advisory.aliases.present?
       end
@@ -57,5 +64,11 @@ class Rubygem::AdvisoriesComponent < ApplicationComponent
         link_to t("rubygems.advisories.view_advisory"), advisory.url, class: LINK, target: "_blank", rel: "noopener"
       end
     end
+  end
+
+  def advisory_label(advisory)
+    return t("rubygems.advisories.malware") if advisory.malware?
+
+    advisory.severity.presence
   end
 end

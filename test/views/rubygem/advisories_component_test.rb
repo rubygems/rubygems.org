@@ -59,12 +59,23 @@ class Rubygem::AdvisoriesComponentTest < ComponentTest
     assert page.has_text?("2 known security vulnerabilities")
   end
 
+  should "label malware and use the error style" do
+    page = render_page Rubygem::AdvisoriesComponent.new(
+      advisories: [advisory(identifier: "MAL-2026-9999", severity: nil)],
+      version: build(:version, number: "1.0.0")
+    )
+
+    assert page.has_text?("Malware")
+    assert page.has_css?(".bg-red-200")
+  end
+
   should "sort advisories by severity" do
     page = render_page Rubygem::AdvisoriesComponent.new(
       advisories: [
         advisory(identifier: "GHSA-loww-0000-0001", severity: :low),
         advisory(identifier: "GHSA-crit-0000-0001", severity: :critical),
-        advisory(identifier: "GHSA-high-0000-0001", severity: :high)
+        advisory(identifier: "GHSA-high-0000-0001", severity: :high),
+        advisory(identifier: "MAL-2026-9999", severity: nil)
       ],
       version: build(:version, number: "1.0.0")
     )
@@ -73,5 +84,7 @@ class Rubygem::AdvisoriesComponentTest < ComponentTest
 
     assert_operator text.index("GHSA-crit-0000-0001"), :<, text.index("GHSA-high-0000-0001")
     assert_operator text.index("GHSA-high-0000-0001"), :<, text.index("GHSA-loww-0000-0001")
+    assert_operator text.index("GHSA-crit-0000-0001"), :<, text.index("MAL-2026-9999")
+    assert_operator text.index("MAL-2026-9999"), :<, text.index("GHSA-high-0000-0001")
   end
 end

@@ -42,6 +42,16 @@ class Advisory::OSVTest < ActiveSupport::TestCase
     end
   end
 
+  context "#malware?" do
+    should "be true for MAL-prefixed identifiers" do
+      assert_predicate build(:advisory, identifier: "MAL-2026-9999"), :malware?
+    end
+
+    should "be false for other identifiers" do
+      refute_predicate build(:advisory, identifier: "GHSA-mm33-5vfq-3mm3"), :malware?
+    end
+  end
+
   context "#affects?" do
     should "match an inclusive introduced and exclusive fixed range" do
       advisory = build(:advisory, :range)

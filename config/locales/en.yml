@@ -876,6 +876,7 @@ en:
       title:
         one: "1 known security vulnerability"
         other: "%{count} known security vulnerabilities"
+      malware: Malware
       view_advisory: View advisory
     show:
       bundler_header: Gemfile
