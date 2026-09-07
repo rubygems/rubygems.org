@@ -29,8 +29,7 @@ class Advisory::OSV::Mapper
         published_at:,
         modified_at:,
         withdrawn_at:,
-        ranges:,
-        payload: @document
+        ranges:
       }
     end
   end

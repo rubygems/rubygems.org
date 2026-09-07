@@ -10,7 +10,6 @@ FactoryBot.define do
     modified_at { Time.current }
     aliases { [] }
     ranges { [] }
-    payload { {} }
 
     trait :withdrawn do
       withdrawn_at { Time.current }

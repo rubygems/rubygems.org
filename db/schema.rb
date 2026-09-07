@@ -34,7 +34,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
     t.datetime "created_at", null: false
     t.string "identifier", null: false
     t.datetime "modified_at", null: false
-    t.jsonb "payload", default: {}, null: false
     t.datetime "published_at"
     t.jsonb "ranges", default: [], null: false
     t.string "rubygem_name", null: false
