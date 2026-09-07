@@ -236,6 +236,19 @@ class Advisory::OSV::FetcherTest < ActiveSupport::TestCase
         assert_equal [@document["id"]], documents.pluck("id")
         assert_requested :get, Advisory::OSV::Fetcher::DUMP_URL
       end
+
+      should "fall back to the full dump when the index is malformed CSV" do
+        stub_request(:get, Advisory::OSV::Fetcher::INDEX_URL).to_return(
+          status: 200,
+          body: %("2026-02-01T00:00:00Z,GHSA-new-0000-0000)
+        )
+        stub_osv_dump([@document])
+
+        documents = Advisory::OSV::Fetcher.new.fetch
+
+        assert_equal [@document["id"]], documents.pluck("id")
+        assert_requested :get, Advisory::OSV::Fetcher::DUMP_URL
+      end
     end
   end
 

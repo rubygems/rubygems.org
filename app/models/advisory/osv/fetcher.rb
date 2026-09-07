@@ -43,7 +43,7 @@ class Advisory::OSV::Fetcher < Advisory::Fetcher
       break if ids.size > MAX_INCREMENTAL_IDS
     end
     ids
-  rescue Faraday::Error => e
+  rescue Faraday::Error, CSV::MalformedCSVError => e
     log_incremental_fallback(e)
     nil
   end
