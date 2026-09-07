@@ -44,7 +44,7 @@ gem "rdoc", "~> 8.0"
 gem "roadie-rails", "~> 3.4"
 gem "ruby-magic", "~> 0.6"
 gem "shoryuken", "~> 7.0", require: false
-gem "statsd-instrument", "~> 3.11"
+gem "statsd-instrument", "~> 4.0"
 gem "validates_formatting_of", "~> 0.9"
 gem "opensearch-ruby", "~> 3.4"
 gem "searchkick", "~> 6.1"
