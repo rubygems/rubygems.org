@@ -2,7 +2,7 @@
 
 class Avo::Resources::Version < Avo::BaseResource
   self.title = :full_name
-  self.includes = [:rubygem]
+  self.includes = %i[rubygem pusher pusher_api_key]
   self.search = {
     query: lambda {
              query.where("full_name LIKE ?", "#{params[:q]}%")

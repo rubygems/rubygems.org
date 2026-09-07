@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Avo::Resources::Deletion < Avo::BaseResource
-  self.includes = [:version]
+  self.includes = %i[version user]
 
   def fields
     field :id, as: :id

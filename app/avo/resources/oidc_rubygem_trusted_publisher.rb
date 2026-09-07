@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Avo::Resources::OIDCRubygemTrustedPublisher < Avo::BaseResource
-  self.includes = [:trusted_publisher]
+  self.includes = %i[rubygem trusted_publisher]
   self.model_class = ::OIDC::RubygemTrustedPublisher
 
   def fields

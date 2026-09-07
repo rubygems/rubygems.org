@@ -2,7 +2,7 @@
 
 class Avo::Resources::OIDCApiKeyRole < Avo::BaseResource
   self.title = :token
-  self.includes = []
+  self.includes = %i[provider user]
   self.model_class = ::OIDC::ApiKeyRole
 
   def fields
