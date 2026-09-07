@@ -35,6 +35,21 @@ class SyncAdvisoriesTest < ActiveJob::TestCase
     assert_equal "Unknown advisory source", @action.response.dig(:messages, 0, :body)
   end
 
+  should "error when the sync job fails to enqueue" do
+    SyncAdvisoriesJob.stubs(:perform_later).returns(false)
+
+    perform_action
+
+    assert_no_enqueued_jobs only: SyncAdvisoriesJob
+
+    audit = Audit.sole
+
+    assert_equal @current_user, audit.auditable
+    assert_equal "Failed to enqueue advisory sync job. Another may already be queued", @action.response.dig(:messages, 0, :body)
+    assert_equal :error, @action.response.dig(:messages, 0, :type)
+    assert_equal :keep_modal_open, @action.response[:type]
+  end
+
   should "record an Avo audit against the operator" do
     comment = "Warming the advisories table before enabling the public flag"
 
