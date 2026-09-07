@@ -5,6 +5,10 @@ class Advisory::OSV < Advisory
 
   enum :severity, { low: "low", moderate: "moderate", high: "high", critical: "critical" }, validate: { allow_nil: true }
 
+  def malware?
+    identifier.to_s.start_with?("MAL-")
+  end
+
   private
 
   def range_includes?(range, gem_version)

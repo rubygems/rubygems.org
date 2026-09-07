@@ -928,6 +928,7 @@ fr:
       title:
         one:
         other:
+      malware:
       view_advisory:
     show:
       bundler_header: Gemfile
