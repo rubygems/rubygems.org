@@ -38,5 +38,58 @@ class PrefixReservationTest < ActiveSupport::TestCase
 
       refute PrefixReservation.reserved?("downtow-mainstreet") # misspelling
     end
+
+    should "not treat an underscore in the prefix as a LIKE wildcard" do
+      create(:prefix_reservation, prefix: "down_town")
+
+      refute PrefixReservation.reserved?("downtown-mainstreet")
+      assert PrefixReservation.reserved?("down_town-mainstreet")
+    end
+  end
+
+  context "#permitted?" do
+    setup do
+      @organization = create(:organization)
+      @prefix_reservation = create(:prefix_reservation, organization: @organization, prefix: "acme")
+    end
+
+    should "permit a gem that belongs to the organization" do
+      assert @prefix_reservation.permitted?(build(:rubygem, name: "acme-widgets", organization: @organization))
+    end
+
+    should "permit a gem being pushed by a member of the organization" do
+      rubygem = build(:rubygem, name: "acme-widgets")
+      rubygem.pushed_by = create(:user).tap { create(:membership, user: it, organization: @organization) }
+
+      assert @prefix_reservation.permitted?(rubygem)
+    end
+
+    should "permit a gem owned by a member of the organization" do
+      member = create(:user)
+      create(:membership, user: member, organization: @organization)
+
+      assert @prefix_reservation.permitted?(create(:rubygem, name: "widgets", owners: [member]))
+    end
+
+    should "permit a name claimed by a pending trusted publisher belonging to a member" do
+      member = create(:user)
+      create(:membership, user: member, organization: @organization)
+      create(:oidc_pending_trusted_publisher, user: member, rubygem_name: "acme-widgets")
+
+      assert @prefix_reservation.permitted?(build(:rubygem, name: "acme-widgets"))
+    end
+
+    should "not permit a gem with no connection to the organization" do
+      rubygem = build(:rubygem, name: "acme-widgets")
+      rubygem.pushed_by = create(:user)
+
+      refute @prefix_reservation.permitted?(rubygem)
+    end
+
+    should "not permit anything once the organization is deleted" do
+      @organization.update!(deleted_at: Time.zone.now)
+
+      refute @prefix_reservation.reload.permitted?(build(:rubygem, name: "acme-widgets"))
+    end
   end
 end

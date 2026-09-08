@@ -157,6 +157,7 @@ en:
             rubygem_name:
               unavailable: "is already in use"
               reserved: "is reserved"
+              reserved_prefix: "starts with a prefix reserved by another organization"
     models:
       user: User
       api_key:

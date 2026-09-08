@@ -47,6 +47,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
     t.index ["type", "identifier", "rubygem_name"], name: "index_advisories_on_type_and_identifier_and_rubygem_name", unique: true
   end
 
+  create_table "api_key_organization_scopes", force: :cascade do |t|
+    t.bigint "api_key_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "membership_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["api_key_id"], name: "index_api_key_organization_scopes_on_api_key_id", unique: true
+    t.index ["membership_id"], name: "index_api_key_organization_scopes_on_membership_id"
+  end
+
   create_table "api_key_rubygem_scopes", force: :cascade do |t|
     t.bigint "api_key_id", null: false
     t.datetime "created_at", null: false
@@ -66,6 +75,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
     t.string "owner_type"
     t.string "scopes", array: true
     t.datetime "soft_deleted_at"
+    t.string "soft_deleted_organization_name"
     t.string "soft_deleted_rubygem_name"
     t.datetime "updated_at", precision: nil, null: false
     t.index ["hashed_key"], name: "index_api_keys_on_hashed_key", unique: true
@@ -498,11 +508,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
   create_table "oidc_pending_trusted_publishers", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "expires_at", precision: nil, null: false
+    t.bigint "organization_id"
     t.string "rubygem_name"
     t.bigint "trusted_publisher_id", null: false
     t.string "trusted_publisher_type", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["organization_id"], name: "index_oidc_pending_trusted_publishers_on_organization_id"
     t.index ["trusted_publisher_type", "trusted_publisher_id"], name: "index_oidc_pending_trusted_publishers_on_trusted_publisher"
     t.index ["user_id"], name: "index_oidc_pending_trusted_publishers_on_user_id"
   end
@@ -624,6 +636,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
     t.integer "user_id"
     t.index ["rubygem_id"], name: "index_ownerships_on_rubygem_id"
     t.index ["user_id", "rubygem_id"], name: "index_ownerships_on_user_id_and_rubygem_id", unique: true
+  end
+
+  create_table "prefix_reservations", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "organization_id"
+    t.string "prefix", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_prefix_reservations_on_organization_id"
+    t.index ["prefix"], name: "index_prefix_reservations_on_prefix", unique: true
   end
 
   create_table "rubygem_transfers", force: :cascade do |t|
@@ -815,6 +836,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
     t.index ["user_id"], name: "index_webauthn_verifications_on_user_id", unique: true
   end
 
+  add_foreign_key "api_key_organization_scopes", "api_keys", name: "api_key_organization_scopes_api_key_id_fk"
+  add_foreign_key "api_key_organization_scopes", "memberships"
   add_foreign_key "api_key_rubygem_scopes", "api_keys", name: "api_key_rubygem_scopes_api_key_id_fk"
   add_foreign_key "attestations", "versions"
   add_foreign_key "audits", "admin_github_users", name: "audits_admin_github_user_id_fk"
@@ -835,6 +858,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
   add_foreign_key "oidc_api_key_roles", "users"
   add_foreign_key "oidc_id_tokens", "api_keys"
   add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
+  add_foreign_key "oidc_pending_trusted_publishers", "organizations", on_delete: :nullify
   add_foreign_key "oidc_pending_trusted_publishers", "users"
   add_foreign_key "oidc_rubygem_trusted_publishers", "rubygems"
   add_foreign_key "organization_invites", "users"
