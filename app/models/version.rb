@@ -26,6 +26,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   before_validation :gem_full_nameify!
   before_save :create_link_verifications, if: :metadata_changed?
   before_save :update_prerelease, if: :number_changed?
+  before_save :serialize_indexed_writes_per_gem, if: -> { will_save_change_to_indexed? || new_record? }
   # TODO: Remove this once we move to GemDownload only
   after_create :create_gem_download
   after_create :record_push_event
@@ -530,6 +531,12 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   private
+
+  def serialize_indexed_writes_per_gem
+    return if rubygem.nil? || rubygem.new_record?
+
+    Rubygem.advisory_xact_lock!("rubygem_version_reorder", rubygem.id)
+  end
 
   def update_prerelease
     self[:prerelease] = prerelease

@@ -1605,6 +1605,39 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context "advisory locking the rubygem to serialize reorders" do
+    setup do
+      @version = create(:version)
+    end
+
+    should "take the per-gem advisory lock before creating a version" do
+      assert_queries_match(/pg_advisory_xact_lock/) do
+        create(:version, rubygem: @version.rubygem)
+      end
+    end
+
+    should "take the per-gem advisory lock when indexed changes" do
+      assert_queries_match(/pg_advisory_xact_lock/) do
+        @version.update!(indexed: false)
+      end
+    end
+
+    should "not take the lock when unrelated attributes change" do
+      assert_no_queries_match(/pg_advisory_xact_lock/) do
+        @version.update!(info_checksum_v2: "lala")
+      end
+    end
+
+    should "not take the lock when the rubygem is not yet persisted" do
+      rubygem = build(:rubygem)
+      version = build(:version, rubygem: rubygem, created_at: nil)
+
+      assert_no_queries_match(/pg_advisory_xact_lock/) do
+        Version.transaction { rubygem.save! && version.save! }
+      end
+    end
+  end
+
   private
 
   def derived_abi(required_ruby_version, platform: "x86_64-linux")
