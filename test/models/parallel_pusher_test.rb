@@ -98,4 +98,73 @@ class ParallelPusherTest < ActiveSupport::TestCase
       assert_equal numbers.size + 1, versions.indexed.count
     end
   end
+
+  context "when pushing and yanking versions of the same gem in parallel" do
+    setup do
+      @fs = RubygemFs.mock!
+      @user = create(:user, email: "parallel-yank-user@rubygems-test.org")
+      @api_key = create(:api_key, owner: @user)
+      @gem_name = "hola-parallel-yank"
+    end
+
+    teardown do
+      Rubygem.find_by(name: @gem_name)&.destroy!
+      @user.destroy!
+      GemDownload.delete_all
+      RubygemFs.mock!
+    end
+
+    # Yanks UPDATE an existing (visible) version row before reorder_versions
+    # runs, so unlike concurrent pushes they deadlock unless the per-gem
+    # advisory lock is taken *before* the version row is written
+    # (Version#serialize_indexed_writes_per_gem). Guards that callback.
+    should "not deadlock and keep indexed state consistent" do
+      %w[1.0.0 2.0.0 3.0.0].each do |number|
+        pusher = Pusher.new(@api_key, build_gem(new_gemspec(@gem_name, number, "GemCutter", "ruby")))
+        pusher.process
+
+        assert_equal 200, pusher.code, pusher.message
+      end
+
+      rubygem = Rubygem.find_by!(name: @gem_name)
+      to_yank = rubygem.versions.where(number: %w[1.0.0 2.0.0]).to_a
+      start = Concurrent::CountDownLatch.new(1)
+
+      push_threads = %w[4.0.0 5.0.0].map do |number|
+        Thread.new do
+          gem = build_gem(new_gemspec(@gem_name, number, "GemCutter", "ruby"))
+          start.wait
+          ActiveRecord::Base.connection_pool.with_connection do
+            pusher = Pusher.new(@api_key, gem)
+            pusher.process
+            ["push #{number}", pusher.code == 200 ? nil : pusher.message]
+          end
+        end
+      end
+
+      yank_threads = to_yank.map do |version|
+        Thread.new do
+          start.wait
+          ActiveRecord::Base.connection_pool.with_connection do
+            Deletion.create!(user: @user, version: version)
+            ["yank #{version.number}", nil]
+          rescue StandardError => e
+            ["yank #{version.number}", "#{e.class}: #{e.message}"]
+          end
+        end
+      end
+
+      start.count_down
+      failures = (push_threads + yank_threads).map(&:value).reject { |(_, error)| error.nil? }
+
+      assert_empty failures, "expected all concurrent pushes and yanks to succeed, got: #{failures.inspect}"
+
+      versions = rubygem.versions.reload
+
+      assert_equal 5, versions.count
+      assert_equal %w[3.0.0 4.0.0 5.0.0], versions.indexed.pluck(:number).sort
+      assert_equal (0..4).to_a, versions.pluck(:position).sort
+      assert_equal ["5.0.0"], versions.where(latest: true).pluck(:number)
+    end
+  end
 end
