@@ -9,9 +9,12 @@ export default class extends Controller {
   connect() {
     this.indexNumber = -1;
     this.suggestLength = 0;
+    this.abortController = null;
   }
 
   disconnect() {
+    this.abortController?.abort();
+    this.abortController = null;
     this.clear();
   }
 
@@ -58,7 +61,12 @@ export default class extends Controller {
     const el = e.currentTarget;
     const term = el.value.trim();
 
+    this.abortController?.abort();
+    this.abortController = null;
+
     if (term.length >= 2) {
+      const abortController = new AbortController();
+      this.abortController = abortController;
       el.classList.remove("autocomplete-done");
       el.classList.add("autocomplete-loading");
       const query = new URLSearchParams({ query: term });
@@ -66,13 +74,20 @@ export default class extends Controller {
       try {
         const response = await fetch("/api/v1/search/autocomplete?" + query, {
           method: "GET",
+          signal: abortController.signal,
         });
         const data = await response.json();
-        this.showSuggestions(data.slice(0, 10));
+        if (!abortController.signal.aborted) {
+          this.showSuggestions(data.slice(0, 10));
+        }
       } catch (error) {}
-      el.classList.remove("autocomplete-loading");
-      el.classList.add("autocomplete-done");
+      if (this.abortController === abortController) {
+        this.abortController = null;
+        el.classList.remove("autocomplete-loading");
+        el.classList.add("autocomplete-done");
+      }
     } else {
+      el.classList.remove("autocomplete-loading");
       this.clear();
     }
   }

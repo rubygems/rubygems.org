@@ -41,6 +41,37 @@ class AutocompletesTest < ApplicationSystemTestCase
     assert_single_active_suggestion
   end
 
+  test "new and short queries cancel stale suggestion requests" do
+    stub_autocomplete_requests
+
+    @fill_field.send_keys "c"
+    wait_for_autocomplete_requests 1
+    @fill_field.send_keys "o"
+    wait_for_autocomplete_requests 2
+
+    resolve_autocomplete_request 1, ["rubocop"]
+    @form.assert_selector "[role='option']", text: "rubocop", count: 1
+    @fill_field.send_keys :down
+    @form.assert_selector "#{SUGGESTIONS}[aria-activedescendant='suggest-0']"
+
+    resolve_autocomplete_request 0, ["stale-result"]
+
+    @form.assert_selector "#{SUGGESTIONS}[aria-activedescendant='suggest-0']"
+    @form.assert_selector "[role='option']", text: "rubocop", count: 1
+
+    assert_autocomplete_request_aborted 0
+    assert_equal "suggest-0", active_descendant
+
+    @fill_field.send_keys :backspace
+    wait_for_autocomplete_requests 3
+    @fill_field.set "r"
+
+    assert_autocomplete_request_aborted 2
+    @form.assert_no_selector "[role='option']"
+
+    refute @fill_field.matches_css?(".autocomplete-loading")
+  end
+
   test "suggestions don't appear when the gem does not exist" do
     @fill_field.set "ruxyz"
 
@@ -118,5 +149,55 @@ class AutocompletesTest < ApplicationSystemTestCase
     @form.assert_selector "#{SUGGESTIONS}[aria-activedescendant]"
 
     assert_equal(1, suggestion_options.count { |option| option["id"] == active_descendant })
+  end
+
+  def stub_autocomplete_requests
+    with_playwright_page do |pw_page|
+      pw_page.evaluate <<~JS
+        window.autocompleteRequests = [];
+        window.fetch = (_url, options = {}) => new Promise((resolve, reject) => {
+          const request = {
+            aborted: false,
+            settled: false,
+            resolve(items) {
+              resolve({ json: async () => items });
+              setTimeout(() => request.settled = true, 0);
+            }
+          };
+          options.signal?.addEventListener("abort", () => {
+            request.aborted = true;
+            reject(new DOMException("Aborted", "AbortError"));
+          });
+          window.autocompleteRequests.push(request);
+        });
+        undefined;
+      JS
+    end
+  end
+
+  def wait_for_autocomplete_requests(count)
+    with_playwright_page do |pw_page|
+      pw_page.wait_for_function("count => window.autocompleteRequests.length === count", arg: count)
+    end
+  end
+
+  def assert_autocomplete_request_aborted(index)
+    with_playwright_page do |pw_page|
+      assert pw_page.evaluate("index => window.autocompleteRequests[index].aborted", arg: index)
+    end
+  end
+
+  def resolve_autocomplete_request(index, items)
+    with_playwright_page do |pw_page|
+      pw_page.evaluate(
+        "args => window.autocompleteRequests[args.index].resolve(args.items)",
+        arg: { index: index, items: items }
+      )
+      pw_page.wait_for_function("index => window.autocompleteRequests[index].settled", arg: index)
+    end
+  end
+
+  def with_playwright_page(&)
+    page.driver.with_playwright_page(&)
   end
 end
