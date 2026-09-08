@@ -2,7 +2,7 @@
 
 class Avo::Actions::SyncAdvisories < Avo::Actions::ApplicationAction
   self.name = "Sync Advisories"
-  self.message = "Fetch and upsert security advisories from the selected source. This runs even when the public source flag is off."
+  self.message = "Fetch and replace security advisories from the selected source. This runs even when the public source flag is off."
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :index
   }
