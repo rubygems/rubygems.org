@@ -88,10 +88,10 @@ class AutocompletesTest < ApplicationSystemTestCase
     assert_equal option["id"], active_descendant
   end
 
-  test "clicking a suggestion submits the search" do
+  test "clicking a suggestion navigates directly to the gem page" do
     @form.first("[role='option']", text: "rubocop").click
 
-    assert_current_path search_path, ignore_query: true
+    assert_current_path rubygem_path("rubocop")
     assert_text "rubocop"
   end
 
