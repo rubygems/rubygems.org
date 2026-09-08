@@ -12,10 +12,6 @@ class Advisory::Fetcher
     Faraday::TooManyRequestsError
   ].freeze
 
-  UPDATE_COLUMNS = %i[
-    aliases summary severity url published_at modified_at withdrawn_at ranges
-  ].freeze
-
   class Error < StandardError; end
 
   class << self
@@ -56,15 +52,11 @@ class Advisory::Fetcher
   end
 
   def import(records)
-    return 0 if records.empty?
-
     self.class.advisory_class.transaction do
+      self.class.advisory_class.delete_all
+
       records.each_slice(BATCH_SIZE) do |slice|
-        self.class.advisory_class.upsert_all(
-          slice,
-          unique_by: %i[type identifier rubygem_name],
-          update_only: UPDATE_COLUMNS
-        )
+        self.class.advisory_class.insert_all!(slice)
       end
     end
 

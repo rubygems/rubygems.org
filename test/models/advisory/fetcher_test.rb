@@ -120,6 +120,48 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
     end
   end
 
+  context "#import" do
+    should "roll back the previous snapshot when a later insert batch fails" do
+      create(:advisory, identifier: "GHSA-keep-0000-0000", rubygem_name: "actionpack", summary: "Keep me")
+      records = Advisory::OSV::Mapper.call(@document.merge(
+                                             "affected" => [
+                                               {
+                                                 "package" => { "name" => "actionpack", "ecosystem" => "RubyGems" },
+                                                 "ranges" => ["type" => "ECOSYSTEM", "events" => [{ "introduced" => "7.0.0" }, "fixed" => "7.0.2.4"]]
+                                               },
+                                               {
+                                                 "package" => { "name" => "rails", "ecosystem" => "RubyGems" },
+                                                 "ranges" => ["type" => "ECOSYSTEM", "events" => [{ "introduced" => "7.0.0" }, "fixed" => "7.0.2.4"]]
+                                               }
+                                             ]
+                                           ))
+
+      stub_const(Advisory::Fetcher, :BATCH_SIZE, 1) do
+        Advisory::OSV.stubs(:insert_all!).returns(nil).then.raises(StandardError, "insert failed")
+
+        assert_raises(StandardError) { FakeFetcher.new.import(records) }
+      end
+
+      assert_equal 1, Advisory::OSV.count
+      assert_equal "Keep me", Advisory::OSV.find_by!(identifier: "GHSA-keep-0000-0000").summary
+      assert_nil Advisory::OSV.find_by(identifier: "GHSA-test-0001-0001")
+    end
+
+    should "only replace rows for the fetcher source" do
+      create(:advisory, identifier: "GHSA-osv-0000-0000", rubygem_name: "actionpack")
+      other = create(:advisory, identifier: "OTHER-0000-0000", rubygem_name: "actionpack", summary: "Other source")
+      Advisory.where(id: other.id).update_all(type: "Advisory::Other")
+
+      FakeFetcher.new.import(Advisory::OSV::Mapper.call(@document))
+
+      assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
+      assert_nil Advisory::OSV.find_by(identifier: "GHSA-osv-0000-0000")
+      assert_equal 1, Advisory.connection.select_value(
+        "SELECT COUNT(*) FROM advisories WHERE type = 'Advisory::Other' AND identifier = 'OTHER-0000-0000'"
+      ).to_i
+    end
+  end
+
   context "#download" do
     setup do
       @url = "https://example.test/advisories"
