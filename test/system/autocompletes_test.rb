@@ -66,10 +66,13 @@ class AutocompletesTest < ApplicationSystemTestCase
   end
 
   test "down arrow key should loop" do
-    @fill_field.send_keys :down, :down, :down, :down
+    suggestion_options.first.hover
     @form.assert_selector "#{SUGGESTIONS}[aria-activedescendant]"
+    initially_active = active_descendant
 
-    assert_equal suggestion_options.last["id"], active_descendant
+    suggestion_options.size.times { @fill_field.send_keys :down }
+
+    assert_equal initially_active, active_descendant
   end
 
   test "up arrow key should loop" do
