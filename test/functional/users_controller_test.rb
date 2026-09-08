@@ -96,7 +96,7 @@ class UsersControllerTest < ActionController::TestCase
         assert_no_changes -> { User.count } do
           post :create, params: { user: { password: PasswordHelpers::SECURE_TEST_PASSWORD } }
         end
-        assert_response :ok
+        assert_response :unprocessable_entity
         assert page.has_content?("Email address is not a valid email")
       end
     end

@@ -16,3 +16,5 @@ module OpenSearchMultiJsonSerializerPatch
 end
 
 OpenSearch::Transport::Transport::Serializer::MultiJson.prepend(OpenSearchMultiJsonSerializerPatch)
+
+OpenSearch::API.settings[:serializer] = OpenSearch::Transport::Transport::Serializer::MultiJson.new

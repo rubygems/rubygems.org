@@ -12,9 +12,9 @@ gem "aws-sdk-sqs", "~> 1.117"
 gem "bootsnap", "~> 1.25"
 gem "clearance", "~> 2.12"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.40"
+gem "datadog", "~> 2.41"
 gem "dogstatsd-ruby", "~> 5.7"
-gem "google-protobuf", "~> 4.35"
+gem "google-protobuf", "~> 4.36"
 gem "faraday", "~> 2.14"
 gem "faraday-retry", "~> 2.4"
 gem "faraday-restrict-ip-addresses", "~> 0.3.0", require: "faraday/restrict_ip_addresses"
@@ -44,7 +44,7 @@ gem "rdoc", "~> 8.0"
 gem "roadie-rails", "~> 3.4"
 gem "ruby-magic", "~> 0.6"
 gem "shoryuken", "~> 7.0", require: false
-gem "statsd-instrument", "~> 3.11"
+gem "statsd-instrument", "~> 4.0"
 gem "validates_formatting_of", "~> 0.9"
 gem "opensearch-ruby", "~> 3.4"
 gem "searchkick", "~> 6.1"
@@ -73,7 +73,7 @@ gem "yaml-schema", "~> 1.2"
 # Admin dashboard
 gem "avo", "~> 3.32"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 4.12.0"
+gem "view_component", "~> 4.14.0"
 gem "pundit", "~> 2.5"
 gem "chartkick", "~> 5.2"
 gem "groupdate", "~> 6.8"
@@ -119,9 +119,9 @@ group :development, :test do
   gem "pg_query", "~> 6.2"
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
-  gem "rubocop", "~> 1.89", require: false
-  gem "rubocop-rails", "~> 2.36", require: false
-  gem "rubocop-performance", "~> 1.26", require: false
+  gem "rubocop", "~> 1.90", require: false
+  gem "rubocop-rails", "~> 2.37", require: false
+  gem "rubocop-performance", "~> 1.27", require: false
   gem "rubocop-minitest", "~> 0.40", require: false
   gem "rubocop-capybara", "~> 3.0", require: false
   gem "rubocop-factory_bot", "~> 2.28", require: false

@@ -5,6 +5,7 @@ class OIDC::RubygemTrustedPublisherPolicy < ApplicationPolicy
   end
 
   delegate :rubygem, to: :record
+  delegate :organization, to: :rubygem
 
   def show?
     rubygem_owned_by_with_role?(user, minimum_required_role: :owner, minimum_required_org_role: :admin)

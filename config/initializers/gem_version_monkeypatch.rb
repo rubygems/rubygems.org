@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# This patch ensures that we don't have a memory leak when instanciating
+# This patch ensures that we don't have a memory leak when instantiating
 # Gem::Version.
 #
 # The way it is built and the purpose it is built for is for short lived uses

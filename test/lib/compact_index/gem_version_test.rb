@@ -62,7 +62,7 @@ class CompactIndex::GemVersionV2Test < ActiveSupport::TestCase
       )
 
       assert_equal(
-        "2.9.0-ef716ba7 |checksum:ef716ba7abcdef,ruby:~> 3.2.0,rubygems:>= 4.1.0.beta1,platform:= x86_64-linux-musl",
+        "2.9.0-ef716ba7 |checksum:ef716ba7abcdef,ruby:~> 3.2.0,rubygems:>= 4.1.0.beta1,platform:x86_64-linux-musl",
         version.to_line
       )
     end
