@@ -2,7 +2,7 @@
 
 class Avo::Resources::OrganizationOnboarding < Avo::BaseResource
   self.title = :organization_name
-  self.includes = [:invites]
+  self.includes = [:created_by]
 
   def actions
     action Avo::Actions::OnboardOrganization

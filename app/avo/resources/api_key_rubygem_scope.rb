@@ -2,7 +2,7 @@
 
 class Avo::Resources::ApiKeyRubygemScope < Avo::BaseResource
   self.title = :cache_key
-  self.includes = []
+  self.includes = %i[api_key ownership]
 
   def fields
     field :id, as: :id
