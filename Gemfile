@@ -12,7 +12,7 @@ gem "aws-sdk-sqs", "~> 1.117"
 gem "bootsnap", "~> 1.25"
 gem "clearance", "~> 2.12"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.41"
+gem "datadog", "~> 2.42"
 gem "dogstatsd-ruby", "~> 5.7"
 gem "google-protobuf", "~> 4.36"
 gem "faraday", "~> 2.14"
@@ -73,7 +73,7 @@ gem "yaml-schema", "~> 1.2"
 # Admin dashboard
 gem "avo", "~> 3.32"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 4.14.0"
+gem "view_component", "~> 4.15.0"
 gem "pundit", "~> 2.5"
 gem "chartkick", "~> 5.2"
 gem "groupdate", "~> 6.8"
@@ -128,7 +128,7 @@ group :development, :test do
 end
 
 group :development do
-  gem "rails-erd", "~> 2.1"
+  gem "rails-erd", "~> 2.2"
   gem "listen", "~> 3.10"
   gem "letter_opener", "~> 1.10"
   gem "letter_opener_web", "~> 3.0"
