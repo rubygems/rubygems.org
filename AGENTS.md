@@ -9,3 +9,6 @@
 - For backfills and other updates to existing data, prefer
   `MaintenanceTasks::Task` over migrations or ad hoc scripts; follow
   [Maintenance tasks](doc/maintenance-tasks.md) for design and rollout principles.
+- For web-facing strings (views, components, flash messages, mailers), add
+  keys to `config/locales/en.yml`, then run `bin/fill-locales`. API-only
+  messages, Avo admin strings, and logs should stay plain English.
