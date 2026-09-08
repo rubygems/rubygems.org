@@ -42,7 +42,11 @@ class RubygemTransfer < ApplicationRecord
   end
 
   def approved_invites
-    invites.includes(:user).select { |invite| invite.user.present? && invite.role.present? }
+    reviewable_invites.select { |invite| invite.role.present? }
+  end
+
+  def reviewable_invites
+    invites.includes(:user).select { |invite| invite.user.present? && !existing_organization_member?(invite.user) }
   end
 
   def available_rubygems
@@ -61,11 +65,18 @@ class RubygemTransfer < ApplicationRecord
 
   private
 
-  def remove_ownerships_for_joining_members
-    invited_users = invites.includes(:user).reject { |invite| invite.role.nil? || invite.outside_contributor? }.map(&:user)
-    invited_users << created_by
+  def existing_organization_member?(user)
+    member_user_ids.include?(user.id)
+  end
 
-    Ownership.includes(:rubygem, :user, :api_key_rubygem_scopes).where(user: invited_users, rubygem: selected_rubygems).destroy_all
+  def remove_ownerships_for_joining_members
+    joining_user_ids = invites.filter_map do |invite|
+      invite.user_id if member_user_ids.include?(invite.user_id) || (invite.role.present? && !invite.outside_contributor?)
+    end
+
+    Ownership.includes(:rubygem, :user, :api_key_rubygem_scopes)
+      .where(user_id: [created_by_id, *joining_user_ids], rubygem: selected_rubygems)
+      .destroy_all
   end
 
   def demote_outside_contributors_to_maintainer
@@ -87,6 +98,12 @@ class RubygemTransfer < ApplicationRecord
   def sync_invites
     existing_invites = invites.includes(:user).index_by(&:user_id)
     self.invites = users_for_rubygem.map { |user| existing_invites[user.id] || OrganizationInvite.new(user: user) }
+  end
+
+  def member_user_ids
+    return [] if organization_id.nil?
+
+    @member_user_ids ||= Membership.where(organization_id: organization_id).pluck(:user_id)
   end
 
   def rubygems_owned_by_transferrer

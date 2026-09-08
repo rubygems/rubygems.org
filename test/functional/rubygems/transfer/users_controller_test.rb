@@ -65,4 +65,16 @@ class Rubygems::Transfer::UsersControllerTest < ActionDispatch::IntegrationTest
     assert_response :redirect
     assert_redirected_to confirm_transfer_rubygems_path
   end
+
+  test "GET /transfer/users omits existing organization members" do
+    existing_member = @maintainers.first
+    other_maintainer = @maintainers.last
+    create(:membership, :admin, user: existing_member, organization: @organization)
+
+    get users_transfer_rubygems_path(as: @owner)
+
+    assert_response :success
+    assert_select %(li[data-user-handle="#{existing_member.handle}"]), count: 0
+    assert_select %(li[data-user-handle="#{other_maintainer.handle}"])
+  end
 end

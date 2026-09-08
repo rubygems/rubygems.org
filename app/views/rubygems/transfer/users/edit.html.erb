@@ -62,9 +62,9 @@
 
 <%= form_with(model: @rubygem_transfer, url: users_transfer_rubygems_path, method: :patch) do |form| %>
   <%= render "rubygems/transfer/error", transfer: @rubygem_transfer if @rubygem_transfer.errors.any? %>
-  <% if @rubygem_transfer.invites.any? %>
+  <% if @rubygem_transfer.reviewable_invites.any? %>
   <ul>
-    <%= form.fields_for :invites do |invite_fields| %>
+    <%= form.fields_for :invites, @rubygem_transfer.reviewable_invites do |invite_fields| %>
       <% user = invite_fields.object.user %>
       <li class="flex w-full py-3 pl-3 justify-between items-center" data-user-handle="<%= user.handle %>">
         <%= invite_fields.label :role, class: "flex flex-row items-center h-11" do %>
