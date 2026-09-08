@@ -5,6 +5,7 @@ FactoryBot.define do
     transient do
       sequence(:key, &:to_s)
       rubygem { nil }
+      scoped_organization { nil }
     end
 
     owner factory: %i[user]
@@ -17,6 +18,7 @@ FactoryBot.define do
 
     after(:build) do |api_key, evaluator|
       api_key.rubygem_id = evaluator.rubygem.id if evaluator.rubygem
+      api_key.organization_id = evaluator.scoped_organization.id if evaluator.scoped_organization
     end
 
     trait :trusted_publisher do

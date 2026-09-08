@@ -50,6 +50,14 @@
           <p class="text-b3 text-neutral-600 dark:text-neutral-400 mb-2"><%= t("api_keys.form.rubygem_scope_info") %></p>
           <%= f.collection_select :gems, current_user.rubygems.by_name, :name, :name, { include_blank: t("api_keys.all_gems"), include_hidden: false }, selected: :name, class: input_class, multiple: true %>
         </div>
+        <% organizations = current_user.manageable_organizations %>
+        <% if organizations.any? %>
+          <div class="mt-6">
+            <%= f.label :organization, t("api_keys.form.organization_scope"), class: label_class %>
+            <p class="text-b3 text-neutral-600 dark:text-neutral-400 mb-2"><%= t("api_keys.form.organization_scope_info") %></p>
+            <%= f.collection_select :organization, organizations, :handle, :name, { include_blank: t("api_keys.no_organization") }, class: input_class %>
+          </div>
+        <% end %>
       </div>
     <% end %>
   </div>

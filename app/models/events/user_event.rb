@@ -34,6 +34,7 @@ class Events::UserEvent < ApplicationRecord
     attribute :name, :string
     attribute :scopes, Types::ArrayOf.new(ActiveRecord::Type::String.new)
     attribute :gem, :string
+    attribute :organization, :string
     attribute :mfa, :boolean
 
     attribute :api_key_gid, :global_id

@@ -3,6 +3,7 @@
 class OIDC::PendingTrustedPublisher < ApplicationRecord
   belongs_to :user
   belongs_to :trusted_publisher, polymorphic: true, optional: false
+  belongs_to :organization, optional: true
 
   accepts_nested_attributes_for :trusted_publisher
 
@@ -13,6 +14,7 @@ class OIDC::PendingTrustedPublisher < ApplicationRecord
     uniqueness: { case_sensitive: false, scope: %i[trusted_publisher_id trusted_publisher_type], conditions: -> { unexpired } }
 
   validate :available_rubygem_name, on: :create
+  validate :organization_manageable_by_user, if: :organization
 
   scope :unexpired, -> { where(arel_table[:expires_at].eq(nil).or(arel_table[:expires_at].gt(Time.now.utc))) }
   scope :expired, -> { where(arel_table[:expires_at].lteq(Time.now.utc)) }
@@ -40,5 +42,11 @@ class OIDC::PendingTrustedPublisher < ApplicationRecord
     return if rubygem.nil? || rubygem.pushable?
 
     errors.add(:rubygem_name, :unavailable)
+  end
+
+  def organization_manageable_by_user
+    return if user.manageable_organizations.exists?(id: organization_id)
+
+    errors.add(:organization, "must be an organization you can manage")
   end
 end

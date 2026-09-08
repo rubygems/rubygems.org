@@ -7,6 +7,7 @@ class ApiKeyTest < ActiveSupport::TestCase
   should validate_presence_of(:name)
   should validate_presence_of(:hashed_key)
   should have_one(:api_key_rubygem_scope).dependent(:destroy)
+  should have_one(:api_key_organization_scope).dependent(:destroy)
 
   should "be valid with factory" do
     assert_predicate build(:api_key), :valid?
@@ -187,6 +188,154 @@ class ApiKeyTest < ActiveSupport::TestCase
     end
   end
 
+  context "organization scope" do
+    setup do
+      @user = create(:user)
+      @organization = create(:organization, owners: [@user])
+      @other_organization = create(:organization, owners: [create(:user)])
+      @api_key = create(:api_key, scopes: %w[push_rubygem], owner: @user, scoped_organization: @organization)
+    end
+
+    should "be invalid if non applicable API scope is enabled" do
+      api_key = build(:api_key, scopes: %w[index_rubygems], owner: @user, scoped_organization: @organization)
+
+      refute_predicate api_key, :valid?
+      assert_contains api_key.errors[:organization], "scope can only be set for push/yank rubygem, and add/remove owner scopes"
+    end
+
+    should "be invalid when scoped to both a gem and an organization" do
+      ownership = create(:ownership, user: @user)
+      api_key = build(:api_key, scopes: %w[push_rubygem], owner: @user, scoped_organization: @organization, rubygem: ownership.rubygem)
+
+      refute_predicate api_key, :valid?
+      assert_contains api_key.errors[:base], "An API key cannot be scoped to both a gem and an organization"
+    end
+
+    should "not persist either new scope when a gem and an organization are assigned together" do
+      ownership = create(:ownership, user: @user)
+      api_key = create(:api_key, scopes: %i[push_rubygem], owner: @user, rubygem: ownership.rubygem)
+
+      refute api_key.update(rubygem_id: ownership.rubygem.id, organization_id: @organization.id)
+
+      api_key.reload
+
+      assert_equal ownership.rubygem, api_key.rubygem
+      assert_nil api_key.organization
+    end
+
+    should "be invalid when user cannot manage the organization" do
+      api_key = build(:api_key, scopes: %w[push_rubygem], owner: @user, scoped_organization: @other_organization)
+
+      refute_predicate api_key, :valid?
+      assert_contains api_key.errors[:organization], "must be an organization you can manage"
+    end
+
+    should "be invalid when user is only a maintainer" do
+      organization = create(:organization, maintainers: [@user])
+      api_key = build(:api_key, scopes: %w[push_rubygem], owner: @user, scoped_organization: organization)
+
+      refute_predicate api_key, :valid?
+      assert_contains api_key.errors[:organization], "must be an organization you can manage"
+    end
+
+    context "#organization_id=" do
+      should "set membership to an organization" do
+        api_key = create(:api_key, key: SecureRandom.hex(24), scopes: %i[push_rubygem], owner: @user, organization_id: @organization.id)
+
+        assert_equal @organization, api_key.organization
+      end
+
+      should "set membership to nil when id is nil" do
+        @api_key.organization_id = nil
+
+        assert_nil @api_key.organization
+      end
+
+      should "add error when owner is not a user" do
+        api_key = build(:api_key, :trusted_publisher, scopes: %i[push_rubygem])
+        api_key.organization_id = @organization.id
+
+        assert_contains api_key.errors[:organization], "must be an organization you can manage"
+        assert_nil api_key.membership
+      end
+    end
+
+    context "#organization_handle=" do
+      should "set membership to an organization" do
+        api_key = create(:api_key, key: SecureRandom.hex(24), scopes: %i[push_rubygem], owner: @user, organization_handle: @organization.handle)
+
+        assert_equal @organization, api_key.organization
+      end
+
+      should "add error when handle is not found" do
+        api_key = ApiKey.new(hashed_key: SecureRandom.hex(24), scopes: %i[push_rubygem], owner: @user, organization_handle: "missing-org")
+
+        assert_contains api_key.errors[:organization], "could not be found"
+      end
+    end
+
+    context "#scoped_to?" do
+      should "allow gems owned by the scoped organization" do
+        rubygem = create(:rubygem, organization: @organization)
+
+        assert @api_key.scoped_to?(rubygem)
+      end
+
+      should "reject personally owned gems" do
+        rubygem = create(:rubygem, owners: [create(:user)])
+
+        refute @api_key.scoped_to?(rubygem)
+      end
+
+      should "reject gems owned by another organization" do
+        rubygem = create(:rubygem, organization: @other_organization)
+
+        refute @api_key.scoped_to?(rubygem)
+      end
+
+      should "reject all gems when the scoped organization is soft-deleted" do
+        @organization.update_column(:deleted_at, Time.current)
+        rubygem = create(:rubygem, owners: [@user])
+
+        refute @api_key.reload.scoped_to?(rubygem)
+        refute @api_key.organization_allows_gem?(rubygem)
+      end
+    end
+
+    context "#scope?" do
+      should "deny yank scope for personally owned gems" do
+        rubygem = create(:rubygem, owners: [@user])
+        api_key = create(:api_key, scopes: %i[yank_rubygem], owner: @user, scoped_organization: @organization)
+
+        refute api_key.scope?(:yank_rubygem, rubygem)
+      end
+
+      should "allow yank scope for organization gems" do
+        rubygem = create(:rubygem, organization: @organization)
+        api_key = create(:api_key, scopes: %i[yank_rubygem], owner: @user, scoped_organization: @organization)
+
+        assert api_key.scope?(:yank_rubygem, rubygem)
+      end
+    end
+  end
+
+  context "API_KEY_CREATED event" do
+    should "include organization handle when scoped to an organization" do
+      organization = create(:organization, owners: [create(:user)])
+      user = organization.users.first
+
+      api_key = create(:api_key, scopes: %w[push_rubygem], owner: user, scoped_organization: organization)
+
+      assert_event Events::UserEvent::API_KEY_CREATED, {
+        name: api_key.name,
+        scopes: ["push_rubygem"],
+        organization: organization.handle,
+        mfa: false,
+        api_key_gid: api_key.to_global_id.to_s
+      }, user.events.where(tag: Events::UserEvent::API_KEY_CREATED).sole
+    end
+  end
+
   context "#soft_deleted?" do
     should "return true if soft_deleted_at is set" do
       api_key = create(:api_key)
@@ -204,10 +353,12 @@ class ApiKeyTest < ActiveSupport::TestCase
     should "set soft_deleted_at" do
       api_key = create(:api_key)
 
+      travel 1.second
       freeze_time do
         api_key.soft_delete!
 
         assert_equal Time.now.utc, api_key.soft_deleted_at
+        assert_equal Time.now.utc, api_key.updated_at
       end
     end
   end
@@ -225,6 +376,25 @@ class ApiKeyTest < ActiveSupport::TestCase
       api_key = create(:api_key)
 
       refute_predicate api_key, :soft_deleted_by_ownership?
+    end
+  end
+
+  context "#soft_deleted_by_organization?" do
+    setup do
+      @user = create(:user)
+      @organization = create(:organization, owners: [@user])
+    end
+
+    should "return true if soft deleted organization name is present" do
+      membership = @user.memberships.find_by!(organization: @organization)
+      api_key = create(:api_key, scopes: %i[push_rubygem], owner: @user, scoped_organization: @organization)
+      api_key.soft_delete!(membership: membership)
+
+      assert_predicate api_key, :soft_deleted_by_organization?
+    end
+
+    should "return false if key not soft deleted" do
+      refute_predicate create(:api_key), :soft_deleted_by_organization?
     end
   end
 

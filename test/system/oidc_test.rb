@@ -126,7 +126,8 @@ class OIDCTest < ApplicationSystemTestCase
       "api_key_permissions" => {
         "scopes" => ["push_rubygem"],
         "valid_for" => 1800,
-        "gems" => [rubygem.name]
+        "gems" => [rubygem.name],
+        "organization" => nil
       },
       "access_policy" => {
         "statements" => [
@@ -195,7 +196,7 @@ class OIDCTest < ApplicationSystemTestCase
     expected.merge!(
       "name" => "Push gems",
       "api_key_permissions" => {
-        "scopes" => %w[push_rubygem yank_rubygem], "valid_for" => 1800, "gems" => nil
+        "scopes" => %w[push_rubygem yank_rubygem], "valid_for" => 1800, "gems" => nil, "organization" => nil
       },
       "access_policy" => {
         "statements" => [
@@ -289,7 +290,8 @@ class OIDCTest < ApplicationSystemTestCase
       "api_key_permissions" => {
         "scopes" => ["push_rubygem"],
         "valid_for" => 1800,
-        "gems" => [rubygem.name]
+        "gems" => [rubygem.name],
+        "organization" => nil
       },
       "access_policy" => {
         "statements" => [

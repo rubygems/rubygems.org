@@ -16,6 +16,7 @@ class Avo::Resources::OIDCApiKeyRole < Avo::BaseResource
       field :valid_for, as: :text, format_using: -> { value&.iso8601 }
       field :scopes, as: :tags, suggestions: ApiKey::API_SCOPES.map { { label: it, value: it } }, enforce_suggestions: true
       field :gems, as: :tags, suggestions: -> { Rubygem.limit(10).pluck(:name).map { { value: it, label: it } } }
+      field :organization, as: :text
     end
     field :access_policy, as: :nested do
       field :statements, as: :array_of, field: :nested do

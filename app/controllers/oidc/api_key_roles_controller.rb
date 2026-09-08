@@ -122,7 +122,7 @@ class OIDC::ApiKeyRolesController < ApplicationController
   PERMITTED_API_KEY_ROLE_PARAMS = [
     :name,
     :oidc_provider_id,
-    api_key_permissions: [:valid_for, scopes: [], gems: []],
+    api_key_permissions: [:valid_for, :organization, scopes: [], gems: []],
     access_policy: {
       statements_attributes: [[
         :effect,

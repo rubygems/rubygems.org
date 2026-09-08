@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-class Admin::MembershipPolicy < Admin::ApplicationPolicy
+class Admin::ApiKeyOrganizationScopePolicy < Admin::ApplicationPolicy
   class Scope < Admin::ApplicationPolicy::Scope
     def resolve
       scope.all
     end
   end
 
-  has_association :api_key_organization_scopes
-
   def avo_show?
-    rubygems_org_admin?
+    policy!(user, record.membership).avo_show?
   end
 end

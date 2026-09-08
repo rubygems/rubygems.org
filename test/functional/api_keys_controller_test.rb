@@ -221,6 +221,33 @@ class ApiKeysControllerTest < ActionController::TestCase
       should "render new api key form" do
         assert page.has_content? "New API key"
       end
+
+      should "hide organization field when user has no manageable organizations" do
+        refute page.has_select?("api_key_organization_id")
+      end
+    end
+
+    context "on GET to new when user can manage an organization" do
+      setup do
+        @organization = create(:organization, owners: [@user])
+        get :new
+      end
+
+      should "show organization field" do
+        assert page.has_select?("api_key_organization_id",
+          options: ["No Organization", @organization.name])
+      end
+    end
+
+    context "on GET to new when user is only a maintainer" do
+      setup do
+        create(:organization, maintainers: [@user])
+        get :new
+      end
+
+      should "hide organization field" do
+        refute page.has_select?("api_key_organization_id")
+      end
     end
 
     context "on POST to create" do
@@ -285,6 +312,22 @@ class ApiKeysControllerTest < ActionController::TestCase
           post :create, params: { api_key: { name: "gem scope", index_rubygems: true, rubygem_id: @ownership.rubygem.id } }
 
           assert_equal "Rubygem scope can only be set for push/yank rubygem, and add/remove owner scopes", flash[:error]
+          assert_empty @user.reload.api_keys
+        end
+
+        should "not create a key scoped to both a gem and an organization" do
+          organization = create(:organization, owners: [@user])
+
+          post :create, params: {
+            api_key: {
+              name: "both scopes",
+              push_rubygem: true,
+              rubygem_id: @ownership.rubygem.id,
+              organization_id: organization.id
+            }
+          }
+
+          assert_equal "An API key cannot be scoped to both a gem and an organization", flash[:error]
           assert_empty @user.reload.api_keys
         end
       end
@@ -411,6 +454,36 @@ class ApiKeysControllerTest < ActionController::TestCase
           end
           assert_equal "Please enable at least one scope and Rubygem scope can only be set for push/yank rubygem, and add/remove owner scopes",
                        flash[:error]
+        end
+
+        should "not persist either scope when a request sends a gem and an organization together" do
+          organization = create(:organization, owners: [@user])
+
+          patch :update, params: {
+            id: @api_key.id,
+            api_key: { push_rubygem: true, rubygem_id: @ownership.rubygem.id, organization_id: organization.id }
+          }
+
+          @api_key.reload
+
+          assert_equal "An API key cannot be scoped to both a gem and an organization", flash[:error]
+          assert_equal @ownership.rubygem, @api_key.rubygem
+          assert_nil @api_key.organization
+        end
+
+        should "switch from a gem scope to an organization scope" do
+          organization = create(:organization, owners: [@user])
+
+          patch :update, params: {
+            id: @api_key.id,
+            api_key: { push_rubygem: true, rubygem_id: nil, organization_id: organization.id }
+          }
+
+          @api_key.reload
+
+          assert_redirected_to profile_api_keys_path
+          assert_nil @api_key.rubygem
+          assert_equal organization, @api_key.organization
         end
       end
 

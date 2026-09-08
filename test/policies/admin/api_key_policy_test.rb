@@ -19,6 +19,8 @@ class Admin::ApiKeyPolicyTest < AdminPolicyTestCase
   def test_associations
     assert_association @admin, @api_key, :api_key_rubygem_scope, Admin::ApiKeyPolicy
     assert_association @admin, @api_key, :ownership, Admin::OwnershipPolicy
+    assert_association @admin, @api_key, :api_key_organization_scope, Admin::ApiKeyPolicy
+    assert_association @admin, @api_key, :membership, Admin::MembershipPolicy
     assert_association @admin, @api_key, :oidc_id_token, Admin::OIDC::IdTokenPolicy
   end
 

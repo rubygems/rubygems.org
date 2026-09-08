@@ -17,7 +17,7 @@ class ApiKeysController < ApplicationController
     api_keys = current_user.api_keys.not_oidc
     @has_expired_keys = api_keys.expired.exists?
     scope = @expired_view ? api_keys.expired.order(expires_at: :desc, id: :desc) : api_keys.unexpired
-    @api_keys = scope.preload(ownership: :rubygem).page(@page)
+    @api_keys = scope.preload(ownership: :rubygem, membership: :organization).page(@page)
     redirect_to new_profile_api_key_path if !@expired_view && @api_keys.empty? && !@has_expired_keys
   end
 
@@ -45,7 +45,7 @@ class ApiKeysController < ApplicationController
 
     if @api_key.errors.present?
       flash.now[:error] = @api_key.errors.full_messages.to_sentence
-      @api_key = current_user.api_keys.build(api_key_create_params.merge(rubygem_id: nil))
+      @api_key = current_user.api_keys.build(api_key_create_params.merge(rubygem_id: nil, organization_id: nil))
       return render :new
     end
 
@@ -62,14 +62,8 @@ class ApiKeysController < ApplicationController
 
   def update
     @api_key = current_user.api_keys.find(params.expect(:id))
-    @api_key.assign_attributes(api_key_update_params(@api_key))
 
-    if @api_key.errors.present?
-      flash.now[:error] = @api_key.errors.full_messages.to_sentence
-      return render :edit
-    end
-
-    if @api_key.save
+    if save_api_key_updates
       redirect_to profile_api_keys_path, flash: { notice: t(".success") }
     else
       flash.now[:error] = @api_key.errors.full_messages.to_sentence
@@ -115,12 +109,19 @@ class ApiKeysController < ApplicationController
   end
 
   def api_key_create_params
-    ApiKeysHelper.api_key_params(params.expect(api_key: [:name, *ApiKey::API_SCOPES, :mfa, :rubygem_id, :expires_at]))
+    ApiKeysHelper.api_key_params(params.expect(api_key: [:name, *ApiKey::API_SCOPES, :mfa, :rubygem_id, :organization_id, :expires_at]))
   end
 
   def api_key_update_params(existing_api_key = nil)
     ApiKeysHelper.api_key_params(
-      params.expect(api_key: [*ApiKey::API_SCOPES, :mfa, :rubygem_id, scopes: ApiKey::API_SCOPES]), existing_api_key
+      params.expect(api_key: [*ApiKey::API_SCOPES, :mfa, :rubygem_id, :organization_id, scopes: ApiKey::API_SCOPES]), existing_api_key
     )
+  end
+
+  def save_api_key_updates
+    @api_key.with_transaction_returning_status do
+      @api_key.assign_attributes(api_key_update_params(@api_key))
+      @api_key.errors.empty? && @api_key.save
+    end
   end
 end

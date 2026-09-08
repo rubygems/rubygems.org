@@ -308,6 +308,10 @@ class User < ApplicationRecord
     rubygem.owned_by?(self)
   end
 
+  def manageable_organizations
+    Organization.where(id: memberships.confirmed.with_minimum_role(:admin).select(:organization_id)).order(:name)
+  end
+
   def acknowledge_policies!
     update(policies_acknowledged_at: Time.zone.now)
   end

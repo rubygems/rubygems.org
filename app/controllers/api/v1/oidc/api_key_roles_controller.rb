@@ -40,7 +40,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
       api_key = @api_key_role.user.api_keys.create!(
         hashed_key: hashed_key(key),
         name: "#{@api_key_role.name}-#{@jwt[:jti]}",
-        **@api_key_role.api_key_permissions.create_params(@api_key_role.user)
+        **api_key_create_params
       )
       OIDC::IdToken.create!(
         api_key:,
@@ -56,11 +56,20 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
       name: api_key.name,
       scopes: api_key.scopes,
       gem: api_key.rubygem,
+      organization: api_key.organization&.handle,
       expires_at: api_key.expires_at
     }.compact, status: :created
+  rescue ActiveRecord::RecordNotFound
+    render json: {
+      errors: ["Unable to create API key: the configured gem or organization scope is no longer valid"]
+    }, status: :unprocessable_content
   end
 
   private
+
+  def api_key_create_params
+    @api_key_role.api_key_permissions.create_params(@api_key_role.user)
+  end
 
   def set_api_key_role
     @api_key_role = OIDC::ApiKeyRole.active.find_by!(token: params.expect(:token))

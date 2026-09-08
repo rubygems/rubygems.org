@@ -28,4 +28,22 @@ class OIDC::ApiKeyPermissionsTest < ActiveSupport::TestCase
 
     assert_equal ["may include at most 1 gem"], permissions.errors.messages[:gems]
   end
+
+  test "validates gems and organization are mutually exclusive" do
+    permissions = OIDC::ApiKeyPermissions.new(scopes: ["push_rubygem"], gems: ["a"], organization: "org")
+    permissions.validate
+
+    assert_equal ["cannot be scoped to both a gem and an organization"], permissions.errors.messages[:base]
+  end
+
+  test "create_params includes membership for organization" do
+    user = create(:user)
+    organization = create(:organization, owners: [user])
+    permissions = OIDC::ApiKeyPermissions.new(scopes: ["push_rubygem"], organization: organization.handle)
+
+    params = permissions.create_params(user)
+
+    assert_equal user.memberships.find_by!(organization: organization), params[:membership]
+    assert_nil params[:ownership]
+  end
 end

@@ -60,6 +60,12 @@ class OIDC::PendingTrustedPublishers::IndexView < ApplicationView
         raw t(".valid_for_html",
           time_html: view_context.time_tag(pending_trusted_publisher.expires_at,
             view_context.distance_of_time_in_words_to_now(pending_trusted_publisher.expires_at)))
+        if pending_trusted_publisher.organization
+          whitespace
+          plain "·"
+          whitespace
+          plain pending_trusted_publisher.organization.name
+        end
       end
 
       render pending_trusted_publisher.trusted_publisher
