@@ -150,6 +150,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.expects(:platform).returns "ruby"
       spec.expects(:cert_chain).returns nil
       spec.stubs(:required_ruby_version).returns Gem::Requirement.default
+      spec.stubs(:metadata).returns({})
       @cutter.stubs(:spec).returns spec
       @cutter.stubs(:spec_contents).returns "spec"
       @cutter.stubs(:size).returns 5
@@ -185,6 +186,60 @@ class PusherTest < ActiveSupport::TestCase
     end
   end
 
+  context "for a new gem with an organization set in the spec" do
+    should "set the organization if the user has a membership" do
+      @user = create(:user, email: "user2@rubygems-test.org")
+      @api_key = create(:api_key, owner: @user)
+      @gem = gem_file("test_with_organization-1.0.0.gem")
+      @organization = create(:organization, owners: [@user], handle: "acme")
+      @cutter = Pusher.new(@api_key, @gem)
+
+      spec = mock
+      spec.expects(:name).returns "test_with_organization"
+      spec.stubs(:version).returns Gem::Version.new("1.0.0")
+      spec.stubs(:original_platform).returns "ruby"
+      spec.stubs(:platform).returns "ruby"
+      spec.stubs(:cert_chain).returns nil
+      spec.stubs(:required_ruby_version).returns Gem::Requirement.default
+      spec.stubs(:metadata).returns({ "organization" => "acme" })
+
+      @cutter.stubs(:spec).returns spec
+      @cutter.stubs(:spec_contents).returns "spec"
+      @cutter.stubs(:size).returns 5
+      @cutter.stubs(:body).returns StringIO.new("dummy body")
+
+      @cutter.find
+
+      assert_equal @organization, @cutter.rubygem.organization
+    end
+
+    should "not set the organization if the user doesn't have membership" do
+      @user = create(:user, email: "user2@rubygems-test.org")
+      @api_key = create(:api_key, owner: @user)
+      @gem = gem_file("test_with_organization-1.0.0.gem")
+      @organization = create(:organization, handle: "acme")
+      @cutter = Pusher.new(@api_key, @gem)
+
+      spec = mock
+      spec.expects(:name).returns "test_with_organization"
+      spec.stubs(:version).returns Gem::Version.new("1.0.0")
+      spec.stubs(:original_platform).returns "ruby"
+      spec.stubs(:platform).returns "ruby"
+      spec.stubs(:cert_chain).returns nil
+      spec.stubs(:required_ruby_version).returns Gem::Requirement.default
+      spec.stubs(:metadata).returns({ "organization" => "acme" })
+
+      @cutter.stubs(:spec).returns spec
+      @cutter.stubs(:spec_contents).returns "spec"
+      @cutter.stubs(:size).returns 5
+      @cutter.stubs(:body).returns StringIO.new("dummy body")
+
+      @cutter.find
+
+      assert_nil @cutter.rubygem.organization
+    end
+  end
+
   context "finding an existing gem" do
     should "bring up existing gem with matching spec" do
       @rubygem = create(:rubygem)
@@ -217,6 +272,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.expects(:original_platform).returns "ruby"
       spec.expects(:cert_chain).returns nil
       spec.stubs(:required_ruby_version).returns Gem::Requirement.default
+      spec.stubs(:metadata).returns({})
       @cutter.stubs(:spec).returns spec
       @cutter.stubs(:spec_contents).returns "spec"
 
@@ -260,6 +316,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:platform).returns Gem::Platform.new("universal-darwin-6000")
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:required_ruby_version).returns Gem::Requirement.default
+      spec.stubs(:metadata).returns({})
       @cutter.stubs(:spec).returns spec
       @cutter.stubs(:spec_contents).returns "spec"
 

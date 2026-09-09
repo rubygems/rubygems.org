@@ -305,6 +305,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     [description, summary, "This rubygem does not have a description or summary."].find(&:present?)
   end
 
+  # TODO: BRIAN - should there be an organization on the version?
+  # - I guess there could be versions before the organization takes over?
+  # - what value does that add other than it makes it more specific
+  # - LEETTTTTSSSSS put that on the backburner. I'm leaning towards probably but I don't know enough
   def update_attributes_from_gem_specification!(spec)
     update!(
       authors: spec.authors,

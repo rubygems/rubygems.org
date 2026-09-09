@@ -107,12 +107,23 @@ class Pusher
     notify_gem_processing_error
   end
 
+  # TODO: BRIAN this is a little bit confusing I think.
+  # - ¿What if the gem already has an organization?
+  # - ¿Should the user impact the organization at all?
+  # - We want to make sure we aren't removing the organization_id from the rubygem
+  def organization(user)
+    handle = spec.metadata["organization"]
+    return if handle.blank?
+    user.organizations.find_by(handle: handle.downcase)
+  end
+
   def find # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     name = spec.name.to_s
     set_tag "gemcutter.rubygem.name", name
 
     @rubygem = Rubygem.name_is(name).first || Rubygem.new(name: name)
     @rubygem.pushed_by = owner
+    @rubygem.organization = organization(owner)
 
     sha256 = Digest::SHA2.base64digest(body.string)
     spec_sha256 = Digest::SHA2.base64digest(spec_contents)
@@ -235,6 +246,7 @@ class Pusher
     rubygem.disown if rubygem.versions.indexed.none?
     persist_version
 
+    # TODO: This should probably also include the organization as an option?
     if rubygem.unowned?
       if api_key.user?
         rubygem.create_ownership(owner)

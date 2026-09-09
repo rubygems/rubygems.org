@@ -253,6 +253,7 @@ class Rubygem < ApplicationRecord
     Links.new(self, version)
   end
 
+  # TODO: BRIAN: Should this include the Organization?
   def payload(version = most_recent_version, protocol = Gemcutter::PROTOCOL, host_with_port = Gemcutter::HOST) # rubocop:disable Metrics/MethodLength
     versioned_links = links(version)
     deps = version.dependencies.to_a.select(&:rubygem)
