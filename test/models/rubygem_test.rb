@@ -84,7 +84,9 @@ class RubygemTest < ActiveSupport::TestCase
       plain = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
                      required_ruby_version: ">= 3.2")
       abi34 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
-                     required_ruby_version: "~> 3.4.0", ruby_abi: "3.4", sha256: Digest::SHA2.base64digest("abi34-1.0.0"))
+                     required_ruby_version: "~> 3.4.0",
+                     required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.4",
+                     sha256: Digest::SHA2.base64digest("abi34-1.0.0"))
 
       assert_equal plain, @rubygem.find_version!(number: "1.0.0", platform: "x86_64-linux-musl")
       assert_equal abi34, @rubygem.find_version!(number: "1.0.0", platform: "x86_64-linux-musl", ruby_abi: "3.4")
@@ -95,11 +97,17 @@ class RubygemTest < ActiveSupport::TestCase
 
     should "mark the latest version for each Ruby ABI per platform" do
       abi32_old = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
-                         required_ruby_version: "~> 3.2.0", ruby_abi: "3.2", sha256: Digest::SHA2.base64digest("abi32-1.0.0"))
+                         required_ruby_version: "~> 3.2.0",
+                         required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.2",
+                         sha256: Digest::SHA2.base64digest("abi32-1.0.0"))
       abi32_new = create(:version, rubygem: @rubygem, number: "2.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
-                         required_ruby_version: "~> 3.2.0", ruby_abi: "3.2", sha256: Digest::SHA2.base64digest("abi32-2.0.0"))
+                         required_ruby_version: "~> 3.2.0",
+                         required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.2",
+                         sha256: Digest::SHA2.base64digest("abi32-2.0.0"))
       abi33_new = create(:version, rubygem: @rubygem, number: "2.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
-                         required_ruby_version: "~> 3.3.0", ruby_abi: "3.3", sha256: Digest::SHA2.base64digest("abi33-2.0.0"))
+                         required_ruby_version: "~> 3.3.0",
+                         required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.3",
+                         sha256: Digest::SHA2.base64digest("abi33-2.0.0"))
       plain_ruby = create(:version, rubygem: @rubygem, number: "2.0.0", platform: "ruby")
 
       @rubygem.reorder_versions
@@ -312,7 +320,7 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "not return a skinny ABI variant when no platform or ruby_abi is given" do
         create(:version, rubygem: @rubygem, number: @version.number, platform: "x86_64-linux", gem_platform: "x86_64-linux",
-               required_ruby_version: "~> 3.2.0", ruby_abi: "3.2",
+               required_ruby_version: "~> 3.2.0", required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.2",
                sha256: Digest::SHA2.base64digest("find-pub-1.0.0-x86_64-linux-3.2"))
 
         assert_equal @jruby_version, @rubygem.find_public_version(@version.number)
@@ -321,7 +329,7 @@ class RubygemTest < ActiveSupport::TestCase
       should "return nil when only skinny ABI variants exist and no ruby_abi is given" do
         @rubygem.versions.update_all(indexed: false)
         create(:version, rubygem: @rubygem, number: @version.number, platform: "x86_64-linux", gem_platform: "x86_64-linux",
-               required_ruby_version: "~> 3.2.0", ruby_abi: "3.2",
+               required_ruby_version: "~> 3.2.0", required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.2",
                sha256: Digest::SHA2.base64digest("find-pub-only-1.0.0-x86_64-linux-3.2"))
 
         assert_nil @rubygem.find_public_version(@version.number)

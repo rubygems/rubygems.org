@@ -454,7 +454,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
         number: "1.0.0",
         platform: "arm64-darwin-25",
         required_ruby_version: "~> 3.4.0",
-        required_rubygems_version: ">= 0",
+        required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION,
         ruby_abi: "3.4",
         sha256: Digest::SHA2.base64digest("sandworm-1.0.0-arm64-darwin-25-3.4"),
         pusher_api_key: @cutter.api_key
@@ -466,41 +466,6 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       @rubygem.stubs(:update_attributes_from_gem_specification!)
       GemCachePurger.stubs(:call)
       @cutter.stubs(:write_gem)
-    end
-
-    should "set content addressable required rubygems version floor" do
-      assert @cutter.save
-
-      assert_equal Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, @version.reload.required_rubygems_version
-    end
-
-    should "normalize content addressable required rubygems version after applying gemspec metadata" do
-      sequence = sequence("content addressable metadata normalization")
-
-      @rubygem
-        .expects(:update_attributes_from_gem_specification!)
-        .with(@version, @cutter.spec)
-        .in_sequence(sequence)
-
-      @version
-        .expects(:normalize_content_addressable_gem_metadata!)
-        .in_sequence(sequence)
-
-      AfterVersionWriteJob.any_instance.stubs(:perform)
-
-      assert @cutter.save
-    end
-
-    should "roll back version changes when normalize raises" do
-      original = @version.required_rubygems_version
-      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec) do |version, _spec|
-        version.update!(required_rubygems_version: "99.0.0")
-      end
-      @version.stubs(:normalize_content_addressable_gem_metadata!)
-        .raises(ActiveRecord::RecordInvalid.new(@version))
-
-      refute @cutter.save
-      assert_equal original, @version.reload.required_rubygems_version
     end
 
     should "include platform and Ruby ABI in success message" do
@@ -544,6 +509,39 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       refute @cutter.save
       assert_equal 409, @cutter.code
       assert_includes @cutter.message, "could not generate a unique content address"
+    end
+
+    should "accept when required_rubygems_version satisfies the floor" do
+      FeatureFlag.enable_for_actor(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, @user)
+      spec = new_gemspec("ca-floor-ok", "1.0.0", "CA floor test", "arm64-darwin-25",
+                        ruby_version: "~> 3.4.0",
+                        rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION)
+      cutter = Pusher.new(@api_key, build_gem(spec))
+      cutter.logger.level = :info
+
+      assert cutter.pull_spec
+      assert cutter.find
+      assert cutter.validate
+
+      assert_equal "3.4", cutter.version.ruby_abi
+    end
+
+    should "reject with 403 when required_rubygems_version is below the floor" do
+      FeatureFlag.enable_for_actor(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, @user)
+      spec = new_gemspec("ca-floor-bad", "1.0.0", "CA floor test", "arm64-darwin-25",
+                        ruby_version: "~> 3.4.0",
+                        rubygems_version: ">= 0")
+      cutter = Pusher.new(@api_key, build_gem(spec))
+      cutter.logger.level = :info
+
+      assert cutter.pull_spec
+      assert cutter.find
+      refute cutter.validate
+
+      assert_equal 403, cutter.code
+      assert_includes cutter.message,
+                      "must be #{Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION} " \
+                      "for content-addressable gems (set required_rubygems_version in the gemspec)"
     end
   end
 

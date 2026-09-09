@@ -248,11 +248,13 @@ class Api::V2::ContentsControllerTest < ActionController::TestCase
     setup do
       @rubygem = create(:rubygem, name: "skinny-contents")
       @skinny32 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux", gem_platform: "x86_64-linux",
-                          required_ruby_version: "~> 3.2.0", ruby_abi: "3.2",
-                          sha256: Digest::SHA2.base64digest("skinny-contents-1.0.0-x86_64-linux-3.2"))
+                         required_ruby_version: "~> 3.2.0",
+                         required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.2",
+                         sha256: Digest::SHA2.base64digest("skinny-contents-1.0.0-x86_64-linux-3.2"))
       @skinny34 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux", gem_platform: "x86_64-linux",
-                          required_ruby_version: "~> 3.4.0", ruby_abi: "3.4",
-                          sha256: Digest::SHA2.base64digest("skinny-contents-1.0.0-x86_64-linux-3.4"))
+                         required_ruby_version: "~> 3.4.0",
+                         required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.4",
+                         sha256: Digest::SHA2.base64digest("skinny-contents-1.0.0-x86_64-linux-3.4"))
 
       @skinny32.manifest.store_checksums("lib/a.rb" => "aaa11111")
       @skinny34.manifest.store_checksums("lib/a.rb" => "bbb22222")

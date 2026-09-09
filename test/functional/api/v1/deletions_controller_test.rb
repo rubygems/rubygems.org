@@ -36,9 +36,13 @@ class Api::V1::DeletionsControllerTest < ActionController::TestCase
       setup do
         @rubygem = create(:rubygem, name: "sandworm")
         @abi32 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
-                        required_ruby_version: "~> 3.2.0", ruby_abi: "3.2", sha256: Digest::SHA2.base64digest("sandworm-1.0.0-3.2"))
+                        required_ruby_version: "~> 3.2.0",
+                        required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.2",
+                        sha256: Digest::SHA2.base64digest("sandworm-1.0.0-3.2"))
         @abi34 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
-                        required_ruby_version: "~> 3.4.0", ruby_abi: "3.4", sha256: Digest::SHA2.base64digest("sandworm-1.0.0-3.4"))
+                        required_ruby_version: "~> 3.4.0",
+                        required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.4",
+                        sha256: Digest::SHA2.base64digest("sandworm-1.0.0-3.4"))
         create(:ownership, user: @user, rubygem: @rubygem)
         RubygemFs.instance.store("gems/#{@abi32.full_name}.gem", "")
         RubygemFs.instance.store("gems/#{@abi34.full_name}.gem", "")
