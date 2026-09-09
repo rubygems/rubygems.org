@@ -23,11 +23,11 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       end
 
       should "return the user id" do
-        assert_not_nil @json["user"]["id"]
+        refute_nil @json["user"]["id"]
       end
 
       should "return the challenge" do
-        assert_not_nil @json["challenge"]
+        refute_nil @json["challenge"]
       end
 
       should "return no excluded credentials" do
@@ -35,7 +35,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       end
 
       should "set the challenge in the session" do
-        assert_not_nil session[:webauthn_registration]["challenge"]
+        refute_nil session[:webauthn_registration]["challenge"]
       end
     end
 
@@ -49,24 +49,24 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
       end
 
       should "return the user id" do
-        assert_not_nil @json["user"]["id"]
+        refute_nil @json["user"]["id"]
       end
 
       should "return the challenge" do
-        assert_not_nil @json["challenge"]
+        refute_nil @json["challenge"]
       end
 
       should "return excluded credentials" do
         assert_equal 3, @json["excludeCredentials"].size
 
         @json["excludeCredentials"].each do |credential|
-          assert_not_nil credential["id"]
-          assert_not_nil credential["type"]
+          refute_nil credential["id"]
+          refute_nil credential["type"]
         end
       end
 
       should "set the challenge in the session" do
-        assert_not_nil session[:webauthn_registration]["challenge"]
+        refute_nil session[:webauthn_registration]["challenge"]
       end
     end
   end

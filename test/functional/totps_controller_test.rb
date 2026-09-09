@@ -103,7 +103,7 @@ class TotpsControllerTest < ActionController::TestCase
 
           should "keep mfa and recovery codes enabled" do
             assert_predicate @user.reload, :totp_enabled?
-            assert_not_empty @user.mfa_hashed_recovery_codes
+            refute_empty @user.mfa_hashed_recovery_codes
           end
 
           should "flash error" do
@@ -115,7 +115,7 @@ class TotpsControllerTest < ActionController::TestCase
           end
 
           should "not clear mfa_redirect_uri from session" do
-            assert_not_nil session[:mfa_redirect_uri]
+            refute_nil session[:mfa_redirect_uri]
           end
         end
       end

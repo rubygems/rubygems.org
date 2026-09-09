@@ -808,7 +808,7 @@ class VersionTest < ActiveSupport::TestCase
 
         assert_equal(expected_identity, version.full_name)
         assert_equal(expected_identity, version.gem_full_name)
-        assert_not_equal(existing_version.full_name, version.full_name)
+        refute_equal(existing_version.full_name, version.full_name)
         assert_includes version.reload.to_title, "1.18.9-#{version.sha256_hex.first(9)}"
       end
 
@@ -1135,9 +1135,9 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
-  context "with a very long authors string." do
+  context "with a very long authors string" do
     should "create without error" do
-      assert_nothing_raised do
+      version =
         create(:version,
           authors: [
             "Fbdoorman: David Pelaez",
@@ -1161,7 +1161,8 @@ class VersionTest < ActiveSupport::TestCase
             "Jon Yurek",
             "Chad Pytel"
           ])
-      end
+
+      assert_predicate version, :persisted?
     end
   end
 

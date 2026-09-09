@@ -43,7 +43,7 @@ class Organizations::Onboarding::GemsControllerTest < ActionDispatch::Integratio
 
       assert_redirected_to organization_onboarding_users_path
 
-      assert_equal [], @organization_onboarding.reload.rubygems
+      assert_empty @organization_onboarding.reload.rubygems
     end
 
     should "remove all gems if rubygems param is empty" do
@@ -54,7 +54,7 @@ class Organizations::Onboarding::GemsControllerTest < ActionDispatch::Integratio
       patch organization_onboarding_gems_path(as: @user), params: { organization_onboarding: { rubygems: [""] } }
 
       assert_redirected_to organization_onboarding_users_path
-      assert_equal [], @organization_onboarding.reload.rubygems
+      assert_empty @organization_onboarding.reload.rubygems
     end
 
     should "invalidate unknown gems" do
@@ -62,7 +62,7 @@ class Organizations::Onboarding::GemsControllerTest < ActionDispatch::Integratio
       patch organization_onboarding_gems_path(as: @user), params: { organization_onboarding: { rubygems: [notmygem.id] } }
 
       assert_response :unprocessable_content
-      assert_equal [], @organization_onboarding.reload.rubygems
+      assert_empty @organization_onboarding.reload.rubygems
     end
   end
 end

@@ -86,7 +86,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
     do_login
 
     assert_redirected_to avo_path(params: { a: :b })
-    assert_not_nil cookies["rubygems_admin_oauth_github_user"]
+    refute_nil cookies["rubygems_admin_oauth_github_user"]
     follow_redirect!
     follow_redirect!
 
@@ -157,7 +157,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
       do_login
 
       assert_redirected_to avo_path(params: { a: :b })
-      assert_not_nil cookies["rubygems_admin_oauth_github_user"]
+      refute_nil cookies["rubygems_admin_oauth_github_user"]
       follow_redirect!
       follow_redirect!
 
@@ -231,7 +231,7 @@ class OAuthTest < ActionDispatch::IntegrationTest
         do_login
 
         assert_redirected_to avo_path(params: { a: :b })
-        assert_not_nil cookies["rubygems_admin_oauth_github_user"]
+        refute_nil cookies["rubygems_admin_oauth_github_user"]
         follow_redirect!
         follow_redirect!
 

@@ -8,13 +8,13 @@ class HookRelayReportJobTest < ActiveJob::TestCase
   end
 
   test "discards on unknown status" do
-    assert_nothing_raised do
+    assert_no_changes -> { @webhook.reload.attributes.slice("successes_since_last_failure", "failures_since_last_success") } do
       HookRelayReportJob.perform_now({ status: "unknown", stream: ":webhook_id-#{@webhook.id}", completed_at: "2020-01-01" })
     end
   end
 
   test "discards on malformed stream" do
-    assert_nothing_raised do
+    assert_no_changes -> { @webhook.reload.attributes.slice("successes_since_last_failure", "failures_since_last_success") } do
       HookRelayReportJob.perform_now({ status: "unknown", stream: ":webhook_idZZZ-#{@webhook.id}", completed_at: "2020-01-01" })
     end
   end

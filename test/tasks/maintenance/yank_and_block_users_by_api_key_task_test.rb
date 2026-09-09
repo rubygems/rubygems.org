@@ -29,21 +29,21 @@ class Maintenance::YankAndBlockUsersByApiKeyTaskTest < ActiveSupport::TestCase
       user = create(:user)
       create(:api_key, owner: user, name: "key-to-remove", created_at: 2.days.ago)
 
-      assert_not_includes @task.collection, user
+      refute_includes @task.collection, user
     end
 
     should "exclude users without a matching API key name" do
       user = create(:user)
       create(:api_key, owner: user, name: "ci-key", created_at: 1.hour.ago)
 
-      assert_not_includes @task.collection, user
+      refute_includes @task.collection, user
     end
 
     should "exclude already blocked users" do
       user = create(:user, :blocked)
       create(:api_key, owner: user, name: "key-to-remove", created_at: 1.hour.ago)
 
-      assert_not_includes @task.collection, user
+      refute_includes @task.collection, user
     end
 
     should "exclude discarded users" do
@@ -51,7 +51,7 @@ class Maintenance::YankAndBlockUsersByApiKeyTaskTest < ActiveSupport::TestCase
       user.discard!
       create(:api_key, owner: user, name: "key-to-remove", created_at: 1.hour.ago)
 
-      assert_not_includes @task.collection, user
+      refute_includes @task.collection, user
     end
 
     should "exclude users whose matching key is not user-owned" do
@@ -59,7 +59,7 @@ class Maintenance::YankAndBlockUsersByApiKeyTaskTest < ActiveSupport::TestCase
       trusted_key = create(:api_key, :trusted_publisher, name: "key-to-remove", created_at: 1.hour.ago)
       trusted_key.update_column(:owner_id, user.id)
 
-      assert_not_includes @task.collection, user
+      refute_includes @task.collection, user
     end
 
     should "deduplicate users with multiple matching API keys" do
@@ -135,7 +135,7 @@ class Maintenance::YankAndBlockUsersByApiKeyTaskTest < ActiveSupport::TestCase
         @task.process(user)
       end
 
-      assert_not user.reload.blocked?
+      refute_predicate user.reload, :blocked?
     end
 
     should "report and swallow ActiveRecord failures without raising" do
@@ -145,7 +145,7 @@ class Maintenance::YankAndBlockUsersByApiKeyTaskTest < ActiveSupport::TestCase
       assert_error_reported(ActiveRecord::RecordNotSaved) do
         assert_nothing_raised { @task.process(user) }
       end
-      assert_not user.reload.blocked?
+      refute_predicate user.reload, :blocked?
     end
   end
 

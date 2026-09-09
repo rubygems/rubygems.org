@@ -76,17 +76,17 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     response = do_get_specs
 
     assert_equal "200", response.code
-    assert_equal [], unmarshal_gzipped(response.body)
+    assert_empty unmarshal_gzipped(response.body)
 
     response = do_get_specs(:prerelease)
 
     assert_equal "200", response.code
-    assert_equal [], unmarshal_gzipped(response.body)
+    assert_empty unmarshal_gzipped(response.body)
 
     response = do_get_specs(:latest)
 
     assert_equal "200", response.code
-    assert_equal [], unmarshal_gzipped(response.body)
+    assert_empty unmarshal_gzipped(response.body)
 
     assert_equal "404", do_get_info("missing").code
     assert_equal "404", do_get_gem("missing").code
@@ -127,7 +127,7 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     response = do_get_specs(:prerelease)
 
     assert_equal "200", response.code
-    assert_equal [], unmarshal_gzipped(response.body)
+    assert_empty unmarshal_gzipped(response.body)
 
     response = do_get_specs(:latest)
 
@@ -160,17 +160,17 @@ class GemServerLifecycleTest < ApplicationSystemTestCase
     response = do_get_specs
 
     assert_equal "200", response.code
-    assert_equal [], unmarshal_gzipped(response.body)
+    assert_empty unmarshal_gzipped(response.body)
 
     response = do_get_specs(:prerelease)
 
     assert_equal "200", response.code
-    assert_equal [], unmarshal_gzipped(response.body)
+    assert_empty unmarshal_gzipped(response.body)
 
     response = do_get_specs(:latest)
 
     assert_equal "200", response.code
-    assert_equal [], unmarshal_gzipped(response.body)
+    assert_empty unmarshal_gzipped(response.body)
 
     assert_versions_etags_match_info(versions_after_yank)
 

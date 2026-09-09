@@ -394,7 +394,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         assert_equal "WebAuthn::ChallengeVerificationError", flash[:alert]
       end
       should "still have the webauthn form url" do
-        assert_not_nil page.find(".js-webauthn-session--form")[:action]
+        refute_nil page.find(".js-webauthn-session--form")[:action]
       end
     end
 
@@ -525,7 +525,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         should "regenerate confirmation token" do
           post :unconfirmed
 
-          assert_not_equal "something", @user.reload.confirmation_token
+          refute_equal "something", @user.reload.confirmation_token
         end
 
         should "send confirmation mail" do

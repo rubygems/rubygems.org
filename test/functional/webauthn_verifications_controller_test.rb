@@ -52,7 +52,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
           assert_equal "max-age=0", @response.headers["Surrogate-Control"]
         end
         should "set webauthn authentication" do
-          assert_not_nil session[:webauthn_authentication]["challenge"]
+          refute_nil session[:webauthn_authentication]["challenge"]
           assert_equal "1", session[:webauthn_authentication]["port"]
         end
 

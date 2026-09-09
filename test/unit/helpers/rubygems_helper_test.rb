@@ -175,10 +175,6 @@ class RubygemsHelperTest < ActionView::TestCase
         @rubygem = create(:rubygem, linkset: linkset, number: "0.0.1")
       end
 
-      should "not raise error" do
-        assert_nothing_raised { link_to_github(@rubygem) }
-      end
-
       should "return nil" do
         assert_nil link_to_github(@rubygem)
       end
