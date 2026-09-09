@@ -42,10 +42,6 @@ class Organizations::GemNameReservationsController < Organizations::BaseControll
 
   private
 
-  def find_organization
-    @organization = Organization.find_by_handle!(params[:organization_id])
-  end
-
   def gem_name_reservation_params
     params.expect(gem_name_reservation: [:name])
   end
