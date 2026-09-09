@@ -131,7 +131,12 @@ module GemValidator::Schema # rubocop:disable Metrics/ModuleLength
             "mailing_list_uri" => METADATA_LINK,
             "bug_tracker_uri" => METADATA_LINK,
             "download_uri" => METADATA_LINK,
-            "funding_uri" => METADATA_LINK
+            "funding_uri" => METADATA_LINK,
+            "organization" => {
+              "type" => "string",
+              "pattern" => /\A[0-9A-Za-z][A-Za-z_\-0-9]*\z/,
+              "maxLength" => 64
+            },
           },
           "propertyNames" => {
             "maxLength" => 128
