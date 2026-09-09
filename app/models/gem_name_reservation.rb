@@ -7,6 +7,8 @@ class GemNameReservation < ApplicationRecord
     uniqueness: { case_sensitive: false },
     presence: true,
     length: { maximum: Gemcutter::MAX_FIELD_LENGTH }
+  validates :name, name_format: true, if: :needs_name_validation?
+
   validate :downcase_name_check
   validate :rubygem_name_available, if: :needs_name_validation?
   validate :organization_within_limit, if: :needs_limit_validation?
