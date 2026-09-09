@@ -65,6 +65,15 @@ class UserTest < ActiveSupport::TestCase
         assert_predicate build(:user, handle: nil), :valid?
       end
 
+      should "not check organization handles when the handle is unchanged" do
+        user = create(:user, handle: "someuser")
+        create(:organization).update_column(:handle, "someuser")
+
+        user.full_name = "A New Name"
+
+        assert_predicate user, :valid?
+      end
+
       should "show user id if no handle set" do
         user = build(:user, handle: nil, id: 13)
 

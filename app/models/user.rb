@@ -79,7 +79,7 @@ class User < ApplicationRecord
 
   validates :handle, uniqueness: { case_sensitive: false }, allow_nil: true, if: :handle_changed?
   validates :handle, format: { with: Patterns::HANDLE_PATTERN }, length: { within: 2..40 }, allow_nil: true
-  validate :unique_with_org_handle
+  validate :unique_with_org_handle, if: :handle_changed?
 
   validates :twitter_username, format: {
     with: /\A[a-zA-Z0-9_]*\z/,
