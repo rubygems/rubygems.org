@@ -1578,25 +1578,32 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
-  context "after_save" do
-    context "reorder versions" do
-      setup do
-        @version = create(:version)
-      end
+  context "version reordering" do
+    setup do
+      @version = create(:version)
+    end
 
-      context "indexed is updated" do
-        should "reorder versions" do
-          @version.expects(:reorder_versions).times(1)
-          @version.update(indexed: false)
-        end
-      end
+    should "take the per-gem advisory lock before creating a version" do
+      version = build(:version, rubygem: @version.rubygem)
 
-      context "info checksum v2 is updated" do
-        should "not reorder versions" do
-          @version.expects(:reorder_versions).times(0)
-          @version.update(info_checksum_v2: "lala")
-        end
-      end
+      Rubygem.expects(:advisory_xact_lock!).with("rubygem_version_reorder", @version.rubygem.id).once
+      version.expects(:reorder_versions).once
+
+      version.save!
+    end
+
+    should "take the per-gem advisory lock and reorder versions when indexed changes" do
+      Rubygem.expects(:advisory_xact_lock!).with("rubygem_version_reorder", @version.rubygem.id).once
+      @version.expects(:reorder_versions).once
+
+      @version.update!(indexed: false)
+    end
+
+    should "not lock or reorder versions when unrelated attributes change" do
+      Rubygem.expects(:advisory_xact_lock!).never
+      @version.expects(:reorder_versions).never
+
+      @version.update!(info_checksum_v2: "lala")
     end
   end
 

@@ -6,23 +6,25 @@ require "concurrent/atomics"
 class ParallelPusherTest < ActiveSupport::TestCase
   self.use_transactional_tests = false
 
+  setup do
+    @fs = RubygemFs.mock!
+    @user = create(:user, email: "parallel-pusher-#{SecureRandom.hex(6)}@rubygems-test.org")
+    @api_key = create(:api_key, owner: @user)
+    @gem_names = []
+  end
+
+  teardown do
+    @gem_names.each { |name| Rubygem.find_by(name: name)&.destroy! }
+    @user.destroy!
+    GemDownload.delete_all
+    RubygemFs.mock!
+  end
+
   context "when pushing gems in parallel" do
-    setup do
-      @fs = RubygemFs.mock!
-      @user = create(:user, email: "user@rubygems-test.org")
-      @api_key = create(:api_key, owner: @user)
-    end
-
-    teardown do
-      @user.destroy!
-      Rubygem.find_by(name: "hola")&.destroy!
-      GemDownload.delete_all
-      RubygemFs.mock!
-    end
-
     should "not lead to sha mismatch between gem file and db" do
+      gem_name = track_gem("hola")
       latch = Concurrent::CountDownLatch.new(2)
-      gem = build_gem(new_gemspec("hola", "1.0.0", "GemCutter", "ruby"))
+      gem = build_gem(new_gemspec(gem_name, "1.0.0", "GemCutter", "ruby"))
 
       Thread.new do
         Pusher.new(@api_key, gem).process
@@ -31,7 +33,7 @@ class ParallelPusherTest < ActiveSupport::TestCase
       end
 
       Thread.new do
-        duplicate_gem = build_gem(new_gemspec("hola", "1.0.0", "GemCutter", "ruby"))
+        duplicate_gem = build_gem(new_gemspec(gem_name, "1.0.0", "GemCutter", "ruby"))
         Pusher.new(@api_key, duplicate_gem).process
         ActiveRecord::Base.connection.close
         latch.count_down
@@ -46,23 +48,9 @@ class ParallelPusherTest < ActiveSupport::TestCase
 
   context "when pushing many versions of the same gem in parallel" do
     setup do
-      @fs = RubygemFs.mock!
-      @user = create(:user, email: "parallel-user@rubygems-test.org")
-      @api_key = create(:api_key, owner: @user)
-      @gem_name = "hola-parallel"
+      @gem_name = track_gem("hola-parallel")
     end
 
-    teardown do
-      Rubygem.find_by(name: @gem_name)&.destroy!
-      @user.destroy!
-      GemDownload.delete_all
-      RubygemFs.mock!
-    end
-
-    # Regression test for concurrent pushes deadlocking in reorder_versions
-    # (https://github.com/rubygems/rubygems.org/issues/6099). Concurrent
-    # writers must serialize on the per-gem advisory lock, so every push
-    # succeeds and positions/latest are consistent afterwards.
     should "push all versions without deadlocking and leave versions consistently ordered" do
       seed = Pusher.new(@api_key, build_gem(new_gemspec(@gem_name, "0.0.1", "GemCutter", "ruby")))
       seed.process
@@ -101,23 +89,9 @@ class ParallelPusherTest < ActiveSupport::TestCase
 
   context "when pushing and yanking versions of the same gem in parallel" do
     setup do
-      @fs = RubygemFs.mock!
-      @user = create(:user, email: "parallel-yank-user@rubygems-test.org")
-      @api_key = create(:api_key, owner: @user)
-      @gem_name = "hola-parallel-yank"
+      @gem_name = track_gem("hola-parallel-yank")
     end
 
-    teardown do
-      Rubygem.find_by(name: @gem_name)&.destroy!
-      @user.destroy!
-      GemDownload.delete_all
-      RubygemFs.mock!
-    end
-
-    # Yanks UPDATE an existing (visible) version row before reorder_versions
-    # runs, so unlike concurrent pushes they deadlock unless the per-gem
-    # advisory lock is taken *before* the version row is written
-    # (Version#serialize_indexed_writes_per_gem). Guards that callback.
     should "not deadlock and keep indexed state consistent" do
       %w[1.0.0 2.0.0 3.0.0].each do |number|
         pusher = Pusher.new(@api_key, build_gem(new_gemspec(@gem_name, number, "GemCutter", "ruby")))
@@ -166,5 +140,13 @@ class ParallelPusherTest < ActiveSupport::TestCase
       assert_equal (0..4).to_a, versions.pluck(:position).sort
       assert_equal ["5.0.0"], versions.where(latest: true).pluck(:number)
     end
+  end
+
+  private
+
+  def track_gem(name)
+    unique_name = "#{name}-#{SecureRandom.hex(6)}"
+    @gem_names << unique_name
+    unique_name
   end
 end
