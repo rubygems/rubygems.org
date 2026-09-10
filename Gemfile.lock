@@ -785,6 +785,7 @@ GEM
     ruby-progressbar (1.13.0)
     ruby-statistics (4.1.1)
     ruby2_keywords (0.0.5)
+    rubyzip (3.5.0)
     safely_block (1.0.0)
     safety_net_attestation (0.5.0)
       jwt (>= 2.0, < 4.0)
@@ -1012,6 +1013,7 @@ DEPENDENCIES
   rubocop-performance (~> 1.27)
   rubocop-rails (~> 2.37)
   ruby-magic (~> 0.6)
+  rubyzip (~> 3.5)
   searchkick (~> 6.1)
   shoryuken (~> 7.0)
   shoulda-context (~> 3.0.0.rc1)
@@ -1321,6 +1323,7 @@ CHECKSUMS
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   ruby-statistics (4.1.1) sha256=a9923db9bc4b1bda685fac2c47a9fadcc9a93cfd36465f5782a68dfbdf43c171
   ruby2_keywords (0.0.5) sha256=ffd13740c573b7301cf7a2e61fc857b2a8e3d3aff32545d6f8300d8bae10e3ef
+  rubyzip (3.5.0) sha256=f77c49d737a849b662f6ca4de473f31b4ecd8288f1c9f901a5c820641f0f8d7c
   safely_block (1.0.0) sha256=bea80e084e620adeada62fd98cf461bbb9888d40dc0f06d337df9d01e1a658e5
   safety_net_attestation (0.5.0) sha256=c8cd01dd550dbe8553862918af6355a04672db11d218ec96104ce3955293f2aa
   sanitize (7.0.0) sha256=269d1b9d7326e69307723af5643ec032ff86ad616e72a3b36d301ac75a273984

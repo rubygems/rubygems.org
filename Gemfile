@@ -68,6 +68,7 @@ gem "faraday-multipart", "~> 1.2"
 gem "sigstore", "~> 0.2.3"
 gem "kramdown", "~> 2.5"
 gem "zlib", "~> 3.2"
+gem "rubyzip", "~> 3.5"
 gem "yaml-schema", "~> 1.2"
 
 # Admin dashboard

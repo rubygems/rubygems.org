@@ -28,6 +28,10 @@ module VersionsHelper
     end
   end
 
+  def version_advisory?(advisories, version)
+    Array(advisories).any? { |advisory| advisory.affects?(version) }
+  end
+
   def download_count_component(rubygem, **options)
     downloads = number_with_delimiter(rubygem.downloads)
     options[:class] = "flex text-neutral-600 dark:text-neutral-400 text-nowrap text-b3 space-x-1 items-center #{options[:class]}"
