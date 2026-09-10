@@ -46,29 +46,19 @@ ActiveSupport.on_load(:action_controller) do
   end
 
   # Only principals whose credentials were verified are logged; a later 403
-  # does not remove them. Sources:
-  #   user_id              - Current.user (web session, user-owned API key, basic auth)
-  #   api_key_id           - Current.api_key, the key that authenticated the request
-  #   api_key_owner_type/id - the key's polymorphic owner (User or a trusted
-  #                          publisher), or the publisher a key is being issued
-  #                          to during an OIDC token exchange
-  #   admin_github_user_id - the Admin::GitHubUser resolved by AdminAuth
+  # does not remove them. The owner is the authenticating key's polymorphic
+  # owner (User or a trusted publisher) or, during an OIDC token exchange
+  # where no key exists yet, the publisher the key is being issued to.
   def log_payload_identity
     api_key = Current.api_key
-    owner_type, owner_id = log_payload_api_key_owner(api_key)
+    owner = Current.api_key_owner
     {
       user_id: Current.user&.id,
       api_key_id: api_key&.id,
-      api_key_owner_type: owner_type,
-      api_key_owner_id: owner_id,
+      api_key_owner_type: api_key ? api_key.owner_type : owner&.class&.polymorphic_name,
+      api_key_owner_id: api_key ? api_key.owner_id : owner&.id,
       admin_github_user_id: request.get_header(GitHubOAuthable::ADMIN_USER_REQUEST_HEADER)&.id
     }.compact
-  end
-
-  def log_payload_api_key_owner(api_key)
-    return [api_key.owner_type, api_key.owner_id] if api_key
-    owner = Current.api_key_owner
-    [owner.class.polymorphic_name, owner.id] if owner
   end
 
   # e.g. "[200] GET /gems/rails (RubygemsController#show)"
