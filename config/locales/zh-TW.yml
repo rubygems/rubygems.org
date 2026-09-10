@@ -985,6 +985,9 @@ zh-TW:
     version:
       yanked: 已被移除
       ruby_abi:
+      content_address:
+      multi_abi:
+      source_gem:
   webauthn_credentials:
     callback:
       success: 您已成功註冊安全裝置。

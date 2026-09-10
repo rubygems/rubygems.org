@@ -1003,6 +1003,9 @@ ja:
     version:
       yanked: ヤンク済み
       ruby_abi:
+      content_address:
+      multi_abi:
+      source_gem:
   webauthn_credentials:
     callback:
       success: セキュリティ機器が正常に登録されました。

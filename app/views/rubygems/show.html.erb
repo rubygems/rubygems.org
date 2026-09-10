@@ -1,6 +1,6 @@
 <% @title = @rubygem.name %>
 <% @title_url = rubygem_path(@rubygem.slug) %>
-<% @subtitle = @latest_version&.slug %>
+<% @subtitle = @latest_version&.display_id %>
 
 <% content_for :head do %>
   <%= auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem.slug, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
@@ -64,24 +64,8 @@
   <% if @versions.present? %>
     <div class="versions">
       <h3 class="<%= section_heading_class %> mb-2"><%= t ".versions_header" %></h3>
-      <ol data-testid="gem-versions" class="flex flex-col gap-1.5">
-        <% @versions.each do |version| %>
-          <li class="flex flex-wrap items-center gap-x-2">
-            <%= link_to version.number, rubygem_version_path(version.rubygem.slug, version.slug),
-                  class: "font-mono text-c4 px-2 py-0.5 rounded-sm bg-green-200 dark:bg-green-800 text-neutral-900 dark:text-white hover:bg-green-300 dark:hover:bg-green-700" %>
-            <span class="text-b4 text-neutral-700 dark:text-neutral-400"><%= version_date_tag(version) %></span>
-            <% if version.platformed? %>
-              <span class="text-b4 text-neutral-700 dark:text-neutral-400"><%= version.platform %></span>
-            <% end %>
-            <% if version.ruby_abi.present? %>
-            <span class="text-b4 text-neutral-700 dark:text-neutral-400"><%= t ".ruby_abi" %> <%= version.ruby_abi %></span>
-            <% end %>
-            <span class="text-b4 text-neutral-700 dark:text-neutral-400">(<%= number_to_human_size(version.size) %>)</span>
-            <% if version.yanked? %>
-              <span class="text-b4 font-semibold text-red-600 dark:text-red-400"><%= t "versions.version.yanked" %></span>
-            <% end %>
-          </li>
-        <% end %>
+      <ol data-testid="gem-versions" class="flex flex-col gap-3">
+        <%= render partial: "versions/grouped_versions", locals: { versions: @versions } %>
       </ol>
       <% if show_all_versions_link?(@rubygem) %>
         <%= link_to t(".show_all_versions", count: @rubygem.versions.count), rubygem_versions_url(@rubygem.slug),

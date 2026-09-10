@@ -997,6 +997,9 @@ zh-CN:
     version:
       yanked: 已撤回
       ruby_abi:
+      content_address:
+      multi_abi:
+      source_gem:
   webauthn_credentials:
     callback:
       success: 您已成功注册一个安全设备。
