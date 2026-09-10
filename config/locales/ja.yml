@@ -675,6 +675,9 @@ ja:
       update: 更新
       owner_heading: 所有権の通知
       push_heading: プッシュ通知
+      gems_heading:
+      organizations_heading:
+      organization_info:
   webauthn_verifications:
     expired_or_already_used: 使用されたリンク中のトークンは期限切れか既に使われています。
     no_port: ポートが与えられていません。再試行してください。
