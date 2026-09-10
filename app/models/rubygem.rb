@@ -324,15 +324,16 @@ class Rubygem < ApplicationRecord
     versions.yanked.exists?
   end
 
+  # Holds the same per-gem advisory lock as Version#serialize_indexed_writes_per_gem
+  # (reentrant), so direct callers can't deadlock a concurrent push.
   def reorder_versions
-    bulk_reorder_versions
+    transaction do
+      Rubygem.advisory_xact_lock!("rubygem_version_reorder", id)
+      bulk_reorder_versions
 
-    versions_of_platforms = versions
-      .release
-      .indexed
-      .group_by { |version| [version.platform, version.ruby_abi] }
-
-    Version.default_scoped.where(id: versions_of_platforms.values.map! { |v| v.max.id }).update_all(latest: true)
+      versions_of_platforms = versions.release.indexed.group_by { |version| [version.platform, version.ruby_abi] }
+      Version.default_scoped.where(id: versions_of_platforms.values.map! { |v| v.max.id }).update_all(latest: true)
+    end
   end
 
   def refresh_indexed!
