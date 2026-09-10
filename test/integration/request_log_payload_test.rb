@@ -3,6 +3,8 @@
 require "test_helper"
 
 class RequestLogPayloadTest < ActionDispatch::IntegrationTest
+  include AdminHelpers
+
   def capture_request_payload
     payloads = []
     subscriber = ActiveSupport::Notifications.subscribe("process_action.action_controller") do |event|
@@ -87,10 +89,13 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :success
-    assert_equal({ user_id: api_key.user.id, api_key_id: api_key.id }, payload[:identity])
+    assert_equal(
+      { user_id: api_key.user.id, api_key_id: api_key.id, api_key_owner_type: "User", api_key_owner_id: api_key.user.id },
+      payload[:identity]
+    )
   end
 
-  test "API request with a trusted-publisher key logs the api key id without a user id" do
+  test "API request with a trusted-publisher key logs the api key id and its owner, no user id" do
     api_key = create(:api_key, :trusted_publisher, key: "tp-key-12345")
 
     payload = capture_request_payload do
@@ -99,7 +104,78 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
       get api_v1_rubygems_path(format: :json), headers: { "HTTP_AUTHORIZATION" => "tp-key-12345" }
     end
 
-    assert_nil payload[:identity][:user_id]
-    assert_equal api_key.id, payload[:identity][:api_key_id]
+    assert_equal(
+      { api_key_id: api_key.id, api_key_owner_type: "OIDC::TrustedPublisher::GitHubAction", api_key_owner_id: api_key.owner_id },
+      payload[:identity]
+    )
+  end
+
+  test "web request managing an api key does not log it as the authenticating key" do
+    user = create(:user, remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
+    api_key = create(:api_key, owner: user)
+    post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+    post authenticate_session_path(verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    payload = capture_request_payload { get edit_profile_api_key_path(api_key) }
+
+    assert_response :success
+    assert_equal({ user_id: user.id }, payload[:identity])
+  end
+
+  test "sign-in request logs the user id once signed in" do
+    user = create(:user)
+
+    payload = capture_request_payload do
+      post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+    end
+
+    assert_response :redirect
+    assert_equal({ user_id: user.id }, payload[:identity])
+  end
+
+  test "basic-auth API request logs the user id" do
+    user = create(:user)
+    auth = ActionController::HttpAuthentication::Basic.encode_credentials(user.email, user.password)
+
+    payload = capture_request_payload do
+      post api_v1_api_key_path, params: { name: "ci-key", index_rubygems: "true" }, headers: { "HTTP_AUTHORIZATION" => auth }
+    end
+
+    assert_response :success
+    assert_equal({ user_id: user.id }, payload[:identity])
+  end
+
+  test "trusted publisher token exchange logs the publisher as the api key owner" do
+    pkey = OpenSSL::PKey::RSA.generate(2048)
+    create(:oidc_provider, issuer: OIDC::Provider::GITHUB_ACTIONS_ISSUER, pkey:)
+    trusted_publisher = create(:oidc_trusted_publisher_github_action)
+    now = Time.now.to_i
+    jwt = JSON::JWT.new(
+      "iss" => OIDC::Provider::GITHUB_ACTIONS_ISSUER, "aud" => Gemcutter::HOST, "jti" => SecureRandom.uuid,
+      "nbf" => now - 60, "iat" => now - 60, "exp" => now + 600,
+      "repository" => trusted_publisher.repository, "repository_owner_id" => trusted_publisher.repository_owner_id,
+      "ref" => "refs/heads/main",
+      "job_workflow_ref" => "#{trusted_publisher.repository}/#{trusted_publisher.workflow_slug}@refs/heads/main"
+    ).sign(pkey.to_jwk)
+
+    payload = capture_request_payload do
+      post api_v1_oidc_trusted_publisher_exchange_token_path, params: { jwt: jwt.to_s }
+    end
+
+    assert_response :created
+    assert_equal(
+      { api_key_owner_type: "OIDC::TrustedPublisher::GitHubAction", api_key_owner_id: trusted_publisher.id },
+      payload[:identity]
+    )
+  end
+
+  test "admin request logs the admin github user id" do
+    admin = create(:admin_github_user, :is_admin)
+    admin_sign_in_as admin
+
+    payload = capture_request_payload { get avo.resources_admin_github_users_path }
+
+    assert_response :success
+    assert_equal admin.id, payload[:identity][:admin_github_user_id]
   end
 end
