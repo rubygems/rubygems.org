@@ -49,6 +49,8 @@ ActiveSupport.on_load(:action_controller) do
   # does not remove them. The owner is the authenticating key's polymorphic
   # owner (User or a trusted publisher) or, during an OIDC token exchange
   # where no key exists yet, the publisher the key is being issued to.
+  # The admin user is the Admin::GitHubUser that Gemcutter::Middleware::AdminAuth
+  # stores on the request env (see GitHubOAuthable#admin_user_request_header).
   def log_payload_identity
     api_key = Current.api_key
     owner = Current.api_key_owner
@@ -57,7 +59,7 @@ ActiveSupport.on_load(:action_controller) do
       api_key_id: api_key&.id,
       api_key_owner_type: api_key ? api_key.owner_type : owner&.class&.polymorphic_name,
       api_key_owner_id: api_key ? api_key.owner_id : owner&.id,
-      admin_github_user_id: request.get_header(GitHubOAuthable::ADMIN_USER_REQUEST_HEADER)&.id
+      admin_github_user_id: request.get_header("gemcutter.rubygems_admin_oauth_github_user")&.id
     }.compact
   end
 

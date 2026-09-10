@@ -4,10 +4,6 @@ module GitHubOAuthable
   extend ActiveSupport::Concern
   include SemanticLogger::Loggable
 
-  # Request env key under which Gemcutter::Middleware::AdminAuth stores the
-  # authenticated Admin::GitHubUser (or nil) for admin requests.
-  ADMIN_USER_REQUEST_HEADER = "gemcutter.rubygems_admin_oauth_github_user"
-
   INFO_QUERY = <<~GRAPHQL
     query($organization_name:String!) {
       viewer {
@@ -88,7 +84,7 @@ module GitHubOAuthable
     end
 
     def admin_user_request_header
-      ADMIN_USER_REQUEST_HEADER
+      "gemcutter.rubygems_admin_oauth_github_user"
     end
 
     def fetch_admin_user_info(oauth_token)
