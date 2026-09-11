@@ -1026,6 +1026,9 @@ fr:
     version:
       yanked: retiré
       ruby_abi:
+      content_address:
+      multi_abi:
+      source_gem:
   webauthn_credentials:
     callback:
       success:

@@ -1255,6 +1255,22 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
+  context ".by_display_order" do
+    setup do
+      @rubygem = create(:rubygem, name: "display-order-test")
+      @newest = create_content_addressable_version(@rubygem, number: "0.2.0", platform: "arm64-darwin", ruby_abi: "4.0")
+      @source = create(:version, rubygem: @rubygem, number: "0.1.0")
+      @multi_abi = create(:version, rubygem: @rubygem, number: "0.1.0", platform: "arm64-darwin", gem_platform: "arm64-darwin")
+      @arm64_abi_four = create_content_addressable_version(@rubygem, number: "0.1.0", platform: "arm64-darwin", ruby_abi: "4.0")
+      @arm64_abi_three = create_content_addressable_version(@rubygem, number: "0.1.0", platform: "arm64-darwin", ruby_abi: "3.3")
+      @x86_abi_three = create_content_addressable_version(@rubygem, number: "0.1.0", platform: "x86_64-linux", ruby_abi: "3.3")
+    end
+
+    should "return versions in display order" do
+      assert_equal [@newest, @source, @multi_abi, @arm64_abi_four, @arm64_abi_three, @x86_abi_three], @rubygem.versions.by_display_order.to_a
+    end
+  end
+
   context "with a few versions" do
     setup do
       @thin = create(:version, authors: %w[thin], built_at: 1.year.ago)
@@ -1604,6 +1620,18 @@ class VersionTest < ActiveSupport::TestCase
 
   def derived_abi(required_ruby_version, platform: "x86_64-linux")
     Version.ruby_abi_for(platform, required_ruby_version)
+  end
+
+  def create_content_addressable_version(rubygem, number:, platform:, ruby_abi:)
+    create(:version,
+           rubygem: rubygem,
+           number: number,
+           platform: platform,
+           gem_platform: platform,
+           ruby_abi: ruby_abi,
+           required_ruby_version: "~> #{ruby_abi}.0",
+           required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION,
+           sha256: Digest::SHA2.base64digest([rubygem.name, number, platform, ruby_abi].join("-")))
   end
 
   def encoded_sha256_with_hex_prefix(hex_sha256)

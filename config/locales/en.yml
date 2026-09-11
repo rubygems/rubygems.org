@@ -990,6 +990,9 @@ en:
     version:
       yanked: yanked
       ruby_abi: Ruby ABI
+      content_address: content address
+      multi_abi: multi-abi
+      source_gem: source
   webauthn_credentials:
     callback:
       success: You have successfully registered a security device.

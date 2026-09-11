@@ -143,6 +143,16 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     order(:position)
   end
 
+  def self.by_display_order
+    reorder(:position)
+      .order(Arel.sql("CASE WHEN platform = 'ruby' THEN 0 ELSE 1 END ASC"))
+      .order(:platform)
+      .order(Arel.sql("CASE WHEN ruby_abi IS NULL THEN 0 ELSE 1 END ASC"))
+      .order(Arel.sql("string_to_array(ruby_abi, '.')::int[] DESC NULLS FIRST"))
+      .order(:content_address)
+      .order(created_at: :desc, id: :desc)
+  end
+
   def self.by_created_at
     order(created_at: :desc)
   end
@@ -266,12 +276,12 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     rubygem.refresh_indexed!
   end
 
-  def previous
-    rubygem.versions.find_by(position: position + 1)
+  def previous_in_display_order
+    adjacent_display_version(1)
   end
 
-  def next
-    rubygem.versions.find_by(position: position - 1)
+  def next_in_display_order
+    adjacent_display_version(-1)
   end
 
   def yanked?
@@ -354,6 +364,12 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def slug
     full_name.delete_prefix("#{rubygem.name}-")
+  end
+
+  def display_id
+    return "#{number}-#{content_address}" if content_addressable?
+
+    number
   end
 
   def downloads_count
@@ -502,6 +518,17 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   private
+
+  def adjacent_display_version(offset)
+    versions = rubygem.versions.by_display_order.to_a
+    current_index = versions.index { |version| version.id == id }
+    return unless current_index
+
+    adjacent_index = current_index + offset
+    return if adjacent_index.negative?
+
+    versions[adjacent_index]
+  end
 
   def content_addressable_required_rubygems_version
     return if meets_content_addressable_rubygems_floor?

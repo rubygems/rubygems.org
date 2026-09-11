@@ -29,10 +29,10 @@ class RubygemsController < ApplicationController
   end
 
   def show
-    @versions = @rubygem.public_versions.limit(5)
+    @versions = @rubygem.public_versions_with_extra_version
     if @versions.to_a.any?
       add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
-      add_breadcrumb t("breadcrumbs.latest_version", version: @latest_version.slug)
+      add_breadcrumb t("breadcrumbs.latest_version", version: @latest_version.display_id)
       render "show"
     else
       add_breadcrumb @rubygem.name
