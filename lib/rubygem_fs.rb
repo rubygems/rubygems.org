@@ -116,6 +116,9 @@ module RubygemFs
     def restore(_)
     end
 
+    def reconcile_permissions(_)
+    end
+
     private
 
     def path_for(key, base = @base_dir)
@@ -227,6 +230,10 @@ module RubygemFs
     rescue Aws::S3::Errors::NotFound => e
       version_id = e.context.http_response.headers["x-amz-version-id"]
       s3.delete_object(key: key, bucket: bucket, version_id: version_id)
+    end
+
+    def reconcile_permissions(key)
+      s3.put_object_acl(key: key, bucket: bucket, acl: "public-read")
     end
 
     private
