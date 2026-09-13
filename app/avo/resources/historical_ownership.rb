@@ -12,5 +12,6 @@ class Avo::Resources::HistoricalOwnership < Avo::BaseResource
 
     field :first_owned_at, as: :date_time
     field :removed_at, as: :date_time
+    field :private_at, as: :date_time
   end
 end
