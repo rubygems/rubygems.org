@@ -192,6 +192,7 @@ module RubygemsHelper
     current_owner_ids = rubygem.ownerships.pluck(:user_id)
 
     rubygem.historical_ownerships
+      .not_private
       .where.not(user_id: current_owner_ids)
       .includes(:user)
       .order(removed_at: :desc)

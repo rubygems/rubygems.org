@@ -61,6 +61,14 @@ class UsersHelperTest < ActionView::TestCase
 
       assert_equal [rubygem], prior_rubygems_of(@user).map(&:rubygem)
     end
+
+    should "exclude a stint the user has marked private" do
+      rubygem = create(:rubygem)
+      create(:version, rubygem: rubygem)
+      create(:historical_ownership, user: @user, rubygem: rubygem, removed_at: Time.current, private_at: Time.current)
+
+      assert_empty prior_rubygems_of(@user)
+    end
   end
 
   context "#rubygems_with_history_for" do

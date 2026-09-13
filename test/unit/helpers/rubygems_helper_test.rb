@@ -309,6 +309,13 @@ class RubygemsHelperTest < ActionView::TestCase
 
       assert_empty prior_owners_of(@rubygem).to_a
     end
+
+    should "exclude a stint the prior owner has marked private" do
+      user = create(:user)
+      create(:historical_ownership, rubygem: @rubygem, user: user, removed_at: Time.current, private_at: Time.current)
+
+      assert_empty prior_owners_of(@rubygem).to_a
+    end
   end
 
   context "#display_owners?" do

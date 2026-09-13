@@ -220,11 +220,11 @@ class User < ApplicationRecord
   end
 
   def total_downloads_count
-    Rubygem.joins(:gem_download).where(id: historical_rubygem_ids).sum("gem_downloads.count")
+    Rubygem.joins(:gem_download).where(id: public_rubygem_ids).sum("gem_downloads.count")
   end
 
   def total_rubygems_count
-    Rubygem.with_versions.where(id: historical_rubygem_ids).count
+    Rubygem.with_versions.where(id: public_rubygem_ids).count
   end
 
   def confirm_email!
@@ -333,8 +333,8 @@ class User < ApplicationRecord
     @keep_gems_published == true
   end
 
-  def historical_rubygem_ids
-    historical_ownerships.distinct.pluck(:rubygem_id)
+  def public_rubygem_ids
+    (ownerships.pluck(:rubygem_id) + historical_ownerships.not_private.pluck(:rubygem_id)).uniq
   end
 
   def update_email

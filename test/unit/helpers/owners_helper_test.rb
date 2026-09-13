@@ -49,5 +49,12 @@ class OwnersHelperTest < ActionView::TestCase
 
       assert_empty prior_ownerships_of(@rubygem)
     end
+
+    should "include a stint the prior owner has marked private" do
+      user = create(:user)
+      create(:historical_ownership, rubygem: @rubygem, user: user, removed_at: Time.current, private_at: Time.current)
+
+      assert_equal [user], prior_ownerships_of(@rubygem).map(&:user)
+    end
   end
 end

@@ -933,6 +933,23 @@ class UserTest < ActiveSupport::TestCase
       assert_equal 3, @user.total_rubygems_count
     end
 
+    should "exclude a formerly-owned gem whose stint is private" do
+      former_rubygem = create(:rubygem, downloads: 500)
+      create(:version, rubygem: former_rubygem)
+      create(:ownership, user: @user, rubygem: former_rubygem).destroy
+      HistoricalOwnership.find_by!(user: @user, rubygem: former_rubygem).make_private!
+
+      assert_equal 6000, @user.total_downloads_count
+      assert_equal 3, @user.total_rubygems_count
+    end
+
+    should "still count a currently-owned gem whose open stint is private" do
+      HistoricalOwnership.find_by!(user: @user, rubygem: @rubygems.first).make_private!
+
+      assert_equal 6000, @user.total_downloads_count
+      assert_equal 3, @user.total_rubygems_count
+    end
+
     should "exclude a formerly-owned gem with no versions from the count" do
       former_rubygem = create(:rubygem)
       create(:ownership, user: @user, rubygem: former_rubygem).destroy

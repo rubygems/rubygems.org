@@ -24,6 +24,7 @@ module UsersHelper
     current_rubygem_ids = user.ownerships.pluck(:rubygem_id)
 
     user.historical_ownerships
+      .not_private
       .where.not(rubygem_id: current_rubygem_ids)
       .joins(:rubygem).merge(Rubygem.with_versions)
       .preload(rubygem: %i[latest_version most_recent_version gem_download])
