@@ -247,6 +247,7 @@ en:
       no_owned_html: You haven't pushed any gems yet. Perhaps check out the guide on %{creating_link} a gem.
       no_subscriptions_html: You're not subscribed to any gems yet. Visit a %{gem_link} to subscribe to one!
       organizations: Organizations
+      prior_ownerships: Prior ownerships
       title: Dashboard
   dependencies:
     show:
@@ -272,6 +273,23 @@ en:
     update:
       confirmed_email: Your email address has been verified.
       token_failure: Please double check the URL or try submitting it again.
+  historical_ownerships:
+    index:
+      title: Prior ownerships
+      info: Prior ownerships marked private are hidden from your profile and the gem's owners list.
+      none: You don't have any prior ownership stints yet.
+      gem: Gem
+      start: Start
+      end: End
+      current: Current
+      visibility: Visibility
+      action: Action
+      public: Public
+      private: Private
+      make_public: Make public
+      make_private: Make private
+    update:
+      success_notice: Updated ownership visibility.
   home:
     index:
       downloads_counting_html: downloads &amp; counting

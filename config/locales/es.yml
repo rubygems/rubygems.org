@@ -258,6 +258,7 @@ es:
       no_subscriptions_html: Aún no te suscribiste a ninguna gema. ¡Visita la %{gem_link}
         para suscribirte!
       organizations:
+      prior_ownerships:
       title: Dashboard
   dependencies:
     show:
@@ -285,6 +286,23 @@ es:
     update:
       confirmed_email: Tu dirección de correo se ha verificado.
       token_failure: Por favor verifica la URL o inténtalo nuevamente.
+  historical_ownerships:
+    index:
+      title:
+      info:
+      none:
+      gem:
+      start:
+      end:
+      current:
+      visibility:
+      action:
+      public:
+      private:
+      make_public:
+      make_private:
+    update:
+      success_notice:
   home:
     index:
       downloads_counting_html: descargas y contando

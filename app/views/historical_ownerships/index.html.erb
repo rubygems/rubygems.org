@@ -1,0 +1,72 @@
+<% @title = t(".title") %>
+<% add_breadcrumb(@title) %>
+
+<% content_for :subject do %>
+  <%= render "dashboards/subject", user: current_user, current: :historical_ownerships %>
+<% end %>
+
+<%
+  th_class    = "py-2 pr-4 text-b4 font-semibold text-neutral-900 dark:text-white"
+  cell_class  = "block md:table-cell py-1 md:py-3 pr-4 align-top " \
+                "before:content-[attr(data-title)] before:block before:text-c4 before:font-semibold " \
+                "before:uppercase before:tracking-wide before:text-neutral-500 md:before:content-none"
+  toggle_btn  = "inline-flex items-center justify-center rounded border-2 border-orange-500 text-orange-500 " \
+                "px-4 h-9 min-h-9 text-b3 hover:bg-orange-500/5 active:bg-orange-500/10 " \
+                "dark:hover:bg-orange-500/15 dark:active:bg-orange-500/25 transition focus:outline-none"
+%>
+
+<h1 class="text-h2 mb-10"><%= t(".title") %></h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head(class: "border-b border-neutral-200 dark:border-neutral-800") do %>
+    <%= c.section_title t(".title"), icon: "history" %>
+  <% end %>
+
+  <% if @historical_ownerships.empty? %>
+    <p class="mt-8 mb-4 text-b3 text-neutral-600 dark:text-neutral-400"><%= t(".none") %></p>
+  <% else %>
+    <p class="mt-8 mb-4 text-b4 text-neutral-600 dark:text-neutral-400"><%= t(".info") %></p>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-b3">
+        <thead class="hidden md:table-header-group border-b-2 border-neutral-300 dark:border-neutral-700">
+          <tr>
+            <th scope="col" class="<%= th_class %>"><%= t(".gem") %></th>
+            <th scope="col" class="<%= th_class %>"><%= t(".start") %></th>
+            <th scope="col" class="<%= th_class %>"><%= t(".end") %></th>
+            <th scope="col" class="<%= th_class %>"><%= t(".visibility") %></th>
+            <th scope="col" class="<%= th_class %>"></th>
+          </tr>
+        </thead>
+        <tbody class="md:divide-y md:divide-neutral-200 md:dark:divide-neutral-800">
+          <% @historical_ownerships.each do |historical_ownership| %>
+            <tr class="block md:table-row border-b border-neutral-200 py-4 dark:border-neutral-800 md:border-0 md:py-0" data-testid="historical_ownership">
+              <td data-title="<%= t(".gem") %>" class="<%= cell_class %> font-medium">
+                <%= link_to historical_ownership.rubygem.name, rubygem_path(historical_ownership.rubygem.slug), class: "text-orange-500 hover:underline dark:text-orange-400" %>
+              </td>
+              <td data-title="<%= t(".start") %>" class="<%= cell_class %> text-nowrap text-neutral-700 dark:text-neutral-300">
+                <%= nice_date_for(historical_ownership.first_owned_at) %>
+              </td>
+              <td data-title="<%= t(".end") %>" class="<%= cell_class %> text-nowrap text-neutral-700 dark:text-neutral-300">
+                <%= historical_ownership.removed_at ? nice_date_for(historical_ownership.removed_at) : t(".current") %>
+              </td>
+              <td data-title="<%= t(".visibility") %>" class="<%= cell_class %> text-neutral-700 dark:text-neutral-300" data-testid="visibility">
+                <%= historical_ownership.private? ? t(".private") : t(".public") %>
+              </td>
+              <td data-title="<%= t(".action") %>" class="<%= cell_class %>">
+                <%= button_to(
+                  historical_ownership.private? ? t(".make_public") : t(".make_private"),
+                  profile_historical_ownership_path(historical_ownership),
+                  method: :patch,
+                  params: { private: !historical_ownership.private? },
+                  class: toggle_btn,
+                  form_class: "inline-block"
+                ) %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+<% end %>

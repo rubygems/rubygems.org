@@ -178,6 +178,8 @@ Rails.application.routes.draw do
         delete :destroy, as: :destroy
       end
 
+      resources :historical_ownerships, only: %i[index update]
+
       resources :api_keys, except: :show do
         delete :reset, on: :collection
       end

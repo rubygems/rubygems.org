@@ -243,6 +243,7 @@ ja:
       no_owned_html: まだgemを公開していません。よろしければgemの%{creating_link}ガイドをご覧ください。
       no_subscriptions_html: まだgemを購読していません。%{gem_link}から何か購読してみてください。
       organizations: 組織
+      prior_ownerships:
       title: ダッシュボード
   dependencies:
     show:
@@ -268,6 +269,23 @@ ja:
     update:
       confirmed_email: メールアドレスが確認されました。
       token_failure: URLを見返すか、再度送信してみてください。
+  historical_ownerships:
+    index:
+      title:
+      info:
+      none:
+      gem:
+      start:
+      end:
+      current:
+      visibility:
+      action:
+      public:
+      private:
+      make_public:
+      make_private:
+    update:
+      success_notice:
   home:
     index:
       downloads_counting_html: ダウンロード数

@@ -44,5 +44,8 @@
   <% if current_user.memberships.any? %>
     <%= nav.link t("dashboards.show.organizations"), organizations_path, name: :organizations, icon: "organizations" %>
   <% end %>
+  <% if current_user.historical_ownerships.any? %>
+    <%= nav.link t("dashboards.show.prior_ownerships"), profile_historical_ownerships_path, name: :historical_ownerships, icon: "history" %>
+  <% end %>
   <%= nav.link t("layouts.application.header.settings"), edit_settings_path, name: :settings, icon: "settings" %>
 <% end %>

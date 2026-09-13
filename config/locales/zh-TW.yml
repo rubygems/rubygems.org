@@ -242,6 +242,7 @@ zh-TW:
       no_owned_html: 您尚未發佈任何 Gem。可以閱讀 %{creating_link} 教學。
       no_subscriptions_html: 您還沒有訂閱過 Gem，前往 %{gem_link} 來訂閱！
       organizations:
+      prior_ownerships:
       title: 控制台
   dependencies:
     show:
@@ -267,6 +268,23 @@ zh-TW:
     update:
       confirmed_email: 電子郵件地址驗證成功。
       token_failure: 請確認 URL 或再次提交
+  historical_ownerships:
+    index:
+      title:
+      info:
+      none:
+      gem:
+      start:
+      end:
+      current:
+      visibility:
+      action:
+      public:
+      private:
+      make_public:
+      make_private:
+    update:
+      success_notice:
   home:
     index:
       downloads_counting_html: 總下載次數
