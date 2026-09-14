@@ -103,7 +103,6 @@ class OrganizationOnboardingTest < ActiveSupport::TestCase
     context "organization_handle" do
       should allow_value("CapsLOCK").for(:organization_handle)
       should_not allow_value(nil).for(:organization_handle)
-      should_not allow_value("1abcde").for(:organization_handle)
       should_not allow_value("abc^%def").for(:organization_handle)
       should_not allow_value("abc\n<script>bad").for(:organization_handle)
 

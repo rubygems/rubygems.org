@@ -13,7 +13,7 @@ class OrganizationOnboarding < ApplicationRecord
   validates :organization_handle, presence: true,
     uniqueness: { case_sensitive: false },
     length: { within: 2..40 },
-    format: { with: Patterns::HANDLE_PATTERN }
+    format: { with: Patterns::ORGANIZATION_HANDLE_PATTERN }
 
   validates :organization_name, presence: true, length: { within: 2..255 }
 
