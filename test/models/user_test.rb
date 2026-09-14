@@ -71,7 +71,9 @@ class UserTest < ActiveSupport::TestCase
 
         user.full_name = "A New Name"
 
+     assert_queries_match(/FROM "organizations"/, count: 0) do
         assert_predicate user, :valid?
+     end
       end
 
       should "show user id if no handle set" do
