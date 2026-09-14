@@ -2,6 +2,7 @@
 
 class Organization < ApplicationRecord
   include Events::Recordable
+  include Organization::DnsVerification
 
   validates :handle, presence: true,
     uniqueness: { case_sensitive: false },

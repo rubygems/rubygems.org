@@ -24,3 +24,75 @@
     </div>
   <% end %>
 <% end %>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title t(".domain_verification"), icon: "language" %>
+  <% end %>
+
+  <p class="text-b3 text-neutral-600 dark:text-neutral-400 mb-6"><%= t(".domain_verification_help") %></p>
+
+  <%= form_with model: @organization, url: organization_path(@organization), method: :patch do |form| %>
+    <div>
+      <%= form.label :domain, t(".domain"), class: "block text-b2 font-semibold mb-2" %>
+      <%= form.text_field(
+        :domain,
+        class: "w-full text-b2 rounded-lg dark:bg-neutral-950 focus:ring-inset focus:ring-1 focus:ring-orange-500",
+        placeholder: "example.com",
+        autocomplete: "off",
+        data: { testid: "organization-domain" },
+      ) %>
+      <% if @organization.errors.include?(:domain) %>
+        <p class="text-b3 text-red-600 dark:text-red-400 mt-2" data-testid="domain-error">
+          <%= @organization.errors.full_messages_for(:domain).to_sentence %>
+        </p>
+      <% end %>
+    </div>
+
+    <div class="flex mt-6">
+      <%= render ButtonComponent.new(t(".update_domain"), type: :submit, style: :outline) %>
+    </div>
+  <% end %>
+
+  <% if @organization.domain.present? %>
+    <div class="mt-10 pt-8 border-t border-neutral-200 dark:border-neutral-800" data-testid="dns-record">
+      <h4 class="text-b2 font-bold uppercase tracking-wide text-neutral-800 dark:text-neutral-200 mb-2">
+        <%= t(".dns_record") %>
+      </h4>
+      <p class="text-b3 text-neutral-600 dark:text-neutral-400 mb-6"><%= t(".dns_record_help") %></p>
+
+      <dl class="text-b3 space-y-3">
+        <div class="sm:flex">
+          <dt class="font-semibold w-32 shrink-0"><%= t(".record_type") %></dt>
+          <dd class="font-mono break-all">TXT</dd>
+        </div>
+        <div class="sm:flex">
+          <dt class="font-semibold w-32 shrink-0"><%= t(".record_name") %></dt>
+          <dd class="font-mono break-all" data-testid="dns-record-name"><%= @organization.dns_txt_record_name %></dd>
+        </div>
+        <div class="sm:flex">
+          <dt class="font-semibold w-32 shrink-0"><%= t(".record_value") %></dt>
+          <dd class="font-mono break-all" data-testid="dns-record-value"><%= @organization.dns_txt_record_value %></dd>
+        </div>
+      </dl>
+
+      <div class="mt-8 flex items-center space-x-2" data-testid="dns-verification-status">
+        <% if @organization.dns_verified? %>
+          <%= icon_tag "check-circle", class: "text-green-600 dark:text-green-400" %>
+          <span class="text-b3 font-semibold"><%= t(".verified") %></span>
+        <% else %>
+          <%= icon_tag "clock", class: "text-neutral-500" %>
+          <span class="text-b3 font-semibold"><%= t(".unverified") %></span>
+        <% end %>
+      </div>
+
+      <p class="text-b3 text-neutral-600 dark:text-neutral-400 mt-2" data-testid="dns-last-checked">
+        <% if @organization.dns_last_checked_at %>
+          <%= t(".last_checked", time: time_ago_in_words(@organization.dns_last_checked_at)) %>
+        <% else %>
+          <%= t(".not_yet_checked") %>
+        <% end %>
+      </p>
+    </div>
+  <% end %>
+<% end %>

@@ -33,6 +33,12 @@ Rails.application.configure do
       class: "SyncDisposableEmailDomainsJob",
       set: { priority: 10 },
       description: "Syncing disposable email domain blocklist daily at 04:00 UTC"
+    },
+    verify_organization_domains: {
+      cron: "0 */6 * * *",
+      class: "VerifyOrganizationDomainsJob",
+      set: { priority: 10 },
+      description: "Checking organization domain TXT records every 6h"
     }
   }
 

@@ -110,6 +110,7 @@ es:
         reserved_domain:
         disposable_email_domain:
         public_suffix:
+        unknown_tld:
         protected_provider:
       models:
         api_key:
@@ -119,6 +120,8 @@ es:
         organization:
           attributes:
             handle:
+              invalid:
+            domain:
               invalid:
         membership:
           attributes:
@@ -499,6 +502,20 @@ es:
     popular:
       title: Nuevos lanzamientos — Gemas más populares
   organizations:
+    edit:
+      domain_verification:
+      domain_verification_help:
+      domain:
+      update_domain:
+      dns_record:
+      dns_record_help:
+      record_type:
+      record_name:
+      record_value:
+      verified:
+      unverified:
+      last_checked:
+      not_yet_checked:
     index:
       title:
       no_organizations:

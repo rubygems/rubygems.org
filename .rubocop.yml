@@ -74,6 +74,7 @@ Metrics/BlockLength:
     - app/models/concerns/**/*.rb
     - config/routes.rb
     - config/environments/development.rb
+    - config/initializers/good_job.rb
     - db/**/*.rb
 
 Metrics/ClassLength:

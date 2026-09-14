@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_14_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -557,10 +557,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
   create_table "organizations", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "deleted_at", precision: nil
+    t.datetime "dns_last_checked_at"
+    t.string "dns_verification_token"
+    t.datetime "dns_verified_at"
+    t.string "domain"
     t.string "handle", limit: 40
     t.string "name", limit: 255
     t.datetime "updated_at", null: false
     t.index "lower((handle)::text)", name: "index_organizations_on_lower_handle", unique: true
+    t.index ["domain"], name: "index_organizations_on_domain", where: "(domain IS NOT NULL)"
   end
 
   create_table "ownership_calls", force: :cascade do |t|

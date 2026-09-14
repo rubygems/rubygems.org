@@ -107,6 +107,7 @@ en:
         reserved_domain: "domain '%{domain}' is reserved and cannot be used for registration. Please use a valid personal email."
         disposable_email_domain: "domain '%{domain}' is a disposable email provider and cannot be used for registration. Please use a valid personal email. If this block is incorrect, email support@rubygems.org."
         public_suffix: is a public suffix and cannot be used; specify a registrable domain
+        unknown_tld: does not use a known top-level domain
         protected_provider: is a major consumer mail provider and cannot be blocked
       models:
         api_key:
@@ -117,6 +118,8 @@ en:
           attributes:
             handle:
               invalid: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
+            domain:
+              invalid: "must be a domain name, like example.com"
         membership:
           attributes:
             user:
@@ -462,6 +465,20 @@ en:
     popular:
       title: New Releases — Popular Gems
   organizations:
+    edit:
+      domain_verification: Domain Verification
+      domain_verification_help: Verify that your organization controls a domain by publishing a DNS record for it.
+      domain: Domain
+      update_domain: Update Domain
+      dns_record: DNS Record
+      dns_record_help: Add this TXT record to your domain's DNS, then wait for us to check it. Removing the record removes the verification.
+      record_type: Type
+      record_name: Name
+      record_value: Value
+      verified: Verified
+      unverified: Not verified
+      last_checked: "Last checked %{time} ago."
+      not_yet_checked: Not checked yet.
     index:
       title: Organizations
       no_organizations: You are not a member of any organizations.

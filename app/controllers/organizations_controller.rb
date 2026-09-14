@@ -52,6 +52,6 @@ class OrganizationsController < Organizations::BaseController
   end
 
   def organization_params
-    params.expect(organization: %i[name])
+    params.expect(organization: %i[name domain])
   end
 end

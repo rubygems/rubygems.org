@@ -103,6 +103,7 @@ zh-CN:
         reserved_domain:
         disposable_email_domain:
         public_suffix:
+        unknown_tld:
         protected_provider:
       models:
         api_key:
@@ -112,6 +113,8 @@ zh-CN:
         organization:
           attributes:
             handle:
+              invalid:
+            domain:
               invalid:
         membership:
           attributes:
@@ -468,6 +471,20 @@ zh-CN:
     popular:
       title: 新的发布 — 热门 Gem
   organizations:
+    edit:
+      domain_verification:
+      domain_verification_help:
+      domain:
+      update_domain:
+      dns_record:
+      dns_record_help:
+      record_type:
+      record_name:
+      record_value:
+      verified:
+      unverified:
+      last_checked:
+      not_yet_checked:
     index:
       title:
       no_organizations:

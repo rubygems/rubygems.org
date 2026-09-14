@@ -103,6 +103,7 @@ ja:
         reserved_domain:
         disposable_email_domain:
         public_suffix:
+        unknown_tld:
         protected_provider:
       models:
         api_key:
@@ -113,6 +114,8 @@ ja:
           attributes:
             handle:
               invalid: は英字から始まり、英字、数字、アンダーバー、ハイフンのみが含まれていなければなりません
+            domain:
+              invalid:
         membership:
           attributes:
             user:
@@ -465,6 +468,20 @@ ja:
     popular:
       title: 新しいリリース - 人気のgem
   organizations:
+    edit:
+      domain_verification:
+      domain_verification_help:
+      domain:
+      update_domain:
+      dns_record:
+      dns_record_help:
+      record_type:
+      record_name:
+      record_value:
+      verified:
+      unverified:
+      last_checked:
+      not_yet_checked:
     index:
       title: 組織
       no_organizations: どの組織のメンバーでもありません。

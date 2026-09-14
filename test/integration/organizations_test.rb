@@ -72,6 +72,129 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
     assert page.has_content? "New Name"
   end
 
+  test "should render the domain verification form on the edit page" do
+    organization = create(:organization, owners: [@user])
+
+    get edit_organization_path(organization)
+
+    assert_response :success
+    assert_select "input[name=?]", "organization[domain]"
+  end
+
+  test "should not render the DNS record until a domain is claimed" do
+    organization = create(:organization, owners: [@user])
+
+    get edit_organization_path(organization)
+
+    assert_response :success
+    assert_select "[data-testid=?]", "dns-record", false
+  end
+
+  test "should render the DNS record to publish once a domain is claimed" do
+    organization = create(:organization, owners: [@user], domain: "arrakis.example.com")
+
+    get edit_organization_path(organization)
+
+    assert_response :success
+    assert_select "[data-testid=?]", "dns-record-name", text: "arrakis.example.com"
+    assert_select "[data-testid=?]", "dns-record-value", text: organization.dns_txt_record_value
+    assert_select "[data-testid=?]", "dns-verification-status", text: /Not verified/
+  end
+
+  test "should render the verified status once the domain is verified" do
+    organization = create(:organization, owners: [@user], domain: "arrakis.example.com")
+    organization.dns_verification_succeeded!
+
+    get edit_organization_path(organization)
+
+    assert_response :success
+    assert_select "[data-testid=?]", "dns-verification-status", text: /Verified/
+  end
+
+  test "should let an owner claim a domain" do
+    organization = create(:organization, owners: [@user])
+
+    patch organization_path(organization), params: {
+      organization: { domain: "arrakis.example.com" }
+    }
+
+    assert_redirected_to organization_path(organization)
+    assert_equal "arrakis.example.com", organization.reload.domain
+    assert_predicate organization.dns_verification_token, :present?
+    refute_predicate organization, :dns_verified?
+  end
+
+  test "should re-render the form when the claimed domain is invalid" do
+    organization = create(:organization, owners: [@user])
+
+    patch organization_path(organization), params: {
+      organization: { domain: "not a domain" }
+    }
+
+    assert_response :success
+    assert_select "[data-testid=?]", "domain-error"
+    assert_nil organization.reload.domain
+  end
+
+  test "should not let an admin claim a domain" do
+    organization = create(:organization, admins: [@user], domain: "arrakis.example.com")
+    organization.dns_verification_succeeded!
+
+    patch organization_path(organization), params: {
+      organization: { domain: "caladan.example.com" }
+    }
+
+    assert_response :forbidden
+    assert_equal "arrakis.example.com", organization.reload.domain
+    assert_predicate organization, :dns_verified?
+  end
+
+  test "should not let a maintainer claim a domain" do
+    organization = create(:organization, maintainers: [@user])
+
+    patch organization_path(organization), params: {
+      organization: { domain: "arrakis.example.com" }
+    }
+
+    assert_response :forbidden
+    assert_nil organization.reload.domain
+    assert_nil organization.dns_verification_token
+  end
+
+  test "should not let a non-member claim a domain" do
+    organization = create(:organization, owners: [create(:user)])
+
+    patch organization_path(organization), params: {
+      organization: { domain: "arrakis.example.com" }
+    }
+
+    assert_response :forbidden
+    assert_nil organization.reload.domain
+    assert_nil organization.dns_verification_token
+  end
+
+  test "should not let a signed out user claim a domain" do
+    organization = create(:organization, owners: [@user])
+    delete sign_out_path
+
+    patch organization_path(organization), params: {
+      organization: { domain: "arrakis.example.com" }
+    }
+
+    assert_response :forbidden
+    assert_nil organization.reload.domain
+    assert_nil organization.dns_verification_token
+  end
+
+  test "should not expose the DNS record or verification status to a non-member" do
+    organization = create(:organization, owners: [create(:user)], domain: "arrakis.example.com")
+
+    get edit_organization_path(organization)
+
+    assert_response :forbidden
+    refute page.has_content? organization.dns_verification_token
+  end
+
   test "should render user roles for users in the organization" do
     organization = create(:organization, owners: [@user])
 
