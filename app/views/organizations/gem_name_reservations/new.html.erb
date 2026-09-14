@@ -53,7 +53,10 @@
 
     <div class="mb-4">
       <%= f.label :name, t(".name"), class: 'block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2' %>
-      <%= f.text_field :name, class: "block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:focus:border-indigo-400", placeholder: "my-gem-name", data: { testid: "gem-name-reservation-name" } %>
+      <%= f.text_field :name, class: "block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-500",
+        placeholder: "my-gem-name",
+        data: { testid: "gem-name-reservation-name" },
+        autofocus: true %>
       <p class="mt-2 text-b3 text-neutral-600 dark:text-neutral-400"><%= t(".name_hint") %></p>
     </div>
     <div class="flex justify-end">
