@@ -92,8 +92,8 @@ class Api::V1::RubygemsController < Api::BaseController
       "gem.version": gemcutter.version&.number
     }.compact
 
-    Datadog::Kit::AppSec::Events.track(event, **metadata, **actor.transform_keys { |key| :"actor.#{key}" })
     logger.info(event, **metadata, actor:, edge_bypassed: request.edge_bypassed?, request_id: request.uuid)
+    Datadog::Kit::AppSec::Events.track(event, **metadata, **actor.transform_keys { |key| :"actor.#{key}" })
   rescue StandardError => e
     Rails.error.report(e, handled: true)
   end
