@@ -369,7 +369,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         should "not flag a push carrying the edge proxy token as bypassed" do
           @request.headers["RUBYGEMS-PROXY-TOKEN"] = "abc"
 
-          stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, "abc") do
+          stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKENS, ["abc"]) do
             post :create, body: gem_file(&:read)
           end
 

@@ -12,11 +12,18 @@ module Gemcutter::RequestIpAddress
     city: "GEOIP-CITY"
   }.freeze
 
-  PROXY_TOKEN = ENV["RUBYGEMS_PROXY_TOKEN"].presence.freeze
+  # RUBYGEMS_PROXY_TOKEN accepts a comma-separated list so a token can be
+  # rotated add-then-remove: append the new token here and deploy, switch the
+  # edge to send it, then drop the old one. Tokens must not contain commas.
+  def self.parse_proxy_tokens(value)
+    value.to_s.split(",").map(&:strip).compact_blank
+  end
+
+  PROXY_TOKENS = parse_proxy_tokens(ENV["RUBYGEMS_PROXY_TOKEN"]).freeze
 
   included do
-    # True only when the request carries the shared secret our Fastly service
-    # attaches to every origin fetch. It is also false when no token is
+    # True only when the request carries one of the shared secrets our Fastly
+    # service attaches to every origin fetch. It is also false when no token is
     # configured in this environment and for traffic that legitimately skips
     # the edge (Kubernetes probes of /internal/*), so read `edge_bypassed?`
     # as "unverified" rather than proof of a bypass, and exclude those paths
@@ -24,7 +31,7 @@ module Gemcutter::RequestIpAddress
     def edge_verified?
       fetch_header("gemcutter.edge_verified") do |k|
         token = headers["RUBYGEMS-PROXY-TOKEN"]
-        set_header k, token.present? && PROXY_TOKEN.present? && ActiveSupport::SecurityUtils.secure_compare(token, PROXY_TOKEN)
+        set_header k, token.present? && PROXY_TOKENS.any? { |expected| ActiveSupport::SecurityUtils.secure_compare(token, expected) }
       end
     end
 

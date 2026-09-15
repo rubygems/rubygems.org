@@ -52,7 +52,7 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
   end
 
   test "payload does not flag a request carrying the edge proxy token" do
-    stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, "abc") do
+    stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKENS, ["abc"]) do
       payload = capture_request_payload { get "/", headers: { "RUBYGEMS-PROXY-TOKEN" => "abc" } }
 
       refute payload[:edge_bypassed]
