@@ -11,12 +11,16 @@ class RubygemTransfer < ApplicationRecord
 
   accepts_nested_attributes_for :invites
 
-  validate :rubygems_owned_by_transferrer, :created_by_organization_ownership, :rubygem_existing_organization
+  validate :rubygems_owned_by_transferrer, :created_by_organization_ownership, :created_by_invite_permissions,
+    :rubygem_existing_organization
 
   before_save :sync_invites, if: :rubygems_changed?
 
   def transfer!
     transaction do
+      organization.memberships.lock.find_by!(user: created_by)
+      raise ActiveRecord::RecordInvalid, self unless valid?
+
       memberships = approved_invites.filter_map { it.to_membership(actor: created_by) }
       organization.memberships << memberships
 
@@ -102,6 +106,15 @@ class RubygemTransfer < ApplicationRecord
   def created_by_organization_ownership
     return if OrganizationPolicy.new(created_by, organization).transfer_gem?
     errors.add(:created_by, "does not have permission to transfer gems to this organization")
+  end
+
+  def created_by_invite_permissions
+    invites.filter_map { it.to_membership(actor: created_by) }.uniq(&:role).each do |membership|
+      membership.organization = organization
+      next if MembershipPolicy.new(created_by, membership).create?
+
+      errors.add(:invites, "contain a role the transferrer does not have permission to grant")
+    end
   end
 
   def rubygem_existing_organization

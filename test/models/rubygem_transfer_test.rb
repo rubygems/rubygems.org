@@ -75,6 +75,34 @@ class RubygemTransferTest < ActiveSupport::TestCase
     end
   end
 
+  test "not creating a membership with a role the transferrer cannot grant" do
+    @organization.memberships.find_by!(user: @owner).update!(role: :admin)
+    invite = build(:organization_invite, invitable: @transfer, role: :owner)
+    @transfer.invites << invite
+
+    assert_raises ActiveRecord::RecordInvalid do
+      @transfer.transfer!
+    end
+
+    assert_not Membership.exists?(user: invite.user, organization: @organization)
+    assert_nil @rubygem.reload.organization
+  end
+
+  test "admin creating memberships with roles they can grant" do
+    @organization.memberships.find_by!(user: @owner).update!(role: :admin)
+    invites = %i[admin maintainer].map do |role|
+      build(:organization_invite, invitable: @transfer, role: role)
+    end
+    @transfer.invites << invites
+
+    @transfer.transfer!
+
+    invites.each do |invite|
+      assert Membership.exists?(user: invite.user, organization: @organization, role: invite.role)
+    end
+    assert_equal @organization, @rubygem.reload.organization
+  end
+
   test "not creating memberships for invites without a specified role" do
     invites = build_list(:organization_invite, 2, invitable: @transfer, role: nil)
     @transfer.invites << invites

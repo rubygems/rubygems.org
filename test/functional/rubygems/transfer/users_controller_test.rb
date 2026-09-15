@@ -13,6 +13,43 @@ class Rubygems::Transfer::UsersControllerTest < ActionDispatch::IntegrationTest
     @invites = @transfer.invites.to_a
   end
 
+  test "GET /rubygems/:rubygem_id/transfer/users as an owner offers the owner role" do
+    get users_transfer_rubygems_path(as: @owner)
+
+    assert_response :success
+    assert_select "option[value='owner']", count: @invites.size
+  end
+
+  test "GET /rubygems/:rubygem_id/transfer/users as an admin does not offer the owner role" do
+    @organization.memberships.find_by!(user: @owner).update!(role: :admin)
+
+    get users_transfer_rubygems_path(as: @owner)
+
+    assert_response :success
+    assert_select "option[value='owner']", count: 0
+    assert_select "option[value='admin']", count: @invites.size
+  end
+
+  test "GET /rubygems/:rubygem_id/transfer/users as a maintainer is forbidden" do
+    @organization.memberships.find_by!(user: @owner).update!(role: :maintainer)
+
+    get users_transfer_rubygems_path(as: @owner)
+
+    assert_response :not_found
+  end
+
+  test "PATCH /rubygems/:rubygem_id/transfer/users as an admin assigning an owner shows an error" do
+    @organization.memberships.find_by!(user: @owner).update!(role: :admin)
+
+    patch users_transfer_rubygems_path(as: @owner), params: {
+      rubygem_transfer: { invites_attributes: { "0" => { id: @invites.first.id, role: "owner" } } }
+    }
+
+    assert_response :unprocessable_content
+    assert_select "li", text: "Invites contain a role the transferrer does not have permission to grant"
+    assert_nil @invites.first.reload.role
+  end
+
   test "PATCH /rubygems/:rubygem_id/transfer/users" do
     patch users_transfer_rubygems_path(as: @owner), params: {
       rubygem_transfer: {
