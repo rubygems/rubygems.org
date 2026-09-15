@@ -15,11 +15,16 @@ module Gemcutter::RequestIpAddress
   PROXY_TOKEN = ENV["RUBYGEMS_PROXY_TOKEN"].presence.freeze
 
   included do
+    # True only when the request carries the shared secret our Fastly service
+    # attaches to every origin fetch. It is also false when no token is
+    # configured in this environment and for traffic that legitimately skips
+    # the edge (Kubernetes probes of /internal/*), so read `edge_bypassed?`
+    # as "unverified" rather than proof of a bypass, and exclude those paths
+    # in detection rules.
     def edge_verified?
       fetch_header("gemcutter.edge_verified") do |k|
-        token = headers["RUBYGEMS-PROXY-TOKEN"].presence
-        verified = !!(token && PROXY_TOKEN && ActiveSupport::SecurityUtils.secure_compare(token, PROXY_TOKEN))
-        set_header k, verified
+        token = headers["RUBYGEMS-PROXY-TOKEN"]
+        set_header k, token.present? && PROXY_TOKEN.present? && ActiveSupport::SecurityUtils.secure_compare(token, PROXY_TOKEN)
       end
     end
 

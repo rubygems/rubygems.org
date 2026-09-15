@@ -20,6 +20,9 @@ module Gemcutter::RequestLogPayload
     identity = log_payload_identity
     payload[:identity] = identity if identity.any?
 
+    actor = log_payload_actor
+    payload[:actor] = actor if actor
+
     payload[:message] ||= log_payload_message(payload)
   end
 
@@ -46,37 +49,34 @@ module Gemcutter::RequestLogPayload
     }
   end
 
-  # During an OIDC token exchange there's no key yet, so the owner is the
-  # publisher being issued one.
+  # Only principals whose credentials were verified are logged; a later 403
+  # does not remove them. The owner is the authenticating key's polymorphic
+  # owner (User or a trusted publisher) or, during an OIDC token exchange
+  # where no key exists yet, the publisher the key is being issued to.
+  # The admin user is the Admin::GitHubUser that Gemcutter::Middleware::AdminAuth
+  # stores on the request env (see GitHubOAuthable#admin_user_request_header).
   def log_payload_identity
     api_key = Current.api_key
-    owner = api_key ? api_key.owner : Current.api_key_owner
-    user = Current.user
+    owner = log_payload_owner
 
     {
-      user_id: user&.id,
+      user_id: Current.user&.id,
       api_key_id: api_key&.id,
       api_key_owner_type: owner&.class&.polymorphic_name,
       api_key_owner_id: owner&.id,
-      admin_github_user_id: request.get_header("gemcutter.rubygems_admin_oauth_github_user")&.id,
-      **log_payload_actor(owner || user, user)
+      admin_github_user_id: request.get_header("gemcutter.rubygems_admin_oauth_github_user")&.id
     }.compact
   end
 
-  def log_payload_actor(actor, user)
-    {
-      actor_gid: actor&.to_gid&.to_s,
-      actor_type: log_payload_actor_type(actor),
-      account_age_seconds: user && (Time.current - user.created_at).to_i
-    }
+  # Who is acting, in the same shape as the `actor` block on gem.push.* log
+  # lines so that one facet keys detection rules across every line.
+  def log_payload_actor
+    (log_payload_owner || Current.user)&.log_actor_attributes
   end
 
-  def log_payload_actor_type(actor)
-    case actor
-    when nil then nil
-    when User then "user"
-    else "trusted_publisher"
-    end
+  def log_payload_owner
+    api_key = Current.api_key
+    api_key ? api_key.owner : Current.api_key_owner
   end
 
   # e.g. "[200] GET /gems/rails (RubygemsController#show)"

@@ -81,37 +81,21 @@ class Api::V1::RubygemsController < Api::BaseController
   private
 
   # Datadog SIEM detection rules key on the log line, not the AppSec span.
+  # The push has already been processed by the time we get here, so
+  # telemetry failures are reported, never surfaced to the pusher.
   def track_gem_push(gemcutter)
     event = gemcutter.code == 200 ? "gem.push.success" : "gem.push.failure"
-    metadata = push_actor_metadata.merge(
+    actor = @api_key.owner.log_actor_attributes
+    metadata = {
+      "usr.id": (@api_key.owner_id.to_s if @api_key.user?),
       "gem.name": gemcutter.rubygem&.name,
       "gem.version": gemcutter.version&.number
-    ).compact
+    }.compact
 
-    Datadog::Kit::AppSec::Events.track(event, **metadata)
-    logger.info(event, **metadata, edge_bypassed: request.edge_bypassed?, account_age_seconds: push_account_age_seconds)
-  end
-
-  def push_actor_metadata
-    owner = @api_key.owner
-    metadata = {
-      "actor.gid": owner.to_gid.to_s,
-      "actor.type": @api_key.user? ? "user" : "trusted_publisher",
-      "usr.id": (owner.id.to_s if @api_key.user?)
-    }
-    return metadata unless @api_key.trusted_publisher?
-
-    metadata.merge(
-      "actor.repository": owner.repository,
-      "actor.workflow": owner.workflow_slug,
-      "actor.repository_owner_id": owner.repository_owner_id
-    )
-  end
-
-  def push_account_age_seconds
-    return unless @api_key.user?
-
-    (Time.current - @api_key.owner.created_at).to_i
+    Datadog::Kit::AppSec::Events.track(event, **metadata, **actor.transform_keys { |key| :"actor.#{key}" })
+    logger.info(event, **metadata, actor:, edge_bypassed: request.edge_bypassed?, request_id: request.uuid)
+  rescue StandardError => e
+    Rails.error.report(e, handled: true)
   end
 
   def cors_set_access_control_headers

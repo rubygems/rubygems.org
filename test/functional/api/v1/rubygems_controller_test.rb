@@ -347,20 +347,33 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           @controller.stubs(:logger).returns(@logger)
         end
 
-        should "log a successful push with the actor, gem and edge fields" do
+        should "log a successful push with the actor, gem, edge and request fields" do
+          ActionDispatch::Request.any_instance.stubs(:uuid).returns("req-123")
+
           post :create, body: gem_file(&:read)
 
           event = @logger.events.sole
 
           assert_semantic_logger_event(event, level: :info, message: "gem.push.success")
-          assert_equal @user.to_gid.to_s, event.payload[:"actor.gid"]
-          assert_equal "user", event.payload[:"actor.type"]
+          assert_equal @user.to_gid.to_s, event.payload.dig(:actor, :gid)
+          assert_equal "user", event.payload.dig(:actor, :type)
+          assert_kind_of Integer, event.payload.dig(:actor, :account_age_seconds)
+          refute event.payload[:actor].key?(:repository)
           assert_equal @user.id.to_s, event.payload[:"usr.id"]
           assert_equal "test", event.payload[:"gem.name"]
           assert_equal "0.0.0", event.payload[:"gem.version"]
+          assert_equal "req-123", event.payload[:request_id]
           assert event.payload[:edge_bypassed]
-          assert_kind_of Integer, event.payload[:account_age_seconds]
-          refute event.payload.key?(:"actor.repository")
+        end
+
+        should "not flag a push carrying the edge proxy token as bypassed" do
+          @request.headers["RUBYGEMS-PROXY-TOKEN"] = "abc"
+
+          stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, "abc") do
+            post :create, body: gem_file(&:read)
+          end
+
+          refute @logger.events.sole.payload[:edge_bypassed]
         end
 
         should "log a failed push without gem version" do
@@ -369,7 +382,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           event = @logger.events.sole
 
           assert_semantic_logger_event(event, level: :info, message: "gem.push.failure")
-          assert_equal @user.to_gid.to_s, event.payload[:"actor.gid"]
+          assert_equal @user.to_gid.to_s, event.payload.dig(:actor, :gid)
           refute event.payload.key?(:"gem.version")
         end
 
@@ -381,14 +394,24 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           post :create, body: "really bad gem"
 
           event = @logger.events.sole
+          actor = event.payload[:actor]
 
-          assert_equal publisher.to_gid.to_s, event.payload[:"actor.gid"]
-          assert_equal "trusted_publisher", event.payload[:"actor.type"]
-          assert_equal publisher.repository, event.payload[:"actor.repository"]
-          assert_equal publisher.workflow_slug, event.payload[:"actor.workflow"]
-          assert_equal publisher.repository_owner_id, event.payload[:"actor.repository_owner_id"]
+          assert_equal publisher.to_gid.to_s, actor[:gid]
+          assert_equal "trusted_publisher", actor[:type]
+          assert_equal publisher.repository, actor[:repository]
+          assert_equal publisher.workflow_slug, actor[:workflow]
+          assert_equal publisher.repository_owner_id, actor[:repository_owner_id]
+          refute actor.key?(:account_age_seconds)
           refute event.payload.key?(:"usr.id")
-          assert_nil event.payload[:account_age_seconds]
+        end
+
+        should "not fail an already-processed push when logging raises" do
+          @logger.stubs(:info).raises(RuntimeError, "logging is down")
+
+          post :create, body: gem_file(&:read)
+
+          assert_response :success
+          assert_equal 1, Rubygem.count
         end
       end
     end
