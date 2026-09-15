@@ -5,7 +5,9 @@
     <%= avatar 328, "user_gravatar", theme: :dark, class: "h-24 w-24 lg:h-40 lg:w-40 rounded-lg object-cover mr-4" %>
 
     <div class="lg:w-full lg:mt-2">
-      <h2 class="font-bold text-h4"><%= user.display_handle %></h2>
+      <h2 class="font-bold text-h4">
+        <%= link_to user.display_handle, profile_path(user.display_id), class: "hover:underline" %>
+      </h2>
       <% if user.full_name.present? %>
         <p class="text-neutral-500 text-b3"><%= user.full_name %></p>
       <% end %>

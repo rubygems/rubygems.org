@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Avo::Resources::Deletion < Avo::BaseResource
-  self.includes = [:version]
+  self.includes = %i[version user]
 
   def fields
     field :id, as: :id
@@ -10,6 +10,7 @@ class Avo::Resources::Deletion < Avo::BaseResource
     field :rubygem, as: :text
     field :number, as: :text
     field :platform, as: :text
+    field :ruby_abi, as: :text, title: "Ruby ABI"
     field :user, as: :belongs_to
     field :version, as: :belongs_to
   end

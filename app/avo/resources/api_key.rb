@@ -2,10 +2,15 @@
 
 class Avo::Resources::ApiKey < Avo::BaseResource
   self.title = :name
-  self.includes = []
+  self.includes = %i[owner api_key_rubygem_scope ownership oidc_id_token]
 
   class ExpiredFilter < Avo::Filters::ScopeBooleanFilter; end
   class TrustedPublisherFilter < Avo::Filters::ScopeBooleanFilter; end
+
+  def actions
+    action Avo::Actions::ChangeApiKeyName
+    action Avo::Actions::RevokeApiKey
+  end
 
   def filters
     filter ExpiredFilter, arguments: { default: { expired: false, unexpired: true } }

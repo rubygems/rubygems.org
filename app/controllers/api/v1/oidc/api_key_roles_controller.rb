@@ -4,6 +4,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   include ApiKeyable
   include JwtValidation
 
+  before_action :deny_shared_cache
   before_action :authenticate_with_api_key, except: :assume_role
   before_action :verify_user_api_key, except: :assume_role
 
@@ -76,5 +77,6 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
 
   def verify_access
     @api_key_role.access_policy.verify_access!(@jwt)
+    Current.user = @api_key_role.user
   end
 end

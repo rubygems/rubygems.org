@@ -149,9 +149,16 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
     end
 
     def verify(cert)
-      ref = cert.openssl.find_extension("1.3.6.1.4.1.57264.1.14")&.value_der&.then { OpenSSL::ASN1.decode(it).value }
+      build_signer_uri = cert.openssl.find_extension("1.3.6.1.4.1.57264.1.9")&.value_der&.then { OpenSSL::ASN1.decode(it).value }
+      expected_prefix = "https://github.com/#{@trusted_publisher.workflow_repository}/#{@trusted_publisher.workflow_slug}@"
+      unless build_signer_uri&.start_with?(expected_prefix) && build_signer_uri != expected_prefix
+        return Sigstore::VerificationFailure.new(
+          "Certificate's Build Signer URI does not match #{expected_prefix}"
+        )
+      end
+
       Sigstore::Policy::Identity.new(
-        identity: "https://github.com/#{@trusted_publisher.workflow_repository}/#{@trusted_publisher.workflow_slug}@#{ref}",
+        identity: build_signer_uri,
         issuer: OIDC::Provider::GITHUB_ACTIONS_ISSUER
       ).verify(cert)
     end

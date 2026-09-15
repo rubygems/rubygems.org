@@ -41,8 +41,12 @@ docker run -d -e RAILS_ENV=production -e SECRET_KEY_BASE_DUMMY=1 -e DATABASE_URL
   --net host "$DOCKER_TAG" \
   -- puma --environment production --config /app/config/puma.rb
 
-sleep 5
-pong=$(curl -m 5 http://localhost:3000/internal/ping || true)
+pong=""
+for i in $(seq 1 10); do
+  pong=$(curl -sm 5 http://localhost:3000/internal/ping || true)
+  [ "${pong}" = "PONG" ] && break
+  sleep 2
+done
 
 if [ "${pong}" != "PONG" ]; then
   echo "Internal ping api test didn't pass."

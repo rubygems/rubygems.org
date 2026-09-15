@@ -15,13 +15,15 @@ class ApplicationController < ActionController::Base
     render_forbidden(e.policy.error)
   end
 
-  before_action :set_locale
+  # TODO: Separate locales by path and re-enable
+  # before_action :set_locale
   before_action :reject_null_char_param
   before_action :reject_path_params_param
   before_action :reject_null_char_cookie
   before_action :set_error_context_user
   before_action :set_user_tag
   before_action :set_current_request
+  after_action :deny_shared_cache_when_authenticated
 
   add_flash_types :notice_html
 
@@ -50,7 +52,16 @@ class ApplicationController < ActionController::Base
   end
 
   def set_user_tag
-    set_tag "gemcutter.user.id", current_user.id if signed_in?
+    return unless signed_in?
+    set_tag "gemcutter.user.id", current_user.id
+
+    trace = Datadog::Tracing.active_trace
+    return unless trace
+    Datadog::Kit::Identity.set_user(
+      trace,
+      id: current_user.id.to_s,
+      login: Digest::SHA256.hexdigest(current_user.handle || current_user.email)
+    )
   end
 
   rescue_from(ActionController::ParameterMissing) do |e|
@@ -80,6 +91,10 @@ class ApplicationController < ActionController::Base
     options[:password].present? && options[:name].present?
   end
 
+  def cacheable_request?
+    !signed_in? && flash.empty?
+  end
+
   def cache_expiry_headers(expiry: 60, fastly_expiry: 3600)
     expires_in expiry, public: true
     fastly_expires_in fastly_expiry
@@ -99,6 +114,7 @@ class ApplicationController < ActionController::Base
 
   def redirect_to_signin
     response.headers["Cache-Control"] = "private, max-age=0"
+    response.headers["Surrogate-Control"] = "max-age=0"
     redirect_to sign_in_path, alert: t("please_sign_in")
   end
 
@@ -167,7 +183,8 @@ class ApplicationController < ActionController::Base
   end
 
   def valid_page_param?(max_page)
-    params[:page].respond_to?(:to_i) && params[:page].to_i.between?(Gemcutter::DEFAULT_PAGE, max_page)
+    # :page is optional, so we read it directly rather than via params.expect, which would raise when absent.
+    params[:page].respond_to?(:to_i) && params[:page].to_i.between?(Gemcutter::DEFAULT_PAGE, max_page) # rubocop:disable Rails/StrongParametersExpect
   end
 
   def reject_null_char_param
@@ -190,8 +207,18 @@ class ApplicationController < ActionController::Base
 
   def disable_cache
     response.headers["Cache-Control"] = "no-cache, no-store"
+    response.headers["Surrogate-Control"] = "max-age=0"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+  end
+
+  def deny_shared_cache_when_authenticated
+    return unless signed_in? || @api_key.present?
+
+    response.headers["Cache-Control"] = "private, no-store"
+    response.headers["Surrogate-Control"] = "max-age=0"
+    vary = response.headers["Vary"].to_s.split(",").map(&:strip).compact_blank
+    response.headers["Vary"] = (vary + %w[Cookie Authorization]).uniq.join(", ")
   end
 
   # Avoid leaking confirmation token in referrer header on certain pages

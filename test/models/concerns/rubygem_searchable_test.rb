@@ -141,10 +141,10 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
   context "filter" do
     setup do
-      example_1 = create(:rubygem, name: "example_1")
-      example_2 = create(:rubygem, name: "example_2")
-      create(:version, :reindex, rubygem: example_1, indexed: false)
-      create(:version, :reindex, rubygem: example_2)
+      example1 = create(:rubygem, name: "example_1")
+      example2 = create(:rubygem, name: "example_2")
+      create(:version, :reindex, rubygem: example1, indexed: false)
+      create(:version, :reindex, rubygem: example2)
     end
 
     should "filter yanked gems from the result" do

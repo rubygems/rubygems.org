@@ -1,5 +1,8 @@
 ---
 nl:
+  admin:
+    delete_user:
+      blocked_reason:
   credentials_required:
   copied: Gekopieerd
   copy_to_clipboard: Kopieer naar klembord
@@ -25,6 +28,7 @@ nl:
   api_key_forbidden:
   api_key_soft_deleted:
   api_key_insufficient_scope:
+  email_not_confirmed:
   please_sign_up: Toegang geweigerd. Schrijf je in voor een account op https://rubygems.org
   please_sign_in:
   otp_incorrect:
@@ -95,11 +99,19 @@ nl:
       messages:
         not_pwned:
         blocked:
+        reserved_domain:
+        disposable_email_domain:
+        public_suffix:
+        protected_provider:
       models:
         api_key:
           attributes:
             expires_at:
               inclusion:
+        gem_name_reservation:
+          attributes:
+            base:
+              organization_limit_reached:
         organization:
           attributes:
             handle:
@@ -139,6 +151,7 @@ nl:
           attributes:
             rubygem_name:
               unavailable:
+              reserved:
     models:
       user:
       api_key:
@@ -171,6 +184,7 @@ nl:
       invalid_gem:
     destroy:
       success:
+      already_expired:
     index:
       api_keys:
       name:
@@ -194,8 +208,11 @@ nl:
       reset:
       save_key:
       mfa:
+      mfa_enabled_notice:
       expiration:
       update_owner:
+      view_expired:
+      view_active:
     new:
       new_api_key:
     reset:
@@ -206,6 +223,7 @@ nl:
     edit:
       edit_api_key:
       invalid_key:
+      expired_key:
     all_gems:
     gem_ownership_removed:
   dashboards:
@@ -226,6 +244,17 @@ nl:
   dependencies:
     show:
       click_to_expand:
+      gem_header:
+      required_version_header:
+      scope_header:
+        one:
+        other:
+      reverse_dependencies_header:
+      version_header:
+      date_header:
+      downloads_count:
+      downloads_header:
+      see_all_reverse:
   email_confirmations:
     create:
       promise_resend: Als het opgegeven account bestaat, wordt er een activatielink
@@ -241,9 +270,24 @@ nl:
     index:
       downloads_counting_html:
       find_blurb_html: Vind je gems makkelijker en publiceer ze sneller.
+      find_blurb_lead:
       learn:
         install_rubygems: Installeer RubyGems
+      donation:
+        body:
+        cta:
+        title:
+      powered_by:
+        body_html:
+        title:
+      supporters:
+        body:
+        cta:
+        title:
   layouts:
+    subject:
+      subject_label:
+      subject_secondary_label:
     application:
       footer:
         about: Over ons
@@ -286,6 +330,8 @@ nl:
       mfa_banner_html:
   breadcrumbs:
     home: Startpagina
+    latest_version:
+    versions:
     dashboard: Dashboard
     settings: Instellingen
     org_name: 'Organisatie: %{name}'
@@ -293,6 +339,8 @@ nl:
     gems:
     members:
     invite_member:
+    reservations:
+    reserve_gem_name:
   mailer:
     confirm_your_email:
     confirmation_subject:
@@ -328,6 +376,10 @@ nl:
     gem_yanked:
       subject:
       title:
+    cache_exposure_inactive_notice:
+      subject:
+    cache_exposure_notice:
+      subject:
     reset_api_key:
       subject:
       title:
@@ -421,6 +473,7 @@ nl:
       add_member:
       invite:
       transfer:
+      reservations:
     members:
       create:
         user_already_invited:
@@ -446,12 +499,34 @@ nl:
         role:
         create:
         invite:
+    gem_name_reservations:
+      create:
+        gem_name_reserved:
+      destroy:
+        gem_name_reservation_removed:
+      index:
+        description:
+        no_reservations:
+        reserve:
+        remove:
+        confirm_remove:
+      new:
+        title:
+        name:
+        name_hint:
+        reserve:
+        limit_html:
+        limit_reached_html:
+        unlimited:
+        disclaimer:
     invitations:
       show:
         accept:
         decline:
         title_html:
   pages:
+    index:
+      title:
     about:
       contributors_amount:
       downloads_amount:
@@ -489,6 +564,8 @@ nl:
     download:
       title:
     security:
+      title:
+    security-engineers-in-residence-faq:
       title:
     supporters:
       title:
@@ -634,10 +711,13 @@ nl:
     edit:
       role:
       title:
+      submit_button:
+      user:
     confirm:
       confirmed_email:
       token_expired:
     index:
+      title:
       add_owner:
       name:
       mfa:
@@ -652,7 +732,14 @@ nl:
       info:
       confirmed:
       pending:
+      current_user_badge:
       confirm_remove:
+      remove_self_dialog:
+        title:
+        warning:
+        confirm_label:
+        submit:
+        cancel:
     resend_confirmation:
       resent_notice:
     create:
@@ -667,6 +754,7 @@ nl:
   settings:
     edit:
       title:
+      account_header:
       webauthn_credentials:
       no_webauthn_credentials:
       webauthn_credential_note:
@@ -732,12 +820,21 @@ nl:
     request_denied:
     show:
       title: Profiel van %{username}
+      gems:
+      no_gems:
+      edit_profile:
+      email_me:
     security_events:
       title:
       description_html:
   rubygems:
     aside:
       downloads_for_this_version: Voor deze versie
+      github_star:
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: Versie vrijgegeven
       required_ruby_version: Required Ruby Version
       required_rubygems_version: Required Rubygems Version
@@ -753,6 +850,7 @@ nl:
         funding:
         header: Links
         home: Startpagina
+        verified:
         mail: Mailing-list
         analytics:
         report_abuse:
@@ -797,6 +895,12 @@ nl:
     show:
       bundler_header: Gemfile
       install: Installeer
+      tabs:
+        label:
+        readme:
+        gem_info:
+        contents:
+        dependencies:
       licenses_header:
         one: Licentie
         other: Licenties
@@ -804,6 +908,7 @@ nl:
       requirements_header: Requirements
       show_all_versions: Toon alle versies (%{count} totaal)
       versions_header: Versies
+      ruby_abi:
       yanked_notice:
     show_yanked:
       not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org.
@@ -824,9 +929,14 @@ nl:
           other:
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title:
       subtitle:
       no_reverse_dependencies:
+      version_header:
     search:
       search_reverse_dependencies_html:
   searches:
@@ -838,6 +948,7 @@ nl:
       updated:
       yanked:
     show:
+      title:
       subtitle_html: voor <em>%{query}</em>
       month_update:
       week_update:
@@ -848,6 +959,7 @@ nl:
     new:
       forgot_password: Wachtwoord vergeten?
       resend_confirmation: Geen bevestigingsemail ontvangen?
+      confirm:
     verify:
       title:
       confirm:
@@ -878,6 +990,7 @@ nl:
     index:
       title:
       all_time_most_downloaded:
+      clickgems:
       total_gems:
       total_users:
   users:
@@ -885,6 +998,7 @@ nl:
       email_sent: Een bevestigingsemail is naar je e-mailadres gestuurd
     new:
       have_account: Heb je al een account?
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: Deze gem wordt momenteel niet gehost op rubygems.org
@@ -895,6 +1009,7 @@ nl:
       imported_gem_version_notice:
     version:
       yanked: verwijderd
+      ruby_abi:
   webauthn_credentials:
     callback:
       success:
@@ -1056,6 +1171,7 @@ nl:
       api_key:
         api_key_created:
         api_key_deleted:
+        api_key_cache_exposure_revoked:
         api_key_name:
         api_key_scopes:
         api_key_gem_html:

@@ -80,6 +80,46 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal version3_ruby, @rubygem.most_recent_version
     end
 
+    should "find versions by number, platform and Ruby ABI" do
+      plain = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
+                     required_ruby_version: ">= 3.2")
+      abi34 = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
+                     required_ruby_version: "~> 3.4.0",
+                     required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.4",
+                     sha256: Digest::SHA2.base64digest("abi34-1.0.0"))
+
+      assert_equal plain, @rubygem.find_version!(number: "1.0.0", platform: "x86_64-linux-musl")
+      assert_equal abi34, @rubygem.find_version!(number: "1.0.0", platform: "x86_64-linux-musl", ruby_abi: "3.4")
+      assert_raises(ActiveRecord::RecordNotFound) do
+        @rubygem.find_version!(number: "1.0.0", platform: "x86_64-linux-musl", ruby_abi: "3.2")
+      end
+    end
+
+    should "mark the latest version for each Ruby ABI per platform" do
+      abi32_old = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
+                         required_ruby_version: "~> 3.2.0",
+                         required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.2",
+                         sha256: Digest::SHA2.base64digest("abi32-1.0.0"))
+      abi32_new = create(:version, rubygem: @rubygem, number: "2.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
+                         required_ruby_version: "~> 3.2.0",
+                         required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.2",
+                         sha256: Digest::SHA2.base64digest("abi32-2.0.0"))
+      abi33_new = create(:version, rubygem: @rubygem, number: "2.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
+                         required_ruby_version: "~> 3.3.0",
+                         required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.3",
+                         sha256: Digest::SHA2.base64digest("abi33-2.0.0"))
+      plain_ruby = create(:version, rubygem: @rubygem, number: "2.0.0", platform: "ruby")
+
+      @rubygem.reorder_versions
+
+      latest_versions = Version.latest
+
+      assert_includes latest_versions, abi32_new
+      assert_includes latest_versions, abi33_new
+      assert_includes latest_versions, plain_ruby
+      refute_includes latest_versions, abi32_old
+    end
+
     should "order latest platform gems with latest uniquely" do
       pre  = create(:version,
         rubygem: @rubygem,
@@ -163,6 +203,24 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal version1pre, @rubygem.reload.most_recent_version
     end
 
+    should "return the most recent non-ruby platform version when multiple non-ruby platform versions exist" do
+      create(:version, rubygem: @rubygem, number: "0.3.8", platform: "universal-darwin")
+      version2 = create(:version, rubygem: @rubygem, number: "0.3.9", platform: "universal-darwin")
+
+      @rubygem.reorder_versions
+
+      assert_equal version2, @rubygem.reload.most_recent_version
+    end
+
+    should "return the highest semver version across platforms" do
+      create(:version, rubygem: @rubygem, number: "0.3.9", platform: "x86_64-linux")
+      version2 = create(:version, rubygem: @rubygem, number: "0.3.10", platform: "universal-darwin")
+
+      @rubygem.reorder_versions
+
+      assert_equal version2, @rubygem.reload.most_recent_version
+    end
+
     should "return the most_recent indexed version when a more recent yanked version exists" do
       create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
       indexed_v1 = create(:version, rubygem: @rubygem, number: "0.1.0", indexed: true)
@@ -215,13 +273,13 @@ class RubygemTest < ActiveSupport::TestCase
           number: "1.0.0",
           platform: "ruby",
           licenses: "MIT",
-          info_checksum: "1234567890")
+          info_checksum_v2: "1234567890")
         @jruby_version = create(:version,
           rubygem: @rubygem,
           number: "1.0.0",
           platform: "jruby",
           licenses: "MIT",
-          info_checksum: "1234567890")
+          info_checksum_v2: "1234567890")
       end
 
       should "return the most recently created version without platform" do
@@ -258,6 +316,23 @@ class RubygemTest < ActiveSupport::TestCase
 
       should "return nil if number is nil" do
         assert_nil @rubygem.find_public_version(nil)
+      end
+
+      should "not return a skinny ABI variant when no platform or ruby_abi is given" do
+        create(:version, rubygem: @rubygem, number: @version.number, platform: "x86_64-linux", gem_platform: "x86_64-linux",
+               required_ruby_version: "~> 3.2.0", required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.2",
+               sha256: Digest::SHA2.base64digest("find-pub-1.0.0-x86_64-linux-3.2"))
+
+        assert_equal @jruby_version, @rubygem.find_public_version(@version.number)
+      end
+
+      should "return nil when only skinny ABI variants exist and no ruby_abi is given" do
+        @rubygem.versions.update_all(indexed: false)
+        create(:version, rubygem: @rubygem, number: @version.number, platform: "x86_64-linux", gem_platform: "x86_64-linux",
+               required_ruby_version: "~> 3.2.0", required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.2",
+               sha256: Digest::SHA2.base64digest("find-pub-only-1.0.0-x86_64-linux-3.2"))
+
+        assert_nil @rubygem.find_public_version(@version.number)
       end
     end
 
@@ -500,6 +575,7 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal @rubygem.most_recent_version.created_at.as_json, hash["version_created_at"]
       assert_equal @rubygem.most_recent_version.downloads_count, hash["version_downloads"]
       assert_equal @rubygem.most_recent_version.platform, hash["platform"]
+      assert_nil hash.fetch("ruby_abi")
       assert_equal @rubygem.most_recent_version.authors, hash["authors"]
       assert_equal @rubygem.most_recent_version.info, hash["info"]
       assert_equal @rubygem.most_recent_version.metadata, hash["metadata"]
@@ -566,7 +642,7 @@ class RubygemTest < ActiveSupport::TestCase
           }
         )
 
-        hash = MultiJson.load(@rubygem.to_json)
+        hash = MultiJSON.parse(@rubygem.to_json)
 
         assert_equal "http://example.com/home", hash["homepage_uri"]
         assert_equal "http://example.com/wiki", hash["wiki_uri"]
@@ -1148,6 +1224,13 @@ class RubygemTest < ActiveSupport::TestCase
       rubygem = build(:rubygem)
 
       assert_equal VersionManifest.new(gem: rubygem.name, number: "0.1.0", platform: "jruby"), rubygem.version_manifest("0.1.0", "jruby")
+    end
+
+    should "return a content-addressed VersionManifest when content_address is given" do
+      rubygem = build(:rubygem)
+
+      assert_equal VersionManifest.new(gem: rubygem.name, number: "0.1.0", content_address: "1c616c4a"),
+                   rubygem.version_manifest("0.1.0", "x86_64-linux", content_address: "1c616c4a")
     end
   end
 

@@ -27,15 +27,12 @@ class RoutingErrorsTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "sign up route is disabled when sign up is disabled" do
-    Clearance.configure { |config| config.allow_sign_up = false }
-    Rails.application.reload_routes!
+  test "sign up route stays available and shows a notice when sign up is disabled" do
+    Clearance.configuration.stubs(:allow_sign_up?).returns(false)
 
-    assert_raises(ActionController::RoutingError) do
-      get "/sign_up"
-    end
-  ensure
-    Clearance.configure { |config| config.allow_sign_up = true }
-    Rails.application.reload_routes!
+    get "/sign_up"
+
+    assert_response :success
+    assert_select "#flash_alert", text: "New account registration has been temporarily disabled."
   end
 end

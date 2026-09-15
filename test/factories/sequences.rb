@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   sequence :email do |n|
-    "user#{n}@example.com"
+    "user#{n}@rubygems-test.org"
   end
 
   sequence :handle do |n|

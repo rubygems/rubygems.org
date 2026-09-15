@@ -5,180 +5,117 @@ require "test_helper"
 class UpdateVersionsFileTest < ActiveSupport::TestCase
   include RakeTaskHelper
 
-  setup do
-    @tmp_versions_file = Tempfile.new("tmp_versions_file")
-    tmp_path = @tmp_versions_file.path
-    Rails.application.config.rubygems.stubs(:[]).with("versions_file_location").returns(tmp_path)
+  COMPACT_INDEX_VERSION_CONFIG = {
+    2 => {
+      config_key: "versions_file_location_v2",
+      rake_task: "compact_index:update_versions_file",
+      store_key: "versions/versions_v2.list",
+      absent_store_keys: ["versions/versions.list"],
+      checksum_column: :info_checksum_v2,
+      yanked_checksum_column: :yanked_info_checksum_v2
+    }
+  }.freeze
 
+  setup do
+    @tmp_versions_files = {}
+    @original_paths = {}
+
+    COMPACT_INDEX_VERSION_CONFIG.each do |version, config|
+      tmp_versions_file = Tempfile.new("versions_v#{version}.list")
+      tmp_versions_file.write "created_at: 2015-08-23T17:22:53-07:00\n---\n"
+      tmp_versions_file.close
+
+      @tmp_versions_files[version] = tmp_versions_file
+      @original_paths[config.fetch(:config_key)] = Rails.application.config.rubygems[config.fetch(:config_key)]
+      Rails.application.config.rubygems[config.fetch(:config_key)] = tmp_versions_file.path
+    end
+
+    cleanup_compact_index_files
     setup_rake_tasks("compact_index.rake")
   end
 
-  def update_versions_file
-    freeze_time do
-      @created_at = Time.now.utc.iso8601
-      Rake::Task["compact_index:update_versions_file"].invoke
-    end
-  end
-
   teardown do
-    @tmp_versions_file.unlink
+    COMPACT_INDEX_VERSION_CONFIG.each_value do |config|
+      Rails.application.config.rubygems[config.fetch(:config_key)] = @original_paths.fetch(config.fetch(:config_key))
+    end
+    cleanup_compact_index_files
+    @tmp_versions_files.each_value(&:unlink)
   end
 
-  context "file header" do
-    setup do
-      update_versions_file
-    end
+  COMPACT_INDEX_VERSION_CONFIG.each do |version, config|
+    should "update compact index v#{version} versions file" do
+      rubygem = create(:rubygem, name: "foo")
+      create(:version,
+        rubygem:,
+        number: "1.0.0",
+        created_at: 1.minute.ago,
+        config.fetch(:checksum_column) => "v#{version}_checksum")
 
-    should "use today's timestamp as header" do
-      expected_header = "created_at: #{@created_at}\n---\n"
+      Rake::Task[config.fetch(:rake_task)].invoke
 
-      assert_equal expected_header, @tmp_versions_file.read
-    end
-  end
+      content = File.read(@tmp_versions_files.fetch(version).path)
 
-  context "single gem" do
-    setup { @rubygem = create(:rubygem, name: "rubyrubyruby") }
-
-    context "platform release" do
-      setup do
-        create(:version,
-          rubygem:       @rubygem,
-          created_at:    2.minutes.ago,
-          number:        "0.0.1",
-          info_checksum: "13q4e1")
-        create(:version,
-          rubygem:       @rubygem,
-          created_at:    1.minute.ago,
-          number:        "0.0.1",
-          info_checksum: "qw212r",
-          platform:      "jruby")
-
-        update_versions_file
-      end
-
-      should "include platform release" do
-        expected_output = "rubyrubyruby 0.0.1,0.0.1-jruby qw212r\n"
-
-        assert_equal expected_output, @tmp_versions_file.readlines[2]
+      assert_includes content, "foo 1.0.0 v#{version}_checksum"
+      assert_includes RubygemFs.instance.get(config.fetch(:store_key)), "foo 1.0.0 v#{version}_checksum"
+      config.fetch(:absent_store_keys).each do |store_key|
+        assert_nil RubygemFs.instance.get(store_key)
       end
     end
 
-    context "order" do
-      setup do
-        1.upto(3) do |i|
-          create(:version,
-            rubygem:       @rubygem,
-            created_at:    i.minutes.ago,
-            number:        "0.0.#{4 - i}",
-            info_checksum: "13q4e#{i}")
-        end
+    should "use compact index v#{version} yanked checksum for latest yanked version" do
+      rubygem = create(:rubygem, name: "foo")
+      create(:version,
+        rubygem:,
+        number: "1.0.0",
+        created_at: 2.minutes.ago,
+        config.fetch(:checksum_column) => "v#{version}_checksum")
+      create(:version,
+        :yanked,
+        rubygem:,
+        number: "1.0.1",
+        created_at: 90.seconds.ago,
+        yanked_at: 1.minute.ago,
+        config.fetch(:checksum_column) => "v#{version}_checksum",
+        config.fetch(:yanked_checksum_column) => "v#{version}_yanked_checksum")
 
-        update_versions_file
-      end
+      Rake::Task[config.fetch(:rake_task)].invoke
 
-      should "order by created_at and use last released version's info_checksum" do
-        expected_output = "rubyrubyruby 0.0.1,0.0.2,0.0.3 13q4e1\n"
+      content = File.read(@tmp_versions_files.fetch(version).path)
 
-        assert_equal expected_output, @tmp_versions_file.readlines[2]
-      end
-    end
-
-    context "yanked version" do
-      setup do
-        create(:version,
-          rubygem:       @rubygem,
-          created_at:    5.minutes.ago,
-          number:        "0.0.1",
-          info_checksum: "qw212r")
-        create(:version,
-          indexed:              false,
-          rubygem:              @rubygem,
-          created_at:           3.minutes.ago,
-          yanked_at:            1.minute.ago,
-          number:               "0.0.2",
-          info_checksum:        "sd12q",
-          yanked_info_checksum: "qw212r")
-        Rake::Task["compact_index:update_versions_file"].invoke
-      end
-
-      should "not include yanked version" do
-        expected_output = "rubyrubyruby 0.0.1 qw212r\n"
-
-        assert_equal expected_output, @tmp_versions_file.readlines[2]
-      end
-    end
-
-    context "yanked version isn't the latest version" do
-      setup do
-        create(:version,
-          rubygem:       @rubygem,
-          created_at:    5.seconds.ago,
-          number:        "0.1.1",
-          info_checksum: "zqw212r")
-        create(:version,
-          indexed:       false,
-          rubygem:       @rubygem,
-          created_at:    4.seconds.ago,
-          yanked_at:     2.seconds.ago,
-          number:        "0.1.2",
-          info_checksum: "zsd12q",
-          yanked_info_checksum: "zab45d")
-        create(:version,
-          rubygem:       @rubygem,
-          created_at:    3.seconds.ago,
-          number:        "0.1.3",
-          info_checksum: "zrt13y")
-
-        update_versions_file
-      end
-
-      should "not include yanked version" do
-        expected_output = "rubyrubyruby 0.1.1,0.1.3 zab45d\n"
-
-        assert_equal expected_output, @tmp_versions_file.readlines[2]
-      end
-    end
-
-    context "no public versions" do
-      setup do
-        create(:version,
-          indexed:       false,
-          rubygem:       @rubygem,
-          created_at:    4.seconds.ago,
-          yanked_at:     2.seconds.ago,
-          number:        "0.1.2",
-          info_checksum: "zsd12q",
-          yanked_info_checksum: "zab45d")
-
-        update_versions_file
-      end
-
-      should "not include yanked version" do
-        refute_includes "rubyrubyruby", @tmp_versions_file.read
+      assert_includes content, "foo 1.0.0 v#{version}_yanked_checksum"
+      assert_includes RubygemFs.instance.get(config.fetch(:store_key)), "foo 1.0.0 v#{version}_yanked_checksum"
+      config.fetch(:absent_store_keys).each do |store_key|
+        assert_nil RubygemFs.instance.get(store_key)
       end
     end
   end
 
-  context "multiple gems" do
-    setup do
-      3.times do |i|
-        create(:rubygem, name: "rubygem#{i}").tap do |gem|
-          create(:version, rubygem: gem, created_at: 4.seconds.ago, number: "0.0.1", info_checksum: "13q4e#{i}")
-        end
-      end
+  should "delegate the default compact index versions file task to the current version" do
+    current_version = GemInfo::CURRENT_VERSION
+    config = COMPACT_INDEX_VERSION_CONFIG.fetch(current_version)
+    rubygem = create(:rubygem, name: "foo")
+    create(:version,
+      rubygem:,
+      number: "1.0.0",
+      created_at: 1.minute.ago,
+      config.fetch(:checksum_column) => "current_checksum")
 
-      update_versions_file
-    end
+    Rake::Task["compact_index:update_versions_file"].invoke
 
-    should "put each gem on new line" do
-      expected_output = <<~VERSIONS_FILE
-        created_at: #{@created_at}
-        ---
-        rubygem0 0.0.1 13q4e0
-        rubygem1 0.0.1 13q4e1
-        rubygem2 0.0.1 13q4e2
-      VERSIONS_FILE
-      assert_equal expected_output, @tmp_versions_file.read
+    content = File.read(@tmp_versions_files.fetch(current_version).path)
+
+    assert_includes content, "foo 1.0.0 current_checksum"
+    assert_includes RubygemFs.instance.get(config.fetch(:store_key)), "foo 1.0.0 current_checksum"
+    config.fetch(:absent_store_keys).each do |store_key|
+      assert_nil RubygemFs.instance.get(store_key)
     end
+  end
+
+  private
+
+  def cleanup_compact_index_files
+    RubygemFs.instance.remove(*COMPACT_INDEX_VERSION_CONFIG.values.flat_map do |config|
+      [config.fetch(:store_key), *config.fetch(:absent_store_keys)]
+    end.uniq)
   end
 end

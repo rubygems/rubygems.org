@@ -29,7 +29,6 @@ Rails.application.routes.draw do
           post :revoke, to: "github_secret_scanning#revoke", defaults: { format: :json }
         end
       end
-      resource :multifactor_auth, only: :show
       resource :webauthn_verification, only: :create do
         get ':webauthn_token/status', action: :status, as: :status, constraints: { format: :json }
       end
@@ -89,7 +88,7 @@ Rails.application.routes.draw do
           delete :yank, to: "deletions#create"
         end
         constraints rubygem_id: Patterns::ROUTE_PATTERN do
-          resource :owners, only: %i[show create edit update destroy]
+          resource :owners, only: %i[show create update destroy]
           resources :trusted_publishers, controller: 'oidc/rubygem_trusted_publishers', only: %i[index create destroy show]
         end
       end
@@ -179,7 +178,7 @@ Rails.application.routes.draw do
         delete :destroy, as: :destroy
       end
 
-      resources :api_keys do
+      resources :api_keys, except: :show do
         delete :reset, on: :collection
       end
 
@@ -260,6 +259,7 @@ Rails.application.routes.draw do
     end
 
     resource :password, only: %i[new create edit update] do
+      get 'reset', to: 'passwords#reset', as: :reset
       post 'otp_edit', to: 'passwords#otp_edit', as: :otp_edit
       post 'webauthn_edit', to: 'passwords#webauthn_edit', as: :webauthn_edit
     end
@@ -282,7 +282,7 @@ Rails.application.routes.draw do
     get '/sign_in' => 'sessions#new', as: 'sign_in'
     delete '/sign_out' => 'sessions#destroy', as: 'sign_out'
 
-    get '/sign_up' => 'users#new', as: 'sign_up' if Clearance.configuration.allow_sign_up?
+    get '/sign_up' => 'users#new', as: 'sign_up'
 
     namespace :organizations, as: :organization do
       get "onboarding", to: redirect("/organizations/onboarding/name")
@@ -310,6 +310,8 @@ Rails.application.routes.draw do
       end
       resource :invitation, only: %i[show update], constraints: { id: Patterns::ROUTE_PATTERN }, controller: "organizations/invitations"
       resources :gems, only: :index, controller: 'organizations/gems'
+      resources :gem_name_reservations, only: %i[index new create destroy], path: 'reservations',
+        controller: 'organizations/gem_name_reservations'
     end
   end
 
@@ -339,6 +341,7 @@ Rails.application.routes.draw do
 
   ################################################################################
   # static pages routes
+  get 'pages' => 'pages#index', constraints: { format: :html }, as: :pages
   get 'pages/sponsors' => redirect('/pages/supporters'), constraints: { format: :html }
   get 'pages/*id' => 'pages#show', constraints: { format: :html, id: Regexp.union(Gemcutter::PAGES) }, as: :page
 

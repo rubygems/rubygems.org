@@ -112,6 +112,12 @@ class RubygemFsTest < ActiveSupport::TestCase
         assert_nil @fs.head("foo/bar/baz")
       end
 
+      should "return nil when head_object raises NotFound" do
+        @s3.stub_responses(:head_object, ->(_) { "NotFound" })
+
+        assert_nil @fs.head("foo")
+      end
+
       should "return s3 response Hash" do
         metadata = { "size" => "123", "path" => "foo" }
         @s3.stub_responses(:head_object, ->(_) { { content_type: "text/plain", metadata: metadata } })

@@ -160,11 +160,13 @@ Minitest/MultipleAssertions:
 Style/ClassAndModuleChildren:
   EnforcedStyle: compact
   Exclude:
+    - lib/compact_index/*.rb
     - lib/gemcutter/middleware/hostess.rb
     - lib/gemcutter/middleware/redirector.rb
 
-Capybara/ClickLinkOrButtonStyle:
-  Enabled: false
+Rails/Present:
+  Exclude:
+    - lib/compact_index/*.rb
 
 Rails/ThreeStateBooleanColumn:
   Enabled: false

@@ -21,14 +21,13 @@ class ApiKeysHelperTest < ActionView::TestCase
       @ownership.destroy!
       rubygem_name = @ownership.rubygem.name
 
-      expected_dom = <<~HTML.squish.gsub(/>\s+</, "><")
-        <span
-          class="tooltip__text"
-          data-tooltip="Ownership of the #{rubygem_name} gem has been removed after being scoped to this key."\
-        >#{rubygem_name} [?]</span>
-      HTML
+      dom = Capybara.string(gem_scope(@api_key.reload))
+      trigger = dom.first("button[aria-describedby]", visible: :all)
+      bubble = dom.first("##{trigger[:"aria-describedby"]}[role='tooltip']", visible: :all)
 
-      assert_equal expected_dom, gem_scope(@api_key.reload)
+      assert_includes dom.text, rubygem_name
+      assert_equal "[?]", trigger.text
+      assert_equal "Ownership of the #{rubygem_name} gem has been removed after being scoped to this key.", bubble.text
     end
   end
 
@@ -38,7 +37,7 @@ class ApiKeysHelperTest < ActionView::TestCase
 
     [
       scope,
-      { class: "form__checkbox__input", id: scope, data: },
+      { class: ApiKeysHelper::CHECKBOX_CLASSES, id: scope, data: },
       "true",
       "false"
     ]

@@ -7,6 +7,7 @@ class ApiKey < ApplicationRecord
                   configure_trusted_publishers].freeze
   APPLICABLE_GEM_API_SCOPES = %i[push_rubygem yank_rubygem add_owner update_owner remove_owner configure_trusted_publishers].freeze
   EXCLUSIVE_SCOPES = %i[show_dashboard].freeze
+  LEGACY_KEY_NAME = "legacy-key"
 
   self.ignored_columns += API_SCOPES
 
@@ -42,6 +43,9 @@ class ApiKey < ApplicationRecord
 
   scope :trusted_publisher, -> { where("owner_type like ?", "OIDC::TrustedPublisher::%") }
   scope :not_trusted_publisher, -> { where("owner_type not like ?", "OIDC::TrustedPublisher::%") }
+
+  scope :classic, -> { where(owner_type: "User").not_oidc }
+  scope :legacy, -> { classic.where(name: LEGACY_KEY_NAME) }
 
   def self.expire_all!
     transaction do

@@ -4,7 +4,7 @@ require "application_system_test_case"
 
 class SettingsTest < ApplicationSystemTestCase
   setup do
-    @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
+    @user = create(:user, email: "nick@rubygems-test.org", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
   end
 
   def enable_otp
@@ -14,7 +14,7 @@ class SettingsTest < ApplicationSystemTestCase
 
   def change_auth_level(type)
     page.select type
-    find("#mfa-edit input[type=submit]").click
+    within("#mfa-edit") { click_button "Update" }
   end
 
   def otp_key
@@ -96,7 +96,7 @@ class SettingsTest < ApplicationSystemTestCase
 
     assert_text "Recovery codes"
 
-    recoveries = page.find(:css, ".recovery-code-list").value.split
+    recoveries = page.find(:css, "[data-testid='recovery-code-list']").value.split
 
     click_link "Copy to clipboard"
     check "ack"

@@ -33,8 +33,20 @@ require "concurrent"
 if production_like
   # Specifies that the worker count should equal the number of processors in production.
   worker_count = Integer(ENV.fetch("WEB_CONCURRENCY") { Concurrent.physical_processor_count })
-  workers worker_count if worker_count > 1
-  worker_timeout 60
+
+  if worker_count > 1
+    workers worker_count
+    worker_timeout 60
+
+    before_fork do
+      sleep 1
+    end
+
+    before_worker_boot do
+      # Re-open appenders after forking the process. https://logger.rocketjob.io/forking.html
+      SemanticLogger.reopen
+    end
+  end
 
   plugin :statsd
 else
@@ -50,7 +62,8 @@ else
 end
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
-port ENV.fetch("PORT", 3000)
+# Explicitly bind to 0.0.0.0 since Puma 8 defaults to :: (IPv6).
+port ENV.fetch("PORT", 3000), "0.0.0.0"
 
 # Specifies the `environment` that Puma will run in.
 environment rails_env
@@ -58,12 +71,3 @@ environment rails_env
 # Specify the PID file. Defaults to tmp/pids/server.pid in development.
 # In other environments, only set the PID file if requested.
 pidfile ENV["PIDFILE"] if ENV["PIDFILE"]
-
-before_fork do
-  sleep 1
-end
-
-on_worker_boot do
-  # Re-open appenders after forking the process. https://logger.rocketjob.io/forking.html
-  SemanticLogger.reopen
-end

@@ -4,16 +4,21 @@ class ApiKeysController < ApplicationController
   before_action :disable_cache, only: :index
   before_action :set_page, only: :index
 
-  include ApiKeyable
+  layout "subject", only: %i[index new edit create update]
 
+  include ApiKeyable
   include SessionVerifiable
 
   verify_session_before
 
   def index
-    @api_key  = session.delete(:api_key)
-    @api_keys = current_user.api_keys.unexpired.not_oidc.preload(ownership: :rubygem).page(@page)
-    redirect_to new_profile_api_key_path if @api_keys.empty?
+    @api_key = session.delete(:api_key)
+    @expired_view = params[:expired] == "true"
+    api_keys = current_user.api_keys.not_oidc
+    @has_expired_keys = api_keys.expired.exists?
+    scope = @expired_view ? api_keys.expired.order(expires_at: :desc, id: :desc) : api_keys.unexpired
+    @api_keys = scope.preload(ownership: :rubygem).page(@page)
+    redirect_to new_profile_api_key_path if !@expired_view && @api_keys.empty? && !@has_expired_keys
   end
 
   def new
@@ -21,10 +26,15 @@ class ApiKeysController < ApplicationController
   end
 
   def edit
-    @api_key = current_user.api_keys.find(params[:id])
-    return unless @api_key.soft_deleted?
+    @api_key = current_user.api_keys.find(params.expect(:id))
+    error = if @api_key.soft_deleted?
+              t(".invalid_key")
+            elsif @api_key.expired?
+              t(".expired_key")
+            end
+    return if error.blank?
 
-    flash[:error] = t(".invalid_key")
+    flash[:error] = error
     redirect_to profile_api_keys_path
   end
 
@@ -51,7 +61,7 @@ class ApiKeysController < ApplicationController
   end
 
   def update
-    @api_key = current_user.api_keys.find(params[:id])
+    @api_key = current_user.api_keys.find(params.expect(:id))
     @api_key.assign_attributes(api_key_update_params(@api_key))
 
     if @api_key.errors.present?
@@ -68,9 +78,11 @@ class ApiKeysController < ApplicationController
   end
 
   def destroy
-    api_key = current_user.api_keys.find(params[:id])
+    api_key = current_user.api_keys.find(params.expect(:id))
 
-    if api_key.expire!
+    if api_key.expired?
+      flash[:error] = t(".already_expired")
+    elsif api_key.expire!
       flash[:notice] = t(".success", name: api_key.name)
     else
       flash[:error] = api_key.errors.full_messages.to_sentence

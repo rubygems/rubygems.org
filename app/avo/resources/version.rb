@@ -2,7 +2,7 @@
 
 class Avo::Resources::Version < Avo::BaseResource
   self.title = :full_name
-  self.includes = [:rubygem]
+  self.includes = %i[rubygem pusher pusher_api_key]
   self.search = {
     query: lambda {
              query.where("full_name LIKE ?", "#{params[:q]}%")
@@ -34,6 +34,8 @@ class Avo::Resources::Version < Avo::BaseResource
     field :slug, as: :text, hide_on: :index
     field :number, as: :text
     field :platform, as: :text
+    field :ruby_abi, as: :text, title: "Ruby ABI"
+    field :content_address, as: :text
 
     field :canonical_number, as: :text
 
@@ -72,8 +74,8 @@ class Avo::Resources::Version < Avo::BaseResource
 
       tab "API" do
         panel do
-          field :info_checksum, as: :text
-          field :yanked_info_checksum, as: :text
+          field :info_checksum_v2, as: :text
+          field :yanked_info_checksum_v2, as: :text
         end
       end
 

@@ -32,3 +32,4 @@ REVISION
 # CodeQL
 codeql-db/
 codeql-results.sarif
+vendor/bundle

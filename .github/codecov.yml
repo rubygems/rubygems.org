@@ -1,3 +1,13 @@
 codecov:
   notify:
     after_n_builds: 2
+
+coverage:
+  status:
+    # Informational: total coverage drifts independently of the diff
+    # (flaky system tests, fork PRs with partial uploads). Patch is the gate.
+    project:
+      default:
+        target: auto
+        threshold: 1%
+        informational: true

@@ -29,4 +29,19 @@ class Api::V1::RubygemsTest < ActionDispatch::IntegrationTest
 
     assert_response :success
   end
+
+  test "does not allow shared caching of the authenticated gem index" do
+    get "/api/v1/gems.json",
+          headers: { HTTP_AUTHORIZATION: @key, HTTP_ACCEPT_ENCODING: "gzip" }
+
+    assert_response :success
+    assert_equal "gzip", @response.headers["Content-Encoding"]
+
+    cache_control = @response.headers["Cache-Control"].to_s
+
+    assert_includes cache_control, "private", "got #{cache_control.inspect}"
+    assert_includes cache_control, "no-store", "got #{cache_control.inspect}"
+    assert_equal "max-age=0", @response.headers["Surrogate-Control"]
+    assert_includes @response.headers["Vary"].to_s, "Authorization", "got #{@response.headers['Vary'].inspect}"
+  end
 end

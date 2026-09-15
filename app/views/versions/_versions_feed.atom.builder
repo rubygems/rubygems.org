@@ -21,7 +21,7 @@ builder.feed "xmlns" => "http://www.w3.org/2005/Atom" do
       builder.author    { |author| author.name h(version.authors) }
       builder.summary   version.summary if version.summary?
       builder.content   "type" => "html" do
-        builder.text!   h(version.description)
+        builder.text! h(version.description)
       end
     end
   end

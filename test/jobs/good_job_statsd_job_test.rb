@@ -37,6 +37,15 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
     end
   end
 
+  class ReturnValueJob < ApplicationJob
+    self.queue_adapter = ActiveJob::QueueAdapters::GoodJobAdapter.new(execution_mode: :async)
+    queue_as :return_value
+
+    def perform
+      "synthetic\nredacted result"
+    end
+  end
+
   class ConcurrencyLimitedJob < ApplicationJob
     self.queue_adapter = ActiveJob::QueueAdapters::GoodJobAdapter.new(execution_mode: :async)
     queue_as :concurrency_limited
@@ -57,6 +66,14 @@ class GoodJobStatsDJobTest < ActiveSupport::TestCase
   setup do
     GoodJobStatsDJob.disable_test_adapter
     GoodJobStatsDJob.stubs(:queue_adapter).returns(ActiveJob::QueueAdapters::GoodJobAdapter.new(execution_mode: :async))
+  end
+
+  test "reports a numeric result counter when a job returns a non-numeric value" do
+    ReturnValueJob.perform_later
+
+    assert_statsd_increment "rails.perform_job.good_job.success", 1 do
+      GoodJob.perform_inline("return_value")
+    end
   end
 
   test "reports metrics to statsd" do

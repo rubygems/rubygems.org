@@ -1,87 +1,95 @@
 <% @title = t('.title') %>
 
-<%= form_for @user, :url => {:controller => 'profiles', :action => 'update'} do |form| %>
-  <%= error_messages_for(@user) %>
-
-  <div class="avatar_field">
-    <%= form.label :avatar, :class => 'form__label'  %>
-    <div class="l-overflow">
-      <%= avatar(160) %>
-      <% if @user.public_email? %>
-        <%= link_to t('.change_avatar'), 'https://www.gravatar.com', :class => 't-text t-link' %>
-      <% else %>
-        <%= content_tag 'i', t('.disabled_avatar_html'), :class => 't-text' %>
-      <% end %>
-    </div>
-  </div>
-
-  <div class="text_field">
-    <%= form.label :handle, :class => 'form__label' %>
-    <%= form.text_field :handle, :class => 'form__input' %>
-  </div>
-
-  <div class="text_field">
-    <%= form.label :twitter_username, class: 'form__label form__label__icon-container' do %>
-      <%=
-        image_tag("/images/x_icon.png", alt: 'X icon', class: 'form__label__icon')
-      %>
-
-      <span class='form__label__text'><%= t('.twitter_username') %></span>
-    <% end %>
-
-    <p class='form__field__instructions'>
-      <%= t('.optional_twitter_username') %>
-    </p>
-
-    <div class="form__input__addon-container form__input__addon-left">
-      <span class="form__input__addon">@</span>
-      <%= form.text_field(:twitter_username, class: 'form__input') %>
-    </div>
-  </div>
-
-  <% if current_user.unconfirmed_email %>
-    <div class="push--bottom-s">
-      <p class='form__field__instructions'>
-        <%= t('.email_awaiting_confirmation', unconfirmed_email: current_user.unconfirmed_email) %>
-      </p>
-      <%= link_to "Resend confirmation", unconfirmed_email_confirmations_path, method: :patch, class: 'form__field__instructions t-link' %>
-    </div>
-  <% end %>
-
-  <div class="text_field">
-    <%= form.label :email, :class => 'form__label' %>
-    <%= form.email_field :email, name: 'user[unconfirmed_email]', class: 'form__input' %>
-  </div>
-
-  <div class="text_field">
-    <%= form.label :full_name, :class => 'form__label' %>
-    <p class='form__field__instructions'>
-      <%= t('.optional_full_name') %>
-    </p>
-    <%= form.text_field :full_name, :class => 'form__input' %>
-  </div>
-
-  <div class="password_field">
-    <%= form.label :password, t("activerecord.attributes.user.password"), :class => 'form__label' %>
-    <p class='form__field__instructions'>
-      <%= t('.enter_password') %>
-    </p>
-    <%= form.password_field :password, autocomplete: 'current-password', class: 'form__input', required: true %>
-  </div>
-
-
-  <div class="profile-checkbox form__checkbox">
-    <%= form.check_box :public_email, :class => 'form__checkbox__input' %>
-    <%= form.label :public_email, t('profiles.public_email'), :class => 'form__checkbox__label' %>
-  </div>
-
-  <div class="submit_field">
-    <%= form.submit t("update"), :data => {:disable_with => t('form_disable_with')}, :class => 'form__submit' %>
-  </div>
+<% content_for :subject do %>
+  <%= render "dashboards/subject", user: current_user, current: :profile %>
 <% end %>
 
-<div class="t-body">
-  <h2><%= t '.delete.delete_profile' %></h2>
-  <p><%= t '.delete.warning' %></p>
-  <%= button_to t('.delete.delete'), delete_profile_path, method: 'get', class: 'form__submit' %>
-</div>
+<%
+  label_class = "block text-b4 font-semibold text-neutral-800 dark:text-neutral-200 mb-2"
+  field_class = "block w-full rounded border border-neutral-300 dark:border-neutral-700 " \
+                "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white px-3 h-12 " \
+                "outline-none focus:border-neutral-500 focus:ring-0"
+  note_class  = "mt-1 text-b4 text-neutral-600 dark:text-neutral-400 " \
+                "[&_a]:text-orange-700 [&_a]:underline dark:[&_a]:text-orange-400"
+  link_class  = "text-b4 text-orange-700 underline dark:text-orange-400"
+%>
+
+<h1 class="text-h2 mb-10"><%= t('.title') %></h1>
+
+<%= render CardComponent.new do %>
+  <%= form_for @user, url: { controller: 'profiles', action: 'update' }, html: { class: "flex flex-col gap-6" } do |form| %>
+    <%= error_messages_for(@user) %>
+
+    <div>
+      <%= form.label :avatar, class: label_class %>
+      <div class="flex items-center gap-4">
+        <%= avatar(160, "profile_avatar", class: "h-20 w-20 rounded-lg object-cover", alt: @user.display_handle) %>
+        <% if @user.public_email? %>
+          <%= link_to t('.change_avatar'), 'https://www.gravatar.com', class: link_class %>
+        <% else %>
+          <p class="<%= note_class %> mt-0"><%= t('.disabled_avatar_html') %></p>
+        <% end %>
+      </div>
+    </div>
+
+    <div>
+      <%= form.label :handle, class: label_class %>
+      <%= form.text_field :handle, class: field_class %>
+    </div>
+
+    <div>
+      <%= form.label :twitter_username, class: "#{label_class} flex items-center gap-2" do %>
+        <%= icon_tag "x-twitter", size: 4 %>
+        <span><%= t('.twitter_username') %></span>
+      <% end %>
+      <p class="<%= note_class %> mb-2"><%= t('.optional_twitter_username') %></p>
+      <div class="flex">
+        <span class="inline-flex items-center px-3 rounded-l border border-r-0 border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400">@</span>
+        <%= form.text_field :twitter_username, class: "#{field_class} rounded-l-none" %>
+      </div>
+    </div>
+
+    <% if current_user.unconfirmed_email %>
+      <div>
+        <p class="<%= note_class %> mt-0"><%= t('.email_awaiting_confirmation', unconfirmed_email: current_user.unconfirmed_email) %></p>
+        <%= link_to "Resend confirmation", unconfirmed_email_confirmations_path, method: :patch, class: link_class %>
+      </div>
+    <% end %>
+
+    <div>
+      <%= form.label :email, class: label_class %>
+      <%= form.email_field :email, name: 'user[unconfirmed_email]', class: field_class %>
+    </div>
+
+    <div>
+      <%= form.label :full_name, class: label_class %>
+      <p class="<%= note_class %> mb-2"><%= t('.optional_full_name') %></p>
+      <%= form.text_field :full_name, class: field_class %>
+    </div>
+
+    <div>
+      <%= form.label :password, t("activerecord.attributes.user.password"), class: label_class %>
+      <p class="<%= note_class %> mb-2"><%= t('.enter_password') %></p>
+      <%= form.password_field :password, autocomplete: 'current-password', class: field_class, required: true %>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <%= form.check_box :public_email, class: "h-4 w-4 rounded border-neutral-300 dark:border-neutral-700 text-orange-500 focus:ring-0" %>
+      <%= form.label :public_email, t('profiles.public_email'), class: "text-b3 text-neutral-800 dark:text-neutral-200" %>
+    </div>
+
+    <div>
+      <%= render ButtonComponent.new(t("update"), type: :submit, data: { disable_with: t('form_disable_with') }) %>
+    </div>
+  <% end %>
+<% end %>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head(class: "border-b border-neutral-200 dark:border-neutral-800") do %>
+    <%= c.section_title t('.delete.delete_profile') %>
+  <% end %>
+  <p class="mt-6 text-b3 text-neutral-700 dark:text-neutral-300"><%= t('.delete.warning') %></p>
+  <div class="mt-6">
+    <%= render ButtonComponent.new(t('.delete.delete'), delete_profile_path, color: :red, style: :outline) %>
+  </div>
+<% end %>

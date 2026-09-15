@@ -3,7 +3,7 @@
 require "test_helper"
 
 class RoutingTest < ActionDispatch::IntegrationTest
-  def contoller_in_ui?(controller)
+  def controller_in_ui?(controller)
     !controller.nil? && controller !~ %r{^api|internal|sendgrid_events.*|view_components(_system_test)?|turbo|admin/admin|avatars$}
   end
 
@@ -11,10 +11,10 @@ class RoutingTest < ActionDispatch::IntegrationTest
     @prev_env = ENV["RAILS_ENV"]
     ENV["RAILS_ENV"] = "production"
     routes = Rails.application.routes.routes
-    @ui_paths_verb = routes.filter_map { |r| [r.path.spec.to_s, r.verb] if contoller_in_ui? r.defaults[:controller] }.to_h
+    @ui_paths_verb = routes.filter_map { |r| [r.path.spec.to_s, r.verb] if controller_in_ui?(r.defaults[:controller]) }.to_h
   end
 
-  test "active storate routes don't exist" do
+  test "active storage routes don't exist" do
     assert_raises(ActionController::RoutingError) do
       post "/rails/active_storage/direct_uploads"
     end

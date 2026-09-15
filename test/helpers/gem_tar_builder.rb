@@ -16,7 +16,7 @@ class GemTarBuilder
   end
 
   def checksums(mode = nil, raw: nil, &block)
-    @entries << [:checksums_yaml_gz,  mode:, raw:, block:]
+    @entries << [:checksums_yaml_gz, mode:, raw:, block:]
   end
 
   def file(name, content)

@@ -22,14 +22,10 @@ class PatternsTest < ActiveSupport::TestCase
   end
 
   test "VERSION_PATTERN is linear" do
-    skip "regexp is not linear"
-
     assert Regexp.linear_time?(Patterns::VERSION_PATTERN)
   end
 
   test "REQUIREMENT_PATTERN is linear" do
-    skip "regexp is not linear"
-
     assert Regexp.linear_time?(Patterns::REQUIREMENT_PATTERN)
   end
 

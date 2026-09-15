@@ -34,6 +34,7 @@ class Organizations::MembersController < Organizations::BaseController
     @membership = @organization.memberships.build(membership_params[:membership].except(:user))
     @membership.user = User.find_by(handle: membership_params[:membership][:user])
     @membership.invited_by = current_user
+    authorize @membership, :create?
 
     if @membership.save
       OrganizationMailer.user_invited(@membership).deliver_later
@@ -44,8 +45,9 @@ class Organizations::MembersController < Organizations::BaseController
   end
 
   def update
+    @membership.assign_attributes(membership_params[:membership])
     authorize @membership, :update?
-    if @membership.update(membership_params[:membership])
+    if @membership.save
       redirect_to organization_memberships_path(@organization), notice: t(".member_updated")
     else
       render :edit, status: :unprocessable_content
@@ -73,7 +75,7 @@ class Organizations::MembersController < Organizations::BaseController
   private
 
   def find_membership
-    @membership = @organization.memberships_including_unconfirmed.find(params[:id])
+    @membership = @organization.memberships_including_unconfirmed.find(params.expect(:id))
   end
 
   def membership_params

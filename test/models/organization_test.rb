@@ -17,8 +17,9 @@ class OrganizationTest < ActiveSupport::TestCase
   context "validations" do
     context "handle" do
       should allow_value("CapsLOCK").for(:handle)
+      should allow_value("1abcde").for(:handle)
+
       should_not allow_value(nil).for(:handle)
-      should_not allow_value("1abcde").for(:handle)
       should_not allow_value("abc^%def").for(:handle)
       should_not allow_value("abc\n<script>bad").for(:handle)
 
@@ -78,6 +79,40 @@ class OrganizationTest < ActiveSupport::TestCase
         refute_predicate organization, :valid?
         assert_contains organization.errors[:handle], "is reserved and cannot be used"
       end
+
+      should "be invalid when handle is reserved under a different separator spelling" do
+        organization = build(:organization, handle: "ruby-gems")
+
+        refute_predicate organization, :valid?
+        assert_contains organization.errors[:handle], "is reserved and cannot be used"
+      end
+
+      should "be invalid when a user already owns the handle" do
+        create(:user, handle: "someuser")
+        organization = build(:organization, handle: "someuser")
+
+        refute_predicate organization, :valid?
+        assert_contains organization.errors[:handle], "has already been taken"
+      end
+
+      should "be invalid when a user already owns the handle in different case" do
+        create(:user, handle: "someuser")
+        organization = build(:organization, handle: "SomeUser")
+
+        refute_predicate organization, :valid?
+        assert_contains organization.errors[:handle], "has already been taken"
+      end
+
+      should "not check user handles when the handle is unchanged" do
+        organization = create(:organization, handle: "mycompany")
+        # Simulate a collision predating this validation: User's own guard
+        # would reject this handle now, so write it past validation.
+        create(:user).update_column(:handle, "mycompany")
+
+        organization.name = "A New Name"
+
+        assert_predicate organization, :valid?
+      end
     end
   end
 
@@ -135,6 +170,46 @@ class OrganizationTest < ActiveSupport::TestCase
     should "raise error if organizations are not found" do
       assert_raises ActiveRecord::RecordNotFound do
         Organization.find_by_handle!(%w[nonexistent nonexistent2])
+      end
+    end
+  end
+
+  context "gem name reservation limits" do
+    setup do
+      @organization = create(:organization)
+    end
+
+    should "report the default limit" do
+      refute_predicate @organization, :gem_name_reservations_unlimited?
+      assert_equal GemNameReservation::ORGANIZATION_LIMIT, @organization.gem_name_reservation_limit
+      assert_equal GemNameReservation::ORGANIZATION_LIMIT, @organization.gem_name_reservations_remaining
+    end
+
+    should "subtract existing reservations from the remaining count" do
+      create_list(:gem_name_reservation, 2, organization: @organization)
+
+      assert_equal GemNameReservation::ORGANIZATION_LIMIT - 2, @organization.gem_name_reservations_remaining
+    end
+
+    should "never report a negative remaining count" do
+      with_feature(FeatureFlag::UNLIMITED_GEM_NAME_RESERVATIONS, actor: @organization) do
+        create_list(:gem_name_reservation, GemNameReservation::ORGANIZATION_LIMIT + 1, organization: @organization)
+      end
+
+      assert_equal 0, @organization.gem_name_reservations_remaining
+    end
+
+    should "report no limit when the feature flag is enabled for the organization" do
+      with_feature(FeatureFlag::UNLIMITED_GEM_NAME_RESERVATIONS, actor: @organization) do
+        assert_predicate @organization, :gem_name_reservations_unlimited?
+        assert_nil @organization.gem_name_reservation_limit
+        assert_nil @organization.gem_name_reservations_remaining
+      end
+    end
+
+    should "not report no limit when the feature flag is enabled for another organization" do
+      with_feature(FeatureFlag::UNLIMITED_GEM_NAME_RESERVATIONS, actor: create(:organization)) do
+        refute_predicate @organization, :gem_name_reservations_unlimited?
       end
     end
   end

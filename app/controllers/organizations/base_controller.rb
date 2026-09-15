@@ -11,6 +11,6 @@ class Organizations::BaseController < ApplicationController
   private
 
   def find_organization
-    @organization = Organization.find_by(handle: params[:organization_id])
+    @organization = Organization.find_by_handle!(params[:organization_id])
   end
 end

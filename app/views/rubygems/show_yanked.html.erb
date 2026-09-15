@@ -4,21 +4,27 @@
   <meta name="robots" content="noindex" />
 <% end %>
 
-<div class="l-overflow">
-  <div class="l-colspan--l">
-    <div id="markup" class="gem__desc">
-      <% if @rubygem.pushable? %>
-        <%= t '.not_hosted_notice' %>
-      <% else %>
-        <%= t('.reserved_namespace_html', count: @rubygem.protected_days) %>
-      <% end %>
-      <%= unsubscribe_link(@rubygem) %>
-    </div>
+<% content_for :subject do %>
+  <%= render "rubygems/aside_yanked" %>
+<% end %>
 
-    <% unless @rubygem.pushable? %>
-      <%= render partial: "rubygems/release_info", locals: { latest_version: @latest_version, rubygem: @rubygem } %>
+<% content_for :subject_secondary do %>
+  <%= render "rubygems/aside_yanked_secondary" %>
+<% end %>
+
+<div class="flex flex-col gap-8 pb-16 lg:pt-10 text-neutral-800 dark:text-neutral-200">
+  <div>
+    <%= render AlertComponent.new(style: :alert) do %>
+      <% if @rubygem.pushable? %>
+        <%= t ".not_hosted_notice" %>
+      <% else %>
+        <%= t(".reserved_namespace_html", count: @rubygem.protected_days) %>
+      <% end %>
     <% end %>
+    <%= unsubscribe_link(@rubygem) %>
   </div>
 
-  <%= render "rubygems/aside_yanked" %>
+  <% unless @rubygem.pushable? %>
+    <%= render partial: "rubygems/release_info", locals: { latest_version: @latest_version, rubygem: @rubygem } %>
+  <% end %>
 </div>

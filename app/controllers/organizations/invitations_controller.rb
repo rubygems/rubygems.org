@@ -3,8 +3,6 @@
 class Organizations::InvitationsController < Organizations::BaseController
   before_action :find_membership
 
-  layout "hammy"
-
   def show
   end
 

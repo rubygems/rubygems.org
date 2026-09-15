@@ -1,65 +1,10 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = [
-    "radio",
-    "gemname",
-    "username",
-    "reveal",
-    "displayname",
-    "submit",
-  ];
+  static targets = ["displayname", "organizationhandle", "submit"];
 
   connect() {
-    this.submitTarget.disabled = true;
-    this.radioTargets.forEach((radio) => {
-      if (radio.checked) {
-        this[radio.value + "name"]();
-      }
-    });
-  }
-
-  gemnameField() {
-    return this.gemnameTarget.querySelector("select");
-  }
-
-  usernameField() {
-    return this.usernameTarget.querySelector("input");
-  }
-
-  gemname() {
-    this.usernameTarget.classList.add("hidden");
-
-    this.gemnameField().disabled = false;
-    this.gemnameTarget.classList.remove("hidden");
-    this.revealTarget.classList.remove("hidden");
-
-    const inputElement = this.gemnameField();
-    inputElement.focus();
-    this.updateDisplaynameWith(inputElement.value);
-    if (inputElement.value === "") {
-      this.submitTarget.disabled = true;
-    }
     this.validate();
-  }
-
-  username() {
-    this.gemnameTarget.classList.add("hidden");
-    this.gemnameField().disabled = true;
-
-    this.usernameTarget.classList.remove("hidden");
-    this.revealTarget.classList.remove("hidden");
-
-    this.updateDisplaynameWith(this.usernameField().value);
-    this.validate();
-  }
-
-  validate() {
-    if (this.element.checkValidity()) {
-      this.submitTarget.disabled = false;
-    } else {
-      this.submitTarget.disabled = true;
-    }
   }
 
   updateDisplayname(e) {
@@ -67,10 +12,24 @@ export default class extends Controller {
     this.validate();
   }
 
-  updateDisplaynameWith(value) {
-    // Replace dashes and underscores with spaces. Capitalize the first letter of each word.
-    this.displaynameTarget.value = value
-      .replace(/[-_]/g, " ")
-      .replace(/\b\w/g, (char) => char.toUpperCase());
+  updateHandle(e) {
+    this.updateHandleWith(e.currentTarget.value);
+    this.validate();
+  }
+
+  validate() {
+    this.submitTarget.disabled = !this.element.checkValidity();
+  }
+
+  updateHandleWith(value) {
+    // Slugify into a URL-safe handle: lowercase, spaces/dashes to underscores,
+    // drop anything else, collapse repeated underscores, and trim the leading
+    // and trailing ones (the handle must start with a letter).
+    this.organizationhandleTarget.value = value
+      .toLowerCase()
+      .replace(/[\s-]+/g, "_")
+      .replace(/[^a-z0-9_]/g, "")
+      .replace(/_+/g, "_")
+      .replace(/^_+|_+$/g, "");
   }
 }

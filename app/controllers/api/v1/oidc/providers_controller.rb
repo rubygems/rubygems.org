@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::OIDC::ProvidersController < Api::BaseController
+  before_action :deny_shared_cache
   before_action :authenticate_with_api_key
   before_action :verify_user_api_key
 
@@ -9,6 +10,6 @@ class Api::V1::OIDC::ProvidersController < Api::BaseController
   end
 
   def show
-    render json: OIDC::Provider.find(params[:id])
+    render json: OIDC::Provider.find(params.expect(:id))
   end
 end

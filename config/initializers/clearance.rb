@@ -11,7 +11,7 @@ Clearance.configure do |config|
   config.rotate_csrf_on_sign_in = true
   config.cookie_expiration = ->(_cookies) { 2.weeks.from_now.utc }
   config.routes = false
-  config.signed_cookie = :migrate
+  config.signed_cookie = true
 end
 
 class Clearance::Session
@@ -25,12 +25,12 @@ class Clearance::Session
 
   def sign_in(user)
     @current_user = user
-    cookies[remember_token_cookie] = user && user.remember_me!
+    cookies.signed[remember_token_cookie] = user && user.remember_me!
     status = run_sign_in_stack
 
     unless status.success?
       @current_user = nil
-      cookies[remember_token_cookie] = nil
+      cookies.delete(remember_token_cookie)
     end
 
     yield(status) if block_given?

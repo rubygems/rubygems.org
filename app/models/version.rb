@@ -4,6 +4,9 @@ require "digest/sha2"
 
 class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   RUBYGEMS_IMPORT_DATE = Date.parse("2009-07-25")
+  DEFAULT_CONTENT_ADDRESS_LENGTH = 8
+  CONTENT_ADDRESS_FORMAT = /\A[0-9a-f]{#{DEFAULT_CONTENT_ADDRESS_LENGTH},64}\z/
+  CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION = ">= 4.1.0.a"
 
   belongs_to :rubygem, touch: true
   has_many :dependencies, lambda {
@@ -18,6 +21,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_many :attestations, dependent: :destroy, inverse_of: :version
 
   before_validation :set_canonical_number, if: :number_changed?
+  before_validation :content_addressify!
   before_validation :full_nameify!
   before_validation :gem_full_nameify!
   before_save :create_link_verifications, if: :metadata_changed?
@@ -54,6 +58,13 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     name_format: { requires_letter: false },
     if: -> { validation_context == :create || number_changed? || platform_changed? },
     presence: true
+
+  validates :sha256, presence: true, if: :content_addressable?
+  validates :content_address, format: { with: CONTENT_ADDRESS_FORMAT }, allow_nil: true
+  validates :content_address, absence: true, unless: :content_addressable?
+  validates :ruby_abi, format: { with: /\A\d+\.\d+\z/ }, allow_nil: true
+  validates :ruby_abi, absence: true, unless: :platformed?
+  validate :content_addressable_required_rubygems_version, if: :content_addressable?
 
   validate :unique_canonical_number, on: :create
   validate :platform_and_number_are_unique, on: :create
@@ -140,6 +151,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     joins(:rubygem)
       .indexed
       .release
+      .where(ruby_abi: nil)
       .order("rubygems.name asc, position desc")
       .pluck("rubygems.name", :number, :platform)
   end
@@ -148,6 +160,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     joins(:rubygem)
       .indexed
       .latest
+      .where(ruby_abi: nil)
       .order("rubygems.name asc, position desc")
       .pluck("rubygems.name", :number, :platform)
   end
@@ -156,6 +169,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     joins(:rubygem)
       .indexed
       .prerelease
+      .where(ruby_abi: nil)
       .order("rubygems.name asc, position desc")
       .pluck("rubygems.name", :number, :platform)
   end
@@ -216,7 +230,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def platformed?
-    platform != "ruby"
+    Version.platformed?(platform)
   end
 
   delegate :reorder_versions, to: :rubygem
@@ -360,6 +374,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
       "rubygems_version"           => required_rubygems_version,
       "ruby_version"               => required_ruby_version,
       "prerelease"                 => prerelease,
+      "ruby_abi"                   => ruby_abi,
       "licenses"                   => licenses,
       "requirements"               => requirements,
       "sha"                        => sha256_hex,
@@ -378,7 +393,9 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def to_title
-    if platformed?
+    if content_addressable?
+      "#{rubygem.name} (#{number}-#{content_address}, Platform: #{platform}, Ruby ABI #{ruby_abi})"
+    elsif platformed?
       "#{rubygem.name} (#{number}-#{platform})"
     else
       "#{rubygem.name} (#{number})"
@@ -387,16 +404,16 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def to_bundler(locked_version: false)
     if prerelease?
-      modifier = locked_version ? "" : "~> "
+      modifier = locked_version ? "" : ">= "
       %(gem '#{rubygem.name}', '#{modifier}#{number}')
     elsif number[0] == "0"
-      %(gem '#{rubygem.name}', '~> #{number}')
+      %(gem '#{rubygem.name}', '>= #{number}')
     else
       release = feature_release
       if release == Gem::Version.new(number)
-        %(gem '#{rubygem.name}', '~> #{release}')
+        %(gem '#{rubygem.name}', '>= #{release}')
       else
-        %(gem '#{rubygem.name}', '~> #{release}', '>= #{number}')
+        %(gem '#{rubygem.name}', '>= #{number}')
       end
     end
   end
@@ -447,28 +464,90 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   alias prerelease prerelease?
 
   def manifest
-    rubygem.version_manifest(number, platformed? ? platform : nil)
+    rubygem.version_manifest(number, platformed? ? platform : nil, content_address: content_address)
   end
 
   def gem_file_name
     "#{full_name}.gem"
   end
 
+  def content_addressable?
+    platformed? && ruby_abi.present?
+  end
+
+  def self.ruby_abi_for(platform, required_ruby_version)
+    return unless platformed?(platform)
+    return if required_ruby_version.blank?
+
+    requirements = Gem::Requirement.create(required_ruby_version.split(/\s*,\s*/)).requirements
+    return unless requirements.one?
+
+    operator, requirement_version = requirements.first
+    return unless operator == "~>"
+
+    segments = requirement_version.segments
+    return unless segments.length == 3
+
+    patch = segments[2]
+    return unless patch.is_a?(Integer)
+    return unless patch.zero?
+
+    "#{segments[0]}.#{segments[1]}"
+  rescue Gem::Requirement::BadRequirementError
+    nil
+  end
+
+  def self.platformed?(platform)
+    platform.present? && platform != "ruby"
+  end
+
   private
+
+  def content_addressable_required_rubygems_version
+    return if meets_content_addressable_rubygems_floor?
+
+    errors.add(:required_rubygems_version,
+               "must be #{CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION} for content-addressable gems (set required_rubygems_version in the gemspec)")
+  end
+
+  def meets_content_addressable_rubygems_floor?
+    floor = Gem::Requirement.new(CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION)
+    requirements = required_rubygems_version.presence&.split(/\s*,\s*/) || [">= 0"]
+    requirement = Gem::Requirement.new(requirements)
+
+    requirement.requirements.any? do |operator, required_version|
+      [">=", "~>", "=", ">"].include?(operator) && floor.satisfied_by?(required_version)
+    end
+  rescue Gem::Requirement::BadRequirementError
+    false
+  end
 
   def update_prerelease
     self[:prerelease] = prerelease
   end
 
   def platform_and_number_are_unique
-    return unless Version.exists?(rubygem_id: rubygem_id, number: number, platform: platform)
-    errors.add(:base, "A version already exists with this number or platform.")
+    return unless Version.exists?(rubygem_id: rubygem_id, number: number, platform: platform, ruby_abi: ruby_abi)
+
+    message = if ruby_abi.present?
+                "A version already exists with this number, platform and Ruby ABI."
+              else
+                "A version already exists with this number or platform."
+              end
+
+    errors.add(:base, message)
   end
 
   def gem_platform_and_number_are_unique
-    platforms = Version.where(rubygem_id: rubygem_id, number: number, gem_platform: gem_platform).pluck(:platform)
+    platforms = Version.where(rubygem_id: rubygem_id, number: number, gem_platform: gem_platform, ruby_abi: ruby_abi).pluck(:platform)
     return if platforms.empty?
-    errors.add(:base, "A version already exists with this number and resolved platform #{platforms}")
+
+    message = if ruby_abi.present?
+                "A version already exists with this number, Ruby ABI and resolved platform #{platforms}"
+              else
+                "A version already exists with this number and resolved platform #{platforms}"
+              end
+    errors.add(:base, message)
   end
 
   def original_platform_resolves_to_gem_platform
@@ -487,15 +566,47 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def full_nameify!
     return if rubygem.nil?
-    self.full_name = "#{rubygem.name}-#{number}"
-    full_name << "-#{platform}" if platformed?
+    self.full_name = platform_identity(platform)
   end
 
   def gem_full_nameify!
     return if gem_platform.blank?
     return if rubygem.nil?
-    self.gem_full_name = "#{rubygem.name}-#{number}"
-    gem_full_name << "-#{gem_platform}" unless gem_platform == "ruby"
+
+    self.gem_full_name = platform_identity(gem_platform)
+  end
+
+  def content_addressify!
+    return if rubygem.nil?
+    return unless content_addressable?
+    return if sha256.blank?
+
+    self.content_address ||= generate_content_address
+  end
+
+  def generate_content_address
+    digest = sha256_hex
+    raise ArgumentError, "Could not generate unique content-address" if digest.blank?
+
+    (DEFAULT_CONTENT_ADDRESS_LENGTH..digest.length).each do |length|
+      candidate = digest.first(length)
+      identity = "#{rubygem.name}-#{number}-#{candidate}"
+      return candidate unless Version.where(full_name: identity).where.not(id: id).exists?
+    end
+
+    raise ArgumentError, "Could not generate unique content-address"
+  end
+
+  def content_addressed_full_name
+    "#{rubygem.name}-#{number}-#{content_address}"
+  end
+
+  def platform_identity(platform_value)
+    return content_addressed_full_name if content_addressable? && content_address.present?
+
+    identity = "#{rubygem.name}-#{number}"
+    identity << "-#{platform_value}" unless platform_value == "ruby"
+    identity
   end
 
   def set_canonical_number
@@ -530,7 +641,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def unique_canonical_number
-    version = Version.find_by(canonical_number: canonical_number, rubygem_id: rubygem_id, platform: platform)
+    version = Version.find_by(canonical_number: canonical_number, rubygem_id: rubygem_id, platform: platform, ruby_abi: ruby_abi)
     errors.add(:canonical_number, "has already been taken. Existing version: #{version.number}") unless version.nil?
   end
 
@@ -549,8 +660,8 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def record_push_event
-    rubygem.record_event!(Events::RubygemEvent::VERSION_PUSHED, number: number, platform: platform, sha256: sha256_hex,
-      pushed_by: pusher&.display_handle, version_gid: to_gid, actor_gid: pusher&.to_gid)
+    rubygem.record_event!(Events::RubygemEvent::VERSION_PUSHED, number: number, platform: platform, ruby_abi: ruby_abi,
+      sha256: sha256_hex, pushed_by: pusher&.display_handle, version_gid: to_gid, actor_gid: pusher&.to_gid)
   end
 
   def enqueue_web_hook_jobs

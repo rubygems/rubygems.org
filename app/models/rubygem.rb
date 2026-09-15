@@ -4,6 +4,10 @@ class Rubygem < ApplicationRecord
   include Patterns
   include RubygemSearchable
 
+  # The user pushing this gem, when available (set by Pusher). Used to let an
+  # existing owner bypass the typo protection for their own gems. Not persisted.
+  attr_accessor :pushed_by
+
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :rubygem
   has_many :ownerships_including_unconfirmed, dependent: :destroy, class_name: "Ownership"
   has_many :owners, through: :ownerships, source: :user
@@ -60,9 +64,12 @@ class Rubygem < ApplicationRecord
 
   has_one :most_recent_version,
     lambda {
-      order(Arel.sql("case when #{quoted_table_name}.latest AND #{quoted_table_name}.platform = 'ruby' then 2 else 1 end desc"))
-        .order(Arel.sql("case when #{quoted_table_name}.latest then #{quoted_table_name}.number else NULL end desc"))
-        .order(id: :desc)
+      order(
+        Arel.sql("case when #{quoted_table_name}.latest AND #{quoted_table_name}.platform = 'ruby' then 0 " \
+                 "when #{quoted_table_name}.latest then 1 else 2 end"),
+        :position,
+        id: :desc
+      )
     },
     class_name: "Version", inverse_of: :rubygem
 
@@ -179,22 +186,22 @@ class Rubygem < ApplicationRecord
 
   # NB: this intentionally does not default the platform to ruby.
   # Without platform, finds the most recent version by (position, created_at) ignoring platform.
-  def find_public_version(number, platform = nil)
+  def find_public_version(number, platform = nil, ruby_abi = nil)
     if platform
-      public_versions.find_by(number:, platform:)
+      public_versions.find_by(number:, platform:, ruby_abi:)
     else
-      public_versions.find_by(number:)
+      public_versions.find_by(number:, ruby_abi:)
     end
   end
 
-  def public_version_payload(number, platform = nil)
-    version = find_public_version(number, platform)
+  def public_version_payload(number, platform = nil, ruby_abi = nil)
+    version = find_public_version(number, platform, ruby_abi)
     payload(version).merge!(version.as_json) if version
   end
 
-  def find_version!(number:, platform:)
+  def find_version!(number:, platform:, ruby_abi: nil)
     platform = platform.presence || "ruby"
-    versions.find_by!(number: number, platform: platform)
+    versions.find_by!(number: number, platform: platform, ruby_abi: ruby_abi)
   end
 
   def find_version_by_slug!(slug)
@@ -256,6 +263,7 @@ class Rubygem < ApplicationRecord
       "version_created_at" => version.created_at,
       "version_downloads"  => version.downloads_count,
       "platform"           => version.platform,
+      "ruby_abi"           => version.ruby_abi,
       "authors"            => version.authors,
       "info"               => version.info,
       "licenses"           => version.licenses,
@@ -295,7 +303,7 @@ class Rubygem < ApplicationRecord
   end
 
   def reserved_name?
-    GemNameReservation.reserved?(name)
+    GemNameReservation.reserved?(name) if name.present?
   end
 
   def create_ownership(user)
@@ -322,7 +330,7 @@ class Rubygem < ApplicationRecord
     versions_of_platforms = versions
       .release
       .indexed
-      .group_by(&:platform)
+      .group_by { |version| [version.platform, version.ruby_abi] }
 
     Version.default_scoped.where(id: versions_of_platforms.values.map! { |v| v.max.id }).update_all(latest: true)
   end
@@ -342,7 +350,8 @@ class Rubygem < ApplicationRecord
   def find_or_initialize_version_from_spec(spec)
     version = versions.find_or_initialize_by(number: spec.version.to_s,
                                              platform: spec.original_platform.to_s,
-                                             gem_platform: spec.platform.to_s)
+                                             gem_platform: spec.platform.to_s,
+                                             ruby_abi: nil)
     version.rubygem = self
     version
   end
@@ -366,8 +375,8 @@ class Rubygem < ApplicationRecord
     user.mfa_enabled? || !metadata_mfa_required?
   end
 
-  def version_manifest(number, platform = nil)
-    VersionManifest.new(gem: name, number: number, platform: platform)
+  def version_manifest(number, platform = nil, content_address: nil)
+    VersionManifest.new(gem: name, number: number, platform: platform, content_address: content_address)
   end
 
   def file_content(fingerprint)
@@ -409,7 +418,7 @@ class Rubygem < ApplicationRecord
   end
 
   def protected_gem_typo
-    gem_typo = GemTypo.new(name)
+    gem_typo = GemTypo.new(name, pushed_by: pushed_by)
 
     return unless gem_typo.protected_typo?
     errors.add :name, "'#{name}' is too similar to an existing gem named '#{gem_typo.protected_gem}'"

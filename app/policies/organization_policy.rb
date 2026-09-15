@@ -42,6 +42,14 @@ class OrganizationPolicy < ApplicationPolicy
     organization_member_with_role?(user, :admin) || deny(t(:forbidden))
   end
 
+  def list_gem_name_reservations?
+    organization_member_with_role?(user, :maintainer) || deny(t(:forbidden))
+  end
+
+  def manage_gem_name_reservations?
+    organization_member_with_role?(user, :admin) || deny(t(:forbidden))
+  end
+
   def destroy?
     false # For now organizations cannot be deleted
   end

@@ -1,46 +1,68 @@
-<%= form_with model: [:profile, @api_key], data: { controller: "exclusive-checkbox gem-scope" } do |f| %>
-  <%= label_tag :name, t("api_keys.index.name"), class: "form__label" %>
-  <%= f.text_field :name, class: "form__input", autocomplete: :off, disabled: f.object.persisted? %>
+<%
+  label_class = "block text-b4 font-semibold text-neutral-800 dark:text-neutral-200 mb-2"
+  field_class = "block w-full rounded border border-neutral-300 dark:border-neutral-700 " \
+                "bg-white dark:bg-neutral-900 text-neutral-900 dark:text-white px-3 h-12 " \
+                "outline-none focus:border-neutral-500 focus:ring-0 " \
+                "disabled:bg-neutral-100 disabled:text-neutral-500 dark:disabled:bg-neutral-800 dark:disabled:text-neutral-500"
+  check_label = "text-b3 text-neutral-800 dark:text-neutral-200"
+  scope_grid  = "grid grid-cols-1 gap-2 sm:grid-cols-2"
+  submit_btn  = "inline-flex items-center justify-center rounded text-white bg-orange-500 px-4 h-12 min-h-12 " \
+                "text-b2 cursor-pointer hover:bg-orange-600 active:bg-orange-600 " \
+                "dark:bg-orange-500 dark:hover:bg-orange-700 dark:active:bg-orange-700 transition focus:outline-none"
+%>
 
-  <div class="form__group">
-    <%= label_tag :scope, t(".exclusive_scopes"), class: "form__label" %>
-    <% ApiKey::EXCLUSIVE_SCOPES.each do |api_scope| %>
-      <div class = "form__checkbox__item">
-        <%= api_key_checkbox(f, api_scope) %>
-        <%= label_tag api_scope, t("api_keys.index.#{api_scope}"), class: "form__checkbox__label" %>
-      </div>
-    <% end %>
-  </div>
-  <div class="form__group">
-    <%= label_tag :scope, t("api_keys.index.scopes"), class: "form__label" %>
-    <% (ApiKey::API_SCOPES - ApiKey::EXCLUSIVE_SCOPES).each do |api_scope| %>
-      <div class = "form__checkbox__item">
-        <%= api_key_checkbox(f, api_scope) %>
-        <%= label_tag api_scope, t("api_keys.index.#{api_scope}"), class: "form__checkbox__label" %>
-      </div>
-    <% end %>
+<%= form_with model: [:profile, @api_key], data: { controller: "exclusive-checkbox gem-scope" }, class: "flex flex-col gap-8" do |f| %>
+  <div>
+    <%= f.label :name, t("api_keys.index.name"), class: label_class %>
+    <%= f.text_field :name, class: field_class, autocomplete: :off, disabled: f.object.persisted? %>
   </div>
 
-  <div class="form__group api_key_rubygem_id_form">
-    <%= label_tag :rubygem_id, t(".rubygem_scope"), class: "form__label" %>
-    <p><%= t(".rubygem_scope_info") %></p>
-    <%= f.collection_select :rubygem_id, current_user.rubygems.by_name, :id, :name, { include_blank: t("api_keys.all_gems") }, selected: :rubygem_id, class: "form__input form__select", data: { gem_scope_target: "selector" } %>
+  <fieldset>
+    <legend class="<%= label_class %>"><%= t(".exclusive_scopes") %></legend>
+    <div class="<%= scope_grid %>">
+      <% ApiKey::EXCLUSIVE_SCOPES.each do |api_scope| %>
+        <div class="flex items-center gap-2">
+          <%= api_key_checkbox(f, api_scope) %>
+          <%= label_tag api_scope, t("api_keys.index.#{api_scope}"), class: check_label %>
+        </div>
+      <% end %>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend class="<%= label_class %>"><%= t("api_keys.index.scopes") %></legend>
+    <div class="<%= scope_grid %>">
+      <% (ApiKey::API_SCOPES - ApiKey::EXCLUSIVE_SCOPES).each do |api_scope| %>
+        <div class="flex items-center gap-2">
+          <%= api_key_checkbox(f, api_scope) %>
+          <%= label_tag api_scope, t("api_keys.index.#{api_scope}"), class: check_label %>
+        </div>
+      <% end %>
+    </div>
+  </fieldset>
+
+  <div>
+    <%= f.label :rubygem_id, t(".rubygem_scope"), class: label_class %>
+    <p class="mb-2 text-b4 text-neutral-600 dark:text-neutral-400"><%= t(".rubygem_scope_info") %></p>
+    <%= f.collection_select :rubygem_id, current_user.rubygems.by_name, :id, :name, { include_blank: t("api_keys.all_gems") }, selected: :rubygem_id, class: field_class, data: { gem_scope_target: "selector" } %>
   </div>
 
-  <div class="form__group">
-    <%= label_tag :expires_at, t(".expiration"), class: "form__label" %>
-    <%= f.datetime_field :expires_at, min: 5.minutes.from_now, include_seconds: false, class: "form__input", disabled: f.object.persisted?  %>
+  <div>
+    <%= f.label :expires_at, t(".expiration"), class: label_class %>
+    <%= f.datetime_field :expires_at, min: 5.minutes.from_now, include_seconds: false, class: field_class, disabled: f.object.persisted? %>
   </div>
 
   <% unless current_user.mfa_disabled? || current_user.mfa_ui_and_api? %>
-    <div class="form__group">
-      <%= label_tag :mfa, t(".multifactor_auth"), class: "form__label" %>
-      <div class="form__checkbox__item">
-        <%= f.check_box :mfa, { class: "form__checkbox__input", id: :mfa, checked: true } , "true", "false" %>
-        <%= label_tag :mfa, t(".enable_mfa"), class: "form__checkbox__label" %>
+    <fieldset>
+      <legend class="<%= label_class %>"><%= t(".multifactor_auth") %></legend>
+      <div class="flex items-center gap-2">
+        <%= f.check_box :mfa, { class: ApiKeysHelper::CHECKBOX_CLASSES, id: :mfa, checked: true }, "true", "false" %>
+        <%= label_tag :mfa, t(".enable_mfa"), class: check_label %>
       </div>
-    </div>
+    </fieldset>
   <% end %>
 
-  <%= f.submit class: "form__submit" %>
+  <div>
+    <%= f.submit class: submit_btn %>
+  </div>
 <% end %>

@@ -13,7 +13,7 @@ class GemValidator::SignedGemTest < Minitest::Test
   KEY = Gem::Security.create_key "ec"
   PRIVATE_KEY = KEY.to_pem Gem::Security::KEY_CIPHER, "password"
   expiration_length_days = Gem.configuration.cert_expiration_length_days
-  CERT = Gem::Security.create_cert_email("foo@example.com", KEY,
+  CERT = Gem::Security.create_cert_email("foo@rubygems-test.org", KEY,
     Gem::Security::ONE_DAY * expiration_length_days)
   PUB_KEY = CERT.to_pem
 
@@ -110,7 +110,7 @@ class GemValidator::SignedGemTest < Minitest::Test
   def test_wrong_pub_key
     key = Gem::Security.create_key "ec"
     expiration_length_days = Gem.configuration.cert_expiration_length_days
-    cert = Gem::Security.create_cert_email("foo@example.com", key,
+    cert = Gem::Security.create_cert_email("foo@rubygems-test.org", key,
       Gem::Security::ONE_DAY * expiration_length_days)
     pub_key = cert.to_pem
 

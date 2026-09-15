@@ -75,7 +75,7 @@ class VersionsControllerTest < ActionController::TestCase
       end
 
       should "use the singular version" do
-        assert_select ".t-list__heading", text: /1 version\b/, count: 1
+        assert_select "[data-testid='versions-count']", text: /1 version\b/, count: 1
       end
     end
 
@@ -88,7 +88,7 @@ class VersionsControllerTest < ActionController::TestCase
       end
 
       should "use the plural version" do
-        assert_select ".t-list__heading", text: /2 versions\b/, count: 1
+        assert_select "[data-testid='versions-count']", text: /2 versions\b/, count: 1
       end
     end
   end
@@ -109,15 +109,13 @@ class VersionsControllerTest < ActionController::TestCase
         The date displayed was specified by the author in the gemspec.
       NOTICE
 
-      assert_select ".gem__version__date", text: "January 01, 2000*", count: 1 do |elements|
-        version = elements.first
+      assert_select "[data-testid='version-date']", text: /January 01, 2000/, count: 1
+      assert_select "[data-testid='version-date'] button sup", text: "*", count: 1
 
-        assert_equal(tooltip_text, version["data-tooltip"])
-      end
+      triggers = css_select("[data-testid='version-date'] button[aria-describedby]")
 
-      assert_select ".gem__version__date sup", text: "*", count: 1
-
-      assert_select ".t-list__heading", text: /1 version since January 01, 2000/, count: 1
+      assert_equal 1, triggers.size
+      assert_select "##{triggers.first['aria-describedby']}[role='tooltip']", text: tooltip_text, count: 1
     end
   end
 
@@ -135,17 +133,21 @@ class VersionsControllerTest < ActionController::TestCase
         get :index, params: { rubygem_id: @rubygem.name }
 
         assert_response :success
-        assert page.has_content?("1.1.2")
-        refute page.has_content?("1.1.1")
-        assert_select ".t-list__heading", text: /2 versions since January 01, 2010/, count: 1
+        page_versions = css_select("[data-testid='gem-versions'] a").map(&:text)
+
+        assert_includes page_versions, "1.1.2"
+        refute_includes page_versions, "1.1.1"
+        assert_select "[data-testid='versions-count']", text: /2 versions since January 01, 2010/, count: 1
 
         # second page only includes the version at position 1
         get :index, params: { rubygem_id: @rubygem.name, page: 2 }
 
         assert_response :success
-        refute page.has_content?("1.1.2")
-        assert page.has_content?("1.1.1")
-        assert_select ".t-list__heading", text: /2 versions since January 01, 2010/, count: 1
+        page_versions = css_select("[data-testid='gem-versions'] a").map(&:text)
+
+        refute_includes page_versions, "1.1.2"
+        assert_includes page_versions, "1.1.1"
+        assert_select "[data-testid='versions-count']", text: /2 versions since January 01, 2010/, count: 1
       end
     end
   end
@@ -179,6 +181,39 @@ class VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to show for a version that is not the latest" do
+    setup do
+      @rubygem = create(:rubygem)
+      create(:version, rubygem: @rubygem, number: "1.0.0")
+      create(:version, rubygem: @rubygem, number: "2.0.0")
+      latest = @rubygem.reload.most_recent_version
+      @other = @rubygem.public_versions.find { |version| version != latest }
+      get :show, params: { rubygem_id: @rubygem.name, id: @other.number }
+    end
+
+    should respond_with :success
+
+    should "link to the latest version of the gem" do
+      assert_select "a[href=?]", rubygem_path(@rubygem.slug), text: /Latest Version/
+    end
+  end
+
+  context "On GET to show for the latest version" do
+    setup do
+      @rubygem = create(:rubygem)
+      create(:version, rubygem: @rubygem, number: "1.0.0")
+      create(:version, rubygem: @rubygem, number: "2.0.0")
+      latest = @rubygem.reload.most_recent_version
+      get :show, params: { rubygem_id: @rubygem.name, id: latest.number }
+    end
+
+    should respond_with :success
+
+    should "not show the latest version button" do
+      assert_select "a", text: /Latest Version/, count: 0
+    end
+  end
+
   context "On GET to show with *a* yanked version" do
     setup do
       @version = create(:version, number: "1.0.1")
@@ -192,13 +227,14 @@ class VersionsControllerTest < ActionController::TestCase
     should "show yanked notice" do
       assert page.has_content?("This version has been yanked")
     end
+
     should "render other versions" do
       assert page.has_content?("Versions")
       assert page.has_content?(@version.number)
-      css = "small:contains('#{@version.authored_at.to_date.to_fs(:long)}')"
 
-      assert page.has_css?(css)
+      assert page.has_css?("[data-testid='version-date']", text: @version.authored_at.to_date.to_fs(:long))
     end
+
     should "renders owner gems overview link" do
       assert page.has_selector?("a[href='#{profile_path('johndoe')}']")
     end

@@ -17,6 +17,33 @@ class SettingsControllerTest < ActionController::TestCase
       sign_in_as(@user)
     end
 
+    context "on the redesigned settings page" do
+      setup { get :edit }
+
+      should respond_with :success
+
+      should "render the page heading" do
+        assert_select "h1", text: "Edit settings"
+      end
+
+      should "render the subject sidebar with settings marked active" do
+        assert_select "nav a[href=?]", edit_settings_path, text: /Settings/
+        assert_select "nav a[href=?].bg-orange-100", edit_settings_path
+      end
+
+      should "group the multi-factor authentication controls in a card" do
+        assert_select "h2", text: /Multi-factor authentication/
+        assert_select "h3", text: "Security device"
+        assert_select "h3", text: "Authentication app"
+      end
+
+      should "list the account links" do
+        assert_select "a[href=?]", new_password_path
+        assert_select "a[href=?]", profile_api_keys_path
+        assert_select "a[href=?]", profile_oidc_pending_trusted_publishers_path
+      end
+    end
+
     context "when user owns a gem with more than MFA_REQUIRED_THRESHOLD downloads" do
       setup do
         @rubygem = create(:rubygem)

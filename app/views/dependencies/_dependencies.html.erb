@@ -5,10 +5,17 @@
     <ul class="deps">
       <li>
         <span>
-          <%= tag.span(class: "deps_expanded deps_expanded-link", data: { gem_id: name, version: }) {} %>
+          <% if version %>
+            <%= tag.span(class: "deps_expanded deps_expanded-link", data: { gem_id: name, version: }) {} %>
+          <% end %>
         </span>
-        <%= link_to "/gems/#{name}/versions/#{version}", target: :_blank do %>
-          <span class="deps_item"><%= name %> <%= version %>
+        <% if version %>
+          <%= link_to "/gems/#{name}/versions/#{version}", target: :_blank do %>
+            <span class="deps_item"><%= name %> <%= version %>
+            <span class="deps_item--details"> <%= req %></span></span>
+          <% end %>
+        <% else %>
+          <span class="deps_item deps_item--unresolved"><%= name %>
           <span class="deps_item--details"> <%= req %></span></span>
         <% end %>
 

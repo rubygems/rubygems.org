@@ -32,6 +32,35 @@ class ApiKeyTest < ActiveSupport::TestCase
     assert_contains api_key.errors[:name], "is too long (maximum is 255 characters)"
   end
 
+  context ".classic and .legacy scopes" do
+    should "include user-owned keys and exclude trusted-publisher keys from .classic" do
+      user_key = create(:api_key)
+      trusted_publisher_key = create(:api_key, :trusted_publisher)
+
+      assert_includes ApiKey.classic, user_key
+      refute_includes ApiKey.classic, trusted_publisher_key
+    end
+
+    should "match only user-owned legacy-key keys in .legacy" do
+      legacy = create(:api_key, :legacy_broad)
+      scoped = create(:api_key, name: "ci-key")
+      trusted_publisher = create(:api_key, :trusted_publisher, name: ApiKey::LEGACY_KEY_NAME)
+
+      assert_includes ApiKey.legacy, legacy
+      refute_includes ApiKey.legacy, scoped
+      refute_includes ApiKey.legacy, trusted_publisher
+    end
+
+    should "include a pre-existing broad legacy-key in .legacy (intentional precaution)" do
+      # .legacy matches by name only, so a broad legacy-key that predates the
+      # dashboard-only rule (migrate created these with validation bypassed) is
+      # in-scope and revoked too. This over-inclusion is deliberate; see the scope comment.
+      pre_existing = create(:api_key, :legacy_broad)
+
+      assert_includes ApiKey.legacy, pre_existing
+    end
+  end
+
   context "#scope" do
     setup do
       @api_key = create(:api_key, scopes: %i[index_rubygems push_rubygem])

@@ -12,11 +12,12 @@ class Organizations::Onboarding::ConfirmControllerTest < ActionDispatch::Integra
 
     @organization_onboarding = create(
       :organization_onboarding,
-      :gem,
       created_by: @user,
-      namesake_rubygem: @rubygem,
       approved_invites: [user: @collaborator, role: "maintainer"]
     )
+
+    @organization_onboarding.rubygems = [@rubygem]
+    @organization_onboarding.save!
 
     FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, @user)
   end

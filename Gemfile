@@ -4,26 +4,26 @@ source "https://rubygems.org"
 
 ruby file: ".ruby-version"
 
-gem "rails", "~> 8.0.5"
+gem "rails", "~> 8.1.3"
 gem "rails-i18n", "~> 8.1.0"
 
-gem "aws-sdk-s3", "~> 1.217"
-gem "aws-sdk-sqs", "~> 1.112"
-gem "bootsnap", "~> 1.23"
-gem "clearance", "~> 2.11"
+gem "aws-sdk-s3", "~> 1.229"
+gem "aws-sdk-sqs", "~> 1.117"
+gem "bootsnap", "~> 1.25"
+gem "clearance", "~> 2.12"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.30"
+gem "datadog", "~> 2.41"
 gem "dogstatsd-ruby", "~> 5.7"
-gem "google-protobuf", "~> 4.34"
+gem "google-protobuf", "~> 4.36"
 gem "faraday", "~> 2.14"
 gem "faraday-retry", "~> 2.4"
 gem "faraday-restrict-ip-addresses", "~> 0.3.0", require: "faraday/restrict_ip_addresses"
 gem "flipper", "~> 1.4"
-gem "flipper-active_record", "~> 1.3"
-gem "flipper-ui", "~> 1.3"
+gem "flipper-active_record", "~> 1.4"
+gem "flipper-ui", "~> 1.4"
 gem "good_job", "~> 3.99"
 gem "gravtastic", "~> 3.2"
-gem "honeybadger", "~> 6.5.2", require: false
+gem "honeybadger", "~> 6.9.1", require: false
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
 gem "mail", "~> 2.9"
@@ -31,25 +31,25 @@ gem "octokit", "~> 10.0"
 gem "omniauth-github", "~> 2.0"
 gem "omniauth", "~> 2.1"
 gem "omniauth-rails_csrf_protection", "~> 2.0"
-gem "openid_connect", "~> 2.3"
+gem "openid_connect", "~> 2.5"
 gem "pg", "~> 1.6"
-gem "puma", "~> 6.6"
-gem "puma-plugin-statsd", "~> 2.7"
+gem "public_suffix", "~> 7.0"
+gem "puma", "~> 8.0"
+gem "puma-plugin-statsd", "~> 2.8"
 gem "rack", "~> 3.2"
 gem "rackup", "~> 2.3"
 gem "rack-sanitizer", "~> 2.0"
-gem "rbtrace", "~> 0.5.3"
-gem "rdoc", "~> 7.2"
+gem "rbtrace", "~> 0.5.5"
+gem "rdoc", "~> 8.0"
 gem "roadie-rails", "~> 3.4"
 gem "ruby-magic", "~> 0.6"
 gem "shoryuken", "~> 7.0", require: false
-gem "statsd-instrument", "~> 3.9"
+gem "statsd-instrument", "~> 4.0"
 gem "validates_formatting_of", "~> 0.9"
 gem "opensearch-ruby", "~> 3.4"
 gem "searchkick", "~> 6.1"
 gem "faraday_middleware-aws-sigv4", "~> 1.0"
 gem "xml-simple", "~> 1.1"
-gem "compact_index", "~> 0.15.0"
 gem "rack-attack", "~> 6.8"
 gem "rqrcode", "~> 3.2"
 gem "rotp", "~> 6.2"
@@ -57,13 +57,13 @@ gem "pwned", "~> 2.4"
 gem "webauthn", "~> 3.4"
 gem "browser", "~> 6.2"
 gem "bcrypt", "~> 3.1"
-gem "blazer", "~> 3.3.0"
-gem "maintenance_tasks", "~> 2.14"
-gem "strong_migrations", "~> 2.5"
+gem "blazer", "~> 3.5.1"
+gem "maintenance_tasks", "~> 2.17"
+gem "strong_migrations", "~> 2.8"
 gem "phlex-rails", "~> 2.4"
-gem "discard", "~> 1.4"
+gem "discard", "~> 2.0"
 gem "user_agent_parser", "~> 2.21"
-gem "pghero", "~> 3.7"
+gem "pghero", "~> 4.0"
 gem "faraday-multipart", "~> 1.2"
 gem "sigstore", "~> 0.2.3"
 gem "kramdown", "~> 2.5"
@@ -71,38 +71,38 @@ gem "zlib", "~> 3.2"
 gem "yaml-schema", "~> 1.2"
 
 # Admin dashboard
-gem "avo", "~> 3.13"
+gem "avo", "~> 3.32"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 4.5.0"
+gem "view_component", "~> 4.14.0"
 gem "pundit", "~> 2.5"
 gem "chartkick", "~> 5.2"
-gem "groupdate", "~> 6.7"
-gem "prop_initializer", "~> 0.2"
+gem "groupdate", "~> 6.8"
+gem "prop_initializer", "~> 0.4"
 
 group :avo, optional: true do
   source "https://packager.dev/avo-hq/" do
-    gem "avo-advanced", "~> 3.30"
+    gem "avo-advanced", "~> 3.32"
   end
 end
 
 # Logging
 gem "amazing_print", "~> 2.0"
-gem "rails_semantic_logger", "~> 4.19"
-gem "pp", "0.6.3"
+gem "rails_semantic_logger", "~> 5.1"
+gem "pp", "0.6.4"
 
 # Former default gems
 gem "csv", "~> 3.3" # zeitwerk-2.6.12
 gem "observer", "~> 0.1.2" # launchdarkly-server-sdk-8.0.0
 
 # Assets
-gem "propshaft", "~> 1.3.1"
+gem "propshaft", "~> 1.3.2"
 gem "importmap-rails", "~> 2.2"
 gem "stimulus-rails", "~> 1.3" # this adds stimulus-loading.js so it must be available at runtime
 gem "local_time", "~> 3.0"
-gem "herb", "~> 0.9"
+gem "herb", "~> 0.10"
 
 group :assets, :development do
-  gem "tailwindcss-rails", "~> 4.4"
+  gem "tailwindcss-rails", "~> 4.6"
 end
 
 group :development, :test do
@@ -115,20 +115,20 @@ group :development, :test do
   gem "brakeman", "~> 8.0", require: false
 
   # used to find n+1 queries
-  gem "prosopite", "~> 2.1"
+  gem "prosopite", "~> 2.2"
   gem "pg_query", "~> 6.2"
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
-  gem "rubocop", "~> 1.86", require: false
-  gem "rubocop-rails", "~> 2.34", require: false
-  gem "rubocop-performance", "~> 1.26", require: false
-  gem "rubocop-minitest", "~> 0.39", require: false
-  gem "rubocop-capybara", "~> 2.22", require: false
+  gem "rubocop", "~> 1.90", require: false
+  gem "rubocop-rails", "~> 2.37", require: false
+  gem "rubocop-performance", "~> 1.27", require: false
+  gem "rubocop-minitest", "~> 0.40", require: false
+  gem "rubocop-capybara", "~> 3.0", require: false
   gem "rubocop-factory_bot", "~> 2.28", require: false
 end
 
 group :development do
-  gem "rails-erd", "~> 1.7"
+  gem "rails-erd", "~> 2.1"
   gem "listen", "~> 3.10"
   gem "letter_opener", "~> 1.10"
   gem "letter_opener_web", "~> 3.0"
@@ -145,15 +145,14 @@ group :test do
   gem "rails-controller-testing", "~> 1.0"
   gem "mocha", "~> 3.1", require: false
   gem "shoulda-context", "~> 3.0.0.rc1"
-  gem "shoulda-matchers", "~> 7.0"
-  gem "selenium-webdriver", "~> 4.41"
+  gem "shoulda-matchers", "~> 8.0"
+  gem "capybara-playwright-driver", "~> 0.5"
   gem "webmock", "~> 3.26"
-  gem "simplecov", "~> 0.22", require: false
-  gem "simplecov-cobertura", "~> 3.1", require: false
+  gem "simplecov", "~> 1.1", require: false
+  gem "simplecov-cobertura", "~> 4.0", require: false
   gem "aggregate_assertions", "~> 0.3.0"
   gem "minitest-gcstats", "~> 1.3"
-  gem "minitest-reporters", "~> 1.7"
-  gem "gem_server_conformance", "~> 0.1.4"
+  gem "minitest-reporters", "~> 1.8"
 end
 
 gem "avo_upgrade", "~> 0.1.1", group: :development

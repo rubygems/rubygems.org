@@ -29,6 +29,38 @@ class UsersControllerTest < ActionController::TestCase
     end
   end
 
+  context "when sign up is disabled" do
+    setup do
+      Clearance.configuration.stubs(:allow_sign_up?).returns(false)
+    end
+
+    context "on GET to new" do
+      setup { get :new }
+
+      should respond_with :success
+      should render_template(:new)
+
+      should "show the registration disabled banner" do
+        assert_text "New account registration has been temporarily disabled."
+      end
+
+      should "not render the sign up form" do
+        refute_selector "input[type=password]"
+      end
+    end
+
+    context "on POST to create" do
+      should "not create a user and render the disabled banner" do
+        assert_no_changes -> { User.count } do
+          post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        end
+
+        assert_response :forbidden
+        assert_text "New account registration has been temporarily disabled."
+      end
+    end
+  end
+
   context "on POST to create" do
     context "when email and password are given" do
       should "create a user" do
@@ -45,6 +77,18 @@ class UsersControllerTest < ActionController::TestCase
           assert_equal Time.current, user.policies_acknowledged_at
         end
       end
+
+      should "track signup with Datadog AppSec" do
+        span = with_appsec_trace do
+          post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        end
+
+        user = User.find_by!(email: "foo@bar.com")
+
+        assert_equal "true", span.get_tag("appsec.events.users.signup.track")
+        assert_equal user.id.to_s, span.get_tag("usr.id")
+        assert_match(/0c7e6a405862.*2e8a3b/, span.get_tag("appsec.events.users.signup.usr.login"))
+      end
     end
 
     context "when missing a parameter" do
@@ -52,7 +96,7 @@ class UsersControllerTest < ActionController::TestCase
         assert_no_changes -> { User.count } do
           post :create, params: { user: { password: PasswordHelpers::SECURE_TEST_PASSWORD } }
         end
-        assert_response :ok
+        assert_response :unprocessable_entity
         assert page.has_content?("Email address is not a valid email")
       end
     end

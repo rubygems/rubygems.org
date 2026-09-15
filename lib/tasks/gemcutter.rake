@@ -81,7 +81,8 @@ namespace :gemcutter do
         canonical_number = Gem::Version.new(version.number).canonical_segments.join(".")
 
         loop do
-          conflicting_version = Version.find_by(canonical_number: canonical_number, rubygem_id: version.rubygem_id, platform: version.platform)
+          conflicting_version = Version.find_by(canonical_number: canonical_number, rubygem_id: version.rubygem_id,
+                                                 platform: version.platform, ruby_abi: nil)
           break unless conflicting_version
 
           canonical_number += ".dedup"

@@ -38,4 +38,12 @@ class OIDC::PendingTrustedPublisherTest < ActiveSupport::TestCase
     refute_predicate publisher, :valid?
     assert_includes publisher.errors[:rubygem_name].first, "is too similar to an existing gem named 'typekit'"
   end
+
+  test "validates rubygem name is not reserved" do
+    create(:gem_name_reservation, name: "ruby")
+    publisher = build(:oidc_pending_trusted_publisher, rubygem_name: "ruby")
+
+    refute_predicate publisher, :valid?
+    assert_equal ["is reserved"], publisher.errors[:rubygem_name]
+  end
 end

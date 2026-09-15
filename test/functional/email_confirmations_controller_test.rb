@@ -29,7 +29,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       setup do
         @user.confirm_email! # must be confirmed to sign in
         sign_in_as(@user)
-        @user.update!(unconfirmed_email: "new@example.com")
+        @user.update!(unconfirmed_email: "new@rubygems-test.org")
         get :update, params: { token: @user.confirmation_token }
       end
 
@@ -211,7 +211,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
         setup do
           @user.confirm_email!
           sign_in_as(@user)
-          @user.update!(unconfirmed_email: "new@example.com")
+          @user.update!(unconfirmed_email: "new@rubygems-test.org")
 
           assert @user.confirmation_token
           get :update, params: { token: @user.confirmation_token }
@@ -316,7 +316,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
       setup do
         @user.confirm_email!
         sign_in_as(@user)
-        @user.update!(unconfirmed_email: "new@example.com")
+        @user.update!(unconfirmed_email: "new@rubygems-test.org")
         @challenge = session[:webauthn_authentication]["challenge"]
         WebauthnHelpers.create_credential(
           webauthn_credential: @webauthn_credential,
@@ -339,7 +339,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
       should "change the user's email" do
         assert @user.reload.email_confirmed
-        assert_equal "new@example.com", @user.email
+        assert_equal "new@rubygems-test.org", @user.email
       end
 
       should "clear mfa_expires_at" do
@@ -517,7 +517,7 @@ class EmailConfirmationsControllerTest < ActionController::TestCase
 
     context "user is signed in" do
       setup do
-        @user = create(:user, confirmation_token: "something", unconfirmed_email: "new@example.com")
+        @user = create(:user, confirmation_token: "something", unconfirmed_email: "new@rubygems-test.org")
         sign_in_as(@user)
       end
 

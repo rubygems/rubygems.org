@@ -209,24 +209,24 @@ class GemDownloadTest < ActiveSupport::TestCase
   end
 
   should "find most downloaded all time" do
-    @rubygem_1 = create(:rubygem)
-    @version_1 = create(:version, rubygem: @rubygem_1)
-    @version_2 = create(:version, rubygem: @rubygem_1)
+    @rubygem1 = create(:rubygem)
+    @version1 = create(:version, rubygem: @rubygem1)
+    @version2 = create(:version, rubygem: @rubygem1)
 
-    @rubygem_2 = create(:rubygem)
-    @version_3 = create(:version, rubygem: @rubygem_2)
+    @rubygem2 = create(:rubygem)
+    @version3 = create(:version, rubygem: @rubygem2)
 
-    @rubygem_3 = create(:rubygem)
-    @version_4 = create(:version, rubygem: @rubygem_3)
+    @rubygem3 = create(:rubygem)
+    @version4 = create(:version, rubygem: @rubygem3)
 
-    GemDownload.increment(1, rubygem_id: @rubygem_1, version_id: @version_1.id)
-    GemDownload.increment(1, rubygem_id: @rubygem_1, version_id: @version_2.id)
-    GemDownload.increment(1, rubygem_id: @rubygem_2, version_id: @version_3.id)
-    GemDownload.increment(1, rubygem_id: @rubygem_3, version_id: @version_1.id)
-    3.times { GemDownload.increment(1, rubygem_id: @rubygem_2, version_id: @version_3.id) }
-    2.times { GemDownload.increment(1, rubygem_id: @rubygem_1, version_id: @version_2.id) }
+    GemDownload.increment(1, rubygem_id: @rubygem1, version_id: @version1.id)
+    GemDownload.increment(1, rubygem_id: @rubygem1, version_id: @version2.id)
+    GemDownload.increment(1, rubygem_id: @rubygem2, version_id: @version3.id)
+    GemDownload.increment(1, rubygem_id: @rubygem3, version_id: @version1.id)
+    3.times { GemDownload.increment(1, rubygem_id: @rubygem2, version_id: @version3.id) }
+    2.times { GemDownload.increment(1, rubygem_id: @rubygem1, version_id: @version2.id) }
 
-    gem_download_order = [@version_3, @version_2, @version_1, @version_4].map(&:gem_download)
+    gem_download_order = [@version3, @version2, @version1, @version4].map(&:gem_download)
 
     assert_equal gem_download_order, GemDownload.most_downloaded_gems
   end

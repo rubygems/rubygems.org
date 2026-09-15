@@ -5,6 +5,8 @@ class SettingsController < ApplicationController
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
   before_action :disable_cache
 
+  layout "subject"
+
   def edit
     @user = current_user
     @webauthn_credential = WebauthnCredential.new(user: @user)

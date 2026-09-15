@@ -1,4 +1,15 @@
 <% @title = t(".title") %>
-<div class="t-body">
+<% add_breadcrumb(t("breadcrumbs.settings"), edit_settings_path) %>
+<% add_breadcrumb(t("oidc.api_key_roles.index.api_key_roles"), profile_oidc_api_key_roles_path) %>
+<% add_breadcrumb(@title) %>
+
+<% content_for :subject do %>
+  <%= render "dashboards/subject", user: current_user, current: :profile %>
+<% end %>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title @title, icon: "settings" %>
+  <% end %>
   <%= render "form" %>
-</div>
+<% end %>

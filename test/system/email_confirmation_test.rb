@@ -21,7 +21,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
   end
 
   test "requesting confirmation mail does not tell if a user exists" do
-    request_confirmation_mail "someone@example.com"
+    request_confirmation_mail "someone@rubygems-test.org"
 
     assert_text "We will email you confirmation link to activate your account if one exists."
   end
@@ -47,6 +47,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
     assert_text "Sign in"
     assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
 
+    clear_browser_cache
     visit link
 
     assert page.has_selector? "#flash_alert", text: "Please double check the URL or try submitting it again."
@@ -143,8 +144,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
   end
 
   teardown do
-    @authenticator&.remove!
+    disable_virtual_authenticator
     Capybara.reset_sessions!
-    Capybara.use_default_driver
   end
 end

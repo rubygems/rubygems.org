@@ -111,7 +111,7 @@ class SearchesControllerTest < ActionController::TestCase
     should respond_with :success
     should "see sinatra on the page in the suggestions" do
       assert_text "Did you mean"
-      assert_text @sinatra.name, page.find(".search__suggestions")
+      assert_text @sinatra.name, page.find("[data-testid='search-suggestions']")
       assert_selector "a[href='#{search_path(query: @sinatra.name)}']"
     end
     should "not see sinatra on the page in the results" do

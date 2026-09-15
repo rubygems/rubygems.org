@@ -35,7 +35,11 @@ class Pusher
   end
 
   def authorize
-    (rubygem.pushable? && (api_key.user? || find_pending_trusted_publisher)) || owner.owns_gem?(rubygem) || notify_unauthorized
+    return notify_reserved if rubygem.reserved_name?
+    return true if rubygem.pushable? && (api_key.user? || find_pending_trusted_publisher)
+    return true if owner.owns_gem?(rubygem)
+
+    notify_unauthorized
   end
 
   def verify_gem_scope
@@ -56,7 +60,7 @@ class Pusher
 
     return notify("There was a problem saving your gem: #{rubygem.all_errors(version)}", 403) unless rubygem.valid? && version.valid?
 
-    unless version.full_name == spec.original_name && version.gem_full_name == spec.full_name
+    unless uploaded_spec_matches_version?
       return notify("There was a problem saving your gem: the uploaded spec has malformed platform attributes", 409)
     end
 
@@ -108,9 +112,15 @@ class Pusher
     set_tag "gemcutter.rubygem.name", name
 
     @rubygem = Rubygem.name_is(name).first || Rubygem.new(name: name)
+    @rubygem.pushed_by = owner
 
     sha256 = Digest::SHA2.base64digest(body.string)
     spec_sha256 = Digest::SHA2.base64digest(spec_contents)
+
+    ruby_abi =
+      if FeatureFlag.enabled?(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, api_key.user)
+        Version.ruby_abi_for(spec.original_platform.to_s, spec.required_ruby_version.to_s)
+      end
 
     version = @rubygem.versions
       .create_with(indexed: false, cert_chain: spec.cert_chain)
@@ -118,6 +128,7 @@ class Pusher
         number: spec.version.to_s,
         platform: spec.original_platform.to_s,
         gem_platform: spec.platform.to_s,
+        ruby_abi: ruby_abi,
         size: size,
         sha256: sha256,
         spec_sha256: spec_sha256,
@@ -125,13 +136,15 @@ class Pusher
         pusher_api_key: api_key
       )
 
+    version.required_ruby_version = spec.required_ruby_version.to_s
+    version.required_rubygems_version = spec.required_rubygems_version.to_s
     unless @rubygem.new_record?
       # Return success for idempotent pushes
       return notify("Gem was already pushed: #{version.to_title}", 200) if version.indexed?
 
       # If the gem is yanked, we can't repush it
       # Additionally, we don't allow overwriting existing versions
-      if (existing = @rubygem.versions.find_by(number: version.number, platform: version.platform))
+      if (existing = @rubygem.versions.find_by(number: version.number, platform: version.platform, ruby_abi: version.ruby_abi))
         return republish_notification(existing)
       end
 
@@ -197,6 +210,12 @@ class Pusher
 
   private
 
+  def uploaded_spec_matches_version?
+    return version.full_name == spec.original_name && version.gem_full_name == spec.full_name unless version.content_addressable?
+
+    version.platform == spec.original_platform.to_s && version.gem_platform == spec.platform.to_s
+  end
+
   def after_write
     GemCachePurger.call(rubygem.name)
     RackAttackReset.gem_push_backoff(@request.remote_ip, owner.to_gid) if @request&.remote_ip.present?
@@ -215,7 +234,7 @@ class Pusher
 
   def update
     rubygem.disown if rubygem.versions.indexed.none?
-    rubygem.update_attributes_from_gem_specification!(version, spec)
+    persist_version
 
     if rubygem.unowned?
       if api_key.user?
@@ -240,6 +259,26 @@ class Pusher
     false
   end
 
+  def persist_version
+    retries = 0
+    begin
+      rubygem.update_attributes_from_gem_specification!(version, spec)
+    rescue ActiveRecord::RecordNotUnique => e
+      raise e unless e.message.include?("index_versions_number_content_address")
+
+      if retries >= 3
+        StatsD.increment("push.content_address_collision_exhausted", tags: { rubygem: rubygem.name })
+        notify("There was a problem saving your gem: could not generate a unique content address after multiple attempts. Please try again.", 409)
+        raise e
+      end
+
+      StatsD.increment("push.content_address_collision", tags: { rubygem: rubygem.name })
+      version.content_address = nil
+      retries += 1
+      retry
+    end
+  end
+
   def republish_notification(version)
     if version.indexed?
       notify("Repushing of gem versions is not allowed.\n" \
@@ -255,8 +294,12 @@ class Pusher
     end
   end
 
+  def notify_reserved
+    notify("This gem name is reserved. You are not allowed to push this gem.", 403)
+  end
+
   def notify_unauthorized
-    if !api_key.user? || rubygem.reserved_name?
+    if !api_key.user?
       notify("You are not allowed to push this gem.", 403)
     elsif rubygem.unconfirmed_ownership?(owner)
       notify("You do not have permission to push to this gem. " \

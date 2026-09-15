@@ -15,17 +15,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     assert_recognizes(post_route, path: "/api/v1/gems", method: :post)
   end
 
-  def self.should_respond_to_show
-    should respond_with :success
-    should "return a hash" do
-      response = yield(@response.body) if block_given?
-
-      assert_not_nil response
-      assert_kind_of Hash, response
-    end
-  end
-
-  def self.should_respond_to(format, &)
+  def self.show_action_should_respond_to(format)
     context "with #{format.to_s.upcase} for a hosted gem" do
       setup do
         @rubygem = create(:rubygem)
@@ -33,7 +23,13 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         get :show, params: { id: @rubygem.slug }, format: format
       end
 
-      should_respond_to_show(&)
+      should respond_with :success
+      should "return a hash" do
+        response = yield(@response.body) if block_given?
+
+        assert_not_nil response
+        assert_kind_of Hash, response
+      end
     end
 
     context "with #{format.to_s.upcase} for a hosted gem with a period in its name" do
@@ -43,7 +39,13 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         get :show, params: { id: @rubygem.slug }, format: format
       end
 
-      should_respond_to_show(&)
+      should respond_with :success
+      should "return a hash" do
+        response = yield(@response.body) if block_given?
+
+        assert_not_nil response
+        assert_kind_of Hash, response
+      end
     end
   end
 
@@ -54,11 +56,11 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
 
     context "On GET to show" do
-      should_respond_to(:json) do |body|
+      show_action_should_respond_to(:json) do |body|
         JSON.load body
       end
 
-      should_respond_to(:yaml) do |body|
+      show_action_should_respond_to(:yaml) do |body|
         YAML.safe_load body
       end
     end
@@ -158,7 +160,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
   end
 
-  def self.should_respond_to(format)
+  def self.index_action_should_respond_to(format)
     context "with #{format.to_s.upcase} for a list of gems" do
       setup do
         @mygems = [create(:rubygem, name: "SomeGem"), create(:rubygem, name: "AnotherGem")]
@@ -178,7 +180,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with :success
 
       should "return a hash" do
-        assert_not_nil yield(@response.body)
+        assert_not_nil(yield(@response.body))
       end
       should "only return my gems" do
         gem_names = yield(@response.body).pluck("name").sort
@@ -197,12 +199,29 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
 
     context "On GET to index" do
-      should_respond_to :json do |body|
+      index_action_should_respond_to :json do |body|
         JSON.load body
       end
 
-      should_respond_to :yaml do |body|
+      index_action_should_respond_to :yaml do |body|
         YAML.safe_load body
+      end
+    end
+
+    context "when user email is unconfirmed" do
+      setup do
+        @user.update!(email_confirmed: false)
+        post :create, body: gem_file(&:read)
+      end
+
+      should respond_with :forbidden
+
+      should "return email confirmation error" do
+        assert_match "Please confirm your email address", @response.body
+      end
+
+      should "not register any gem" do
+        assert_equal 0, Rubygem.count
       end
     end
 
@@ -292,6 +311,25 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
 
         assert_equal @user, ownership.user
         assert_predicate ownership, :confirmed?
+      end
+    end
+
+    context "On POST to create" do
+      should "track a successful push with Datadog AppSec" do
+        span = with_appsec_trace { post :create, body: gem_file(&:read) }
+
+        assert_equal "true", span.get_tag("appsec.events.gem.push.success.track")
+        assert_equal @user.id.to_s, span.get_tag("appsec.events.gem.push.success.usr.id")
+        assert_equal "test", span.get_tag("appsec.events.gem.push.success.gem.name")
+        assert_equal "0.0.0", span.get_tag("appsec.events.gem.push.success.gem.version")
+      end
+
+      should "track a failed push with Datadog AppSec" do
+        span = with_appsec_trace { post :create, body: "really bad gem" }
+
+        assert_equal "true", span.get_tag("appsec.events.gem.push.failure.track")
+        assert_equal @user.id.to_s, span.get_tag("appsec.events.gem.push.failure.usr.id")
+        assert_nil span.get_tag("appsec.events.gem.push.failure.gem.version")
       end
     end
 
@@ -425,7 +463,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should respond_with 403
       should "not register gem" do
         assert_predicate Rubygem.count, :zero?
-        assert_match(/There was a problem saving your gem: Name 'rubygems' is a reserved gem name./, @response.body)
+        assert_match(/This gem name is reserved. You are not allowed to push this gem./, @response.body)
       end
     end
 

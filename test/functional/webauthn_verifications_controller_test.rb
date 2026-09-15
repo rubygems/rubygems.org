@@ -45,6 +45,12 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
         end
 
         should respond_with :success
+
+        should "not allow the challenge page to be cached" do
+          assert_includes @response.headers["Cache-Control"], "no-store"
+          # Unauthenticated flow, so the blanket guard doesn't fire — deny edge caching explicitly.
+          assert_equal "max-age=0", @response.headers["Surrogate-Control"]
+        end
         should "set webauthn authentication" do
           assert_not_nil session[:webauthn_authentication]["challenge"]
           assert_equal "1", session[:webauthn_authentication]["port"]

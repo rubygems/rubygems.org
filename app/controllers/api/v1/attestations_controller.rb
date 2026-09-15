@@ -12,7 +12,7 @@ class Api::V1::AttestationsController < Api::BaseController
   private
 
   def find_version
-    @version = Version.find_by(full_name: params[:id].delete_suffix(".json")) ||
+    @version = Version.find_by(full_name: params.expect(:id).delete_suffix(".json")) ||
       render(plain: t(:this_rubygem_could_not_be_found), status: :not_found)
   end
 end

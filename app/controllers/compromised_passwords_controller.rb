@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class CompromisedPasswordsController < ApplicationController
-  layout "hammy"
-
   before_action :validate_session
 
   def show

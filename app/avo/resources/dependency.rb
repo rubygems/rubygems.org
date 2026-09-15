@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Avo::Resources::Dependency < Avo::BaseResource
-  self.includes = []
+  self.includes = %i[version rubygem]
 
   def fields
     field :id, as: :id, link_to_resource: true

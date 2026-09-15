@@ -27,8 +27,25 @@ Rails.application.configure do
       class: "RefreshOIDCProvidersJob",
       set: { priority: 10 },
       description: "Refreshing all OIDC provider configurations every 30m"
+    },
+    sync_disposable_email_domains: {
+      cron: "0 4 * * *",
+      class: "SyncDisposableEmailDomainsJob",
+      set: { priority: 10 },
+      description: "Syncing disposable email domain blocklist daily at 04:00 UTC"
     }
   }
+
+  # Account-blocking job: schedule in production only, mirroring the previous
+  # production-only Kubernetes CronJob. (enable_cron is on in all non-dev envs.)
+  if Rails.env.production?
+    config.good_job.cron[:verify_user_email_domains] = {
+      cron: "0 12 * * *",
+      class: "VerifyUserEmailDomainsJob",
+      set: { priority: 10 },
+      description: "Blocking users whose email domain has expired daily at 12:00 UTC"
+    }
+  end
 
   # see https://github.com/bensheldon/good_job/pull/883
   # this makes good_job consistent with the priorities we used

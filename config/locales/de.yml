@@ -1,5 +1,8 @@
 ---
 de:
+  admin:
+    delete_user:
+      blocked_reason:
   credentials_required:
   copied: Kopiert!
   copy_to_clipboard: In die Zwischenablage kopieren
@@ -32,6 +35,7 @@ de:
   api_key_forbidden:
   api_key_soft_deleted:
   api_key_insufficient_scope:
+  email_not_confirmed:
   please_sign_up: Zugriff verweigert. Bitte melden Sie sich unter https://rubygems.org
     mit einem Konto an
   please_sign_in: Bitte melden Sie sich an, um fortzufahren.
@@ -107,11 +111,19 @@ de:
           werden
         blocked: Die Domain '%{domain}' wurde wegen Spam blockiert. Bitte verwenden
           Sie eine gültige persönliche E-Mail-Adresse.
+        reserved_domain:
+        disposable_email_domain:
+        public_suffix:
+        protected_provider:
       models:
         api_key:
           attributes:
             expires_at:
               inclusion:
+        gem_name_reservation:
+          attributes:
+            base:
+              organization_limit_reached:
         organization:
           attributes:
             handle:
@@ -151,6 +163,7 @@ de:
           attributes:
             rubygem_name:
               unavailable: wird bereits verwendet
+              reserved:
     models:
       user: Benutzer
       api_key:
@@ -185,6 +198,7 @@ de:
       invalid_gem: Das ausgewählte Gem kann diesem Schlüssel nicht zugeordnet werden
     destroy:
       success: 'API-Schlüssel erfolgreich gelöscht: %{name}'
+      already_expired:
     index:
       api_keys: API-Schlüssel
       name: Name
@@ -209,8 +223,11 @@ de:
       save_key: 'Beachten Sie, dass wir Ihnen den Schlüssel nicht erneut anzeigen
         können. Neuer API-Schlüssel:'
       mfa: MFA
+      mfa_enabled_notice:
       expiration:
       update_owner:
+      view_expired:
+      view_active:
     new:
       new_api_key: Neuer API-Schlüssel
     reset:
@@ -222,6 +239,7 @@ de:
       edit_api_key: API-Schlüssel bearbeiten
       invalid_key: Ein ungültiger API-Schlüssel kann nicht bearbeitet werden. Bitte
         löschen Sie ihn und erstellen Sie einen neuen.
+      expired_key:
     all_gems: Alle Gems
     gem_ownership_removed: Die Eigentümerschaft von %{rubygem_name} wurde nach der
       Zuordnung zu diesem Schlüssel entfernt.
@@ -243,6 +261,17 @@ de:
   dependencies:
     show:
       click_to_expand: Klicken Sie auf das Pfeilsymbol, um es zu erweitern.
+      gem_header:
+      required_version_header:
+      scope_header:
+        one:
+        other:
+      reverse_dependencies_header:
+      version_header:
+      date_header:
+      downloads_count:
+      downloads_header:
+      see_all_reverse:
   email_confirmations:
     create:
       promise_resend: Wir senden Ihnen einen Bestätigungslink per E-Mail, um Ihr Konto
@@ -259,9 +288,24 @@ de:
     index:
       downloads_counting_html: Gezählte Downloads
       find_blurb_html: Finde, installiere und veröffentliche RubyGems.
+      find_blurb_lead:
       learn:
         install_rubygems: Installiere RubyGems
+      donation:
+        body:
+        cta:
+        title:
+      powered_by:
+        body_html:
+        title:
+      supporters:
+        body:
+        cta:
+        title:
   layouts:
+    subject:
+      subject_label:
+      subject_secondary_label:
     application:
       footer:
         about: Über uns
@@ -304,6 +348,8 @@ de:
       mfa_banner_html:
   breadcrumbs:
     home: Startseite
+    latest_version:
+    versions:
     dashboard: Dashboard
     settings: Einstellungen
     org_name: 'Organisation: %{name}'
@@ -311,6 +357,8 @@ de:
     gems:
     members:
     invite_member:
+    reservations:
+    reserve_gem_name:
   mailer:
     confirm_your_email: Bitte bestätigen Sie Ihre E-Mail-Adresse mit dem Link, der
       an Ihre E-Mail gesendet wurde.
@@ -354,6 +402,10 @@ de:
     gem_yanked:
       subject: Gem %{gem} von %{host} zurückgezogen
       title: GEM ZURÜCKGEZOGEN
+    cache_exposure_inactive_notice:
+      subject:
+    cache_exposure_notice:
+      subject:
     reset_api_key:
       subject: "%{host} API-Schlüssel wurde zurückgesetzt"
       title: API-SCHLÜSSEL ZURÜCKGESETZT
@@ -473,6 +525,7 @@ de:
       add_member:
       invite:
       transfer:
+      reservations:
     members:
       create:
         user_already_invited:
@@ -498,12 +551,34 @@ de:
         role:
         create:
         invite:
+    gem_name_reservations:
+      create:
+        gem_name_reserved:
+      destroy:
+        gem_name_reservation_removed:
+      index:
+        description:
+        no_reservations:
+        reserve:
+        remove:
+        confirm_remove:
+      new:
+        title:
+        name:
+        name_hint:
+        reserve:
+        limit_html:
+        limit_reached_html:
+        unlimited:
+        disclaimer:
     invitations:
       show:
         accept:
         decline:
         title_html:
   pages:
+    index:
+      title:
     about:
       contributors_amount: "%{count} Rubyists"
       downloads_amount: Millionen von Gem-Downloads
@@ -544,6 +619,8 @@ de:
       title: Download RubyGems
     security:
       title: Security
+    security-engineers-in-residence-faq:
+      title:
     supporters:
       title:
   policies:
@@ -722,10 +799,13 @@ de:
     edit:
       role:
       title:
+      submit_button:
+      user:
     confirm:
       confirmed_email:
       token_expired:
     index:
+      title:
       add_owner:
       name:
       mfa:
@@ -740,7 +820,14 @@ de:
       info:
       confirmed:
       pending:
+      current_user_badge:
       confirm_remove:
+      remove_self_dialog:
+        title:
+        warning:
+        confirm_label:
+        submit:
+        cancel:
     resend_confirmation:
       resent_notice:
     create:
@@ -755,6 +842,7 @@ de:
   settings:
     edit:
       title:
+      account_header:
       webauthn_credentials:
       no_webauthn_credentials:
       webauthn_credential_note:
@@ -820,12 +908,21 @@ de:
     request_denied:
     show:
       title: Profil von %{username}
+      gems:
+      no_gems:
+      edit_profile:
+      email_me:
     security_events:
       title:
       description_html:
   rubygems:
     aside:
       downloads_for_this_version: Für diese Version
+      github_star:
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: Version veröffentlicht
       required_ruby_version: Erforderliche Ruby-Version
       required_rubygems_version:
@@ -841,6 +938,7 @@ de:
         funding:
         header: Links
         home: Homepage
+        verified:
         mail: Mailingliste
         analytics:
         report_abuse: Missbrauch melden
@@ -885,6 +983,12 @@ de:
     show:
       bundler_header: Gemfile
       install: installieren
+      tabs:
+        label:
+        readme:
+        gem_info:
+        contents:
+        dependencies:
       licenses_header:
         one: Lizenz
         other: Lizenzen
@@ -892,6 +996,7 @@ de:
       requirements_header: Anforderungen
       show_all_versions: Zeige alle Versionen (%{count} total)
       versions_header: Versionen
+      ruby_abi:
       yanked_notice:
     show_yanked:
       not_hosted_notice: Dieses Gem wird aktuell nicht auf RubyGems.org gehostet.
@@ -912,9 +1017,14 @@ de:
           other:
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title:
       subtitle:
       no_reverse_dependencies:
+      version_header:
     search:
       search_reverse_dependencies_html:
   searches:
@@ -926,6 +1036,7 @@ de:
       updated:
       yanked:
     show:
+      title:
       subtitle_html: für <em>%{query}</em>
       month_update:
       week_update:
@@ -936,6 +1047,7 @@ de:
     new:
       forgot_password: Passwort vergessen?
       resend_confirmation:
+      confirm:
     verify:
       title:
       confirm:
@@ -966,6 +1078,7 @@ de:
     index:
       title:
       all_time_most_downloaded: Am meisten Heruntergeladen in der gesamten Zeit
+      clickgems:
       total_gems: Gems insgesamt
       total_users: Benutzer insgesamt
   users:
@@ -973,6 +1086,7 @@ de:
       email_sent:
     new:
       have_account: Haben Sie schon einen Account?
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: Dieses Gem wird nicht gerade von RubyGems.org gehostet.
@@ -983,6 +1097,7 @@ de:
       imported_gem_version_notice:
     version:
       yanked:
+      ruby_abi:
   webauthn_credentials:
     callback:
       success:
@@ -1144,6 +1259,7 @@ de:
       api_key:
         api_key_created:
         api_key_deleted:
+        api_key_cache_exposure_revoked:
         api_key_name:
         api_key_scopes:
         api_key_gem_html:

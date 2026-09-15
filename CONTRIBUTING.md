@@ -20,9 +20,7 @@ Once you’re ready:
 
 If you’re looking for things to hack on, please check
 [GitHub Issues](https://github.com/rubygems/rubygems.org/issues). If you’ve
-found bugs or have feature ideas don’t be afraid to pipe up and ask the
-[mailing list](https://groups.google.com/group/rubygems-org) or IRC channel
-(`#rubygems` on `irc.freenode.net`) about them.
+found bugs or have feature ideas, use [GitHub Discussions](https://github.com/rubygems/rubygems.org/discussions).
 
 Acceptance
 ----------
@@ -76,6 +74,17 @@ Note: Docker compose does not run the rubygems.org application itself.
 * run `docker compose up` to start the required services.
 
 Follow the instructions below on how to install Bundler and setup the database.
+
+#### Environment (DevContainer)
+
+If you want to run Ruby, Rails, and the test suite inside Docker instead of your host machine,
+you can use this repository's DevContainer configuration.
+
+* Install Docker. See instructions at https://docs.docker.com/get-docker/
+* Install Visual Studio Code and the "Dev Containers" extension.
+* Open this repository in VS Code and run "Dev Containers: Reopen in Container".
+* Wait for the container setup to complete (`bin/setup` runs automatically).
+* Run tests from a terminal in the container, for example: `bin/rails test:all`
 
 #### Environment (OS X)
 

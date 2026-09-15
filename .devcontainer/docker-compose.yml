@@ -9,8 +9,10 @@ services:
     depends_on:
       - search
       - db
-      - selenium
 
-  selenium:
-    image: selenium/standalone-chromium
-    restart: unless-stopped
+  # Codespaces' kernel does not allow raising vm.max_map_count, which
+  # OpenSearch needs to use mmap-backed index storage. Fall back to NIO so
+  # the search container can boot. Local dev and CI keep the default (mmap).
+  search:
+    environment:
+      - "node.store.allow_mmap=false"

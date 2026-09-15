@@ -1,8 +1,9 @@
-<div class="access-policy">
-  <dl class="oidc_access_policy">
-    <dt><%= access_policy.class.human_attribute_name :statements %></dt>
-    <dd>
-      <%= render access_policy.statements %>
-    </dd>
-  </dl>
+<div>
+  <ul class="-mx-4 divide-y divide-neutral-200 dark:divide-neutral-800 border-y border-neutral-200 dark:border-neutral-800">
+    <% access_policy.statements.each do |statement| %>
+      <li class="px-4 py-3">
+        <%= render statement %>
+      </li>
+    <% end %>
+  </ul>
 </div>

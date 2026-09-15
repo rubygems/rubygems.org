@@ -1,0 +1,5 @@
+<%= link_to profile_path(owner.display_id), title: owner.display_handle, alt: owner.display_handle,
+      class: "flex w-fit max-w-full items-center gap-2 py-0.5 text-b3 text-neutral-800 dark:text-neutral-200 hover:text-orange-500 dark:hover:text-orange-400" do %>
+  <%= avatar(24, "owner-#{owner.id}", owner, alt: "", class: "rounded") %>
+  <span class="truncate"><%= owner.display_handle %></span>
+<% end %>

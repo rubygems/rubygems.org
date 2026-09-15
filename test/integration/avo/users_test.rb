@@ -7,21 +7,124 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
 
   test "getting users as admin" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
-
-    get avo.resources_users_path
-
-    assert_response :success
-
-    user = create(:user)
+    user = create(:user, created_at: Time.zone.local(1997, 4, 15, 12, 30))
 
     get avo.resources_users_path
 
     assert_response :success
     assert page.has_content? user.name
+    assert_not page.has_content? "Created at"
 
     get avo.resources_user_path(user)
 
     assert_response :success
     assert page.has_content? user.name
+    assert page.has_content? "Created at"
+    assert page.has_content? user.created_at.utc.iso8601
+  end
+
+  test "searching users by blocked email" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+    blocked_user = create(:user, :blocked, blocked_email: "blocked_user@rubygems-test.org")
+    create(:user, email: "blockedXuser@rubygems-test.org")
+
+    get avo.avo_api_path(resource_name: "users"), params: { q: "blocked_user@rubygems-test" }
+
+    assert_response :success
+    assert_equal [blocked_user.to_param], response.parsed_body.dig("users", "results").pluck("_id")
+  end
+
+  test "showing the delete action to rubygems.org operators on the user page" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+    user = create(:user)
+
+    get avo.resources_user_path(user)
+
+    assert_response :success
+    assert page.has_content? "Delete User"
+  end
+
+  test "showing the unblock action for a blocked user" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+    user = create(:user, :blocked)
+
+    get avo.resources_user_path(user)
+
+    assert_response :success
+    assert page.has_content? "Unblock User"
+  end
+
+  test "enabling the delete action when the user is the sole owner of an old gem version" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+    user = create(:user)
+    rubygem = create(:rubygem, name: "admin-delete-blocked-old-gem", owners: [user])
+    create(:version, rubygem:, created_at: 31.days.ago)
+
+    get avo.resources_user_path(user)
+
+    assert_response :success
+    assert_select "a[data-action-name='Delete User'][data-disabled='false']", count: 1
+  end
+
+  test "enabling the delete action when the user is the sole owner of a gem version with too many downloads" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+    user = create(:user)
+    rubygem = create(:rubygem, name: "admin-delete-blocked-popular-gem", owners: [user])
+    version = create(:version, rubygem:)
+    GemDownload.increment(100_001, rubygem_id: rubygem.id, version_id: version.id)
+
+    get avo.resources_user_path(user)
+
+    assert_response :success
+    assert_select "a[data-action-name='Delete User'][data-disabled='false']", count: 1
+  end
+
+  test "enabling the delete action when an old gem version has another owner" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+    user = create(:user)
+    rubygem = create(:rubygem, name: "admin-delete-shared-old-gem", owners: [user, create(:user)])
+    create(:version, rubygem:, created_at: 31.days.ago)
+
+    get avo.resources_user_path(user)
+
+    assert_response :success
+    assert_select "a[data-action-name='Delete User'][data-disabled='false']", count: 1
+    refute page.has_content? Avo::Actions::DeleteUser.blocked_reason
+  end
+
+  test "enabling the delete action when the user's old gem version is already yanked" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+    user = create(:user)
+    rubygem = create(:rubygem, name: "admin-delete-yanked-old-gem", owners: [user])
+    create(:version, rubygem:, created_at: 31.days.ago, indexed: false)
+    create(:version, rubygem:)
+
+    get avo.resources_user_path(user)
+
+    assert_response :success
+    assert_select "a[data-action-name='Delete User'][data-disabled='false']", count: 1
+    refute page.has_content? Avo::Actions::DeleteUser.blocked_reason
+  end
+
+  test "showing the delete action to rubygems.org operators on the users index" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+
+    get avo.resources_users_path
+
+    assert_response :success
+    assert page.has_content? "Delete User"
+  end
+
+  test "redirecting operators outside the rubygems.org team" do
+    requires_avo_pro
+    admin = create(:admin_github_user, :is_admin)
+    info_data = admin.info_data.deep_dup
+    info_data[:viewer][:organization][:teams][:edges].reject! { |edge| edge.dig(:node, :slug) == "rubygems-org" }
+    admin.update!(info_data:)
+    admin_sign_in_as admin
+
+    get avo.resources_user_path(create(:user))
+
+    assert_redirected_to avo.root_path
   end
 end

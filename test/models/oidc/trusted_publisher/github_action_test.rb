@@ -451,4 +451,47 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
       )
     end
   end
+
+  test "#to_sigstore_identity_policy verifies a reusable workflow pinned by SHA when the caller has a different ref" do
+    publisher = create(:oidc_trusted_publisher_github_action,
+      repository_owner: "caller-org",
+      repository_name: "caller-repo",
+      workflow_filename: "release.yml",
+      workflow_repository_owner: "shared-org",
+      workflow_repository_name: "shared-workflows")
+    workflow_ref = "shared-org/shared-workflows/.github/workflows/release.yml@cdefa43486604b3aae79e9d1db24b670475f2c92"
+    openssl_cert = build(:x509_certificate, :key_usage, :github_actions_fulcio,
+      github_actions_job_workflow_ref: workflow_ref,
+      github_actions_source_repository_ref: "refs/heads/master")
+    cert = Sigstore::Internal::X509::Certificate.new(openssl_cert)
+
+    assert_predicate publisher.to_sigstore_identity_policy.verify(cert), :verified?
+  end
+
+  test "#to_sigstore_identity_policy verifies a same-repository workflow" do
+    publisher = create(:oidc_trusted_publisher_github_action,
+      repository_owner: "sigstore",
+      repository_name: "sigstore-ruby",
+      workflow_filename: "release.yml")
+    openssl_cert = build(:x509_certificate, :key_usage, :github_actions_fulcio)
+    cert = Sigstore::Internal::X509::Certificate.new(openssl_cert)
+
+    assert_predicate publisher.to_sigstore_identity_policy.verify(cert), :verified?
+  end
+
+  test "#to_sigstore_identity_policy rejects a different reusable workflow" do
+    publisher = create(:oidc_trusted_publisher_github_action,
+      repository_owner: "caller-org",
+      repository_name: "caller-repo",
+      workflow_filename: "release.yml",
+      workflow_repository_owner: "shared-org",
+      workflow_repository_name: "shared-workflows")
+    workflow_ref = "attacker-org/shared-workflows/.github/workflows/release.yml@cdefa43486604b3aae79e9d1db24b670475f2c92"
+    openssl_cert = build(:x509_certificate, :key_usage, :github_actions_fulcio,
+      github_actions_job_workflow_ref: workflow_ref,
+      github_actions_source_repository_ref: "refs/heads/main")
+    cert = Sigstore::Internal::X509::Certificate.new(openssl_cert)
+
+    refute_predicate publisher.to_sigstore_identity_policy.verify(cert), :verified?
+  end
 end

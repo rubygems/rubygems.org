@@ -3,7 +3,7 @@
 class Avo::Actions::UnblockUser < Avo::Actions::ApplicationAction
   self.name = "Unblock User"
   self.visible = lambda {
-    current_user.team_member?("rubygems-org") && view == :show && record.blocked?
+    current_user.team_member?("rubygems-org") && view == :show && resource.record.blocked?
   }
 
   self.message = lambda {

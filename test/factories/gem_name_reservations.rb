@@ -2,6 +2,6 @@
 
 FactoryBot.define do
   factory :gem_name_reservation do
-    name { "rail-ties" }
+    sequence(:name) { |n| "rail-ties-#{n}" }
   end
 end

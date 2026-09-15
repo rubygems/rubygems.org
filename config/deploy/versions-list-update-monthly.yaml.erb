@@ -99,5 +99,10 @@ spec:
                 secretKeyRef:
                   name: <%= environment %>
                   key: database_url
+            - name: MEMCACHED_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: <%= environment %>
+                  key: memcached_endpoint
             securityContext:
               privileged: false

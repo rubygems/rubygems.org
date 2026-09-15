@@ -5,27 +5,35 @@ on:
     branches:
       - master
       - oidc-api-tokens
-permissions:
-  contents: read
+
+concurrency:
+  # PR runs supersede each other; push runs publish unique SHA tags and must finish.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+permissions: {}
 
 jobs:
   build:
     name: Docker build (and optional push)
     runs-on: ubuntu-24.04
+    timeout-minutes: 60
     env:
-      RUBYGEMS_VERSION: "4.0.8"
-      RUBY_VERSION: "4.0.2"
+      RUBYGEMS_VERSION: "4.0.16"
+      RUBY_VERSION: .ruby-version
+      RUBYGEMS_ORG_SECRETS_AVAILABLE: ${{ github.repository == 'rubygems/rubygems.org' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'rubygems/rubygems.org') }}
     permissions:
-      id-token: write
+      contents: read
+      id-token: write # Needed to authenticate to AWS through OIDC
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # master
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
       - name: Cache Docker layers
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-rubygems-${{ hashFiles('**/Gemfile.lock') }}
@@ -34,14 +42,14 @@ jobs:
       - name: Install and start services (needed for image test)
         run: docker compose up -d
       - name: Configure AWS credentials from Production account
-        uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7 # v6.0.0
-        if: github.secret_source != 'None'
+        uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c # v6.2.4
+        if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true'
         with:
           role-to-assume: arn:aws:iam::048268392960:role/rubygems-ecr-pusher
           aws-region: us-west-2
       - name: Login to Amazon ECR
-        if: github.secret_source != 'None'
-        uses: aws-actions/amazon-ecr-login@261fc3d4806db1fa66a15cc11113c456db8870a7 # v2.1.0
+        if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true'
+        uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
       - name: build, test and optionally push docker image
         run: ./script/build_docker.sh
         env:

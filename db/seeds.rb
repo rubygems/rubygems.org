@@ -2,29 +2,31 @@
 
 password = "super-secret-password"
 
+# "rubygems" is a reserved handle (see Organization::Handle), so the seed
+# organization uses the same gem-* naming as the seed users below.
 org = Organization.create_with(
-  name: "RubyGems",
-  handle: "rubygems"
-).find_or_create_by!(name: "RubyGems")
+  name: "Gem Org",
+  handle: "gem-org"
+).find_or_create_by!(name: "Gem Org")
 
 author = User.create_with(
   handle: "gem-author",
   password: password,
   email_confirmed: true,
   webauthn_id: "a1TLW3o1W18mTuDBfDALHhL2tZ1_E-2B03Fqsdu8Rv05V4tSsRzepe-L7Uprg356dw1tktXXcTI9TIRaK4gM-A"
-).find_or_create_by!(email: "gem-author@example.com")
+).find_or_create_by!(email: "gem-author@rubygems-test.org")
 
 maintainer = User.create_with(
   handle: "gem-maintainer",
   password: password,
   email_confirmed: true
-).find_or_create_by!(email: "gem-maintainer@example.com")
+).find_or_create_by!(email: "gem-maintainer@rubygems-test.org")
 
 user = User.create_with(
   handle: "gem-user",
   password: password,
   email_confirmed: true
-).find_or_create_by!(email: "gem-user@example.com")
+).find_or_create_by!(email: "gem-user@rubygems-test.org")
 
 Membership.create_with(
   role: :owner,
@@ -66,7 +68,7 @@ Version.create_with(
   indexed: true,
   pusher: author,
   sha256: Digest::SHA256.base64digest("abc123"),
-  info_checksum: Digest::MD5.base64digest("abc123")
+  info_checksum_v2: Digest::MD5.base64digest("abc123")
 ).find_or_create_by!(rubygem: rubygem0, number: "0.0.1", platform: "ruby", gem_platform: "ruby") do |version|
   author.deletions.find_or_create_by!(version: version)
 end

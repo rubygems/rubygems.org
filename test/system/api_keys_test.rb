@@ -72,7 +72,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     click_button "Create API Key"
 
     assert_text "Note that we won't be able to show the key to you again. New API key:"
-    assert_equal @ownership.rubygem.name, page.find('.owners__cell[data-title="Gem"]').text
+    assert_equal @ownership.rubygem.name, page.find('td[data-title="Gem"]').text
     assert_equal @ownership.rubygem, @user.api_keys.last.rubygem
   end
 
@@ -140,7 +140,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     @ownership.destroy!
     click_button "Create API Key"
 
-    assert page.has_css? ".flash"
+    assert page.has_css? "#flash_error"
     assert_text "Rubygem must be a gem that you are an owner of"
     assert_empty @user.api_keys
   end
@@ -170,7 +170,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     click_button "Create API Key"
 
     assert_text "Note that we won't be able to show the key to you again. New API key:"
-    assert_equal expiration.strftime("%Y-%m-%d %H:%M %Z"), page.find('.owners__cell[data-title="Expiration"]').text
+    assert_equal expiration.strftime("%Y-%m-%d %H:%M %Z"), page.find('td[data-title="Expiration"]').text
     assert_equal expiration, @user.api_keys.last.expires_at
   end
 
@@ -216,7 +216,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     click_button "Update API Key"
 
     assert_text("Successfully updated API key")
-    assert_equal "All Gems", page.find('.owners__cell[data-title="Gem"]').text
+    assert_equal "All Gems", page.find('td[data-title="Gem"]').text
     assert_nil api_key.reload.rubygem
   end
 
@@ -270,7 +270,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     @another_ownership.destroy!
     click_button "Update API Key"
 
-    assert page.has_css? ".flash"
+    assert page.has_css? "#flash_error"
     assert_text "Rubygem must be a gem that you are an owner of"
     assert_equal @ownership.rubygem, api_key.reload.rubygem
   end
@@ -326,11 +326,11 @@ class ApiKeysTest < ApplicationSystemTestCase
     api_key = create(:api_key, owner: @user)
 
     visit_profile_api_keys_path
-    click_button "Delete"
+    accept_alert do
+      click_button "Delete"
+    end
 
-    page.accept_alert
-
-    assert_text "New API key"
+    assert_current_path profile_api_keys_path
     page.assert_text "Successfully deleted API key: #{api_key.name}"
 
     assert_event Events::UserEvent::API_KEY_DELETED, { name: api_key.name, api_key_gid: api_key.to_global_id.to_s },
@@ -341,29 +341,55 @@ class ApiKeysTest < ApplicationSystemTestCase
     api_key = create(:api_key, owner: @user)
 
     visit_profile_api_keys_path
-    click_button "Reset"
+    accept_alert do
+      click_button "Reset"
+    end
 
-    page.accept_alert
-
-    assert_text "New API key"
+    assert_current_path profile_api_keys_path
     page.assert_no_text api_key.name
+  end
+
+  test "viewing previous api keys" do
+    create(:api_key, owner: @user, name: "old-key")
+
+    visit_profile_api_keys_path
+
+    assert_no_link "View previous API keys"
+
+    accept_alert do
+      click_button "Delete"
+    end
+
+    assert_text "Successfully deleted API key: old-key"
+    assert_current_path profile_api_keys_path
+
+    click_link "View previous API keys"
+
+    assert_text "old-key"
+    assert_no_button "Edit"
+    assert_no_button "Delete"
+    assert_no_button "Reset"
+
+    click_link "Back to active API keys"
+
+    assert_no_text "old-key"
   end
 
   test "gem ownership removed displays api key as invalid" do
     api_key = create(:api_key, scopes: %i[push_rubygem], owner: @user, ownership: @ownership)
     visit_profile_api_keys_path
 
-    refute page.has_css? ".owners__row__invalid"
+    refute page.has_css? "[data-testid='api-key-invalid-row']"
 
     @ownership.destroy!
 
     visit_profile_api_keys_path
 
-    assert page.has_css? ".owners__row__invalid"
+    assert page.has_css? "[data-testid='api-key-invalid-row']"
     assert_predicate api_key.reload, :soft_deleted?
 
     refute page.has_button? "Edit"
-    assert_equal "#{@ownership.rubygem.name} [?]", page.find('.owners__cell[data-title="Gem"]').text
+    assert_equal "#{@ownership.rubygem.name} [?]", page.find('td[data-title="Gem"]').text
     visit_edit_profile_api_key_path(api_key)
 
     assert_text "An invalid API key cannot be edited. Please delete it and create a new one."

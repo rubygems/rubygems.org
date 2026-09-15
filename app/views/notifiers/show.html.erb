@@ -1,39 +1,62 @@
-<% @title = t('.title') %>
+<% content_for :subject do %>
+  <%= render "dashboards/subject", user: current_user, current: :settings %>
+<% end %>
 
-<% if @ownerships.any? %>
-  <div class="t-body">
-    <%= form_tag notifier_path, method: :put do %>
-      <p><%= t('.info') %></p>
+<% radio_label = "flex items-center gap-3 text-b2 text-neutral-900 dark:text-white cursor-pointer"
+   radio_input = "h-5 w-5 accent-orange focus:ring-0" %>
 
-      <% @ownerships.each do |ownership| %>
-        <h2><%= ownership.rubygem.name %></h2>
-        <h4 class="t-list__heading"><%= t('.push_heading') %></h4>
-        <div class="push--s">
-          <%= label_tag do %>
-            <%= radio_button_tag "ownerships[#{ownership.id}][push]", :on, ownership.push_notifier? %>
-            <%= t('.on') %> <em>(<%= t('.recommended') %>)</em>
-          <% end %>
-          <br>
-          <%= label_tag do %>
-            <%= radio_button_tag "ownerships[#{ownership.id}][push]", :off, !ownership.push_notifier? %>
-            <%= t('.off') %>
-          <% end %>
-        </div>
+<%= render CardComponent.new do |c| %>
+  <%= c.head(class: "border-b border-neutral-200 dark:border-neutral-800") do %>
+    <%= c.section_title t('.title'), icon: "notifications" %>
+  <% end %>
 
-        <h4 class="t-list__heading"><%= t('.owner_heading') %></h4>
-        <div class="push--s">
-          <%= label_tag do %>
-            <%= radio_button_tag "ownerships[#{ownership.id}][owner]", :on, ownership.owner_notifier? %>
-            <%= t('.on') %> <em>(<%= t('.recommended') %>)</em>
-          <% end %>
-          <br>
-          <%= label_tag do %>
-            <%= radio_button_tag "ownerships[#{ownership.id}][owner]", :off, !ownership.owner_notifier? %>
-            <%= t('.off') %>
-          <% end %>
-        </div>
-      <% end %>
-      <%= submit_tag t('.update'), class: 'form__submit' %>
-    <% end %>
+  <div class="my-8">
+    <p class="text-b2 text-neutral-700 dark:text-neutral-300"><%= t('.info') %></p>
   </div>
+
+  <% if @ownerships.any? %>
+    <%= form_tag notifier_path, method: :put do %>
+      <div class="divide-y divide-neutral-200 dark:divide-neutral-800">
+        <% @ownerships.each do |ownership| %>
+          <section class="py-4 first:pt-0 last:pb-0">
+            <h2 class="text-h4 mb-4"><%= ownership.rubygem.name %></h2>
+
+            <div class="flex flex-col gap-8 sm:flex-row">
+              <fieldset class="flex-1">
+                <legend class="<%= c.sub_heading_classes %> mb-2"><%= t('.push_heading') %></legend>
+                <div class="space-y-2">
+                  <%= label_tag(nil, nil, class: radio_label) do %>
+                    <%= radio_button_tag "ownerships[#{ownership.id}][push]", :on, ownership.push_notifier?, class: radio_input %>
+                    <span><%= t('.on') %> <span class="text-b3 text-neutral-600 dark:text-neutral-400">(<%= t('.recommended') %>)</span></span>
+                  <% end %>
+                  <%= label_tag(nil, nil, class: radio_label) do %>
+                    <%= radio_button_tag "ownerships[#{ownership.id}][push]", :off, !ownership.push_notifier?, class: radio_input %>
+                    <span><%= t('.off') %></span>
+                  <% end %>
+                </div>
+              </fieldset>
+
+              <fieldset class="flex-1">
+                <legend class="<%= c.sub_heading_classes %> mb-2"><%= t('.owner_heading') %></legend>
+                <div class="space-y-3">
+                  <%= label_tag(nil, nil, class: radio_label) do %>
+                    <%= radio_button_tag "ownerships[#{ownership.id}][owner]", :on, ownership.owner_notifier?, class: radio_input %>
+                    <span><%= t('.on') %> <span class="text-b3 text-neutral-600 dark:text-neutral-400">(<%= t('.recommended') %>)</span></span>
+                  <% end %>
+                  <%= label_tag(nil, nil, class: radio_label) do %>
+                    <%= radio_button_tag "ownerships[#{ownership.id}][owner]", :off, !ownership.owner_notifier?, class: radio_input %>
+                    <span><%= t('.off') %></span>
+                  <% end %>
+                </div>
+              </fieldset>
+            </div>
+          </section>
+        <% end %>
+      </div>
+
+      <div class="flex justify-end my-4">
+        <%= render ButtonComponent.new(t('.update'), type: :submit) %>
+      </div>
+    <% end %>
+  <% end %>
 <% end %>

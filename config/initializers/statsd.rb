@@ -114,6 +114,7 @@ ActiveSupport::Notifications.subscribe("perform_job.good_job") do |event|
   statsd_measure_performance event.name,
     event.payload.merge(
       measurement: result,
+      value: 1,
       statsd_tags:
     )
 end

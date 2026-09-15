@@ -78,7 +78,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def development_log_in_as
-    user = User.find(params[:user_id])
+    user = User.find(params.expect(:user_id))
     sign_in(user)
     redirect_back_or_to dashboard_path
   end
@@ -101,12 +101,27 @@ class SessionsController < Clearance::SessionsController
   def do_login(two_factor_label:, two_factor_method:, authentication_method:)
     sign_in(@user) do |status|
       if status.success?
+        Current.user = @user
         StatsD.increment "login.success"
         current_user.record_event!(Events::UserEvent::LOGIN_SUCCESS, request:,
           two_factor_method:, two_factor_label:, authentication_method:)
+        Datadog::Kit::AppSec::Events::V2.track_user_login_success(
+          Digest::SHA256.hexdigest(current_user.handle || current_user.email),
+          current_user.id.to_s
+        )
         set_login_flash
         redirect_to(url_after_create)
       else
+        attempted_user = begin
+          User.find_by_email(who) || User.find_by(handle: who)
+        rescue Encoding::UndefinedConversionError
+          nil
+        end
+        login = attempted_user ? (attempted_user.handle || attempted_user.email) : who.to_s
+        metadata = attempted_user ? { "usr.id": attempted_user.id.to_s } : {}
+        Datadog::Kit::AppSec::Events::V2.track_user_login_failure(
+          Digest::SHA256.hexdigest(login), attempted_user.present?, metadata
+        )
         login_failure(status.failure_message)
       end
     end
@@ -114,7 +129,7 @@ class SessionsController < Clearance::SessionsController
 
   def login_failure(message)
     StatsD.increment "login.failure"
-    flash.now.notice = message
+    flash.now.alert = message
     webauthn_new_setup
     render "sessions/new", status: :unauthorized
   end
@@ -223,7 +238,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def initiate_compromised_password_reset!(user)
-    user.forgot_password!
+    user.invalidate_password_reset!
     PasswordMailer.compromised_password_reset(user).deliver_later
   end
 

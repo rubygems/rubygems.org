@@ -1,5 +1,8 @@
 ---
 pt-BR:
+  admin:
+    delete_user:
+      blocked_reason:
   credentials_required:
   copied: Copiado
   copy_to_clipboard: Copiar
@@ -29,6 +32,7 @@ pt-BR:
   api_key_forbidden:
   api_key_soft_deleted:
   api_key_insufficient_scope:
+  email_not_confirmed:
   please_sign_up: Acesso Negado. Por favor se registre em https://rubygems.org
   please_sign_in: Por favor, faça login em sua conta para continuar.
   otp_incorrect: Seu código OTP está incorreto. Por favor, verifique-o e tente novamente.
@@ -101,11 +105,19 @@ pt-BR:
         not_pwned: já apareceu anteriormente em um vazamento de dados e não deve ser
           utilizada
         blocked:
+        reserved_domain:
+        disposable_email_domain:
+        public_suffix:
+        protected_provider:
       models:
         api_key:
           attributes:
             expires_at:
               inclusion:
+        gem_name_reservation:
+          attributes:
+            base:
+              organization_limit_reached:
         organization:
           attributes:
             handle:
@@ -145,6 +157,7 @@ pt-BR:
           attributes:
             rubygem_name:
               unavailable:
+              reserved:
     models:
       user: Usuário
       api_key:
@@ -177,6 +190,7 @@ pt-BR:
       invalid_gem:
     destroy:
       success:
+      already_expired:
     index:
       api_keys:
       name:
@@ -200,8 +214,11 @@ pt-BR:
       reset:
       save_key:
       mfa:
+      mfa_enabled_notice:
       expiration:
       update_owner:
+      view_expired:
+      view_active:
     new:
       new_api_key:
     reset:
@@ -212,6 +229,7 @@ pt-BR:
     edit:
       edit_api_key:
       invalid_key:
+      expired_key:
     all_gems:
     gem_ownership_removed:
   dashboards:
@@ -232,6 +250,17 @@ pt-BR:
   dependencies:
     show:
       click_to_expand:
+      gem_header:
+      required_version_header:
+      scope_header:
+        one:
+        other:
+      reverse_dependencies_header:
+      version_header:
+      date_header:
+      downloads_count:
+      downloads_header:
+      see_all_reverse:
   email_confirmations:
     create:
       promise_resend:
@@ -246,9 +275,24 @@ pt-BR:
     index:
       downloads_counting_html: downloads
       find_blurb_html: Encontre, instale e publique RubyGems.
+      find_blurb_lead:
       learn:
         install_rubygems: Instalar o RubyGems
+      donation:
+        body:
+        cta:
+        title:
+      powered_by:
+        body_html:
+        title:
+      supporters:
+        body:
+        cta:
+        title:
   layouts:
+    subject:
+      subject_label:
+      subject_secondary_label:
     application:
       footer:
         about: Sobre
@@ -291,6 +335,8 @@ pt-BR:
       mfa_banner_html:
   breadcrumbs:
     home: Início
+    latest_version:
+    versions:
     dashboard: Painel de Controle
     settings: Configurações da Conta
     org_name: 'Org: %{name}'
@@ -298,6 +344,8 @@ pt-BR:
     gems:
     members:
     invite_member:
+    reservations:
+    reserve_gem_name:
   mailer:
     confirm_your_email: Por favor, confirme seu endereço de email através do link
       que enviamos para o seu endereço de email.
@@ -340,6 +388,10 @@ pt-BR:
     gem_yanked:
       subject:
       title:
+    cache_exposure_inactive_notice:
+      subject:
+    cache_exposure_notice:
+      subject:
     reset_api_key:
       subject:
       title:
@@ -433,6 +485,7 @@ pt-BR:
       add_member:
       invite:
       transfer:
+      reservations:
     members:
       create:
         user_already_invited:
@@ -458,12 +511,34 @@ pt-BR:
         role:
         create:
         invite:
+    gem_name_reservations:
+      create:
+        gem_name_reserved:
+      destroy:
+        gem_name_reservation_removed:
+      index:
+        description:
+        no_reservations:
+        reserve:
+        remove:
+        confirm_remove:
+      new:
+        title:
+        name:
+        name_hint:
+        reserve:
+        limit_html:
+        limit_reached_html:
+        unlimited:
+        disclaimer:
     invitations:
       show:
         accept:
         decline:
         title_html:
   pages:
+    index:
+      title:
     about:
       contributors_amount:
       downloads_amount:
@@ -500,6 +575,8 @@ pt-BR:
     download:
       title:
     security:
+      title:
+    security-engineers-in-residence-faq:
       title:
     supporters:
       title:
@@ -645,10 +722,13 @@ pt-BR:
     edit:
       role:
       title:
+      submit_button:
+      user:
     confirm:
       confirmed_email:
       token_expired:
     index:
+      title:
       add_owner:
       name:
       mfa:
@@ -663,7 +743,14 @@ pt-BR:
       info:
       confirmed:
       pending:
+      current_user_badge:
       confirm_remove:
+      remove_self_dialog:
+        title:
+        warning:
+        confirm_label:
+        submit:
+        cancel:
     resend_confirmation:
       resent_notice:
     create:
@@ -678,6 +765,7 @@ pt-BR:
   settings:
     edit:
       title:
+      account_header:
       webauthn_credentials:
       no_webauthn_credentials:
       webauthn_credential_note:
@@ -743,12 +831,21 @@ pt-BR:
     request_denied:
     show:
       title: Perfil de %{username}
+      gems:
+      no_gems:
+      edit_profile:
+      email_me:
     security_events:
       title:
       description_html:
   rubygems:
     aside:
       downloads_for_this_version: Desta versão
+      github_star:
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: Versão lançada
       required_ruby_version: Versão Requerida do Ruby
       required_rubygems_version: Versão Requerida do RubyGems
@@ -764,6 +861,7 @@ pt-BR:
         funding:
         header: Links
         home: Homepage
+        verified:
         mail: Lista de Emails
         analytics:
         report_abuse: Denunciar Abuso
@@ -810,6 +908,12 @@ pt-BR:
     show:
       bundler_header: Gemfile
       install: instalar
+      tabs:
+        label:
+        readme:
+        gem_info:
+        contents:
+        dependencies:
       licenses_header:
         one: Licença
         other: Licenças
@@ -817,6 +921,7 @@ pt-BR:
       requirements_header: Requisitos
       show_all_versions: Mostrar todas as versões (%{count})
       versions_header: Versões
+      ruby_abi:
       yanked_notice: Esta gem foi removida, e não está mais disponível para download.
     show_yanked:
       not_hosted_notice: Esta gem não está hospedada no Gemcutter.
@@ -847,9 +952,14 @@ pt-BR:
           other:
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title: Dependências Reversas para %{name}
       subtitle:
       no_reverse_dependencies:
+      version_header:
     search:
       search_reverse_dependencies_html: Buscar Gems com dependências&hellip;
   searches:
@@ -861,6 +971,7 @@ pt-BR:
       updated:
       yanked:
     show:
+      title:
       subtitle_html: para <em>%{query}</em>
       month_update:
       week_update:
@@ -871,6 +982,7 @@ pt-BR:
     new:
       forgot_password: Esqueceu sua Senha?
       resend_confirmation: Não recebeu o email de confirmação?
+      confirm:
     verify:
       title:
       confirm:
@@ -901,6 +1013,7 @@ pt-BR:
     index:
       title: Estatísticas
       all_time_most_downloaded: Mais baixadas de todos os tempos
+      clickgems:
       total_gems: Total de gems
       total_users: Total de usuários
   users:
@@ -908,6 +1021,7 @@ pt-BR:
       email_sent:
     new:
       have_account: Já tem uma conta?
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: Esta gem não está hospdada no Gemcutter.
@@ -918,6 +1032,7 @@ pt-BR:
       imported_gem_version_notice:
     version:
       yanked: removida
+      ruby_abi:
   webauthn_credentials:
     callback:
       success:
@@ -1079,6 +1194,7 @@ pt-BR:
       api_key:
         api_key_created:
         api_key_deleted:
+        api_key_cache_exposure_revoked:
         api_key_name:
         api_key_scopes:
         api_key_gem_html:

@@ -31,16 +31,6 @@ class SignUpTest < ApplicationSystemTestCase
     assert_equal "Email@person.com", User.last.email
   end
 
-  test "sign up with no handle" do
-    visit sign_up_path
-
-    fill_in "Email", with: "email@person.com"
-    fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
-    click_button "Sign up"
-
-    assert_text "errors prohibited"
-  end
-
   test "sign up with bad handle" do
     visit sign_up_path
 
@@ -70,7 +60,12 @@ class SignUpTest < ApplicationSystemTestCase
 
     visit root_path
 
-    assert_no_text "Sign up"
+    assert_link "Sign up"
+
+    click_on "Sign up"
+
+    assert_text "New account registration has been temporarily disabled."
+    assert_no_button "Sign up"
   end
 
   test "email confirmation" do

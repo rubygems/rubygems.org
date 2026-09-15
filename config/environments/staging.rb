@@ -61,10 +61,10 @@ Rails.application.configure do
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
   $stdout.sync = true
-  config.rails_semantic_logger.format = :json
   config.rails_semantic_logger.semantic = true
-  config.rails_semantic_logger.add_file_appender = false
-  config.semantic_logger.add_appender(io: $stdout, formatter: config.rails_semantic_logger.format)
+  config.rails_semantic_logger.appenders do |appenders|
+    appenders.add(io: $stdout, formatter: :json)
+  end
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :request_id ]

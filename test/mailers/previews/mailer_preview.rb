@@ -2,7 +2,9 @@
 
 class MailerPreview < ActionMailer::Preview
   def email_reset
-    Mailer.email_reset(User.first)
+    user = User.first
+    user.generate_confirmation_token(reset_unconfirmed_email: false)
+    Mailer.email_reset(user)
   end
 
   def email_reset_update
@@ -10,18 +12,18 @@ class MailerPreview < ActionMailer::Preview
   end
 
   def email_confirmation
-    Mailer.email_confirmation(User.last)
+    user = User.last
+    user.generate_confirmation_token(reset_unconfirmed_email: false)
+    Mailer.email_confirmation(user)
   end
 
   def change_password
     user = User.last
-    user.forgot_password!
     PasswordMailer.change_password(user)
   end
 
   def compromised_password_reset
     user = User.last
-    user.forgot_password!
     PasswordMailer.compromised_password_reset(user)
   end
 
@@ -54,22 +56,6 @@ class MailerPreview < ActionMailer::Preview
     created_by_user = User.last
     notified_user = User.first
     Mailer.gem_trusted_publisher_added(rubygem_trusted_publisher, created_by_user, notified_user)
-  end
-
-  def mfa_notification
-    Mailer.mfa_notification(User.last.id)
-  end
-
-  def mfa_recommendation_announcement
-    Mailer.mfa_recommendation_announcement(User.last.id)
-  end
-
-  def mfa_required_soon_announcement
-    Mailer.mfa_required_soon_announcement(User.last.id)
-  end
-
-  def mfa_required_popular_gems_announcement
-    Mailer.mfa_required_popular_gems_announcement(User.last.id)
   end
 
   def gem_yanked
@@ -190,7 +176,7 @@ class MailerPreview < ActionMailer::Preview
         handle: "gem-user-with-yubikey",
         password: "super-secret-password",
         email_confirmed: true
-      ).find_or_create_by!(email: "gem-user-with-yubikey@example.com")
+      ).find_or_create_by!(email: "gem-user-with-yubikey@rubygems-test.org")
 
       webauthn_credential = user_with_yubikey.webauthn_credentials.create_with(
         external_id: "external-id",

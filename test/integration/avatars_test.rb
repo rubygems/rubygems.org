@@ -37,6 +37,46 @@ class AvatarsTest < ActionDispatch::IntegrationTest
     assert_nil response.headers["Link"]
   end
 
+  test "sets cache headers on successful gravatar response" do
+    stub_request(:get, Addressable::Template.new("https://secure.gravatar.com/avatar/{hash}.png?d=404&r=PG&s=64"))
+      .to_return(status: 200, body: "image", headers: { "Content-Type" => "image/jpeg" })
+
+    user = create(:user)
+    get avatar_user_path(user.id, size: 64)
+
+    assert_response :success
+    assert_includes response.headers["Cache-Control"], "public"
+    assert_includes response.headers["Surrogate-Control"], "max-age=300"
+    assert_includes response.headers["Cache-Control"], "max-age=1800"
+    assert_equal "avatar/#{user.display_id}", response.headers["Surrogate-Key"]
+  end
+
+  test "sets cache headers on gravatar 404" do
+    stub_request(:get, Addressable::Template.new("https://secure.gravatar.com/avatar/{hash}.png?d=404&r=PG&s=64"))
+      .to_return(status: 404)
+
+    user = create(:user)
+    get avatar_user_path(user.id, size: 64)
+
+    assert_response :found
+    assert_includes response.headers["Cache-Control"], "public"
+    assert_includes response.headers["Surrogate-Control"], "max-age=300"
+    assert_includes response.headers["Cache-Control"], "max-age=1800"
+    assert_equal "avatar/#{user.display_id}", response.headers["Surrogate-Key"]
+  end
+
+  test "does not set cache headers on gravatar error" do
+    stub_request(:get, Addressable::Template.new("https://secure.gravatar.com/avatar/{hash}.png?d=404&r=PG&s=64"))
+      .to_return(status: 500)
+
+    user = create(:user)
+    get avatar_user_path(user.id, size: 64)
+
+    assert_response :found
+    assert_nil response.headers["Surrogate-Key"]
+    refute_includes response.headers["Cache-Control"].to_s, "public"
+  end
+
   test "serves default avatar with theme when user has no gravatar" do
     user = create(:user)
     get avatar_user_path(user.id, size: 64, theme: "dark")

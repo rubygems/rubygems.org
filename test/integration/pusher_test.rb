@@ -7,7 +7,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
   include GemspecYamlTemplateHelpers
 
   setup do
-    @user = create(:user, email: "user@example.com")
+    @user = create(:user, email: "user@rubygems-test.org")
     @api_key = create(:api_key, owner: @user)
     @gem = gem_file
     @cutter = Pusher.new(@api_key, @gem)
@@ -57,7 +57,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
 
       assert_empty out
       assert_empty err
-      assert_match(/path: root -> date/, @cutter.message)
+      assert_match(%r{path: /date}, @cutter.message)
 
       assert_equal 422, @cutter.code
     end
@@ -71,7 +71,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       @cutter = Pusher.new(@api_key, @gem)
       @cutter.process
 
-      assert_match(/path: root -> required_ruby_version -> requirements -> 0 -> 1 -> version/, @cutter.message)
+      assert_match(%r{path: /required_ruby_version/requirements/0/1/version}, @cutter.message)
       assert_equal 422, @cutter.code
     end
 
@@ -84,7 +84,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       @cutter = Pusher.new(@api_key, @gem)
       @cutter.process
 
-      assert_match(/path: root -> required_rubygems_version -> requirements -> 0 -> 1 -> version/, @cutter.message)
+      assert_match(%r{path: /required_rubygems_version/requirements/0/1/version}, @cutter.message)
       assert_equal 422, @cutter.code
     end
 
@@ -145,7 +145,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
 
       refute @cutter.process
 
-      assert_match(/path: root -> metadata -> foo/, @cutter.message)
+      assert_match(%r{path: /metadata/foo}, @cutter.message)
       assert_equal 422, @cutter.code
     end
 
@@ -339,8 +339,8 @@ class PusherIntegrationTest < ActiveSupport::TestCase
         assert_equal 200, @cutter.code
       end
 
-      should "set info_checksum" do
-        assert_not_nil @rubygem.versions.last.info_checksum
+      should "set info_checksum_v2" do
+        assert_not_nil @rubygem.versions.last.info_checksum_v2
       end
 
       should "indexe rubygem and version" do
@@ -392,6 +392,10 @@ class PusherIntegrationTest < ActiveSupport::TestCase
           version_gid: @rubygem.versions.last.to_gid.to_s
         }, @rubygem.events.where(tag: Events::RubygemEvent::VERSION_PUSHED).sole
       end
+
+      should "set success message" do
+        assert_equal "Successfully registered gem: #{@cutter.version.to_title}", @cutter.message
+      end
     end
 
     should "purge gem cache" do
@@ -430,6 +434,114 @@ class PusherIntegrationTest < ActiveSupport::TestCase
           end
         end
       end
+    end
+
+    should "preserve required rubygems version for gems supporting multiple Ruby ABIs" do
+      @cutter.version.update!(required_rubygems_version: ">= 3.0", ruby_abi: nil)
+
+      assert @cutter.save
+
+      assert_equal ">= 3.0", @cutter.version.reload.required_rubygems_version
+    end
+  end
+
+  context "successfully saving a gemcutter scoped to one Ruby ABI" do
+    setup do
+      @rubygem = create(:rubygem, name: "sandworm")
+      @version = create(
+        :version,
+        rubygem: @rubygem,
+        number: "1.0.0",
+        platform: "arm64-darwin-25",
+        required_ruby_version: "~> 3.4.0",
+        required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION,
+        ruby_abi: "3.4",
+        sha256: Digest::SHA2.base64digest("sandworm-1.0.0-arm64-darwin-25-3.4"),
+        pusher_api_key: @cutter.api_key
+      )
+
+      @cutter.stubs(:rubygem).returns @rubygem
+      @cutter.stubs(:version).returns @version
+      @cutter.stubs(:spec).returns(mock)
+      @rubygem.stubs(:update_attributes_from_gem_specification!)
+      GemCachePurger.stubs(:call)
+      @cutter.stubs(:write_gem)
+    end
+
+    should "include platform and Ruby ABI in success message" do
+      assert @cutter.save
+
+      assert_equal "Successfully registered gem: #{@version.to_title}", @cutter.message
+    end
+
+    should "retry the persist on a content_address unique collision" do
+      sequence = sequence("content address collision retry")
+      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec)
+        .in_sequence(sequence)
+        .raises(ActiveRecord::RecordNotUnique.new(
+                  'duplicate key value violates unique constraint "index_versions_number_content_address"'
+                ))
+      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec)
+        .in_sequence(sequence)
+
+      assert @cutter.save
+    end
+
+    should "not retry on an unrelated unique violation" do
+      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec).once
+        .raises(ActiveRecord::RecordNotUnique.new(
+                  'duplicate key value violates unique constraint "index_versions_full_name"'
+                ))
+
+      refute @cutter.save
+    end
+
+    should "fail with an error after exhausting content_address retries" do
+      StatsD.stubs(:increment)
+      StatsD.expects(:increment).with("push.content_address_collision", tags: { rubygem: @rubygem.name }).times(3)
+      StatsD.expects(:increment).with("push.content_address_collision_exhausted", tags: { rubygem: @rubygem.name }).once
+
+      @rubygem.expects(:update_attributes_from_gem_specification!).with(@version, @cutter.spec).times(4)
+        .raises(ActiveRecord::RecordNotUnique.new(
+                  'duplicate key value violates unique constraint "index_versions_number_content_address"'
+                ))
+
+      refute @cutter.save
+      assert_equal 409, @cutter.code
+      assert_includes @cutter.message, "could not generate a unique content address"
+    end
+
+    should "accept when required_rubygems_version satisfies the floor" do
+      FeatureFlag.enable_for_actor(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, @user)
+      spec = new_gemspec("ca-floor-ok", "1.0.0", "CA floor test", "arm64-darwin-25",
+                        ruby_version: "~> 3.4.0",
+                        rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION)
+      cutter = Pusher.new(@api_key, build_gem(spec))
+      cutter.logger.level = :info
+
+      assert cutter.pull_spec
+      assert cutter.find
+      assert cutter.validate
+
+      assert_equal "3.4", cutter.version.ruby_abi
+    end
+
+    should "reject with 403 when required_rubygems_version is below the floor" do
+      FeatureFlag.enable_for_actor(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, @user)
+      spec = new_gemspec("ca-floor-bad", "1.0.0", "CA floor test", "arm64-darwin-25",
+                        ruby_version: "~> 3.4.0",
+                        rubygems_version: ">= 0")
+      cutter = Pusher.new(@api_key, build_gem(spec))
+      cutter.logger.level = :info
+
+      assert cutter.pull_spec
+      assert cutter.find
+      refute cutter.validate
+
+      assert_equal 403, cutter.code
+      assert_includes cutter.message,
+                      "must be #{Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION} " \
+                      "for content-addressable gems (set required_rubygems_version in the gemspec)"
     end
   end
 

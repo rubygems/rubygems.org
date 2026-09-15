@@ -53,12 +53,16 @@ class PushTest < ActionDispatch::IntegrationTest
     info_file = response.body
 
     assert_response :success
+    rubygem = Rubygem.find_by!(name: "sigstore")
+    existing_version_created_at = Version.find_by!(full_name: "sigstore-0.0.1").created_at.utc.iso8601
+    pushed_version = rubygem.versions.find_by!(number: "1.0.0")
+
     assert_equal <<~INFO, info_file
       ---
-      0.0.1 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3
-      1.0.0 |checksum:#{Digest::SHA256.hexdigest File.binread(gem_file('sigstore-1.0.0.gem'))}
+      0.0.1 |checksum:b5d4045c3f466fa91fe2cc6abe79232a1a57cdf104f7a26e716e0a1e2789df78,ruby:>= 2.0.0,rubygems:>= 2.6.3,created_at:#{existing_version_created_at}
+      1.0.0 |checksum:#{Digest::SHA256.hexdigest File.binread(gem_file('sigstore-1.0.0.gem'))},created_at:#{pushed_version.created_at.utc.iso8601}
     INFO
-    assert_equal Digest::MD5.hexdigest(info_file), Rubygem.find_by!(name: "sigstore").versions.find_by(number: "1.0.0").info_checksum
+    assert_equal Digest::MD5.hexdigest(info_file), pushed_version.info_checksum_v2
 
     get api_v2_rubygem_version_path("sigstore", "1.0.0", format: "json")
 
@@ -88,13 +92,16 @@ class PushTest < ActionDispatch::IntegrationTest
     assert page.has_content?("Pushed by")
     assert page.has_link? "Homepage", href: "http://example.com/sandworm"
 
-    css = %(div.gem__users a[alt=#{@user.handle}])
+    css = %(.gem__users a[alt=#{@user.handle}])
 
     assert page.has_css?(css, count: 2)
 
-    assert_equal Digest::MD5.hexdigest(<<~INFO), Rubygem.find_by!(name: "sandworm").versions.sole.info_checksum
+    version = Rubygem.find_by!(name: "sandworm").versions.sole
+    sha256 = Digest::SHA256.hexdigest gem_io.string
+
+    assert_equal Digest::MD5.hexdigest(<<~INFO), version.info_checksum_v2
       ---
-      1.0.0 |checksum:#{Digest::SHA256.hexdigest gem_io.string}
+      1.0.0 |checksum:#{sha256},created_at:#{version.created_at.utc.iso8601}
     INFO
   end
 
@@ -223,7 +230,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    get rubygem_path("sandworm")
+    get rubygem_version_dependencies_path("sandworm", "1.0.0")
 
     assert_response :success
     assert page.has_content?("crysknife")
@@ -237,7 +244,7 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    get rubygem_path("sandworm")
+    get rubygem_version_dependencies_path("sandworm", "1.0.0")
 
     assert_response :success
     assert page.has_content?("mauddib")
@@ -517,7 +524,7 @@ class PushTest < ActionDispatch::IntegrationTest
           '@original_platform': 'not-ruby'
           '@new_platform': ruby
           '@summary': 'malicious'
-          '@authors': [test@example.com]
+          '@authors': [test@rubygems-test.org]
       YAML
 
       push_gem "malicious.gem"
@@ -543,7 +550,7 @@ class PushTest < ActionDispatch::IntegrationTest
           '@original_platform': 'not-ruby'
           '@new_platform': ruby
           '@summary': 'malicious'
-          '@authors': [test@example.com]
+          '@authors': [test@rubygems-test.org]
       YAML
 
       push_gem "malicious.gem"
@@ -567,7 +574,7 @@ class PushTest < ActionDispatch::IntegrationTest
           platform: !ruby/object:Gem::Platform
             os: ruby
           summary: 'malicious'
-          authors: [test@example.com]
+          authors: [test@rubygems-test.org]
         YAML
         push_gem "malicious.gem"
 
@@ -588,7 +595,7 @@ class PushTest < ActionDispatch::IntegrationTest
           version: '1'
           platform: [ruby]
           summary: 'malicious'
-          authors: [test@example.com]
+          authors: [test@rubygems-test.org]
         YAML
         push_gem "malicious.gem"
 
@@ -603,7 +610,7 @@ class PushTest < ActionDispatch::IntegrationTest
           version: []
         version: '1'
         summary: 'malicious'
-        authors: [test@example.com]
+        authors: [test@rubygems-test.org]
       YAML
       push_gem "malicious.gem"
 
@@ -620,7 +627,7 @@ class PushTest < ActionDispatch::IntegrationTest
             os: "../../../../../etc/passwd"
           '@original_platform': ruby
           '@summary': 'malicious'
-          '@authors': [test@example.com]
+          '@authors': [test@rubygems-test.org]
       YAML
       push_gem "malicious.gem"
 
@@ -635,7 +642,7 @@ class PushTest < ActionDispatch::IntegrationTest
         version: '1'
         platform: ruby
         summary: 'malicious'
-        authors: [test@example.com]
+        authors: [test@rubygems-test.org]
         date: !ruby/object:Time
           a: 1
       YAML

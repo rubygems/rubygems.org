@@ -5,6 +5,7 @@
 class WebauthnVerificationsController < ApplicationController
   include WebauthnVerifiable
 
+  before_action :disable_cache
   before_action :set_verification_status_session, only: :authenticate
   before_action :set_verification, :set_user, except: %i[successful_verification failed_verification]
   before_action :check_show_verification_status, only: %i[successful_verification failed_verification]

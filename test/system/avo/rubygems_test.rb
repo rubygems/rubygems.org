@@ -101,7 +101,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     version.reload
 
     assert_not_nil version.yanked_at
-    assert_not_nil version.yanked_info_checksum
+    assert_not_nil version.yanked_info_checksum_v2
 
     audit = rubygem.audits.sole
     deletion = security_user.deletions.first
@@ -179,9 +179,9 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     version2.reload
 
     assert_not_nil version1.yanked_at
-    assert_not_nil version1.yanked_info_checksum
+    assert_not_nil version1.yanked_info_checksum_v2
     assert_not_nil version2.yanked_at
-    assert_not_nil version2.yanked_info_checksum
+    assert_not_nil version2.yanked_info_checksum_v2
 
     audit = rubygem.audits.sole
     deletion1 = security_user.deletions.first
@@ -335,6 +335,25 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     end
 
     assert_not_nil Audit.last
+  end
+
+  test "update versions list" do
+    admin_user = create(:admin_github_user, :is_admin)
+    avo_sign_in_as admin_user
+
+    visit avo.resources_rubygems_path
+
+    create(:version)
+
+    click_button "Actions"
+    click_on "Update Versions List"
+    fill_in "Comment", with: "A nice long comment"
+
+    assert_enqueued_jobs 1, only: UpdateVersionsListJob do
+      click_button "Update"
+
+      page.assert_text "Versions list update job scheduled"
+    end
   end
 
   test "upload names file" do

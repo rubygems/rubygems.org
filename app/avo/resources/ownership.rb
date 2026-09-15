@@ -2,7 +2,7 @@
 
 class Avo::Resources::Ownership < Avo::BaseResource
   self.title = :cache_key
-  self.includes = []
+  self.includes = %i[user rubygem authorizer]
 
   class ConfirmedFilter < Avo::Filters::ScopeBooleanFilter; end
 

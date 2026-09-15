@@ -9,6 +9,7 @@ class NewsController < ApplicationController
       .page(@page)
       .per(Gemcutter::NEWS_PER_PAGE)
     limit_total_count
+    add_breadcrumb t(".title")
   end
 
   def popular
@@ -18,6 +19,7 @@ class NewsController < ApplicationController
       .page(@page)
       .per(Gemcutter::NEWS_PER_PAGE)
     limit_total_count
+    add_breadcrumb t(".title")
 
     render :show
   end

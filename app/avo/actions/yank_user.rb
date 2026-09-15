@@ -12,9 +12,7 @@ class Avo::Actions::YankUser < Avo::Actions::ApplicationAction
 
   class ActionHandler < Avo::Actions::ActionHandler
     def handle_record(user)
-      user.rubygems.find_each do |rubygem|
-        rubygem.yank_versions!(force: true)
-      end
+      YankRubygemsForUserJob.perform_later(user: user)
       user.block!
     end
   end

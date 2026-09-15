@@ -15,7 +15,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
     assert_text "Authenticate with Security Device"
-    assert_text "Authenticating as #{@user.handle}".upcase
+    assert_text "Authenticating as #{@user.handle}"
 
     click_on "Authenticate"
 
@@ -31,7 +31,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
     assert_text "Authenticate with Security Device"
-    assert_text "Authenticating as #{@user.handle}".upcase
+    assert_text "Authenticating as #{@user.handle}"
 
     click_on "Authenticate"
 
@@ -49,7 +49,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
     assert_text "Authenticate with Security Device"
-    assert_text "Authenticating as #{@user.handle}".upcase
+    assert_text "Authenticating as #{@user.handle}"
 
     @mock_client.kill_server
     click_on "Authenticate"
@@ -67,7 +67,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: wrong_port })
 
     assert_text "Authenticate with Security Device"
-    assert_text "Authenticating as #{@user.handle}".upcase
+    assert_text "Authenticating as #{@user.handle}"
 
     click_on "Authenticate"
 
@@ -84,7 +84,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
     assert_text "Authenticate with Security Device"
-    assert_text "Authenticating as #{@user.handle}".upcase
+    assert_text "Authenticating as #{@user.handle}"
 
     click_on "Authenticate"
 
@@ -100,7 +100,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
     travel 3.minutes do
       assert_text "Authenticate with Security Device"
-      assert_text "Authenticating as #{@user.handle}".upcase
+      assert_text "Authenticating as #{@user.handle}"
 
       click_on "Authenticate"
 
@@ -113,8 +113,7 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
   def teardown
     @mock_client.kill_server
-    @authenticator&.remove!
-    Capybara.use_default_driver
+    disable_virtual_authenticator
   end
 
   private
@@ -122,19 +121,24 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
   def assert_link_is_expired
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })
 
+    assert_current_path root_path
     assert_text "The token in the link you used has either expired or been used already."
   end
 
   def assert_poll_status(status)
     @api_key ||= create(:api_key, key: "12345", scopes: %i[push_rubygem], owner: @user)
 
-    Capybara.current_driver = :rack_test
-    page.driver.header "AUTHORIZATION", "12345"
+    # Poll the JSON status endpoint via rack_test (authenticated with an API key
+    # header) rather than the browser. using_driver restores the Playwright
+    # driver on block exit, even if the assertion below fails, so the surrounding
+    # browser-driven test can continue.
+    Capybara.using_driver(:rack_test) do
+      page.driver.header "AUTHORIZATION", "12345"
 
-    visit status_api_v1_webauthn_verification_path(webauthn_token: @verification.path_token, format: :json)
+      visit status_api_v1_webauthn_verification_path(webauthn_token: @verification.path_token, format: :json)
 
-    assert_equal status, JSON.parse(page.text)["status"]
-    fullscreen_headless_chrome_driver
+      assert_equal status, JSON.parse(page.text)["status"]
+    end
   end
 
   def assert_successful_verification_not_found

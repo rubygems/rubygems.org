@@ -25,7 +25,7 @@ class OwnerTest < ApplicationSystemTestCase
       click_button "Add Owner"
     end
 
-    owners_table = page.find(:css, ".owners__table")
+    owners_table = page.find('[data-testid="owners_table"]')
 
     within_element owners_table do
       assert_selector(:css, "a[href='#{profile_path(@other_user.display_id)}']")
@@ -95,7 +95,7 @@ class OwnerTest < ApplicationSystemTestCase
       end
     end
 
-    refute page.has_selector? ".owners__table a[href='#{profile_path(@other_user)}']"
+    refute page.has_selector? "a[href='#{profile_path(@other_user)}']"
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
@@ -108,9 +108,9 @@ class OwnerTest < ApplicationSystemTestCase
     visit_ownerships_page
 
     within_element owner_row(@user) do
-      accept_confirm do
-        click_button "Remove"
-      end
+      click_button "Remove"
+      fill_in "username_confirm_#{@ownership.id}", with: @user.handle
+      click_button "Remove my access"
     end
 
     assert page.has_selector?("a[href='#{profile_path(@user.display_id)}']")
@@ -121,12 +121,71 @@ class OwnerTest < ApplicationSystemTestCase
     assert_no_emails
   end
 
+  test "removing self as owner shows username confirmation dialog" do
+    create(:ownership, user: @other_user, rubygem: @rubygem)
+
+    visit_ownerships_page
+
+    within_element owner_row(@user) do
+      click_button "Remove"
+
+      assert_selector "dialog[open]"
+      assert_selector "[data-confirm-remove-self-target='submitButton'][disabled]"
+    end
+  end
+
+  test "removing self as owner requires correct username before submitting" do
+    create(:ownership, user: @other_user, rubygem: @rubygem)
+
+    visit_ownerships_page
+
+    within_element owner_row(@user) do
+      click_button "Remove"
+      fill_in "username_confirm_#{@ownership.id}", with: "wrong-handle"
+
+      assert_selector "[data-confirm-remove-self-target='submitButton'][disabled]"
+    end
+  end
+
+  test "removing self as owner succeeds after typing correct username" do
+    create(:ownership, user: @other_user, rubygem: @rubygem)
+
+    visit_ownerships_page
+
+    within_element owner_row(@user) do
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+        click_button "Remove"
+        fill_in "username_confirm_#{@ownership.id}", with: @user.handle
+        click_button "Remove my access"
+      end
+    end
+
+    refute page.has_selector? "[data-testid='owners_table'] a[href='#{profile_path(@user.display_id)}']"
+  end
+
+  test "cancelling self-removal dialog keeps owner in place" do
+    create(:ownership, user: @other_user, rubygem: @rubygem)
+
+    visit_ownerships_page
+
+    within_element owner_row(@user) do
+      click_button "Remove"
+
+      assert_selector "dialog[open]"
+      click_button "Cancel"
+
+      refute_selector "dialog[open]"
+    end
+
+    assert page.has_selector? "[data-testid='owners_table'] a[href='#{profile_path(@user.display_id)}']"
+  end
+
   test "verify using webauthn" do
     create_webauthn_credential
 
     visit sign_in_path
     click_button "Authenticate with security device"
-    find(:css, ".header__popup-link")
+    find(:css, "[data-testid='header-popup-link']")
 
     visit rubygem_path(@rubygem.slug)
     click_link "Ownership"
@@ -143,7 +202,7 @@ class OwnerTest < ApplicationSystemTestCase
 
     visit sign_in_path
     click_button "Authenticate with security device"
-    find(:css, ".header__popup-link")
+    find(:css, "[data-testid='header-popup-link']")
 
     visit rubygem_path(@rubygem.slug)
     click_link "Ownership"
@@ -236,9 +295,9 @@ class OwnerTest < ApplicationSystemTestCase
 
     visit_ownerships_page
 
-    assert page.has_selector?(".owners__table")
+    assert page.has_selector?('[data-testid="owners_table"]')
 
-    owners_table = page.find(:css, ".owners__table")
+    owners_table = page.find('[data-testid="owners_table"]')
     within_element owners_table do
       assert_selector(:css, "a[href='#{profile_path(@user.display_id)}']")
       assert_selector(:css, "a[href='#{profile_path(maintainer.display_id)}']")
@@ -339,15 +398,15 @@ class OwnerTest < ApplicationSystemTestCase
   end
 
   teardown do
-    @authenticator&.remove!
+    disable_virtual_authenticator
   end
 
   private
 
   def owner_row(owner)
-    page.find(:css, ".owners__table")
-      .find(:css, "td[data-title='Name']", text: /^#{owner.handle}$/)
-      .find(:xpath, "./parent::tr")
+    page.find('[data-testid="owners_table"]')
+      .find(:css, "td[data-title='Name'] a", text: /^#{owner.handle}$/)
+      .find(:xpath, "./parent::td/parent::tr")
   end
 
   def assert_cell(user, column, expected)
@@ -364,6 +423,6 @@ class OwnerTest < ApplicationSystemTestCase
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
 
-    assert_selector ".owners__table"
+    assert_selector '[data-testid="owners_table"]'
   end
 end

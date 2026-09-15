@@ -2,9 +2,12 @@
 
 class GemCachePurger
   def self.call(gem_name)
-    # We need to purge from Fastly and from Memcached
+    GemInfo::VERSIONS.each_value do |config|
+      Rails.cache.delete("#{config.fetch(:cache_prefix)}/#{gem_name}")
+    end
+    Rails.cache.delete("names")
+
     ["info/#{gem_name}", "names"].each do |path|
-      Rails.cache.delete(path)
       FastlyPurgeJob.perform_later(path:, soft: true)
     end
 

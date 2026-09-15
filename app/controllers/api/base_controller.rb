@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class Api::BaseController < ApplicationController
+  content_security_policy false
+
   skip_before_action :verify_authenticity_token
-  after_action :skip_session
+  after_action :skip_session # TODO: verify if this is still needed now that CSP is disabled for API controllers
 
   rescue_from(Pundit::NotAuthorizedError) do |e|
     render_forbidden(e.policy.error)
@@ -52,7 +54,9 @@ class Api::BaseController < ApplicationController
     hashed_key = Digest::SHA256.hexdigest(params_key)
     @api_key   = ApiKey.unexpired.find_by_hashed_key(hashed_key)
     return render_unauthorized unless @api_key
+    Current.api_key = @api_key
     set_tags "gemcutter.api_key.owner" => @api_key.owner.to_gid, "gemcutter.user.api_key_id" => @api_key.id
+    return render_forbidden(t(:email_not_confirmed)) if @api_key.user&.unconfirmed?
     Current.user = @api_key.user
     render_forbidden(t(:api_key_soft_deleted)) if @api_key.soft_deleted?
   end
@@ -90,6 +94,12 @@ class Api::BaseController < ApplicationController
 
   def skip_session
     request.session_options[:skip] = true
+  end
+
+  def deny_shared_cache
+    response.headers["Cache-Control"]     = "private, no-store"
+    response.headers["Surrogate-Control"] = "max-age=0"
+    response.headers["Vary"] = [response.headers["Vary"], "Authorization"].compact_blank.join(", ")
   end
 
   def render_bad_request(error = "bad request")

@@ -1,5 +1,8 @@
 ---
 zh-TW:
+  admin:
+    delete_user:
+      blocked_reason:
   credentials_required: 需要認證
   copied: 已複製
   copy_to_clipboard: 複製
@@ -25,6 +28,7 @@ zh-TW:
   api_key_forbidden: API 金鑰沒有存取權限
   api_key_soft_deleted:
   api_key_insufficient_scope:
+  email_not_confirmed:
   please_sign_up: 存取遭拒。請先在 https://rubygems.org 上註冊帳號
   please_sign_in: 請登入以繼續。
   otp_incorrect: 您的 OTP 碼不正確。請檢查後再試一次。
@@ -95,11 +99,19 @@ zh-TW:
       messages:
         not_pwned: 曾出現在資料外洩事件中，不應再使用
         blocked: 網域 '%{domain}' 因濫發垃圾郵件而遭封鎖。請使用有效的個人電子郵件地址。
+        reserved_domain:
+        disposable_email_domain:
+        public_suffix:
+        protected_provider:
       models:
         api_key:
           attributes:
             expires_at:
               inclusion:
+        gem_name_reservation:
+          attributes:
+            base:
+              organization_limit_reached:
         organization:
           attributes:
             handle:
@@ -139,6 +151,7 @@ zh-TW:
           attributes:
             rubygem_name:
               unavailable:
+              reserved:
     models:
       user:
       api_key:
@@ -171,6 +184,7 @@ zh-TW:
       invalid_gem:
     destroy:
       success: 已刪除 API 金鑰：%{name}
+      already_expired:
     index:
       api_keys: API 金鑰
       name: 名稱
@@ -194,8 +208,11 @@ zh-TW:
       reset: 重設
       save_key: 請注意，我們無法再次顯示您的 API 金鑰。新 API 金鑰：
       mfa: MFA
+      mfa_enabled_notice:
       expiration:
       update_owner:
+      view_expired:
+      view_active:
     new:
       new_api_key: 新 API 金鑰
     reset:
@@ -206,6 +223,7 @@ zh-TW:
     edit:
       edit_api_key: 編輯 API 金鑰
       invalid_key: 無法編輯無效的 API 金鑰。請刪除此金鑰並重新建立。
+      expired_key:
     all_gems: 所有 Gems
     gem_ownership_removed:
   dashboards:
@@ -224,6 +242,17 @@ zh-TW:
   dependencies:
     show:
       click_to_expand: 點擊箭頭圖示來展開。
+      gem_header:
+      required_version_header:
+      scope_header:
+        one:
+        other:
+      reverse_dependencies_header:
+      version_header:
+      date_header:
+      downloads_count:
+      downloads_header:
+      see_all_reverse:
   email_confirmations:
     create:
       promise_resend: 如果該帳號存在，我們會將用於啟用帳號的確認連結傳送到您的電子郵件地址。
@@ -238,9 +267,24 @@ zh-TW:
     index:
       downloads_counting_html: 總下載次數
       find_blurb_html: 搜尋、安裝以及發佈 RubyGems
+      find_blurb_lead:
       learn:
         install_rubygems: 安裝 RubyGems
+      donation:
+        body:
+        cta:
+        title:
+      powered_by:
+        body_html:
+        title:
+      supporters:
+        body:
+        cta:
+        title:
   layouts:
+    subject:
+      subject_label:
+      subject_secondary_label:
     application:
       footer:
         about: 關於
@@ -283,6 +327,8 @@ zh-TW:
       mfa_banner_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。[了解詳情](部落格文章連結)！"
   breadcrumbs:
     home: 首頁
+    latest_version:
+    versions:
     dashboard: 控制台
     settings: 設定
     org_name: 組織：%{name}
@@ -290,6 +336,8 @@ zh-TW:
     gems:
     members:
     invite_member:
+    reservations:
+    reserve_gem_name:
   mailer:
     confirm_your_email: 已寄送連結，請點擊連結來確認您的電子郵件地址。
     confirmation_subject: "%{host} 電子郵件地址確認"
@@ -326,6 +374,10 @@ zh-TW:
     gem_yanked:
       subject: Gem %{gem} 已從 RubyGems.org 移除
       title: Gem 已移除
+    cache_exposure_inactive_notice:
+      subject:
+    cache_exposure_notice:
+      subject:
     reset_api_key:
       subject: RubyGems.org 上的 API 金鑰遭重設
       title: API 金鑰重設
@@ -426,6 +478,7 @@ zh-TW:
       add_member:
       invite:
       transfer:
+      reservations:
     members:
       create:
         user_already_invited:
@@ -451,12 +504,34 @@ zh-TW:
         role:
         create:
         invite:
+    gem_name_reservations:
+      create:
+        gem_name_reserved:
+      destroy:
+        gem_name_reservation_removed:
+      index:
+        description:
+        no_reservations:
+        reserve:
+        remove:
+        confirm_remove:
+      new:
+        title:
+        name:
+        name_hint:
+        reserve:
+        limit_html:
+        limit_reached_html:
+        unlimited:
+        disclaimer:
     invitations:
       show:
         accept:
         decline:
         title_html:
   pages:
+    index:
+      title:
     about:
       contributors_amount: "%{count} 位 Ruby 愛好者"
       downloads_amount:
@@ -485,6 +560,8 @@ zh-TW:
       title: 下載 RubyGems
     security:
       title: 安全性
+    security-engineers-in-residence-faq:
+      title:
     supporters:
       title:
   policies:
@@ -633,10 +710,13 @@ zh-TW:
     edit:
       role:
       title:
+      submit_button:
+      user:
     confirm:
       confirmed_email:
       token_expired: 確認權杖已過期。請從 Gem 頁面嘗試重新傳送權杖。
     index:
+      title:
       add_owner: 新增擁有者
       name: 擁有者
       mfa: MFA 狀態
@@ -651,7 +731,14 @@ zh-TW:
       info: 新增或移除擁有者
       confirmed: 已確認
       pending: 待確認
+      current_user_badge:
       confirm_remove: 您確定要將此使用者從擁有者名單中移除嗎？
+      remove_self_dialog:
+        title:
+        warning:
+        confirm_label:
+        submit:
+        cancel:
     resend_confirmation:
       resent_notice:
     create:
@@ -666,6 +753,7 @@ zh-TW:
   settings:
     edit:
       title: 編輯設定
+      account_header:
       webauthn_credentials: 安全裝置
       no_webauthn_credentials: 您沒有任何安全裝置
       webauthn_credential_note: 安全裝置可以是任何遵循 FIDO2 標準的裝置，例如安全或生物特徵金鑰。
@@ -733,12 +821,21 @@ zh-TW:
     request_denied: 此請求遭拒。我們無法驗證您的密碼。
     show:
       title: "%{username} 的個人檔案"
+      gems:
+      no_gems:
+      edit_profile:
+      email_me:
     security_events:
       title:
       description_html:
   rubygems:
     aside:
       downloads_for_this_version: 這個版本
+      github_star:
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: 版本发布
       required_ruby_version: Ruby 版本需求
       required_rubygems_version: RubyGems 版本需求
@@ -754,6 +851,7 @@ zh-TW:
         funding:
         header: 相關連結
         home: 首頁
+        verified:
         mail: 郵件群組
         analytics:
         report_abuse: 檢舉濫用
@@ -798,6 +896,12 @@ zh-TW:
     show:
       bundler_header: Gemfile
       install: 安裝
+      tabs:
+        label:
+        readme:
+        gem_info:
+        contents:
+        dependencies:
       licenses_header:
         one: 授權
         other: 授權
@@ -805,6 +909,7 @@ zh-TW:
       requirements_header: 必填
       show_all_versions: 顯示所有版本（共 %{count}）
       versions_header: 版本列表
+      ruby_abi:
       yanked_notice: 這個 Gem 版本已被移除，因此無法提供下載，也無法被其他的 Gem 相依。
     show_yanked:
       not_hosted_notice: 這個 Gem 目前沒有在 RubyGems.org 上
@@ -825,9 +930,14 @@ zh-TW:
           other:
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title: "%{name} 的反向依賴"
       subtitle: 下列 Gems 的最新版本需要 %{name}
       no_reverse_dependencies: 此 Gem 沒有反向依賴。
+      version_header:
     search:
       search_reverse_dependencies_html: 搜尋反向依賴 Gems&hellip;
   searches:
@@ -839,6 +949,7 @@ zh-TW:
       updated: 更新於
       yanked: 移除於
     show:
+      title:
       subtitle_html: "<em>%{query}</em>"
       month_update: 於最近一個月更新 (%{count})
       week_update: 於最近一週更新 (%{count})
@@ -849,6 +960,7 @@ zh-TW:
     new:
       forgot_password: 忘記密碼？
       resend_confirmation: 沒收到確認信？
+      confirm:
     verify:
       title:
       confirm: 確認
@@ -879,6 +991,7 @@ zh-TW:
     index:
       title: 統計資料
       all_time_most_downloaded: 歷史下載次數排行
+      clickgems:
       total_gems: Gems 總數
       total_users: 總使用者數量
   users:
@@ -886,6 +999,7 @@ zh-TW:
       email_sent: 已傳送確認信到您的電子郵件地址。
     new:
       have_account: 已經註冊過了？
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: 這個 Gem 目前沒有在 RubyGems.org 上
@@ -897,6 +1011,7 @@ zh-TW:
         gemspec 指定。
     version:
       yanked: 已被移除
+      ruby_abi:
   webauthn_credentials:
     callback:
       success: 您已成功註冊安全裝置。
@@ -1058,6 +1173,7 @@ zh-TW:
       api_key:
         api_key_created:
         api_key_deleted:
+        api_key_cache_exposure_revoked:
         api_key_name:
         api_key_scopes:
         api_key_gem_html:

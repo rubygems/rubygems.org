@@ -17,24 +17,37 @@ class UploadVersionsFileJob < ApplicationJob
   )
 
   def perform
-    versions_path = Rails.application.config.rubygems["versions_file_location"]
-    versions_file = CompactIndex::VersionsFile.new(versions_path)
-    from_date = versions_file.updated_at
+    upload_versions_file(
+      versions_file_location: Rails.application.config.rubygems["versions_file_location_v2"],
+      extra_gems: GemInfo.compact_index_versions(versions_file_updated_at("versions_file_location_v2")),
+      key: "v2/versions",
+      surrogate_key: "v2/versions s3-compact-index s3-v2/versions"
+    )
+  end
 
-    logger.info "Generating versions file from #{from_date}"
+  private
 
-    extra_gems = GemInfo.compact_index_versions(from_date)
+  def versions_file_updated_at(config_key)
+    path = Rails.application.config.rubygems[config_key]
+    CompactIndex::VersionsFile.new(path).updated_at
+  end
+
+  def upload_versions_file(versions_file_location:, extra_gems:, key:, surrogate_key:)
+    versions_file = CompactIndex::VersionsFile.new(versions_file_location)
+
+    logger.info "Generating #{key} file from #{versions_file.updated_at}"
+
     response_body = CompactIndex.versions(versions_file, extra_gems)
 
     content_md5 = Digest::MD5.base64digest(response_body)
     checksum_sha256 = Digest::SHA256.base64digest(response_body)
 
     response = RubygemFs.compact_index.store(
-      "versions", response_body,
+      key, response_body,
       public_acl: false, # the compact-index bucket does not have ACLs enabled
       metadata: {
         "surrogate-control" => "max-age=3600, stale-while-revalidate=1800",
-        "surrogate-key" => "versions s3-compact-index s3-versions",
+        "surrogate-key" => surrogate_key,
         "sha256" => checksum_sha256,
         "md5" => content_md5
       },
@@ -44,8 +57,8 @@ class UploadVersionsFileJob < ApplicationJob
       content_md5:
     )
 
-    logger.info(message: "Uploading versions file succeeded", response:)
+    logger.info(message: "Uploading #{key} file succeeded", response:)
 
-    FastlyPurgeJob.perform_later(key: "s3-versions", soft: true)
+    FastlyPurgeJob.perform_later(key: "s3-#{key}", soft: true)
   end
 end

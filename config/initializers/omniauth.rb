@@ -30,3 +30,17 @@ class FailureEndpoint < OmniAuth::FailureEndpoint
 end
 
 OmniAuth.config.on_failure = FailureEndpoint
+
+# TODO: Delete this when pull#186 is merged for omniauth-oauth2
+# TLDR: There's a bug in the comparison for the `state` value if the state from the omniauth callback
+#   is not yet set in the session. Deleting the params from the session causes a nil-byte error that bubbles
+#   up to OmniAuth's catch for StandardErrors and will redirect to our FailureEndpoint
+#   - We can avoid this by calling .to_s on nil and returning "" in the secure_compare
+# https://github.com/omniauth/omniauth-oauth2/issues/189
+# https://github.com/omniauth/omniauth-oauth2/issues/189#issuecomment-4624416883
+# https://github.com/omniauth/omniauth-oauth2/pull/186
+OmniAuth::Strategies::OAuth2.prepend(Module.new do
+  def secure_compare(string_a, string_b)
+    super(string_a.to_s, string_b.to_s)
+  end
+end)

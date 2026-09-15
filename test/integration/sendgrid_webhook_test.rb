@@ -38,8 +38,8 @@ class SendgridWebhookTest < ActionDispatch::IntegrationTest
 
   test "saves events and schedules jobs" do
     params = [
-      { email: "user1@example.com", sg_event_id: "nwlyJ3Ej3wUBZQiaCAL5YA==", timestamp: Time.current.to_i, event: "bounce" },
-      { email: "user2@example.com", sg_event_id: "t61hI0Xpmk8XSR1YX4s0Kg==", timestamp: Time.current.to_i, event: "delivered" }
+      { email: "user1@rubygems-test.org", sg_event_id: "nwlyJ3Ej3wUBZQiaCAL5YA==", timestamp: Time.current.to_i, event: "bounce" },
+      { email: "user2@rubygems-test.org", sg_event_id: "t61hI0Xpmk8XSR1YX4s0Kg==", timestamp: Time.current.to_i, event: "delivered" }
     ]
     assert_enqueued_jobs 2, only: ProcessSendgridEventJob do
       post "/sendgrid_events", params: params, as: :json, headers: authorization_header
@@ -50,8 +50,8 @@ class SendgridWebhookTest < ActionDispatch::IntegrationTest
     events = SendgridEvent.all
 
     assert_equal 2, events.size
-    assert_equal "user1@example.com", events.first.email
-    assert_equal "user2@example.com", events.last.email
+    assert_equal "user1@rubygems-test.org", events.first.email
+    assert_equal "user2@rubygems-test.org", events.last.email
     assert events.all?(&:pending?)
   end
 

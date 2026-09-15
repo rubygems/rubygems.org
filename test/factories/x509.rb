@@ -11,6 +11,8 @@ FactoryBot.define do
     public_key { OpenSSL::PKey::EC.generate("prime256v1") }
     transient do
       extension_factory { OpenSSL::X509::ExtensionFactory.new }
+      github_actions_job_workflow_ref { "sigstore/sigstore-ruby/.github/workflows/release.yml@refs/tags/v0.1.1" }
+      github_actions_source_repository_ref { "refs/tags/v0.1.1" }
     end
 
     trait :key_usage do
@@ -25,7 +27,7 @@ FactoryBot.define do
         # Add subjectAltName with the workflow URI (required for policy extraction)
         cert.add_extension(ctx.extension_factory.create_ext(
                              "subjectAltName",
-          "URI:https://github.com/sigstore/sigstore-ruby/.github/workflows/release.yml@refs/tags/v0.1.1",
+          "URI:https://github.com/#{ctx.github_actions_job_workflow_ref}",
           false
                            ))
 
@@ -45,7 +47,7 @@ FactoryBot.define do
             "1.3.6.1.4.1.57264.1.8" =>
                 "https://token.actions.githubusercontent.com",
             "1.3.6.1.4.1.57264.1.9" =>
-                ".Xhttps://github.com/sigstore/sigstore-ruby/.github/workflows/release.yml@refs/tags/v0.1.1",
+                "https://github.com/#{ctx.github_actions_job_workflow_ref}",
             "1.3.6.1.4.1.57264.1.10" =>
                 ".(f106999a2210a9a17b32b172f95518859a85ffed",
             "1.3.6.1.4.1.57264.1.11" =>
@@ -55,7 +57,7 @@ FactoryBot.define do
             "1.3.6.1.4.1.57264.1.13" =>
                 ".(f106999a2210a9a17b32b172f95518859a85ffed",
             "1.3.6.1.4.1.57264.1.14" =>
-                "..refs/tags/v0.1.1",
+                ctx.github_actions_source_repository_ref,
             "1.3.6.1.4.1.57264.1.15" =>
                 "..766398650",
             "1.3.6.1.4.1.57264.1.16" =>

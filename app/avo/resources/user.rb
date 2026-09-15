@@ -5,22 +5,64 @@ class Avo::Resources::User < Avo::BaseResource
   self.includes = []
   self.search = {
     query: lambda {
-             query.where("email LIKE ? OR handle LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
+             search_term = "%#{ActiveRecord::Base.sanitize_sql_like(params[:q])}%"
+             query.where("email LIKE ? OR handle LIKE ? OR blocked_email LIKE ?", search_term, search_term, search_term)
            }
   }
+
+  class ApiKeyNameFilter < Avo::Filters::TextFilter
+    self.name = "API key name"
+    self.button_label = "Filter by API key name"
+
+    def apply(_request, query, value)
+      return query if value.blank?
+
+      api_keys = ApiKey.where(owner_type: "User")
+        .where("name ILIKE ?", "%#{ActiveRecord::Base.sanitize_sql_like(value)}%")
+      query.where(id: api_keys.select(:owner_id))
+    end
+  end
+
+  class CreatedAtFilter < Avo::Filters::DateTimeFilter
+    self.name = "Account creation time (UTC)"
+    self.button_label = "Filter by creation time"
+
+    def apply(_request, query, value)
+      return query if value.blank?
+
+      start_value, end_value = value.split(" to ", 2)
+      return query.none if start_value.blank? || end_value.blank?
+
+      start_at = Time.zone.strptime(start_value, "%Y-%m-%d %H:%M:%S")
+      end_at = Time.zone.strptime(end_value, "%Y-%m-%d %H:%M:%S")
+      return query.none if start_at > end_at
+
+      query.where(created_at: start_at..end_at)
+    rescue ArgumentError
+      query.none
+    end
+  end
 
   def actions
     action Avo::Actions::BlockUser
     action Avo::Actions::CreateUser
     action Avo::Actions::ChangeUserEmail
+    action Avo::Actions::DeleteUser
     action Avo::Actions::ResetApiKey
     action Avo::Actions::ResetUser2fa
+    action Avo::Actions::UnblockUser
     action Avo::Actions::YankRubygemsForUser
     action Avo::Actions::YankUser
   end
 
+  def filters
+    filter ApiKeyNameFilter
+    filter CreatedAtFilter
+  end
+
   def fields # rubocop:disable Metrics
     field :id, as: :id
+    field :created_at, as: :date_time, readonly: true, only_on: :show
 
     field :email, as: :text
     field :gravatar,

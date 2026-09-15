@@ -15,7 +15,7 @@ class MaintenanceTasksTest < ApplicationSystemTestCase
     click_on "Maintenance::UserTotpSeedEmptyToNilTask"
 
     assert_difference "Audit.count", 1 do
-      assert_enqueued_jobs 1, only: MaintenanceTasks::TaskJob do
+      assert_enqueued_jobs 1, only: ApplicationMaintenanceTaskJob do
         click_on "Run"
 
         page.assert_text "Enqueued"

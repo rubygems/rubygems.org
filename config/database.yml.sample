@@ -8,7 +8,7 @@ development:
   primary:
     <<: *default
     database: rubygems_development
-    host: localhost
+    host: <%= ENV.fetch("DB_HOST", "localhost") %>
     password: devpassword
     pool: 5
     timeout: 5000
@@ -17,11 +17,12 @@ test:
   primary:
     <<: *default
     database: rubygems_test
-    host: localhost
+    host: <%= ENV.fetch("DB_HOST", "localhost") %>
     min_messages: warning
     password: testpassword
     pool: 5
     timeout: 5000
+    gssencmode: disable
 
 staging:
   primary:

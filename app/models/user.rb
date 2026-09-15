@@ -6,6 +6,7 @@ class User < ApplicationRecord
   include Events::Recordable
   include Gravtastic
   include UserMultifactorMethods
+  include PasswordResettable
 
   is_gravtastic default: "retro"
 
@@ -15,17 +16,16 @@ class User < ApplicationRecord
   default_scope { not_deleted }
 
   before_save :_generate_confirmation_token_no_reset_unconfirmed_email, if: :will_save_change_to_unconfirmed_email?
-  before_create :_generate_confirmation_token_no_reset_unconfirmed_email
+  before_create :_generate_confirmation_token_no_reset_unconfirmed_email, unless: :email_confirmed?
   after_create :record_create_event
   after_update :record_email_update_event, if: :email_was_updated?
   after_update :record_email_verified_event, if: -> { saved_change_to_email? && email_confirmed? }
   after_update :record_password_update_event, if: :saved_change_to_encrypted_password?
   after_update :record_policies_acknowledged_event, if: :saved_change_to_policies_acknowledged_at?
-  before_discard :yank_gems
+  before_discard :yank_gems, unless: :keep_gems_published?
   before_discard :expire_all_api_keys
   before_discard :destroy_associations_for_discard
   before_discard :clear_personal_attributes
-  after_discard :send_deletion_complete_email
   before_destroy :yank_gems
 
   scope :not_deleted, -> { kept }
@@ -70,7 +70,12 @@ class User < ApplicationRecord
 
   validates :email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true,
     uniqueness: { case_sensitive: false }
-  validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
+  validates :unconfirmed_email, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, format: { with: URI::MailTo::EMAIL_REGEXP },
+    allow_blank: true
+  validates :email, reserved_domain: true, if: -> { email_changed? || email_confirmed_changed?(to: true) }
+  validates :unconfirmed_email, reserved_domain: true, if: :unconfirmed_email_changed?
+  validates :email, disposable_email_domain: true, if: -> { email_changed? || email_confirmed_changed?(to: true) }
+  validates :unconfirmed_email, disposable_email_domain: true, if: :unconfirmed_email_changed?
 
   validates :handle, uniqueness: { case_sensitive: false }, allow_nil: true, if: :handle_changed?
   validates :handle, format: { with: Patterns::HANDLE_PATTERN }, length: { within: 2..40 }, allow_nil: true
@@ -240,6 +245,24 @@ class User < ApplicationRecord
       SELECT rubygem_id FROM ownerships GROUP BY rubygem_id HAVING count(rubygem_id) = 1)')
   end
 
+  def sole_owner_of_ineligible_gem_versions?
+    only_owner_gems
+      .left_joins(versions: :gem_download)
+      .where(versions: { indexed: true })
+      .where(
+        Version.arel_table[:created_at].lt(Deletion::MAXIMUM_VERSION_AGE.ago)
+          .or(GemDownload.arel_table[:count].gt(Deletion::MAXIMUM_DOWNLOADS))
+      )
+      .exists?
+  end
+
+  def delete_account!(keep_gems_published: false)
+    @keep_gems_published = keep_gems_published
+    discard!
+  ensure
+    @keep_gems_published = false
+  end
+
   def remember_me!
     self.remember_token = Clearance::Token.new
     self.remember_token_expires_at = Gemcutter::REMEMBER_FOR.from_now
@@ -295,6 +318,10 @@ class User < ApplicationRecord
 
   private
 
+  def keep_gems_published?
+    @keep_gems_published == true
+  end
+
   def update_email
     update(email: unconfirmed_email, unconfirmed_email: nil, mail_fails: 0)
   end
@@ -344,7 +371,6 @@ class User < ApplicationRecord
   end
 
   def clear_personal_attributes
-    @email_before_discard = email
     update!(
       email: "deleted+#{id}@rubygems.org",
       handle: nil, email_confirmed: false,
@@ -355,10 +381,6 @@ class User < ApplicationRecord
       mfa_level: :disabled,
       password: SecureRandom.hex(20).encode("UTF-8")
     )
-  end
-
-  def send_deletion_complete_email
-    Mailer.deletion_complete(@email_before_discard).deliver_later
   end
 
   def record_create_event

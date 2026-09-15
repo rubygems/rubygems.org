@@ -36,7 +36,7 @@ class UnblockUserTest < ActiveSupport::TestCase
   end
 
   should "be visible" do
-    action_mock = Data.define(:current_user, :view, :record).new(current_user: @current_user, view: :show, record: @user)
+    action_mock = Data.define(:current_user, :view, :resource).new(current_user: @current_user, view: :show, resource: @resource)
 
     assert action_mock.instance_exec(&Avo::Actions::UnblockUser.visible)
   end
@@ -47,7 +47,8 @@ class UnblockUserTest < ActiveSupport::TestCase
     end
 
     should "not be visible" do
-      action_mock = Data.define(:current_user, :view, :record).new(current_user: @current_user, view: :show, record: @user)
+      resource = Avo::Resources::User.new.hydrate(record: @user)
+      action_mock = Data.define(:current_user, :view, :resource).new(current_user: @current_user, view: :show, resource:)
 
       refute action_mock.instance_exec(&Avo::Actions::UnblockUser.visible)
     end

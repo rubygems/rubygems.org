@@ -6,7 +6,7 @@ class ProfileTest < ApplicationSystemTestCase
   include ActiveJob::TestHelper
 
   setup do
-    @user = create(:user, email: "nick@example.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
+    @user = create(:user, email: "nick@rubygems-test.org", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "nick1", mail_fails: 1)
   end
 
   test "changing handle" do
@@ -25,7 +25,7 @@ class ProfileTest < ApplicationSystemTestCase
   end
 
   test "changing to an existing handle" do
-    create(:user, email: "nick2@example.com", handle: "nick2")
+    create(:user, email: "nick2@rubygems-test.org", handle: "nick2")
 
     sign_in
     visit profile_path("nick1")
@@ -56,19 +56,19 @@ class ProfileTest < ApplicationSystemTestCase
     visit profile_path("nick1")
     click_link "Edit Profile"
 
-    fill_in "Email address", with: "nick2@example.com"
+    fill_in "Email address", with: "nick2@rubygems-test.org"
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
       click_button "Update"
     end
 
-    assert page.has_selector? "input[value='nick@example.com']"
+    assert page.has_selector? "input[value='nick@rubygems-test.org']"
     assert page.has_selector? "#flash_notice", text: "You will receive " \
                                                      "an email within the next few minutes. It contains instructions " \
                                                      "for confirming your new email address."
 
-    assert_event Events::UserEvent::EMAIL_ADDED, { email: "nick2@example.com" },
+    assert_event Events::UserEvent::EMAIL_ADDED, { email: "nick2@rubygems-test.org" },
       @user.events.where(tag: Events::UserEvent::EMAIL_ADDED).sole
 
     link = last_email_link
@@ -81,10 +81,10 @@ class ProfileTest < ApplicationSystemTestCase
       assert_text("Your email address has been verified")
       visit edit_profile_path
 
-      assert page.has_selector? "input[value='nick2@example.com']"
+      assert page.has_selector? "input[value='nick2@rubygems-test.org']"
     end
 
-    assert_event Events::UserEvent::EMAIL_VERIFIED, { email: "nick2@example.com" },
+    assert_event Events::UserEvent::EMAIL_VERIFIED, { email: "nick2@rubygems-test.org" },
       @user.events.where(tag: Events::UserEvent::EMAIL_VERIFIED).sole
   end
 
@@ -189,30 +189,47 @@ class ProfileTest < ApplicationSystemTestCase
     assert_no_enqueued_jobs
   end
 
-  test "seeing the gems ordered by downloads" do
-    create(:rubygem, owners: [@user], number: "1.0.0", downloads: 5)
-    create(:rubygem, owners: [@user], number: "1.0.0", downloads: 2)
-    create(:rubygem, owners: [@user], number: "1.0.0", downloads: 7)
+  test "seeing owned gems ordered by downloads with their most recent versions" do
+    platform_gem = create(:rubygem, name: "platform-gem", owners: [@user], downloads: 7)
+    platform_release = create(:version,
+      rubygem: platform_gem,
+      number: "2.0.0",
+      description: "Current platform gem release",
+      created_at: Time.zone.parse("2026-01-03"))
+    create(:version, rubygem: platform_gem, number: "3.0.0", platform: "java")
+
+    prerelease_gem = create(:rubygem, name: "prerelease-gem", owners: [@user], downloads: 5)
+    stable_release = create(:version,
+      rubygem: prerelease_gem,
+      number: "1.5.0",
+      description: "Current stable release",
+      created_at: Time.zone.parse("2026-01-02"))
+    create(:version, rubygem: prerelease_gem, number: "2.0.0.pre")
+    create(:version, :yanked, rubygem: prerelease_gem, number: "3.0.0")
+
+    simple_gem = create(:rubygem, name: "simple-gem", owners: [@user], downloads: 2)
+    simple_release = create(:version,
+      rubygem: simple_gem,
+      number: "4.0.0",
+      description: "Current simple gem release",
+      created_at: Time.zone.parse("2026-01-01"))
 
     sign_in
     visit profile_path("nick1")
 
-    downloads = page.all(".gems__gem__downloads__count")
+    assert_equal %w[platform-gem prerelease-gem simple-gem], page.all("article li h4").map(&:text)
 
-    assert_equal("7\nDOWNLOADS", downloads[0].text)
-    assert_equal("5\nDOWNLOADS", downloads[1].text)
-    assert_equal("2\nDOWNLOADS", downloads[2].text)
-  end
+    [
+      [platform_gem, platform_release, "7"],
+      [prerelease_gem, stable_release, "5"],
+      [simple_gem, simple_release, "2"]
+    ].each do |rubygem, version, downloads|
+      row = page.find("a[href='#{rubygem_path(rubygem.slug)}']")
 
-  test "seeing the latest version when there is a newer previous version" do
-    create(:rubygem, owners: [@user], number: "1.0.1")
-    create(:version, rubygem: Rubygem.first, number: "0.0.2")
-
-    sign_in
-    visit profile_path("nick1")
-
-    version = page.find(".gems__gem__version").text
-
-    assert_equal("1.0.1", version)
+      assert_equal version.description, row[:title]
+      assert_equal version.number, row.find("[data-testid='rubygem-version']").text
+      assert_equal downloads, row.find("[data-testid='rubygem-downloads']").text
+      assert_includes row.text, version.created_at.to_date.to_fs(:long)
+    end
   end
 end

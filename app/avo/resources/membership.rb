@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Avo::Resources::Membership < Avo::BaseResource
-  self.includes = []
+  self.includes = %i[user organization]
 
   class ConfirmedFilter < Avo::Filters::ScopeBooleanFilter; end
 

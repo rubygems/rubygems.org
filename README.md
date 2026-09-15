@@ -19,7 +19,6 @@ Hosting is donated by [Amazon Web Services](https://aws.amazon.com), with CDN se
 
 ## Links
 
-* [Slack](https://bundler.slack.com/)
 * [RFCs](https://github.com/rubygems/rfcs)
 * [Support](mailto:support@rubygems.org)
 * [GitHub Workflow][]: [![test workflow](https://github.com/rubygems/rubygems.org/actions/workflows/test.yml/badge.svg)](https://github.com/rubygems/rubygems.org/actions/workflows/test.yml) [![lint workflow](https://github.com/rubygems/rubygems.org/actions/workflows/lint.yml/badge.svg)](https://github.com/rubygems/rubygems.org/actions/workflows/lint.yml) [![docker workflow](https://github.com/rubygems/rubygems.org/actions/workflows/docker.yml/badge.svg)](https://github.com/rubygems/rubygems.org/actions/workflows/docker.yml)

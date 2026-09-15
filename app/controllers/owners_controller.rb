@@ -36,6 +36,7 @@ class OwnersController < ApplicationController
 
   def index
     authorize @rubygem, :show_unconfirmed_ownerships?
+
     @ownerships = @rubygem.ownerships_including_unconfirmed.includes(:user, :authorizer)
   end
 

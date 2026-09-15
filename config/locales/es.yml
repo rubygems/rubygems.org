@@ -1,5 +1,8 @@
 ---
 es:
+  admin:
+    delete_user:
+      blocked_reason:
   credentials_required: Credenciales requeridas
   copied: "¡Copiado!"
   copy_to_clipboard: Copiar al portapapeles
@@ -30,6 +33,7 @@ es:
   api_key_forbidden: La clave API no tiene acceso
   api_key_soft_deleted:
   api_key_insufficient_scope:
+  email_not_confirmed:
   please_sign_up: Acceso denegado. Por favor regístrate en https://rubygems.org
   please_sign_in: Por favor, ingresa en tu cuenta para continuar.
   otp_incorrect: Tu código OTP es incorrecto. Por favor verifícalo y prueba nuevamente.
@@ -103,11 +107,19 @@ es:
           debería usar
         blocked: El dominio '%{domain}' ha sido bloqueado por spam. Por favor utiliza
           un email personal válido.
+        reserved_domain:
+        disposable_email_domain:
+        public_suffix:
+        protected_provider:
       models:
         api_key:
           attributes:
             expires_at:
               inclusion:
+        gem_name_reservation:
+          attributes:
+            base:
+              organization_limit_reached:
         organization:
           attributes:
             handle:
@@ -147,6 +159,7 @@ es:
           attributes:
             rubygem_name:
               unavailable:
+              reserved:
     models:
       user: Usuario
       api_key:
@@ -181,6 +194,7 @@ es:
       invalid_gem: La gema seleccionada no se puede incluir en esta clave
     destroy:
       success: 'Clave de API eliminada con éxito: %{name}'
+      already_expired:
     index:
       api_keys: Claves de API
       name: Nombre
@@ -205,8 +219,11 @@ es:
       save_key: 'Ten en cuenta que no se volverá a mostrar la clave de API. Nueva
         clave de API:'
       mfa: AMF
+      mfa_enabled_notice:
       expiration:
       update_owner:
+      view_expired:
+      view_active:
     new:
       new_api_key: Nueva clave de API
     reset:
@@ -219,6 +236,7 @@ es:
       edit_api_key: Editar clave de API
       invalid_key: No se puede editar una clave de API inválida. Por favor bórrala
         y crea una nueva.
+      expired_key:
     all_gems: Todas las gemas
     gem_ownership_removed: Se ha eliminado la propiedad de %{rubygem_name} tras haber
       sido añadida a esta clave.
@@ -240,6 +258,17 @@ es:
   dependencies:
     show:
       click_to_expand: Haz clic en el icono de flecha para expandir
+      gem_header:
+      required_version_header:
+      scope_header:
+        one:
+        other:
+      reverse_dependencies_header:
+      version_header:
+      date_header:
+      downloads_count:
+      downloads_header:
+      see_all_reverse:
   email_confirmations:
     create:
       promise_resend: Te enviaremos un correo con el enlace de confirmación para activar
@@ -256,9 +285,24 @@ es:
     index:
       downloads_counting_html: descargas y contando
       find_blurb_html: Encuentra, instala, y publica RubyGems.
+      find_blurb_lead:
       learn:
         install_rubygems: Instala RubyGems
+      donation:
+        body:
+        cta:
+        title:
+      powered_by:
+        body_html:
+        title:
+      supporters:
+        body:
+        cta:
+        title:
   layouts:
+    subject:
+      subject_label:
+      subject_secondary_label:
     application:
       footer:
         about: Acerca de
@@ -301,6 +345,8 @@ es:
       mfa_banner_html:
   breadcrumbs:
     home: Inicio
+    latest_version:
+    versions:
     dashboard: Dashboard
     settings: Configuración
     org_name: 'Org: %{name}'
@@ -308,6 +354,8 @@ es:
     gems:
     members:
     invite_member:
+    reservations:
+    reserve_gem_name:
   mailer:
     confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
     confirmation_subject: Por favor confirma tu dirección de correo con %{host}
@@ -351,6 +399,10 @@ es:
     gem_yanked:
       subject: Gema %{gem} eliminada de %{host}
       title: GEMA ELIMINADA
+    cache_exposure_inactive_notice:
+      subject:
+    cache_exposure_notice:
+      subject:
     reset_api_key:
       subject: Clave de API de %{host} restablecida
       title: CLAVE DE API RESTABLECIDA
@@ -466,6 +518,7 @@ es:
       add_member:
       invite:
       transfer:
+      reservations:
     members:
       create:
         user_already_invited:
@@ -491,12 +544,34 @@ es:
         role:
         create:
         invite:
+    gem_name_reservations:
+      create:
+        gem_name_reserved:
+      destroy:
+        gem_name_reservation_removed:
+      index:
+        description:
+        no_reservations:
+        reserve:
+        remove:
+        confirm_remove:
+      new:
+        title:
+        name:
+        name_hint:
+        reserve:
+        limit_html:
+        limit_reached_html:
+        unlimited:
+        disclaimer:
     invitations:
       show:
         accept:
         decline:
         title_html:
   pages:
+    index:
+      title:
     about:
       contributors_amount: "%{count} Rubystas"
       downloads_amount: millones de descargas de gemas
@@ -534,6 +609,8 @@ es:
       title: Descargar RubyGems
     security:
       title: Seguridad
+    security-engineers-in-residence-faq:
+      title:
     supporters:
       title:
   policies:
@@ -709,11 +786,14 @@ es:
     edit:
       role:
       title:
+      submit_button:
+      user:
     confirm:
       confirmed_email: Has sido añadido/a como propietario de la gema %{gem}
       token_expired: El token de confirmación ha expirado. Por favor intenta reenviar
         el token desde la página de la gema.
     index:
+      title:
       add_owner: AÑADIR PROPIETARIO
       name: PROPIETARIO/A
       mfa: ESTADO DE AMF
@@ -728,7 +808,14 @@ es:
       info: añadir o eliminar propietarios
       confirmed: Confirmado
       pending: Pendiente
+      current_user_badge:
       confirm_remove: "¿Seguro que quieres eliminar a este usuario de los propietarios?"
+      remove_self_dialog:
+        title:
+        warning:
+        confirm_label:
+        submit:
+        cancel:
     resend_confirmation:
       resent_notice: Se ha reenviado un mensaje de confirmación a tu correo electrónico
     create:
@@ -746,6 +833,7 @@ es:
   settings:
     edit:
       title: Editar configuración
+      account_header:
       webauthn_credentials: Dispositivo de seguridad
       no_webauthn_credentials: No tienes dispositivos de seguridad
       webauthn_credential_note: Un dispositivo de seguridad puede ser cualquier dispositivo
@@ -830,12 +918,21 @@ es:
     request_denied: La solicitud fue denegada. No pudimos verificar tu contraseña.
     show:
       title: Perfil de %{username}
+      gems:
+      no_gems:
+      edit_profile:
+      email_me:
     security_events:
       title:
       description_html:
   rubygems:
     aside:
       downloads_for_this_version: Para esta versión
+      github_star:
+      latest_version_button:
+      versions_button:
+        one:
+        other:
       gem_version_age: Versión publicada
       required_ruby_version: Versión de Ruby requerida
       required_rubygems_version: Versión de Rubygems requerida
@@ -851,6 +948,7 @@ es:
         funding: Financiación
         header: Enlace
         home: Página
+        verified:
         mail: Lista de Correo
         analytics:
         report_abuse: Reportar abusos
@@ -898,6 +996,12 @@ es:
     show:
       bundler_header: Gemfile
       install: instalar
+      tabs:
+        label:
+        readme:
+        gem_info:
+        contents:
+        dependencies:
       licenses_header:
         one: Licencia
         other: Licencias
@@ -905,6 +1009,7 @@ es:
       requirements_header: Requerimientos
       show_all_versions: Mostrar todas las versiones (%{count} total)
       versions_header: Versiones
+      ruby_abi:
       yanked_notice: Esta versión fue borrada, y no está disponible para su descarga
         directa ni por otras gemas que puedan haber dependido de la misma.
     show_yanked:
@@ -937,9 +1042,14 @@ es:
           other:
   reverse_dependencies:
     index:
+      date_header:
+      downloads_count:
+      downloads_header:
+      gem_header:
       title: Dependencias inversas para %{name}
       subtitle: La última versión de las siguientes gemas requieren %{name}
       no_reverse_dependencies: Esta gema no tiene dependencias inversas
+      version_header:
     search:
       search_reverse_dependencies_html: Buscar dependencias inversas&hellip;
   searches:
@@ -951,6 +1061,7 @@ es:
       updated: Actualizada
       yanked: Borrada
     show:
+      title:
       subtitle_html: para <em>%{query}</em>
       month_update: Actualizadas en el último mes (%{count})
       week_update: Actualizadas en la última semana (%{count})
@@ -961,6 +1072,7 @@ es:
     new:
       forgot_password: "¿Olvidaste tu contraseña?"
       resend_confirmation: "¿No recibiste tu correo electrónico de confirmación?"
+      confirm:
     verify:
       title:
       confirm: Confirmar
@@ -992,6 +1104,7 @@ es:
     index:
       title: Estadísticas
       all_time_most_downloaded: Más descargadas
+      clickgems:
       total_gems: Gemas totales
       total_users: Usuarios totales
   users:
@@ -1000,6 +1113,7 @@ es:
         electrónico.
     new:
       have_account: "¿Ya tienes una cuenta?"
+      registration_disabled:
   versions:
     index:
       not_hosted_notice: Esta gema no está alojada actualmente en RubyGems.org.
@@ -1012,6 +1126,7 @@ es:
         el archivo gemspec.
     version:
       yanked: borrada
+      ruby_abi:
   webauthn_credentials:
     callback:
       success: Has dado de alta con éxito un dispositivo de seguridad.
@@ -1188,6 +1303,7 @@ es:
       api_key:
         api_key_created:
         api_key_deleted:
+        api_key_cache_exposure_revoked:
         api_key_name:
         api_key_scopes:
         api_key_gem_html:

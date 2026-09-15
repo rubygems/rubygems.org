@@ -98,7 +98,7 @@ class DeletionTest < ActiveSupport::TestCase
       end
 
       should "set the yanked info checksum" do
-        refute_nil @version.reload.yanked_info_checksum
+        refute_nil @version.reload.yanked_info_checksum_v2
       end
 
       should "delete the .gem file" do
@@ -123,6 +123,17 @@ class DeletionTest < ActiveSupport::TestCase
       GemCachePurger.expects(:call).with(@gem_name)
 
       delete_gem
+    end
+
+    should "set different yanked info checksums when another version remains indexed" do
+      other_version = create(:version, rubygem: @version.rubygem, number: "0.0.1")
+
+      delete_gem
+      @version.reload
+      checksum = Version._sha256_hex(other_version.sha256)
+      expected_line = "0.0.1 |checksum:#{checksum},ruby:>= 2.0.0,rubygems:>= 2.6.3,created_at:#{other_version.created_at.utc.iso8601}"
+
+      assert_equal Digest::MD5.hexdigest("---\n#{expected_line}\n"), @version.yanked_info_checksum_v2
     end
   end
 
@@ -174,6 +185,18 @@ class DeletionTest < ActiveSupport::TestCase
 
     assert_equal deletion.rubygem, @version.rubygem.name
     assert_equal @version.id, deletion.version_id
+    assert_nil deletion.ruby_abi
+  end
+
+  should "record the Ruby ABI for versions targeting a single Ruby ABI" do
+    version = create(:version, rubygem: @version.rubygem, number: "2.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
+                     required_ruby_version: "~> 3.4.0",
+                     required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.4",
+                     sha256: Digest::SHA2.base64digest("test-2.0.0-3.4"))
+    deletion = Deletion.new(version: version, user: @user)
+    deletion.valid?
+
+    assert_equal "3.4", deletion.ruby_abi
   end
 
   context "with restored gem" do
@@ -205,9 +228,9 @@ class DeletionTest < ActiveSupport::TestCase
         assert_predicate @version.reload, :latest?
       end
 
-      should "remove the yanked time and yanked_info_checksum" do
+      should "remove the yanked time and yanked_info_checksum_v2" do
         assert_nil @version.yanked_at
-        assert_nil @version.yanked_info_checksum
+        assert_nil @version.yanked_info_checksum_v2
       end
 
       should "purge fastly" do

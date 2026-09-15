@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::RubygemsController < Api::BaseController
+  before_action :deny_shared_cache, only: :index
   before_action :authenticate_with_api_key, except: %i[show reverse_dependencies]
   before_action :verify_user_api_key, except: %i[show reverse_dependencies create]
   before_action :find_rubygem, only: %i[show reverse_dependencies]
@@ -50,6 +51,7 @@ class Api::V1::RubygemsController < Api::BaseController
 
     gemcutter = Pusher.new(@api_key, gem_body, request:, attestations:)
     gemcutter.process
+    track_gem_push(gemcutter)
     render plain: response_with_mfa_warning(gemcutter.message), status: gemcutter.code
   rescue Pundit::NotAuthorizedError
     raise # allow rescue_from in base_controller to handle this
@@ -77,6 +79,16 @@ class Api::V1::RubygemsController < Api::BaseController
   end
 
   private
+
+  def track_gem_push(gemcutter)
+    event = gemcutter.code == 200 ? "gem.push.success" : "gem.push.failure"
+    metadata = {
+      "usr.id": (@api_key.owner_id.to_s if @api_key.user?),
+      "gem.name": gemcutter.rubygem&.name,
+      "gem.version": gemcutter.version&.number
+    }.compact
+    Datadog::Kit::AppSec::Events.track(event, **metadata)
+  end
 
   def cors_set_access_control_headers
     headers["Access-Control-Allow-Origin"] = "*"

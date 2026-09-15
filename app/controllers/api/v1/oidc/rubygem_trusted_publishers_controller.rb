@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::OIDC::RubygemTrustedPublishersController < Api::BaseController
+  before_action :deny_shared_cache
   before_action :authenticate_with_api_key
   before_action :verify_user_api_key
 
@@ -41,7 +42,7 @@ class Api::V1::OIDC::RubygemTrustedPublishersController < Api::BaseController
   end
 
   def find_rubygem_trusted_publisher
-    @rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.find(params[:id])
+    @rubygem_trusted_publisher = @rubygem.oidc_rubygem_trusted_publishers.find(params.expect(:id))
   end
 
   def set_trusted_publisher_type

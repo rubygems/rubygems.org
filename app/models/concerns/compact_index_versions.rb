@@ -1,0 +1,94 @@
+# frozen_string_literal: true
+
+module CompactIndexVersions
+  extend ActiveSupport::Concern
+
+  class_methods do
+    def compact_index_versions(date, version: self::CURRENT_VERSION)
+      config = self::VERSIONS.fetch(version)
+      checksum_column = config[:checksum_column]
+      yanked_checksum_column = config[:yanked_checksum_column]
+
+      query = ["SELECT * FROM (
+                  (SELECT r.name, v.created_at as date, v.#{checksum_column} as info_checksum, v.number, v.platform, v.ruby_abi, v.content_address
+                  FROM rubygems AS r, versions AS v
+                  WHERE v.rubygem_id = r.id AND
+                        v.created_at > ?)
+                  UNION
+                  (SELECT r.name, v.yanked_at as date, v.#{yanked_checksum_column} as info_checksum, '-'||v.number,
+                          v.platform, v.ruby_abi, v.content_address
+                  FROM rubygems AS r, versions AS v
+                  WHERE v.rubygem_id = r.id AND
+                        v.indexed is false AND
+                        v.yanked_at > ?)
+                ) AS u
+                ORDER BY date, number, platform, ruby_abi, content_address, name", date, date]
+
+      map_gem_versions(execute_raw_sql(query).map { |v| [v["name"], [v]] }, version:)
+    end
+
+    def each_compact_index_public_version(updated_at, version: self::CURRENT_VERSION, &block)
+      # Stream one CompactIndex::Gem at a time to avoid loading every version into memory.
+      # When called without a block, return an Enumerator so callers can use .to_a, .map, etc.
+      return enum_for(__method__, updated_at, version:) unless block
+
+      config = self::VERSIONS.fetch(version)
+      checksum_column = config[:checksum_column]
+      yanked_checksum_column = config[:yanked_checksum_column]
+
+      query = ["SELECT r.name, v.indexed, COALESCE(v.yanked_at, v.created_at) as stamp,
+                       v.sha256, COALESCE(v.#{yanked_checksum_column}, v.#{checksum_column}) as info_checksum,
+                       v.number, v.platform, v.ruby_abi, v.content_address
+                FROM rubygems AS r, versions AS v
+                WHERE v.rubygem_id = r.id AND
+                      (v.created_at <= ? OR v.yanked_at <= ?)
+                ORDER BY r.name COLLATE \"C\", stamp, v.number, v.platform, v.ruby_abi, v.content_address", updated_at, updated_at]
+
+      execute_raw_sql(query)
+        .chunk_while { |a, b| a["name"] == b["name"] }
+        .each { |rows| public_compact_index_gem(rows.first["name"], rows, version:, &block) }
+    end
+
+    def compact_index_public_versions(updated_at, version: self::CURRENT_VERSION)
+      each_compact_index_public_version(updated_at, version:).to_a
+    end
+
+    def execute_raw_sql(query)
+      sanitized_sql = ActiveRecord::Base.send(:sanitize_sql_array, query)
+      ActiveRecord::Base.connection.execute(sanitized_sql)
+    end
+
+    def map_gem_versions(versions_by_gem, version:)
+      versions_by_gem.map { |gem_name, versions| build_compact_index_gem(gem_name, versions, version:) }
+    end
+
+    def public_compact_index_gem(gem_name, versions, version:)
+      info_checksum = versions.last["info_checksum"]
+      versions.select! { |v| v["indexed"] == true }
+      return if versions.empty?
+
+      # Set all versions' info_checksum to work around https://github.com/bundler/compact_index/pull/20
+      versions.each { |v| v["info_checksum"] = info_checksum }
+      yield build_compact_index_gem(gem_name, versions, version:)
+    end
+
+    def build_compact_index_gem(gem_name, versions, version:)
+      version_class = self::VERSIONS.fetch(version).fetch(:klass)
+      compact_index_versions = versions.map do |version_row|
+        args = {
+          number: version_row["number"],
+          platform: version_row["platform"],
+          checksum: version_row["sha256"],
+          info_checksum: version_row["info_checksum"],
+          ruby_abi: version_row["ruby_abi"],
+          content_address: version_row["content_address"]
+        }
+        args = args.slice(*version_class.members)
+        version_class.new(**args)
+      end
+      CompactIndex::Gem.new(gem_name, compact_index_versions)
+    end
+
+    private :map_gem_versions, :public_compact_index_gem, :build_compact_index_gem, :execute_raw_sql
+  end
+end

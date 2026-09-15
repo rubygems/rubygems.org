@@ -1,13 +1,25 @@
 <% @title ||= t(".title") %>
 
-<div class="news__nav-links">
-  <%= link_to t(".all_gems"), news_url, class: "news__nav-link #{active_status(news_path)}" %>
-  <%= link_to t(".popular_gems"), popular_news_url, class: "news__nav-link #{active_status(popular_news_path)}" %>
-</div>
+<% active   = "px-4 py-2 rounded-full text-sm font-semibold bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 no-underline" %>
+<% inactive = "px-4 py-2 rounded-full text-sm font-semibold text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 no-underline" %>
 
-<header class="gems__header">
-  <p class="gems__meter"><%= page_entries_info @rubygems %></p>
-</header>
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title @title, icon: "history" %>
+  <% end %>
 
-<%= render partial: "news/rubygem", collection: @rubygems %>
-<%= paginate @rubygems %>
+  <div class="flex gap-2 mb-6">
+    <%= link_to t(".all_gems"), news_path, class: current_page?(news_path) ? active : inactive %>
+    <%= link_to t(".popular_gems"), popular_news_path, class: current_page?(popular_news_path) ? active : inactive %>
+  </div>
+
+  <header class="flex items-center mb-6">
+    <p class="text-xs text-neutral-500 uppercase tracking-wide" data-testid="entries-info"><%= page_entries_info @rubygems %></p>
+  </header>
+
+  <% @rubygems.each do |rubygem| %>
+    <%= render RubygemComponent.new(rubygem:) %>
+  <% end %>
+
+  <%= paginate @rubygems, theme: "hammy" %>
+<% end %>

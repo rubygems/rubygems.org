@@ -29,4 +29,17 @@ class HomeControllerTest < ActionController::TestCase
 
     assert_equal I18n.default_locale, I18n.locale
   end
+
+  should "ignore locale param and use default locale" do
+    get :index, params: { locale: "de" }
+
+    assert_equal I18n.default_locale, I18n.locale
+  end
+
+  should "ignore Accept-Language header and use default locale" do
+    @request.env["HTTP_ACCEPT_LANGUAGE"] = "de-DE,de;q=0.9,en;q=0.8"
+    get :index
+
+    assert_equal I18n.default_locale, I18n.locale
+  end
 end

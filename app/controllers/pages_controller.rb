@@ -3,9 +3,12 @@
 class PagesController < ApplicationController
   before_action :find_page, only: :show
 
-  layout "hammy"
+  def index
+    add_breadcrumb t(".title")
+  end
 
   def show
+    add_breadcrumb t("pages.index.title"), pages_path
     add_breadcrumb t("pages.#{@page}.title")
     render @page
   end

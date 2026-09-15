@@ -12,7 +12,10 @@ class SearchesController < ApplicationController
     return if params[:query].blank?
     @error_msg, @gems = ElasticSearcher.new(params[:query], page: @page).search
 
+    add_breadcrumb(t(".title"), root_path)
+
     return unless @gems
+
     set_total_pages if @gems.total_count > Gemcutter::SEARCH_MAX_PAGES * Rubygem.default_per_page
     exact_match = Rubygem.name_is(params[:query]).first
     @yanked_gem = exact_match unless exact_match&.indexed_versions?
