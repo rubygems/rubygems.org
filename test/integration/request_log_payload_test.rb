@@ -16,6 +16,22 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
     ActiveSupport::Notifications.unsubscribe(subscriber)
   end
 
+  def assert_actor(expected, payload, human: true)
+    actor = payload[:actor]
+    if human
+      assert_kind_of Integer, actor[:account_age_seconds]
+    else
+      refute actor.key?(:account_age_seconds)
+    end
+
+    assert_equal expected, actor.except(:account_age_seconds)
+  end
+
+  def trusted_publisher_actor(publisher)
+    { gid: publisher.to_gid.to_s, type: "trusted_publisher", repository: publisher.repository,
+      workflow: publisher.workflow_slug, repository_owner_id: publisher.repository_owner_id }
+  end
+
   test "semantic logger is configured with the application name" do
     assert_equal "rubygems.org", SemanticLogger.application
   end
@@ -27,6 +43,20 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
     assert_predicate payload[:timestamp], :utc?
     assert_equal "test", payload[:env]
     assert_equal({ client: { ip: "127.0.0.1" } }, payload[:network])
+  end
+
+  test "payload flags a request that did not come through the edge" do
+    payload = capture_request_payload { get "/" }
+
+    assert payload[:edge_bypassed]
+  end
+
+  test "payload does not flag a request carrying the edge proxy token" do
+    stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKENS, ["abc"]) do
+      payload = capture_request_payload { get "/", headers: { "RUBYGEMS-PROXY-TOKEN" => "abc" } }
+
+      refute payload[:edge_bypassed]
+    end
   end
 
   test "rails block carries controller, action, params, format and timings" do
@@ -70,6 +100,7 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
     payload = capture_request_payload { get "/" }
 
     refute payload.key?(:identity)
+    refute payload.key?(:actor)
   end
 
   test "signed-in web request logs the user id only" do
@@ -79,6 +110,7 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
     payload = capture_request_payload { get dashboard_path }
 
     assert_equal({ user_id: user.id }, payload[:identity])
+    assert_actor({ gid: user.to_gid.to_s, type: "user" }, payload)
   end
 
   test "API request logs the user id and api key id" do
@@ -93,6 +125,7 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
       { user_id: api_key.user.id, api_key_id: api_key.id, api_key_owner_type: "User", api_key_owner_id: api_key.user.id },
       payload[:identity]
     )
+    assert_actor({ gid: api_key.user.to_gid.to_s, type: "user" }, payload)
   end
 
   test "API request with a trusted-publisher key logs the api key id and its owner, no user id" do
@@ -108,6 +141,7 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
       { api_key_id: api_key.id, api_key_owner_type: "OIDC::TrustedPublisher::GitHubAction", api_key_owner_id: api_key.owner_id },
       payload[:identity]
     )
+    assert_actor(trusted_publisher_actor(api_key.owner), payload, human: false)
   end
 
   test "web request managing an api key does not log it as the authenticating key" do
@@ -120,6 +154,7 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_equal({ user_id: user.id }, payload[:identity])
+    assert_actor({ gid: user.to_gid.to_s, type: "user" }, payload)
   end
 
   test "sign-in request logs the user id once signed in" do
@@ -131,6 +166,7 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
 
     assert_response :redirect
     assert_equal({ user_id: user.id }, payload[:identity])
+    assert_actor({ gid: user.to_gid.to_s, type: "user" }, payload)
   end
 
   test "basic-auth API request logs the user id" do
@@ -143,6 +179,7 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_equal({ user_id: user.id }, payload[:identity])
+    assert_actor({ gid: user.to_gid.to_s, type: "user" }, payload)
   end
 
   test "trusted publisher token exchange logs the publisher as the api key owner" do
@@ -167,6 +204,7 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
       { api_key_owner_type: "OIDC::TrustedPublisher::GitHubAction", api_key_owner_id: trusted_publisher.id },
       payload[:identity]
     )
+    assert_actor(trusted_publisher_actor(trusted_publisher), payload, human: false)
   end
 
   test "admin request logs the admin github user id" do
@@ -176,6 +214,7 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
     payload = capture_request_payload { get avo.resources_admin_github_users_path }
 
     assert_response :success
-    assert_equal admin.id, payload[:identity][:admin_github_user_id]
+    assert_equal({ admin_github_user_id: admin.id }, payload[:identity])
+    refute payload.key?(:actor)
   end
 end
