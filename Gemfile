@@ -94,7 +94,6 @@ gem "pp", "0.6.4"
 gem "csv", "~> 3.3" # zeitwerk-2.6.12
 gem "observer", "~> 0.1.2" # launchdarkly-server-sdk-8.0.0
 
-
 # TODO: Remove this when the rails upstream merges the patch
 # json 3.0 dropped the positional options hash from JSON.parse, which
 # ActiveSupport::JSON.decode still uses (activesupport 8.1.3.1).
