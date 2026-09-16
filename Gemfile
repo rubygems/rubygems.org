@@ -9,10 +9,10 @@ gem "rails-i18n", "~> 8.1.0"
 
 gem "aws-sdk-s3", "~> 1.229"
 gem "aws-sdk-sqs", "~> 1.117"
-gem "bootsnap", "~> 1.25"
+gem "bootsnap", "~> 1.26"
 gem "clearance", "~> 2.12"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.41"
+gem "datadog", "~> 2.42"
 gem "dogstatsd-ruby", "~> 5.7"
 gem "google-protobuf", "~> 4.36"
 gem "faraday", "~> 2.14"
@@ -38,7 +38,7 @@ gem "puma", "~> 8.0"
 gem "puma-plugin-statsd", "~> 2.8"
 gem "rack", "~> 3.2"
 gem "rackup", "~> 2.3"
-gem "rack-sanitizer", "~> 2.0"
+gem "rack-sanitizer", "~> 2.1"
 gem "rbtrace", "~> 0.5.5"
 gem "rdoc", "~> 8.0"
 gem "roadie-rails", "~> 3.4"
@@ -73,7 +73,7 @@ gem "yaml-schema", "~> 1.2"
 # Admin dashboard
 gem "avo", "~> 3.32"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 4.14.0"
+gem "view_component", "~> 4.15.0"
 gem "pundit", "~> 2.5"
 gem "chartkick", "~> 5.2"
 gem "groupdate", "~> 6.8"
@@ -87,12 +87,18 @@ end
 
 # Logging
 gem "amazing_print", "~> 2.0"
-gem "rails_semantic_logger", "~> 5.1"
+gem "rails_semantic_logger", "~> 5.2"
 gem "pp", "0.6.4"
 
 # Former default gems
 gem "csv", "~> 3.3" # zeitwerk-2.6.12
 gem "observer", "~> 0.1.2" # launchdarkly-server-sdk-8.0.0
+
+# TODO: Remove this when the rails upstream merges the patch
+# json 3.0 dropped the positional options hash from JSON.parse, which
+# ActiveSupport::JSON.decode still uses (activesupport 8.1.3.1).
+# The change is already merged in rails
+gem "json", "< 3"
 
 # Assets
 gem "propshaft", "~> 1.3.2"
@@ -128,7 +134,7 @@ group :development, :test do
 end
 
 group :development do
-  gem "rails-erd", "~> 2.1"
+  gem "rails-erd", "~> 2.2"
   gem "listen", "~> 3.10"
   gem "letter_opener", "~> 1.10"
   gem "letter_opener_web", "~> 3.0"
@@ -148,7 +154,7 @@ group :test do
   gem "shoulda-matchers", "~> 8.0"
   gem "capybara-playwright-driver", "~> 0.5"
   gem "webmock", "~> 3.26"
-  gem "simplecov", "~> 1.1", require: false
+  gem "simplecov", "~> 1.2", require: false
   gem "simplecov-cobertura", "~> 4.0", require: false
   gem "aggregate_assertions", "~> 0.3.0"
   gem "minitest-gcstats", "~> 1.3"
