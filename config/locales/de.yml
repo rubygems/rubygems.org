@@ -29,13 +29,13 @@ de:
   locale_name: Deutsch
   none: None
   not_found: Nicht gefunden
-  or:
-  forbidden:
-  api_gem_not_found:
-  api_key_forbidden:
-  api_key_soft_deleted:
+  or: oder
+  forbidden: Nicht erlaubt
+  api_gem_not_found: Dieses Gem wurde nicht gefunden
+  api_key_forbidden: Dieser API-Key hat kein Zugang
+  api_key_soft_deleted: Ein ungültiger API-Key kann nicht verwendet werden. Bitte diesen löschen und einen neuen erstellen. 
   api_key_insufficient_scope:
-  email_not_confirmed:
+  email_not_confirmed: Bitte bestätigen Sie ihre E-Mail-Adresse um die API zu nutzen. Prüfen Sie ihr Postfach nach einem Bestätigungs-Link.
   please_sign_up: Zugriff verweigert. Bitte melden Sie sich unter https://rubygems.org
     mit einem Konto an
   please_sign_in: Bitte melden Sie sich an, um fortzufahren.
