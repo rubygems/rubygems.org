@@ -69,4 +69,18 @@ class MembershipTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context ".update_push_notifier" do
+    should "enable and disable push_notifier for memberships" do
+      membership = Membership.create!(organization: @organization, user: @user, invited_by: @owner, confirmed_at: Time.zone.now)
+
+      Membership.update_push_notifier([membership.id], [])
+
+      assert_predicate membership.reload, :push_notifier?
+
+      Membership.update_push_notifier([], [membership.id])
+
+      refute_predicate membership.reload, :push_notifier?
+    end
+  end
 end

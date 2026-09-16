@@ -14,45 +14,74 @@
     <p class="text-b2 text-neutral-700 dark:text-neutral-300"><%= t('.info') %></p>
   </div>
 
-  <% if @ownerships.any? %>
+  <% if @ownerships.any? || @memberships.any? %>
     <%= form_tag notifier_path, method: :put do %>
-      <div class="divide-y divide-neutral-200 dark:divide-neutral-800">
-        <% @ownerships.each do |ownership| %>
-          <section class="py-4 first:pt-0 last:pb-0">
-            <h2 class="text-h4 mb-4"><%= ownership.rubygem.name %></h2>
+      <% if @ownerships.any? %>
+        <h2 class="text-h3 mb-4"><%= t('.gems_heading') %></h2>
+        <div class="divide-y divide-neutral-200 dark:divide-neutral-800 mb-8">
+          <% @ownerships.each do |ownership| %>
+            <section class="py-4 first:pt-0 last:pb-0">
+              <h3 class="text-h4 mb-4"><%= ownership.rubygem.name %></h3>
 
-            <div class="flex flex-col gap-8 sm:flex-row">
-              <fieldset class="flex-1">
+              <div class="flex flex-col gap-8 sm:flex-row">
+                <fieldset class="flex-1">
+                  <legend class="<%= c.sub_heading_classes %> mb-2"><%= t('.push_heading') %></legend>
+                  <div class="space-y-2">
+                    <%= label_tag(nil, nil, class: radio_label) do %>
+                      <%= radio_button_tag "ownerships[#{ownership.id}][push]", :on, ownership.push_notifier?, class: radio_input %>
+                      <span><%= t('.on') %> <span class="text-b3 text-neutral-600 dark:text-neutral-400">(<%= t('.recommended') %>)</span></span>
+                    <% end %>
+                    <%= label_tag(nil, nil, class: radio_label) do %>
+                      <%= radio_button_tag "ownerships[#{ownership.id}][push]", :off, !ownership.push_notifier?, class: radio_input %>
+                      <span><%= t('.off') %></span>
+                    <% end %>
+                  </div>
+                </fieldset>
+
+                <fieldset class="flex-1">
+                  <legend class="<%= c.sub_heading_classes %> mb-2"><%= t('.owner_heading') %></legend>
+                  <div class="space-y-3">
+                    <%= label_tag(nil, nil, class: radio_label) do %>
+                      <%= radio_button_tag "ownerships[#{ownership.id}][owner]", :on, ownership.owner_notifier?, class: radio_input %>
+                      <span><%= t('.on') %> <span class="text-b3 text-neutral-600 dark:text-neutral-400">(<%= t('.recommended') %>)</span></span>
+                    <% end %>
+                    <%= label_tag(nil, nil, class: radio_label) do %>
+                      <%= radio_button_tag "ownerships[#{ownership.id}][owner]", :off, !ownership.owner_notifier?, class: radio_input %>
+                      <span><%= t('.off') %></span>
+                    <% end %>
+                  </div>
+                </fieldset>
+              </div>
+            </section>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if @memberships.any? %>
+        <h2 class="text-h3 mb-2"><%= t('.organizations_heading') %></h2>
+        <p class="text-b2 text-neutral-700 dark:text-neutral-300 mb-4"><%= t('.organization_info') %></p>
+        <div class="divide-y divide-neutral-200 dark:divide-neutral-800">
+          <% @memberships.each do |membership| %>
+            <section class="py-4 first:pt-0 last:pb-0">
+              <h3 class="text-h4 mb-4"><%= membership.organization.handle %></h3>
+
+              <fieldset>
                 <legend class="<%= c.sub_heading_classes %> mb-2"><%= t('.push_heading') %></legend>
                 <div class="space-y-2">
                   <%= label_tag(nil, nil, class: radio_label) do %>
-                    <%= radio_button_tag "ownerships[#{ownership.id}][push]", :on, ownership.push_notifier?, class: radio_input %>
+                    <%= radio_button_tag "memberships[#{membership.id}][push]", :on, membership.push_notifier?, class: radio_input %>
                     <span><%= t('.on') %> <span class="text-b3 text-neutral-600 dark:text-neutral-400">(<%= t('.recommended') %>)</span></span>
                   <% end %>
                   <%= label_tag(nil, nil, class: radio_label) do %>
-                    <%= radio_button_tag "ownerships[#{ownership.id}][push]", :off, !ownership.push_notifier?, class: radio_input %>
+                    <%= radio_button_tag "memberships[#{membership.id}][push]", :off, !membership.push_notifier?, class: radio_input %>
                     <span><%= t('.off') %></span>
                   <% end %>
                 </div>
               </fieldset>
-
-              <fieldset class="flex-1">
-                <legend class="<%= c.sub_heading_classes %> mb-2"><%= t('.owner_heading') %></legend>
-                <div class="space-y-3">
-                  <%= label_tag(nil, nil, class: radio_label) do %>
-                    <%= radio_button_tag "ownerships[#{ownership.id}][owner]", :on, ownership.owner_notifier?, class: radio_input %>
-                    <span><%= t('.on') %> <span class="text-b3 text-neutral-600 dark:text-neutral-400">(<%= t('.recommended') %>)</span></span>
-                  <% end %>
-                  <%= label_tag(nil, nil, class: radio_label) do %>
-                    <%= radio_button_tag "ownerships[#{ownership.id}][owner]", :off, !ownership.owner_notifier?, class: radio_input %>
-                    <span><%= t('.off') %></span>
-                  <% end %>
-                </div>
-              </fieldset>
-            </div>
-          </section>
-        <% end %>
-      </div>
+            </section>
+          <% end %>
+        </div>
+      <% end %>
 
       <div class="flex justify-end my-4">
         <%= render ButtonComponent.new(t('.update'), type: :submit) %>

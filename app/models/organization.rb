@@ -15,6 +15,7 @@ class Organization < ApplicationRecord
   has_many :unconfirmed_memberships, -> { where(confirmed_at: nil) }, class_name: "Membership", dependent: :destroy, inverse_of: :organization
   has_many :memberships_including_unconfirmed, class_name: "Membership", dependent: :destroy, inverse_of: :organization
   has_many :users, through: :memberships
+  has_many :push_notifiable_members, ->(org) { org.users.push_notifiable_members }, through: :memberships, source: :user
   has_many :rubygems, dependent: :nullify
   has_many :gem_name_reservations, dependent: :destroy
   has_many :audits, as: :auditable, dependent: :nullify

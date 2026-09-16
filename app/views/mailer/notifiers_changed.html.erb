@@ -26,6 +26,21 @@
             </li>
           <% end %>
         </ul>
+        <% if @memberships.any? %>
+          <p>
+            Here are your email notification settings for each organization you belong to:
+          </p>
+          <ul>
+            <% @memberships.each do |membership| %>
+              <li>
+                <%= membership.organization.handle %> organization emails:
+                <ul>
+                  <li>Gem Push Notifications: <%= membership.push_notifier? ? t("mailer.notifiers_changed.on") : t("mailer.notifiers_changed.off_html") %></li>
+                </ul>
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
         <p>If this change to your settings is expected, you do not need to take further action.</p>
         <p>
           <strong>Only if this change to your settings is unexpected</strong>

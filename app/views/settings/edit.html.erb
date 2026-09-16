@@ -104,7 +104,7 @@
         <%= t("oidc.api_key_roles.index.api_key_roles") %>
       <% end %>
     <% end %>
-    <% if @user.ownerships.any? %>
+    <% if @user.ownerships.any? || @user.memberships.confirmed.any? %>
       <%= c.list_item_to(notifier_path) do %>
         <%= t("notifiers.show.title") %>
       <% end %>
