@@ -179,10 +179,9 @@ class Rubygem < ApplicationRecord
   }, class_name: "Version", inverse_of: :rubygem
 
   def public_versions_with_extra_version(extra_version = nil)
-    version_ids = versions.published.by_display_order.limit(5).pluck(:id)
-    version_ids << extra_version.id if extra_version
-
-    versions.where(id: version_ids.uniq).by_display_order.to_a
+    positions = versions.published.reorder(:position).distinct.limit(5).pluck(:position) | [extra_version&.position].compact
+    version_ids = versions.published.where(position: positions).pluck(:id) | [extra_version&.id].compact
+    versions.where(id: version_ids).by_display_order.to_a
   end
 
   # NB: this intentionally does not default the platform to ruby.

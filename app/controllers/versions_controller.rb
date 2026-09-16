@@ -23,6 +23,7 @@ class VersionsController < ApplicationController
     @latest_version  = @rubygem.find_version_by_slug!(params[:id])
     @versions        = @rubygem.public_versions_with_extra_version(@latest_version)
     @versioned_links = @rubygem.links(@latest_version)
+    @previous_version, @next_version = @latest_version.previous_and_next_in_display_order
     @on_version_page = true
     add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
     if @latest_version == @rubygem.most_recent_version

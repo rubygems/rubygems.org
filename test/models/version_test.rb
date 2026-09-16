@@ -1269,6 +1269,12 @@ class VersionTest < ActiveSupport::TestCase
     should "return versions in display order" do
       assert_equal [@newest, @source, @multi_abi, @arm64_abi_four, @arm64_abi_three, @x86_abi_three], @rubygem.versions.by_display_order.to_a
     end
+
+    should "return previous and next versions in display order" do
+      assert_equal [@source, nil], @newest.previous_and_next_in_display_order
+      assert_equal [@arm64_abi_four, @source], @multi_abi.previous_and_next_in_display_order
+      assert_equal [nil, @arm64_abi_three], @x86_abi_three.previous_and_next_in_display_order
+    end
   end
 
   context "with a few versions" do

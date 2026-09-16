@@ -276,12 +276,17 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     rubygem.refresh_indexed!
   end
 
-  def previous_in_display_order
-    adjacent_display_version(1)
-  end
+  def previous_and_next_in_display_order
+    ids = rubygem.versions.by_display_order.pluck(:id)
+    current_index = ids.index(id)
+    return [nil, nil] unless current_index
 
-  def next_in_display_order
-    adjacent_display_version(-1)
+    previous_id = ids[current_index + 1]
+    next_id = current_index.positive? ? ids[current_index - 1] : nil
+
+    adjacent_versions = rubygem.versions.where(id: [previous_id, next_id].compact).index_by(&:id)
+
+    [adjacent_versions[previous_id], adjacent_versions[next_id]]
   end
 
   def yanked?
@@ -518,17 +523,6 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   private
-
-  def adjacent_display_version(offset)
-    versions = rubygem.versions.by_display_order.to_a
-    current_index = versions.index { |version| version.id == id }
-    return unless current_index
-
-    adjacent_index = current_index + offset
-    return if adjacent_index.negative?
-
-    versions[adjacent_index]
-  end
 
   def content_addressable_required_rubygems_version
     return if meets_content_addressable_rubygems_floor?
