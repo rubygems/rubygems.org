@@ -105,6 +105,82 @@ class PushTest < ActionDispatch::IntegrationTest
     INFO
   end
 
+  test "pushing a new gem with organization metadata as an owner" do
+    organization = create(:organization, handle: "org-example", owners: [@user])
+    spec = new_gemspec("org-first-gem", "1.0.0", "Gemcutter", "ruby") do |s|
+      s.metadata["rubygems_organization"] = organization.handle
+    end
+
+    push_gem build_gem(spec)
+
+    assert_response :success
+    rubygem = Rubygem.find_by!(name: "org-first-gem")
+
+    assert_equal organization, rubygem.organization
+    assert_empty rubygem.ownerships
+    assert rubygem.owned_by?(@user)
+  end
+
+  test "pushing a new gem with organization metadata as an admin" do
+    admin = create(:user)
+    organization = create(:organization, handle: "org-example", admins: [admin])
+    @key = "admin-key"
+    create(:api_key, owner: admin, key: @key, scopes: %i[push_rubygem])
+    spec = new_gemspec("org-admin-first-gem", "1.0.0", "Gemcutter", "ruby") do |s|
+      s.metadata["rubygems_organization"] = organization.handle
+    end
+
+    push_gem build_gem(spec)
+
+    assert_response :success
+    rubygem = Rubygem.find_by!(name: "org-admin-first-gem")
+
+    assert_equal organization, rubygem.organization
+    assert_empty rubygem.ownerships
+    assert rubygem.owned_by?(admin)
+  end
+
+  test "pushing a new gem with organization metadata as a maintainer is denied" do
+    maintainer = create(:user)
+    organization = create(:organization, handle: "org-example", maintainers: [maintainer])
+    @key = "maintainer-key"
+    create(:api_key, owner: maintainer, key: @key, scopes: %i[push_rubygem])
+    spec = new_gemspec("org-maintainer-first-gem", "1.0.0", "Gemcutter", "ruby") do |s|
+      s.metadata["rubygems_organization"] = organization.handle
+    end
+
+    assert_no_difference %w[Rubygem.count Ownership.count Version.count] do
+      push_gem build_gem(spec)
+    end
+
+    assert_response :forbidden
+    assert_equal "You do not have permission to add a gem to organization 'org-example'.", response.body
+    assert_nil Rubygem.find_by(name: "org-maintainer-first-gem")
+  end
+
+  test "an organization maintainer can push a new version after an owner claims the gem" do
+    maintainer = create(:user)
+    organization = create(:organization, handle: "org-example", owners: [@user], maintainers: [maintainer])
+    spec = new_gemspec("org-followup-gem", "1.0.0", "Gemcutter", "ruby") do |s|
+      s.metadata["rubygems_organization"] = organization.handle
+    end
+
+    push_gem build_gem(spec)
+
+    assert_response :success
+
+    create(:api_key, owner: maintainer, key: "maintainer-key", scopes: %i[push_rubygem])
+    @key = "maintainer-key"
+    push_gem build_gem(new_gemspec("org-followup-gem", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :success
+    rubygem = Rubygem.find_by!(name: "org-followup-gem")
+
+    assert_equal organization, rubygem.organization
+    assert_empty rubygem.ownerships
+    assert rubygem.versions.indexed.find_by(number: "2.0.0")
+  end
+
   test "push a new version of a gem" do
     rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
     create(:ownership, rubygem: rubygem, user: @user)
@@ -195,6 +271,26 @@ class PushTest < ActionDispatch::IntegrationTest
 
     rubygem = Rubygem.find_by!(name: "sandworm")
 
+    assert rubygem.owned_by?(@user)
+    assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: pending_trusted_publisher.trusted_publisher)
+  end
+
+  test "pushing a new gem with a pending trusted publisher and organization metadata" do
+    organization = create(:organization, handle: "org-example", owners: [@user])
+    pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "org-trusted-gem", user: @user)
+    @key = "trusted-org-key"
+    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    spec = new_gemspec("org-trusted-gem", "1.0.0", "Gemcutter", "ruby") do |s|
+      s.metadata["rubygems_organization"] = organization.handle
+    end
+
+    push_gem build_gem(spec)
+
+    assert_response :success
+    rubygem = Rubygem.find_by!(name: "org-trusted-gem")
+
+    assert_equal organization, rubygem.organization
+    assert_empty rubygem.ownerships
     assert rubygem.owned_by?(@user)
     assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: pending_trusted_publisher.trusted_publisher)
   end
