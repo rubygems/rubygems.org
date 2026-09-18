@@ -54,7 +54,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         end
 
         assert_select "p", "You will receive an email within the next few minutes. It contains instructions for changing your password."
-        assert_not_nil @user.reload.password_reset_token_digest
+        refute_nil @user.reload.password_reset_token_digest
         assert_nil @user.confirmation_token
         assert_in_delta 3.hours.from_now, @user.password_reset_token_expires_at, 2.seconds
       end
@@ -141,7 +141,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         begin_password_reset(reason: "compromised")
 
         assert_response :success
-        assert_not page.has_content?(I18n.t("passwords.edit.compromised_heading"))
+        refute page.has_content?(I18n.t("passwords.edit.compromised_heading"))
       end
 
       should "not bypass enabled MFA" do
@@ -158,7 +158,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         begin_password_reset
 
         assert_response :success
-        assert_not page.has_content?(I18n.t("passwords.edit.compromised_heading"))
+        refute page.has_content?(I18n.t("passwords.edit.compromised_heading"))
       end
     end
 

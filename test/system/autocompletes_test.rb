@@ -16,7 +16,8 @@ class AutocompletesTest < ApplicationSystemTestCase
     @form = @fill_field.ancestor("form")
     @fill_field.set "rubo"
     # Wait for the autocomplete request to populate the listbox before each test.
-    @form.assert_selector "[role='option']", minimum: 1
+    assert_selector "#homepage_gem_query.autocomplete-done"
+    @form.assert_selector "[role='option']", count: 2
   end
 
   test "submitting the field runs a search" do
@@ -88,6 +89,24 @@ class AutocompletesTest < ApplicationSystemTestCase
     assert_equal option["id"], active_descendant
   end
 
+  test "a slow response for an earlier term does not replace the suggestions" do
+    # Reload so the fetch stub is in place before the first suggestion request.
+    visit root_path
+    delay_responses_for_shorter_terms
+    @fill_field = find_by_id "homepage_gem_query"
+    @form = @fill_field.ancestor("form")
+    @fill_field.set "rubo"
+    @form.assert_selector "[role='option']", count: 2
+
+    @fill_field.send_keys :down
+    @form.assert_selector "#{SUGGESTIONS}[aria-activedescendant='suggest-0']"
+
+    assert_selector "body[data-stale-responses]"
+    settle_pending_renders
+
+    assert_equal "suggest-0", active_descendant
+  end
+
   test "clicking a suggestion submits the search" do
     @form.first("[role='option']", text: "rubocop").click
 
@@ -115,5 +134,31 @@ class AutocompletesTest < ApplicationSystemTestCase
     @form.assert_selector "#{SUGGESTIONS}[aria-activedescendant]"
 
     assert_equal(1, suggestion_options.count { |option| option["id"] == active_descendant })
+  end
+
+  # Delays the autocomplete responses for the prefixes typed before the full
+  # term, so they always resolve after the response for the full term.
+  def delay_responses_for_shorter_terms
+    page.execute_script(<<~JS)
+      const originalFetch = window.fetch;
+      let staleResponses = 0;
+      window.fetch = (url, options) =>
+        originalFetch(url, options).then(async (response) => {
+          const query = new URL(url, location.origin).searchParams.get("query");
+          if (query && query.length < 4) {
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            staleResponses += 1;
+            document.body.dataset.staleResponses = staleResponses;
+          }
+          return response;
+        });
+    JS
+  end
+
+  def settle_pending_renders
+    page.evaluate_async_script(<<~JS)
+      const done = arguments[0];
+      requestAnimationFrame(() => requestAnimationFrame(done));
+    JS
   end
 end

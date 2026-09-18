@@ -24,7 +24,10 @@ Rails/LexicallyScopedActionFilter:
   Enabled: false
 
 Rails/RefuteMethods:
-  Enabled: false
+  EnforcedStyle: refute
+
+Minitest/AssertEmptyLiteral:
+  Enabled: true
 
 Rails/HelperInstanceVariable:
   Enabled: false

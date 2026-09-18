@@ -54,7 +54,7 @@ class RubygemTransferTest < ActiveSupport::TestCase
     non_owner = create(:user)
     @transfer.created_by = non_owner
 
-    assert_not @transfer.valid?
+    refute_predicate @transfer, :valid?
     assert_includes @transfer.errors[:created_by], "must be an owner of the #{@rubygem.name} gem"
     assert_includes @transfer.errors[:created_by], "does not have permission to transfer gems to this organization"
   end
@@ -109,7 +109,7 @@ class RubygemTransferTest < ActiveSupport::TestCase
     @transfer.transfer!
 
     invites.each do |invite|
-      assert_not Membership.exists?(user: invite.user, organization: @organization)
+      refute Membership.exists?(user: invite.user, organization: @organization)
     end
   end
 
@@ -144,7 +144,7 @@ class RubygemTransferTest < ActiveSupport::TestCase
     @transfer.invites.create!(user: user, invitable: @transfer, role: :outside_contributor)
     @transfer.transfer!
 
-    assert_not Membership.exists?(user: user, organization: @organization)
+    refute Membership.exists?(user: user, organization: @organization)
   end
 
   test "updates the status and completed_at fields when transfer is successful" do
@@ -158,7 +158,7 @@ class RubygemTransferTest < ActiveSupport::TestCase
     existing_organization = create(:organization)
     @rubygem.update!(organization: existing_organization)
 
-    assert_not @transfer.valid?
+    refute_predicate @transfer, :valid?
     assert_includes @transfer.errors[:rubygems], "#{@rubygem.name} is already owned by an organization"
   end
 

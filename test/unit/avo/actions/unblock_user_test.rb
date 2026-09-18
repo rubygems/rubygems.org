@@ -32,7 +32,7 @@ class UnblockUserTest < ActiveSupport::TestCase
   should "ask for confirmation" do
     action_mock = Data.define(:record).new(record: @user)
 
-    assert_not_nil action_mock.instance_exec(&Avo::Actions::UnblockUser.message)
+    refute_nil action_mock.instance_exec(&Avo::Actions::UnblockUser.message)
   end
 
   should "be visible" do

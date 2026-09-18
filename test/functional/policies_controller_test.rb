@@ -49,7 +49,7 @@ class PoliciesControllerTest < ActionController::TestCase
         assert_response :redirect
         @user.reload
 
-        assert_not_nil @user.policies_acknowledged_at
+        refute_nil @user.policies_acknowledged_at
       end
     end
   end

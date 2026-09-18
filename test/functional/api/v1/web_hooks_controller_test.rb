@@ -280,7 +280,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
             assert page.has_content?("No such webhook exists under your account.")
           end
           should "not delete the webhook" do
-            assert_not_nil WebHook.find(@rubygem_hook.id)
+            refute_nil WebHook.find(@rubygem_hook.id)
           end
         end
 
@@ -296,7 +296,7 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
             assert page.has_content?("No such webhook exists under your account.")
           end
           should "not delete the webhook" do
-            assert_not_nil WebHook.find(@rubygem_hook.id)
+            refute_nil WebHook.find(@rubygem_hook.id)
           end
         end
       end

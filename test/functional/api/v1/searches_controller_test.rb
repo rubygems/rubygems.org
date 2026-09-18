@@ -123,7 +123,7 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
         assert_equal "match1", @body[0]
       end
       should "not contain other gems" do
-        assert_not @body.include?("other")
+        refute_includes @body, "other"
       end
     end
 

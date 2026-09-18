@@ -9,6 +9,7 @@ export default class extends Controller {
   connect() {
     this.indexNumber = -1;
     this.suggestLength = 0;
+    this.requestNumber = 0;
   }
 
   disconnect() {
@@ -57,6 +58,8 @@ export default class extends Controller {
   async suggest(e) {
     const el = e.currentTarget;
     const term = el.value.trim();
+    // Responses can arrive out of order, so only the most recent request is applied.
+    const requestNumber = ++this.requestNumber;
 
     if (term.length >= 2) {
       el.classList.remove("autocomplete-done");
@@ -68,8 +71,10 @@ export default class extends Controller {
           method: "GET",
         });
         const data = await response.json();
+        if (requestNumber !== this.requestNumber) return;
         this.showSuggestions(data.slice(0, 10));
       } catch (error) {}
+      if (requestNumber !== this.requestNumber) return;
       el.classList.remove("autocomplete-loading");
       el.classList.add("autocomplete-done");
     } else {

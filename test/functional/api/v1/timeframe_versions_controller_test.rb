@@ -50,7 +50,7 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
           to: "2017-11-12"
         }
 
-        assert_equal 400, response.status
+        assert_response :bad_request
         assert_includes response.body, "iso8601"
       end
 
@@ -60,7 +60,7 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
           to: ["2017-11-12"]
         }
 
-        assert_equal 400, response.status
+        assert_response :bad_request
         assert_includes response.body, "iso8601"
       end
 
@@ -70,7 +70,7 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
           to: Time.zone.parse("2017-11-12").iso8601
         }
 
-        assert_equal 400, response.status
+        assert_response :bad_request
         assert_includes response.body, "iso8601"
       end
 
@@ -80,7 +80,7 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
           to: Time.zone.parse("2017-11-30").iso8601
         }
 
-        assert_equal 400, response.status
+        assert_response :bad_request
         assert_includes response.body, "query time range cannot exceed"
       end
 
@@ -90,7 +90,7 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
           to: Time.zone.parse("2017-11-09").iso8601
         }
 
-        assert_equal 400, response.status
+        assert_response :bad_request
         assert_includes response.body, "must be before the ending time parameter"
       end
     end
@@ -99,7 +99,7 @@ class Api::V1::TimeframeVersionsControllerTest < ActionController::TestCase
       should 'return a bad request when "from" is missing' do
         get :index, format: :json, params: { to: Time.zone.parse("2017-11-12").iso8601 }
 
-        assert_equal 400, response.status
+        assert_response :bad_request
         assert_includes response.body, "missing"
       end
 

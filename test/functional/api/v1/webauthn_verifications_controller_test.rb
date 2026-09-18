@@ -32,7 +32,7 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
       should respond_with :success
 
       should "have a body" do
-        assert_not_nil @response.body
+        refute_nil @response.body
       end
 
       if format == :plain
