@@ -50,8 +50,9 @@ export default class extends Controller {
 
   choose(e) {
     this.clear();
-    this.queryTarget.value = e.target.textContent;
-    this.queryTarget.form.submit();
+    const gemName = e.currentTarget.textContent.trim();
+    this.queryTarget.value = gemName;
+    window.location.assign(`/gems/${encodeURIComponent(gemName)}`);
   }
 
   async suggest(e) {
