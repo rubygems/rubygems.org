@@ -35,7 +35,7 @@ class OrganizationPushNotificationsTest < ActiveSupport::TestCase
     recipients = ActionMailer::Base.deliveries.flat_map(&:to)
 
     assert_includes recipients, @pusher.email
-    assert_not_includes recipients, @member.email
+    refute_includes recipients, @member.email
   end
 
   test "does not send gem pushed email to unconfirmed organization members" do
@@ -48,7 +48,7 @@ class OrganizationPushNotificationsTest < ActiveSupport::TestCase
 
     recipients = ActionMailer::Base.deliveries.flat_map(&:to)
 
-    assert_not_includes recipients, unconfirmed_member.email
+    refute_includes recipients, unconfirmed_member.email
   end
 
   test "sends gem yanked email to confirmed organization members with push_notifier enabled" do
@@ -78,7 +78,7 @@ class OrganizationPushNotificationsTest < ActiveSupport::TestCase
     recipients = ActionMailer::Base.deliveries.flat_map(&:to)
 
     assert_includes recipients, @pusher.email
-    assert_not_includes recipients, @member.email
+    refute_includes recipients, @member.email
   end
 
   private
