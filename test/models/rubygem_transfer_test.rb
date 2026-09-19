@@ -84,7 +84,7 @@ class RubygemTransferTest < ActiveSupport::TestCase
       @transfer.transfer!
     end
 
-    assert_not Membership.exists?(user: invite.user, organization: @organization)
+    refute Membership.exists?(user: invite.user, organization: @organization)
     assert_nil @rubygem.reload.organization
   end
 
@@ -176,7 +176,7 @@ class RubygemTransferTest < ActiveSupport::TestCase
 
     assert_predicate @transfer, :completed?
     assert_equal "maintainer", membership.reload.role
-    assert_not Ownership.exists?(user: co_owner, rubygem: @rubygem)
+    refute Ownership.exists?(user: co_owner, rubygem: @rubygem)
     assert_equal @organization, @rubygem.reload.organization
   end
 
@@ -189,7 +189,7 @@ class RubygemTransferTest < ActiveSupport::TestCase
     @transfer.transfer!
 
     assert_equal "admin", membership.reload.role
-    assert_not Ownership.exists?(user: co_owner, rubygem: @rubygem)
+    refute Ownership.exists?(user: co_owner, rubygem: @rubygem)
   end
 
   test "creates membership for new invitee and leaves existing member unchanged" do
@@ -209,8 +209,8 @@ class RubygemTransferTest < ActiveSupport::TestCase
 
     assert_equal "maintainer", membership.reload.role
     assert Membership.exists?(user: new_invitee, organization: @organization, role: :admin)
-    assert_not Ownership.exists?(user: existing_member, rubygem: @rubygem)
-    assert_not Ownership.exists?(user: new_invitee, rubygem: @rubygem)
+    refute Ownership.exists?(user: existing_member, rubygem: @rubygem)
+    refute Ownership.exists?(user: new_invitee, rubygem: @rubygem)
   end
 
   test "removes ownership for existing members even without an invite role" do
@@ -222,7 +222,7 @@ class RubygemTransferTest < ActiveSupport::TestCase
     @transfer.transfer!
 
     assert_equal "admin", membership.reload.role
-    assert_not Ownership.exists?(user: co_owner, rubygem: @rubygem)
+    refute Ownership.exists?(user: co_owner, rubygem: @rubygem)
   end
 
   test "does not review existing organization members on the users step" do
@@ -237,6 +237,6 @@ class RubygemTransferTest < ActiveSupport::TestCase
     reviewable_user_ids = @transfer.reviewable_invites.map(&:user_id)
 
     assert_includes reviewable_user_ids, outsider.id
-    assert_not_includes reviewable_user_ids, co_owner.id
+    refute_includes reviewable_user_ids, co_owner.id
   end
 end
