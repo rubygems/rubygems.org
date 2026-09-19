@@ -162,6 +162,108 @@ class OwnershipTest < ActiveSupport::TestCase
     end
   end
 
+  context "historical ownership" do
+    context "on create" do
+      should "create a matching open HistoricalOwnership when already confirmed" do
+        ownership = create(:ownership, role: :owner)
+
+        historical = HistoricalOwnership.find_by(rubygem: ownership.rubygem, user: ownership.user)
+
+        assert_predicate historical, :present?
+        assert_in_delta ownership.confirmed_at, historical.first_owned_at, 1.second
+        assert_nil historical.removed_at
+        assert_equal "owner", historical.role
+      end
+
+      should "not create a HistoricalOwnership while unconfirmed" do
+        ownership = create(:ownership, :unconfirmed)
+
+        assert_not HistoricalOwnership.exists?(rubygem: ownership.rubygem, user: ownership.user)
+      end
+    end
+
+    context "on confirm" do
+      should "create a matching open HistoricalOwnership using the confirmation time" do
+        ownership = create(:ownership, :unconfirmed, role: :owner)
+
+        ownership.confirm!
+
+        historical = HistoricalOwnership.find_by(rubygem: ownership.rubygem, user: ownership.user)
+
+        assert_predicate historical, :present?
+        assert_in_delta ownership.confirmed_at, historical.first_owned_at, 1.second
+        assert_nil historical.removed_at
+        assert_equal "owner", historical.role
+      end
+    end
+
+    context "on role change" do
+      setup do
+        @ownership = create(:ownership, role: :maintainer)
+      end
+
+      should "raise the open HistoricalOwnership's role when promoted" do
+        @ownership.update!(role: :owner)
+
+        historical = HistoricalOwnership.find_by(rubygem: @ownership.rubygem, user: @ownership.user)
+
+        assert_equal "owner", historical.role
+      end
+
+      should "not lower the open HistoricalOwnership's role when demoted" do
+        @ownership.update!(role: :owner)
+        @ownership.update!(role: :maintainer)
+
+        historical = HistoricalOwnership.find_by(rubygem: @ownership.rubygem, user: @ownership.user)
+
+        assert_equal "owner", historical.role
+      end
+    end
+
+    context "on destroy" do
+      setup do
+        @rubygem = create(:rubygem)
+        @ownership_one = create(:ownership, rubygem: @rubygem)
+        @ownership_two = create(:ownership, rubygem: @rubygem)
+      end
+
+      should "close the matching open HistoricalOwnership" do
+        @ownership_two.safe_destroy
+
+        historical = HistoricalOwnership.find_by(rubygem: @rubygem, user: @ownership_two.user)
+
+        assert_predicate historical, :present?
+        refute_nil historical.removed_at
+      end
+
+      should "not affect other owners' HistoricalOwnership records" do
+        @ownership_two.safe_destroy
+
+        historical = HistoricalOwnership.find_by(rubygem: @rubygem, user: @ownership_one.user)
+
+        assert_nil historical.removed_at
+      end
+
+      should "tolerate there being no existing open HistoricalOwnership" do
+        HistoricalOwnership.where(rubygem: @rubygem, user: @ownership_two.user).delete_all
+
+        assert_nothing_raised do
+          @ownership_two.safe_destroy
+        end
+
+        assert_not HistoricalOwnership.exists?(rubygem: @rubygem, user: @ownership_two.user)
+      end
+
+      should "not create a HistoricalOwnership for a rescinded unconfirmed invite" do
+        unconfirmed = create(:ownership, :unconfirmed, rubygem: @rubygem)
+
+        unconfirmed.destroy
+
+        assert_not HistoricalOwnership.exists?(rubygem: @rubygem, user: unconfirmed.user)
+      end
+    end
+  end
+
   context "#valid_confirmation_token?" do
     setup do
       @ownership = create(:ownership)
