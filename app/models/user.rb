@@ -182,7 +182,9 @@ class User < ApplicationRecord
   # The `actor` block on request and gem.push.* log lines: GlobalIDs, not
   # PII, and the same GlobalID Rack::Attack.api_key_owner_id throttles on.
   def log_actor_attributes
-    { gid: to_gid.to_s, type: "user", account_age_seconds: (Time.current - created_at).to_i }
+    attributes = { gid: to_gid.to_s, type: "user" }
+    attributes[:account_age_seconds] = (Time.current - created_at).to_i if created_at
+    attributes
   end
 
   def reset_api_key!
