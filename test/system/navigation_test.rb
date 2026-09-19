@@ -54,7 +54,7 @@ class NavigationTest < ApplicationSystemTestCase
     editor = find("textarea[aria-label='Test editor']")
     editor.send_keys("/")
 
-    assert_field "Test editor", with: "/"
+    assert_equal "/", editor.value
     assert_no_selector "#query:focus"
 
     content_editor = find("[aria-label='Test content editor']")
