@@ -1182,6 +1182,15 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#log_actor_attributes" do
+    should "omit account age when created_at is nil" do
+      user = create(:user)
+      user.created_at = nil
+
+      assert_equal({ gid: user.to_gid.to_s, type: "user" }, user.log_actor_attributes)
+    end
+  end
+
   context ".normalize_email" do
     should "return the normalized email" do
       assert_equal "UsEr@example.COM", User.normalize_email(:"UsEr@\texample . COM")
