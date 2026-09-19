@@ -180,6 +180,40 @@ class GemValidator::InvalidGemspecTest < Minitest::Test
     end
   end
 
+  def test_accept_rubygems_organization_metadata
+    @valid_gemspec.metadata = { "rubygems_organization" => "org-example" }
+
+    assert_valid_gemspec @valid_gemspec
+    assert_valid_gemspec_yaml @valid_gemspec.to_yaml
+  end
+
+  def test_reject_rubygems_organization_too_short
+    @valid_gemspec.metadata = { "rubygems_organization" => "a" }
+
+    assert_valid_gemspec @valid_gemspec
+    assert_raises GemValidator::Package::InvalidGemspec do
+      GemValidator::Package.validate_gemspec_yaml @valid_gemspec.to_yaml
+    end
+  end
+
+  def test_reject_rubygems_organization_too_long
+    @valid_gemspec.metadata = { "rubygems_organization" => "a" * 41 }
+
+    assert_valid_gemspec @valid_gemspec
+    assert_raises GemValidator::Package::InvalidGemspec do
+      GemValidator::Package.validate_gemspec_yaml @valid_gemspec.to_yaml
+    end
+  end
+
+  def test_reject_rubygems_organization_illegal_characters
+    @valid_gemspec.metadata = { "rubygems_organization" => "org.example" }
+
+    assert_valid_gemspec @valid_gemspec
+    assert_raises GemValidator::Package::InvalidGemspec do
+      GemValidator::Package.validate_gemspec_yaml @valid_gemspec.to_yaml
+    end
+  end
+
   def test_reject_nil_license
     @valid_gemspec.licenses = nil
 

@@ -419,6 +419,10 @@ class PusherTest < ActiveSupport::TestCase
   end
 
   context "checking if the rubygem can be pushed to" do
+    setup do
+      @cutter.stubs(:spec).returns stub(metadata: {})
+    end
+
     should "be true if rubygem is new" do
       @cutter.stubs(:rubygem).returns Rubygem.new
 
@@ -620,5 +624,201 @@ class PusherTest < ActiveSupport::TestCase
       refute @cutter.verify_sigstore
       assert_equal "Attestation verification failed:\nAttestation failed to validate", @cutter.message
     end
+  end
+
+  context "claiming a new gem for an organization" do
+    setup do
+      @organization = create(:organization, handle: "org-example", owners: [@user])
+    end
+
+    should "create personal ownership when a new gem has no organization metadata" do
+      cutter = push_gem_named("plain-new-gem")
+
+      assert cutter.process
+      rubygem = Rubygem.find_by!(name: "plain-new-gem")
+
+      assert_nil rubygem.organization
+      assert_predicate rubygem.ownerships.where(user: @user), :exists?
+    end
+
+    should "create personal ownership when the pusher is not an organization member and metadata is absent" do
+      guest = create(:user)
+      api_key = create(:api_key, owner: guest)
+      cutter = push_gem_named("guest-new-gem", api_key: api_key)
+
+      assert cutter.process
+      rubygem = Rubygem.find_by!(name: "guest-new-gem")
+
+      assert_nil rubygem.organization
+      assert_predicate rubygem.ownerships.where(user: guest), :exists?
+    end
+
+    should "assign the gem to the organization for an owner without creating ownership" do
+      cutter = push_gem_named("org-owned-gem", organization_handle: @organization.handle)
+
+      assert cutter.process
+      rubygem = Rubygem.find_by!(name: "org-owned-gem")
+
+      assert_equal @organization, rubygem.organization
+      assert_empty rubygem.ownerships
+      assert rubygem.owned_by?(@user)
+    end
+
+    should "assign the gem to the organization for an admin without creating ownership" do
+      admin = create(:user)
+      create(:membership, :admin, user: admin, organization: @organization)
+      api_key = create(:api_key, owner: admin)
+      cutter = push_gem_named("org-admin-gem", organization_handle: @organization.handle, api_key: api_key)
+
+      assert cutter.process
+      rubygem = Rubygem.find_by!(name: "org-admin-gem")
+
+      assert_equal @organization, rubygem.organization
+      assert_empty rubygem.ownerships
+      assert rubygem.owned_by?(admin)
+    end
+
+    should "look up the organization handle case-insensitively" do
+      cutter = push_gem_named("org-case-gem", organization_handle: @organization.handle.upcase)
+
+      assert cutter.process
+      rubygem = Rubygem.find_by!(name: "org-case-gem")
+
+      assert_equal @organization, rubygem.organization
+    end
+
+    should "deny a maintainer and not create the gem" do
+      maintainer = create(:user)
+      create(:membership, :maintainer, user: maintainer, organization: @organization)
+      api_key = create(:api_key, owner: maintainer)
+
+      assert_no_difference %w[Rubygem.count Ownership.count Version.count] do
+        cutter = push_gem_named("org-maintainer-gem", organization_handle: @organization.handle, api_key: api_key)
+
+        refute cutter.process
+        assert_equal 403, cutter.code
+        assert_equal "You do not have permission to add a gem to organization 'org-example'.", cutter.message
+      end
+
+      assert_nil Rubygem.find_by(name: "org-maintainer-gem")
+    end
+
+    should "deny a non-member and not create the gem" do
+      guest = create(:user)
+      api_key = create(:api_key, owner: guest)
+
+      assert_no_difference %w[Rubygem.count Ownership.count Version.count] do
+        cutter = push_gem_named("org-guest-gem", organization_handle: @organization.handle, api_key: api_key)
+
+        refute cutter.process
+        assert_equal 403, cutter.code
+        assert_equal "You do not have permission to add a gem to organization 'org-example'.", cutter.message
+      end
+
+      assert_nil Rubygem.find_by(name: "org-guest-gem")
+    end
+
+    should "deny an unconfirmed admin and not create the gem" do
+      pending_admin = create(:user)
+      create(:membership, :pending, :admin, user: pending_admin, organization: @organization)
+      api_key = create(:api_key, owner: pending_admin)
+
+      assert_no_difference %w[Rubygem.count Ownership.count Version.count] do
+        cutter = push_gem_named("org-pending-gem", organization_handle: @organization.handle, api_key: api_key)
+
+        refute cutter.process
+        assert_equal 403, cutter.code
+      end
+
+      assert_nil Rubygem.find_by(name: "org-pending-gem")
+    end
+
+    should "return 404 when the organization handle does not exist" do
+      assert_no_difference %w[Rubygem.count Ownership.count Version.count] do
+        cutter = push_gem_named("org-missing-gem", organization_handle: "no-such-org")
+
+        refute cutter.process
+        assert_equal 404, cutter.code
+        assert_equal "Could not find organization 'no-such-org'.", cutter.message
+      end
+
+      assert_nil Rubygem.find_by(name: "org-missing-gem")
+    end
+
+    should "ignore organization metadata on an existing user-owned gem" do
+      rubygem = create(:rubygem, name: "user-owned-gem", number: "1.0.0", owners: [@user])
+      cutter = push_gem_named("user-owned-gem", version: "2.0.0", organization_handle: @organization.handle)
+
+      assert cutter.process
+      rubygem.reload
+
+      assert_nil rubygem.organization
+      assert_predicate rubygem.ownerships.where(user: @user), :exists?
+    end
+
+    should "ignore organization metadata on an existing organization-owned gem" do
+      rubygem = create(:rubygem, name: "already-org-gem", number: "1.0.0")
+      @organization.rubygems << rubygem
+      other_organization = create(:organization, owners: [@user], handle: "other-org")
+      cutter = push_gem_named("already-org-gem", version: "2.0.0", organization_handle: other_organization.handle)
+
+      assert cutter.process
+
+      assert_equal @organization, rubygem.reload.organization
+    end
+
+    should "deny a non-member pushing an existing organization-owned gem even with metadata" do
+      rubygem = create(:rubygem, name: "org-member-only", number: "1.0.0")
+      @organization.rubygems << rubygem
+      guest = create(:user)
+      api_key = create(:api_key, owner: guest)
+
+      assert_no_difference "Version.count" do
+        cutter = push_gem_named("org-member-only", version: "2.0.0", organization_handle: @organization.handle, api_key: api_key)
+
+        refute cutter.process
+        assert_equal 403, cutter.code
+      end
+
+      assert_equal @organization, rubygem.reload.organization
+    end
+
+    should "assign the gem to the organization for a pending trusted publisher without creating ownership" do
+      pending_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "trusted-org-gem", user: @user)
+      api_key = create(:api_key, owner: pending_publisher.trusted_publisher, scopes: %i[push_rubygem])
+      cutter = push_gem_named("trusted-org-gem", organization_handle: @organization.handle, api_key: api_key)
+
+      assert cutter.process
+      rubygem = Rubygem.find_by!(name: "trusted-org-gem")
+
+      assert_equal @organization, rubygem.organization
+      assert_empty rubygem.ownerships
+      assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: pending_publisher.trusted_publisher)
+      assert rubygem.owned_by?(@user)
+    end
+
+    should "deny a pending trusted publisher whose user cannot add gems to the organization" do
+      maintainer = create(:user)
+      create(:membership, :maintainer, user: maintainer, organization: @organization)
+      pending_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "trusted-maintainer-gem", user: maintainer)
+      api_key = create(:api_key, owner: pending_publisher.trusted_publisher, scopes: %i[push_rubygem])
+
+      assert_no_difference %w[Rubygem.count Ownership.count Version.count] do
+        cutter = push_gem_named("trusted-maintainer-gem", organization_handle: @organization.handle, api_key: api_key)
+
+        refute cutter.process
+        assert_equal 403, cutter.code
+        assert_equal "You do not have permission to add a gem to organization 'org-example'.", cutter.message
+      end
+
+      assert_nil Rubygem.find_by(name: "trusted-maintainer-gem")
+    end
+  end
+
+  def push_gem_named(name, version: "1.0.0", organization_handle: nil, api_key: @api_key)
+    spec = new_gemspec(name, version, "Gemcutter", "ruby") do |s|
+      s.metadata["rubygems_organization"] = organization_handle if organization_handle
+    end
+    Pusher.new(api_key, build_gem(spec))
   end
 end
