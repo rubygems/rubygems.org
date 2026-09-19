@@ -264,6 +264,37 @@ class RubygemTest < ActiveSupport::TestCase
 
         assert_equal versions.count, versions.uniq.count
       end
+
+      should "limit by version groups and include every build in those groups" do
+        rubygem = create(:rubygem, name: "group-limit-test")
+        latest_group = %w[ruby arm64-darwin x86_64-linux aarch64-linux x64-mingw-ucrt java].map do |platform|
+          create(:version, rubygem: rubygem, number: "2.0.0", platform: platform, gem_platform: platform, position: 0)
+        end
+        older_versions = (1..5).map do |position|
+          create(:version, rubygem: rubygem, number: "1.#{position}.0", position: position)
+        end
+
+        versions = rubygem.public_versions_with_extra_version
+
+        assert_empty latest_group.map(&:reload) - versions
+        assert_equal %w[2.0.0 1.5.0 1.4.0 1.3.0 1.2.0], versions.map(&:number).uniq
+        refute_includes versions, older_versions.first.reload
+      end
+
+      should "include every build in the extra version group" do
+        rubygem = create(:rubygem, name: "extra-group-test")
+        5.times do |position|
+          create(:version, rubygem: rubygem, number: "2.#{position}.0", position: position)
+        end
+        extra_group = %w[arm64-darwin x86_64-linux].map do |platform|
+          create(:version, rubygem: rubygem, number: "1.0.0", platform: platform, gem_platform: platform, position: 10)
+        end
+
+        extra_group.each(&:reload)
+        versions = rubygem.public_versions_with_extra_version(extra_group.first)
+
+        assert_empty extra_group - versions
+      end
     end
 
     context "#find_public_version" do

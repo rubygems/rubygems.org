@@ -247,11 +247,9 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should "render versions in correct order" do
-      assert_select("div.versions > ol > li") do |elements|
-        elements.each_with_index do |elem, index|
-          assert_select elem, "a", @versions[index].number
-        end
-      end
+      page_versions = css_select("[data-testid='gem-versions'] > li > div > span").map(&:text)
+
+      assert_equal @versions.map(&:number), page_versions
     end
   end
 
@@ -420,5 +418,52 @@ class RubygemsControllerTest < ActionController::TestCase
 
       assert page.has_selector?("a[href='#{profile_path(@outside_contributor.display_id)}']")
     end
+  end
+
+  context "On GET to show for a gem with content-addressable versions" do
+    setup do
+      @rubygem = create(:rubygem, name: "content-addressable-ui-test")
+      @newest = create_content_addressable_version(number: "0.2.0", platform: "arm64-darwin", ruby_abi: "4.0")
+      @source = create(:version, rubygem: @rubygem, number: "0.1.0")
+      @fat = create(:version, rubygem: @rubygem, number: "0.1.0", platform: "arm64-darwin", gem_platform: "arm64-darwin")
+      @arm64 = create_content_addressable_version(number: "0.1.0", platform: "arm64-darwin", ruby_abi: "4.0")
+      @x86 = create_content_addressable_version(number: "0.1.0", platform: "x86_64-linux", ruby_abi: "3.3")
+    end
+
+    should "render grouped versions with content addresses and build type badges" do
+      get :show, params: { id: @rubygem.slug }
+
+      assert_response :success
+      assert_equal %w[0.2.0 0.1.0], version_group_text
+      assert_select "[data-testid='gem-versions'] h4", text: "arm64-darwin"
+      assert_select "[data-testid='gem-versions'] h4", text: "x86_64-linux"
+      [@newest, @arm64, @x86].each do |version|
+        assert_select "[data-testid='gem-versions'] a[href=?]",
+                      rubygem_version_path(@rubygem.slug, version.slug), text: /Ruby ABI #{version.ruby_abi}/
+        assert_select "[data-testid='gem-versions']", text: /content address: #{version.content_address}/
+      end
+      assert_select "[data-testid='gem-versions'] a[href=?]", rubygem_version_path(@rubygem.slug, @source.slug), text: /source/
+      assert_select "[data-testid='gem-versions'] a[href=?]", rubygem_version_path(@rubygem.slug, @fat.slug), text: /multi-abi/
+      assert_select "[data-testid='gem-versions']", text: /Ruby ABI 4.0/
+      assert_select "[data-testid='gem-versions']", text: /single-abi/, count: 0
+    end
+  end
+
+  private
+
+  def create_content_addressable_version(number:, platform:, ruby_abi:)
+    create(:version,
+           rubygem: @rubygem,
+           number: number,
+           platform: platform,
+           gem_platform: platform,
+           ruby_abi: ruby_abi,
+           required_ruby_version: "~> #{ruby_abi}.0",
+           required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION,
+           sha256: Digest::SHA2.base64digest([@rubygem.name, number, platform, ruby_abi].join("-")))
+  end
+
+  def version_group_text
+    css_select("[data-testid='gem-versions'] > li > div > span").map(&:text)
   end
 end

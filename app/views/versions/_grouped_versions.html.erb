@@ -1,0 +1,50 @@
+<% row_link_class = "grid w-full items-center gap-x-2 gap-y-1 rounded-sm px-2 py-1 -mx-2 no-underline hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+<% row_link_style = "grid-template-columns: max-content 10rem 4rem minmax(0, 1fr);" %>
+<% badge_class = "inline-flex w-fit items-center rounded-full px-2 py-0.5 text-c4 font-semibold bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300" %>
+<% row_text_class = "text-b4 text-neutral-700 dark:text-neutral-400" %>
+
+<% versions.to_a.group_by(&:number).each_value do |version_group| %>
+  <% representative = version_group.first %>
+  <li class="flex flex-col gap-2">
+    <div>
+      <span class="font-mono text-c4 px-2 py-0.5 rounded-sm bg-green-200 dark:bg-green-800 text-neutral-900 dark:text-white"><%= representative.number %></span>
+    </div>
+
+    <ol class="ml-4 flex flex-col gap-2 border-l border-neutral-300 pl-3 dark:border-neutral-700">
+      <% version_group.group_by(&:platform).each do |platform, platform_versions| %>
+        <li class="flex flex-col gap-1">
+          <h4 class="text-b4 font-semibold text-neutral-900 dark:text-white">
+            <%= platform == "ruby" ? t("versions.version.source_gem") : platform %>
+          </h4>
+
+          <ol class="ml-4 flex flex-col gap-1">
+            <% platform_versions.each do |version| %>
+              <li>
+                <%= link_to rubygem_version_path(version.rubygem.slug, version.slug), class: row_link_class, style: row_link_style do %>
+                  <span class="sr-only"><%= version.display_id %></span>
+                  <% if version.ruby_abi.present? %>
+                    <span class="<%= badge_class %>"><%= t "versions.version.ruby_abi" %> <%= version.ruby_abi %></span>
+                    <span class="<%= row_text_class %>"><%= version_date_tag(version) %></span>
+                    <span class="<%= row_text_class %>">(<%= number_to_human_size(version.size) %>)</span>
+                    <span class="<%= row_text_class %>"><%= t "versions.version.content_address" %>: <%= version.content_address %></span>
+                  <% elsif version.platformed? %>
+                    <span class="<%= badge_class %>"><%= t "versions.version.multi_abi" %></span>
+                    <span class="<%= row_text_class %>"><%= version_date_tag(version) %></span>
+                    <span class="<%= row_text_class %>">(<%= number_to_human_size(version.size) %>)</span>
+                  <% else %>
+                    <span class="<%= badge_class %>"><%= t "versions.version.source_gem" %></span>
+                    <span class="<%= row_text_class %>"><%= version_date_tag(version) %></span>
+                    <span class="<%= row_text_class %>">(<%= number_to_human_size(version.size) %>)</span>
+                  <% end %>
+                  <% if version.yanked? %>
+                    <span class="text-b4 font-semibold text-red-600 dark:text-red-400"><%= t "versions.version.yanked" %></span>
+                  <% end %>
+                <% end %>
+              </li>
+            <% end %>
+          </ol>
+        </li>
+      <% end %>
+    </ol>
+  </li>
+<% end %>
