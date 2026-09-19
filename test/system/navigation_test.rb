@@ -25,6 +25,23 @@ class NavigationTest < ApplicationSystemTestCase
     assert_selector "button[aria-label='Open menu'][aria-expanded='false']"
   end
 
+  test "slash does not reveal search when the mobile nav is open" do
+    page.current_window.resize_to(393, 852)
+    visit stats_path
+
+    find("button[aria-label='Open menu']").click
+
+    assert_selector "dialog[open]"
+    assert_no_selector "[data-reveal-search-target='item']", visible: true
+
+    find("body").send_keys("/")
+
+    assert_selector "dialog[open]"
+    assert_no_selector "[data-reveal-search-target='item']", visible: true
+    assert_no_selector "#query:focus"
+    assert_selector "button[aria-label='Open menu'][aria-expanded='true']"
+  end
+
   test "slash remains available in editable elements" do
     visit stats_path
     page.execute_script <<~JAVASCRIPT

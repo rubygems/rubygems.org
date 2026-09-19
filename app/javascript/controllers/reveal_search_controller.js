@@ -12,7 +12,8 @@ export default class extends Reveal {
       event.shiftKey ||
       event.target.closest(
         "input, textarea, select, [contenteditable]:not([contenteditable='false'])",
-      )
+      ) ||
+      document.querySelector("dialog[open]")
     ) {
       return;
     }
