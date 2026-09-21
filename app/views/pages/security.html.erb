@@ -53,7 +53,7 @@
 
   <p>
     Sometimes the contact goes the other way. If our
-    <%= link_to "security team", page_path(id: "security-engineers-in-residence-faq") %>
+    <%= link_to "security team", page_path("security-engineers-in-residence-faq") %>
     confirms a vulnerability in a gem you maintain, or receives a report about one,
     we will contact you privately before anything is made public. <strong>If we need
     to reach out to you about a gem security issue, we will use
@@ -76,7 +76,7 @@
     sensitive, such as proof-of-concept code, to that key, and check the
     fingerprint matches the above before you trust it. The full public key is published in
     <%= link_to "our security team’s FAQ",
-          page_path(id: "security-engineers-in-residence-faq", anchor: "our-public-key") %>.
+          page_path("security-engineers-in-residence-faq", anchor: "our-public-key") %>.
   </p>
 
   <h2>Reporting RubyGems.org Website Problems</h2>

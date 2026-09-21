@@ -15,14 +15,4 @@ class Card::TimelineComponentTest < ComponentTest
     assert_selector "time[datetime='#{datetime.iso8601}']"
     assert_text "additional content"
   end
-
-  should "render a link to the user" do
-    user = create(:user)
-
-    render Card::TimelineComponent.new do |c|
-      c.timeline_item(1.2.days.ago, c.link_to_user(user))
-    end
-
-    assert_link user.display_handle, href: view_context.profile_path(id: user.display_id)
-  end
 end

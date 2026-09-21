@@ -1,8 +1,8 @@
 <% @title = t('.title', rubygem: @rubygem.name) %>
 <% @roles = Ownership.roles.map { |k,_| [Ownership.human_attribute_name("role.#{k}"), k] } %>
 
-<% add_breadcrumb @rubygem.name, rubygem_path(id: @rubygem.slug) %>
-<% add_breadcrumb t("owners.index.title"), rubygem_owners_path(rubygem_id: @rubygem.slug) %>
+<% add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug) %>
+<% add_breadcrumb t("owners.index.title"), rubygem_owners_path(@rubygem.slug) %>
 <% add_breadcrumb @title %>
 
 <%

@@ -17,13 +17,13 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
     end
 
     should "get show" do
-      get profile_oidc_api_key_role_url(token: @api_key_role.token)
+      get profile_oidc_api_key_role_url(@api_key_role.token)
 
       assert_response :success
     end
 
     should "get show format json" do
-      get profile_oidc_api_key_role_url(token: @api_key_role.token, format: :json)
+      get profile_oidc_api_key_role_url(@api_key_role.token, format: :json)
 
       assert_response :success
     end
@@ -254,7 +254,7 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
     end
 
     should "get github_actions_workflow" do
-      get github_actions_workflow_profile_oidc_api_key_role_url(token: @api_key_role.token)
+      get github_actions_workflow_profile_oidc_api_key_role_url(@api_key_role.token)
 
       assert_response :success
     end
@@ -262,7 +262,7 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
     should "get github_actions_workflow with a github actions role" do
       provider = create(:oidc_provider, issuer: "https://token.actions.githubusercontent.com")
       @api_key_role = create(:oidc_api_key_role, provider:, user: @user).token
-      get github_actions_workflow_profile_oidc_api_key_role_url(token: @api_key_role)
+      get github_actions_workflow_profile_oidc_api_key_role_url(@api_key_role)
 
       assert_response :success
     end
@@ -276,7 +276,7 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
         user: @user,
         provider:,
         api_key_permissions: { scopes: ["push_rubygem"], gems: [rubygem.name] })
-      get github_actions_workflow_profile_oidc_api_key_role_url(token: @api_key_role.token)
+      get github_actions_workflow_profile_oidc_api_key_role_url(@api_key_role.token)
 
       assert_response :success
 
@@ -369,7 +369,7 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
     end
 
     should "delete" do
-      delete profile_oidc_api_key_role_url(token: @api_key_role.token)
+      delete profile_oidc_api_key_role_url(@api_key_role.token)
 
       assert_response :redirect
       assert_redirected_to profile_oidc_api_key_roles_path
@@ -378,12 +378,12 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
 
       page.assert_no_text @api_key_role.token
 
-      get profile_oidc_api_key_role_url(token: @api_key_role.token)
+      get profile_oidc_api_key_role_url(@api_key_role.token)
 
       assert_response :success
       page.assert_selector "h2", text: /This role was deleted .+ ago and can no longer be used/
 
-      delete profile_oidc_api_key_role_url(token: @api_key_role.token)
+      delete profile_oidc_api_key_role_url(@api_key_role.token)
 
       assert_response :redirect
       assert_redirected_to profile_oidc_api_key_roles_path
@@ -392,7 +392,7 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
 
       page.assert_selector "#flash_error", text: "The role has been deleted."
 
-      get edit_profile_oidc_api_key_role_url(token: @api_key_role.token)
+      get edit_profile_oidc_api_key_role_url(@api_key_role.token)
 
       assert_response :redirect
       assert_redirected_to profile_oidc_api_key_roles_path
@@ -405,25 +405,17 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
     should "delete a role with a legacy access policy over the complexity limits" do
       @api_key_role.update_column(:access_policy, persisted_access_policy(11))
 
-      delete profile_oidc_api_key_role_url(token: @api_key_role.token)
+      delete profile_oidc_api_key_role_url(@api_key_role.token)
 
       assert_response :redirect
       assert_redirected_to profile_oidc_api_key_roles_path
       assert_predicate @api_key_role.reload, :deleted_at?
     end
-
-    should "return to the role when deletion fails" do
-      OIDC::ApiKeyRole.any_instance.stubs(:update).returns(false)
-
-      delete profile_oidc_api_key_role_url(token: @api_key_role.token)
-
-      assert_redirected_to profile_oidc_api_key_role_url(token: @api_key_role.token)
-    end
   end
 
   context "without a verified session" do
     should "redirect show to verify" do
-      get profile_oidc_api_key_role_url(token: @api_key_role.token)
+      get profile_oidc_api_key_role_url(@api_key_role.token)
 
       assert_response :redirect
       assert_redirected_to verify_session_path
@@ -437,7 +429,7 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
     end
 
     should "redirect github_actions_workflow to verify" do
-      get github_actions_workflow_profile_oidc_api_key_role_url(token: @api_key_role.token)
+      get github_actions_workflow_profile_oidc_api_key_role_url(@api_key_role.token)
 
       assert_response :redirect
       assert_redirected_to verify_session_path

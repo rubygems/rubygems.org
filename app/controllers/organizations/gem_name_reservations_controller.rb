@@ -25,7 +25,7 @@ class Organizations::GemNameReservationsController < Organizations::BaseControll
     authorize @gem_name_reservation, :create?
 
     if @gem_name_reservation.save
-      redirect_to organization_gem_name_reservations_path(organization_id: @organization), notice: t(".gem_name_reserved")
+      redirect_to organization_gem_name_reservations_path(@organization), notice: t(".gem_name_reserved")
     else
       render :new, status: :unprocessable_content
     end
@@ -37,7 +37,7 @@ class Organizations::GemNameReservationsController < Organizations::BaseControll
 
     @gem_name_reservation.destroy!
 
-    redirect_to organization_gem_name_reservations_path(organization_id: @organization), notice: t(".gem_name_reservation_removed")
+    redirect_to organization_gem_name_reservations_path(@organization), notice: t(".gem_name_reservation_removed")
   end
 
   private
