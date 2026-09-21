@@ -13,7 +13,7 @@ class Organizations::InvitationsController < Organizations::BaseController
     confirmed = with_pending_membership_locked { @membership.confirm! }
 
     if confirmed
-      redirect_to organization_path(id: @organization), notice: "You have successfully joined the #{@organization.handle} organization."
+      redirect_to organization_path(@organization), notice: "You have successfully joined the #{@organization.handle} organization."
     else
       redirect_expired_invitation
     end

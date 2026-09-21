@@ -108,7 +108,7 @@ class ApiKeysController < ApplicationController
     when "create"
       new_profile_api_key_path
     when "update"
-      edit_profile_api_key_path(id: params[:id])
+      edit_profile_api_key_path(params[:id])
     else
       super
     end
