@@ -321,7 +321,6 @@ en:
           is supported by
         uptime: Uptime
         secured_by: Secured by
-        looking_for_maintainers: maintainers wanted
       header:
         profile: Profile
         dashboard: Dashboard

@@ -325,7 +325,6 @@ fr:
           <br class="hidden lg:block"> est soutenu par
         uptime: Uptime
         secured_by:
-        looking_for_maintainers:
       header:
         profile: Profil
         dashboard: Dashboard

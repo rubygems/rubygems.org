@@ -319,7 +319,6 @@ nl:
           <br class="hidden lg:block"> wordt ondersteund door
         uptime: Uptime
         secured_by:
-        looking_for_maintainers:
       header:
         profile: Profiel
         dashboard: Dashboard
