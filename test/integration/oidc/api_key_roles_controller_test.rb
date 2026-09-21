@@ -179,11 +179,19 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
     should "delete a role with a legacy access policy over the complexity limits" do
       @api_key_role.update_column(:access_policy, persisted_access_policy(11))
 
-      delete profile_oidc_api_key_role_url(@api_key_role.token)
+      delete profile_oidc_api_key_role_url(token: @api_key_role.token)
 
       assert_response :redirect
       assert_redirected_to profile_oidc_api_key_roles_path
       assert_predicate @api_key_role.reload, :deleted_at?
+    end
+
+    should "return to the role when deletion fails" do
+      OIDC::ApiKeyRole.any_instance.stubs(:update).returns(false)
+
+      delete profile_oidc_api_key_role_url(token: @api_key_role.token)
+
+      assert_redirected_to profile_oidc_api_key_role_url(token: @api_key_role.token)
     end
   end
 
