@@ -21,14 +21,15 @@ class Maintenance::BackfillUserCreatedAtTaskTest < ActiveSupport::TestCase
   test "#process backfills created_at and preserves a later value on rerun" do
     user = create(:user)
     user.update_column(:created_at, nil)
-    Maintenance::BackfillUserCreatedAtTask.process(user)
+    stale_user = @task.collection.find(user.id)
+    Maintenance::BackfillUserCreatedAtTask.process(stale_user)
 
     assert_equal Time.utc(2009, 10, 8, 13, 30, 18), user.reload.created_at
 
     current_created_at = Time.utc(2020, 1, 2, 3, 4, 5)
     user.update_column(:created_at, current_created_at)
 
-    Maintenance::BackfillUserCreatedAtTask.process(user)
+    Maintenance::BackfillUserCreatedAtTask.process(stale_user)
 
     assert_equal current_created_at, user.reload.created_at
   end
