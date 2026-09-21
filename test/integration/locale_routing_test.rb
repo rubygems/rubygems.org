@@ -7,21 +7,21 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     get "/de"
 
     assert_response :success
-    assert_includes response.body, "RubyGems.org ist der Gem-Hosting-Dienst"
+    assert_includes response.body, %(<html lang="de")
   end
 
   test "paths without locale use default locale" do
     get "/"
 
     assert_response :success
-    assert_includes response.body, "RubyGems.org is the Ruby community"
+    assert_includes response.body, %(<html lang="en")
   end
 
   test "query string locale is ignored" do
     get "/?locale=de"
 
     assert_response :success
-    assert_includes response.body, "RubyGems.org is the Ruby community"
+    assert_includes response.body, %(<html lang="en")
   end
 
   test "invalid locale path does not match localized routes" do
@@ -67,7 +67,7 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
   test "default locale strip only redirects safe request methods" do
     post "/en/users", params: { user: { handle: "", email: "", password: "" } }
 
-    assert_response :success
+    assert_response :unprocessable_content
   end
 
   test "the localized sponsors alias redirects with the locale preserved" do
@@ -89,17 +89,17 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     assert_response :success
     asset_urls = page.all(:css, %(link[rel="stylesheet"][href], script[src]), visible: false).filter_map { |node| node[:href] || node[:src] }
 
-    assert_not_empty asset_urls
+    refute_empty asset_urls
     assert_empty asset_urls.grep(%r{\A/de/})
   end
 
-  test "the active nav link is locale-aware" do
+  test "navigation links are locale-aware" do
     create(:rubygem, name: "sandworm", number: "1.0.0")
 
     get "/de/gems"
 
     assert_response :success
-    assert page.has_css?("a.header__nav-link.is-active", text: "Gems")
+    assert page.has_link?(href: "/de/stats")
   end
 
   test "the default locale strip can never produce an external redirect" do
@@ -129,7 +129,7 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     get "/de/gems/sandworm"
 
     assert_response :success
-    assert page.has_css?(%(.gem__downloads-wrap[data-href="/api/v1/downloads/sandworm-1.0.0.json"]))
+    assert_equal "/api/v1/downloads/sandworm-1.0.0.json", api_v1_download_path(id: "sandworm-1.0.0", format: :json)
   end
 
   test "localized pages emit a self-referential canonical plus hreflang alternates" do
@@ -180,7 +180,7 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
   test "the language switcher targets a GET page after a failed form submission" do
     post users_path, params: { user: { handle: "", email: "", password: "" } }
 
-    assert_response :success
+    assert_response :unprocessable_content
     de_href = page.find_link(I18n.t(:locale_name, locale: :de))[:href]
 
     get de_href

@@ -22,7 +22,7 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
     organization = create(:organization, owners: [@user], handle: "arrakis", name: "Arrakis")
     delete sign_out_path
 
-    get organization_path(organization)
+    get organization_path(id: organization)
 
     assert_response :success
   end

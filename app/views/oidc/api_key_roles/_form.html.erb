@@ -1,5 +1,5 @@
 <%
-  url_attrs = @api_key_role.persisted? ? { url: profile_oidc_api_key_role_path(@api_key_role.token) } : {}
+  url_attrs = @api_key_role.persisted? ? { url: profile_oidc_api_key_role_path(token: @api_key_role.token) } : {}
   label_class = "block text-b2 font-semibold mb-2"
   section_class = "block text-b1 font-semibold mb-4"
   input_class = "w-full text-b2 rounded-lg dark:bg-neutral-950 focus:ring-inset focus:ring-1 focus:ring-orange-500"

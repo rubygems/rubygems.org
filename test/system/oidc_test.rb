@@ -30,7 +30,7 @@ class OIDCTest < ApplicationSystemTestCase
     page.assert_text "https://token.actions.githubusercontent.com/.well-known/jwks"
     page.assert_text(/Displaying 1 api key role/i)
 
-    assert_link @id_token.api_key_role.name, href: profile_oidc_api_key_role_path(@id_token.api_key_role.token)
+    assert_link @id_token.api_key_role.name, href: profile_oidc_api_key_role_path(token: @id_token.api_key_role.token)
   end
 
   test "viewing api key roles" do
@@ -52,9 +52,9 @@ class OIDCTest < ApplicationSystemTestCase
     page.assert_text "CONDITIONS\nsub string_equals repo:segiddins/oidc-test:ref:refs/heads/main"
     page.assert_text(/Displaying 1 id token/i)
 
-    assert_selector "form[action='#{profile_oidc_provider_path(@provider)}'] button",
+    assert_selector "form[action='#{profile_oidc_provider_path(id: @provider)}'] button",
       text: "View provider https://token.actions.githubusercontent.com"
-    assert_link @id_token.jti, href: profile_oidc_id_token_path(@id_token)
+    assert_link @id_token.jti, href: profile_oidc_id_token_path(id: @id_token)
   end
 
   test "viewing id tokens" do
@@ -71,8 +71,8 @@ class OIDCTest < ApplicationSystemTestCase
     page.assert_text "EXPIRES AT\n#{@id_token.api_key.expires_at.to_fs(:long)}"
     page.assert_text "JWT ID\n#{@id_token.jti}"
 
-    assert_link @api_key_role.name, href: profile_oidc_api_key_role_path(@api_key_role.token)
-    assert_link "https://token.actions.githubusercontent.com", href: profile_oidc_provider_path(@provider)
+    assert_link @api_key_role.name, href: profile_oidc_api_key_role_path(token: @api_key_role.token)
+    assert_link "https://token.actions.githubusercontent.com", href: profile_oidc_provider_path(id: @provider)
     page.assert_text "jti\n#{@id_token.jti}"
     page.assert_text "claim1\nvalue1"
     page.assert_text "claim2\nvalue2"
@@ -84,7 +84,7 @@ class OIDCTest < ApplicationSystemTestCase
     create(:version, rubygem: rubygem, metadata: { "source_code_uri" => "https://github.com/example/repo" })
 
     sign_in
-    visit rubygem_path(rubygem.slug)
+    visit rubygem_path(id: rubygem.slug)
     click_link "OIDC: Create"
     verify_session
 
@@ -230,7 +230,7 @@ class OIDCTest < ApplicationSystemTestCase
 
     sign_in
 
-    visit rubygem_path(rubygem.slug)
+    visit rubygem_path(id: rubygem.slug)
     click_link "OIDC: Create"
     verify_session
 
@@ -325,19 +325,19 @@ class OIDCTest < ApplicationSystemTestCase
     rubygem = create(:rubygem, name: "rubygem0")
     create(:version, rubygem: rubygem, metadata: { "source_code_uri" => "https://github.com/example/rubygem0" })
 
-    visit new_rubygem_trusted_publisher_path(rubygem.slug)
+    visit new_rubygem_trusted_publisher_path(rubygem_id: rubygem.slug)
 
     assert_text "Please sign in to continue."
 
     sign_in
-    visit new_rubygem_trusted_publisher_path(rubygem.slug)
+    visit new_rubygem_trusted_publisher_path(rubygem_id: rubygem.slug)
     verify_session
 
     assert_text "Forbidden"
 
     create(:ownership, rubygem: rubygem, user: @user)
 
-    visit rubygem_trusted_publishers_path(rubygem.slug)
+    visit rubygem_trusted_publishers_path(rubygem_id: rubygem.slug)
 
     page.assert_selector "h1", text: "Trusted Publishers"
     page.assert_text("Trusted publishers for rubygem0")
@@ -413,7 +413,7 @@ class OIDCTest < ApplicationSystemTestCase
     create(:version, rubygem:)
 
     sign_in
-    visit rubygem_trusted_publishers_path(rubygem.slug)
+    visit rubygem_trusted_publishers_path(rubygem_id: rubygem.slug)
     verify_session
 
     click_button "Delete"

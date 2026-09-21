@@ -9,7 +9,7 @@
   </div>
 
   <% if @latest_version != @rubygem.most_recent_version %>
-    <%= link_to rubygem_path(@rubygem.slug),
+    <%= link_to rubygem_path(id: @rubygem.slug),
           class: "flex w-full items-center gap-3 px-4 py-3 h-12 min-h-12 rounded border-2 border-green-500 text-b3 " \
                  "bg-green-500/10 text-green-700 dark:text-green-300 hover:bg-green-500/15 active:bg-green-500/20 " \
                  "dark:hover:bg-green-500/20 dark:active:bg-green-500/30 hover:shadow-md " \
@@ -20,7 +20,7 @@
     <% end %>
   <% end %>
 
-  <%= link_to rubygem_versions_path(@rubygem.slug),
+  <%= link_to rubygem_versions_path(rubygem_id: @rubygem.slug),
         class: "flex w-full items-center px-4 py-3 h-12 min-h-12 rounded border-2 border-green-500 text-b3 " \
                "text-green-700 dark:text-green-300 hover:bg-green-500/5 active:bg-green-500/10 " \
                "dark:hover:bg-green-500/15 dark:active:bg-green-500/25 hover:shadow-md " \

@@ -1,7 +1,7 @@
 <%
   add_breadcrumb "Dashboard", dashboard_path
-  add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle), organization_path(@organization)
-  add_breadcrumb t("breadcrumbs.reservations"), organization_gem_name_reservations_path(@organization)
+  add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle), organization_path(id: @organization)
+  add_breadcrumb t("breadcrumbs.reservations"), organization_gem_name_reservations_path(organization_id: @organization)
   add_breadcrumb t("breadcrumbs.reserve_gem_name")
 %>
 
@@ -16,7 +16,7 @@
     <%= c.title t(".title"), icon: "description" %>
   <% end %>
 
-  <%= form_with(model: @gem_name_reservation, url: organization_gem_name_reservations_path(@organization), method: :post) do |f| %>
+  <%= form_with(model: @gem_name_reservation, url: organization_gem_name_reservations_path(organization_id: @organization), method: :post) do |f| %>
     <% if @gem_name_reservation.errors.any? %>
       <div class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
         <div class="flex">

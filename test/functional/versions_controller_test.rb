@@ -194,7 +194,7 @@ class VersionsControllerTest < ActionController::TestCase
     should respond_with :success
 
     should "link to the latest version of the gem" do
-      assert_select "a[href=?]", rubygem_path(@rubygem.slug), text: /Latest Version/
+      assert_select "a[href=?]", rubygem_path(id: @rubygem.slug), text: /Latest Version/
     end
   end
 

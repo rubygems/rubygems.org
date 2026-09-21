@@ -35,7 +35,7 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "GET /organizations/:organization_handle/members with a differently cased handle" do
-    get organization_memberships_path(@organization.handle.upcase)
+    get organization_memberships_path(organization_id: @organization.handle.upcase)
 
     assert_response :success
   end
@@ -43,7 +43,7 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
   test "GET /organizations/:organization_handle/members with an unknown handle when signed out" do
     delete sign_out_path
 
-    get organization_memberships_path("does-not-exist")
+    get organization_memberships_path(organization_id: "does-not-exist")
 
     assert_response :not_found
   end
@@ -106,7 +106,7 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
     new_user = create(:user)
 
     assert_no_difference -> { @organization.memberships.where(role: "owner").count } do
-      post organization_memberships_path(@organization), params: { membership: { user: new_user.handle, role: :owner } }
+      post organization_memberships_path(organization_id: @organization), params: { membership: { user: new_user.handle, role: :owner } }
     end
 
     assert_response :not_found
@@ -150,7 +150,7 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
     maintainer_user = create(:user)
     maintainer_membership = create(:membership, organization: @organization, user: maintainer_user, role: :maintainer)
 
-    patch organization_membership_path(@organization, maintainer_membership), params: { membership: { role: "owner" } }
+    patch organization_membership_path(organization_id: @organization, id: maintainer_membership), params: { membership: { role: "owner" } }
 
     assert_response :not_found
     assert_equal "maintainer", maintainer_membership.reload.role
@@ -160,7 +160,7 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
     owner_user = create(:user)
     owner_membership = create(:membership, organization: @organization, user: owner_user, role: :owner)
 
-    patch organization_membership_path(@organization, owner_membership), params: { membership: { role: "admin" } }
+    patch organization_membership_path(organization_id: @organization, id: owner_membership), params: { membership: { role: "admin" } }
 
     assert_response :not_found
     assert_equal "owner", owner_membership.reload.role
@@ -174,9 +174,9 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
     maintainer_user = create(:user)
     maintainer_membership = create(:membership, organization: @organization, user: maintainer_user, role: :maintainer)
 
-    patch organization_membership_path(@organization, maintainer_membership), params: { membership: { role: "owner" } }
+    patch organization_membership_path(organization_id: @organization, id: maintainer_membership), params: { membership: { role: "owner" } }
 
-    assert_redirected_to organization_memberships_path(@organization)
+    assert_redirected_to organization_memberships_path(organization_id: @organization)
     assert_equal "owner", maintainer_membership.reload.role
   end
 

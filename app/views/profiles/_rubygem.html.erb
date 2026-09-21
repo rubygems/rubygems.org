@@ -1,6 +1,6 @@
 <li class="rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
   <div class="flex flex-wrap items-center justify-between gap-2">
-    <%= link_to rubygem_path(rubygem.slug), class: "flex items-center gap-2 font-semibold text-neutral-900 hover:text-orange-500 dark:text-white" do %>
+    <%= link_to rubygem_path(id: rubygem.slug), class: "flex items-center gap-2 font-semibold text-neutral-900 hover:text-orange-500 dark:text-white" do %>
       <%= rubygem.name %>
       <% if rubygem.latest_version %>
         <%= version_number(rubygem.latest_version) %>

@@ -48,7 +48,7 @@ class OIDC::PendingTrustedPublishers::IndexView < ApplicationView
     div(class: "py-6 first:pt-0 last:pb-0") do
       div(class: "flex flex-wrap items-center justify-between gap-3") do
         h2(class: "text-b1 font-semibold text-neutral-900 dark:text-white") { pending_trusted_publisher.rubygem_name }
-        button_to(t(".delete"), profile_oidc_pending_trusted_publisher_path(pending_trusted_publisher),
+        button_to(t(".delete"), profile_oidc_pending_trusted_publisher_path(id: pending_trusted_publisher),
           method: :delete, class: DANGER_BTN)
       end
 

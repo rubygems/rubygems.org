@@ -23,7 +23,7 @@ class DependenciesTest < ApplicationSystemTestCase
     assert_text("1 Development Dependency")
     assert_text(rubygem_two.name)
     # the highest version matching the requirements is resolved and linked
-    assert_link(href: rubygem_version_path(rubygem_two.slug, "2.4.3"))
+    assert_link(href: rubygem_version_path(rubygem_id: rubygem_two.slug, id: "2.4.3"))
     assert_text("<= 4.0.0")
   end
 
@@ -33,7 +33,7 @@ class DependenciesTest < ApplicationSystemTestCase
     dep_version = create(:version, number: "1.0.0", platform: "jruby")
     create(:dependency, rubygem: dep_version.rubygem, version: version)
 
-    visit rubygem_path(version.rubygem.slug)
+    visit rubygem_path(id: version.rubygem.slug)
     click_on "Dependencies"
 
     assert_text(dep_version.rubygem.name)
@@ -51,9 +51,9 @@ class DependenciesTest < ApplicationSystemTestCase
     visit rubygem_version_dependencies_path(rubygem_id: rubygem.slug, version_id: version.number)
 
     assert_text("Reverse Dependencies")
-    assert_link(dependent_version.rubygem.name, href: rubygem_path(dependent_version.rubygem.slug))
+    assert_link(dependent_version.rubygem.name, href: rubygem_path(id: dependent_version.rubygem.slug))
     click_on "See all reverse dependencies"
 
-    assert_current_path rubygem_reverse_dependencies_path(rubygem.slug)
+    assert_current_path rubygem_reverse_dependencies_path(rubygem_id: rubygem.slug)
   end
 end

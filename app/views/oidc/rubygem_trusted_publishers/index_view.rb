@@ -16,7 +16,7 @@ class OIDC::RubygemTrustedPublishers::IndexView < ApplicationView
       end
 
       div do
-        render ButtonComponent.new(t(".create"), new_rubygem_trusted_publisher_path(rubygem.slug), method: "get")
+        render ButtonComponent.new(t(".create"), new_rubygem_trusted_publisher_path(rubygem_id: rubygem.slug), method: "get")
       end
 
       render CardComponent.new do
@@ -45,7 +45,7 @@ class OIDC::RubygemTrustedPublishers::IndexView < ApplicationView
         h2(class: "text-b1 font-semibold text-neutral-900 dark:text-white") do
           plain rubygem_trusted_publisher.trusted_publisher.class.publisher_name
         end
-        button_to(t(".delete"), rubygem_trusted_publisher_path(rubygem.slug, rubygem_trusted_publisher),
+        button_to(t(".delete"), rubygem_trusted_publisher_path(rubygem_id: rubygem.slug, id: rubygem_trusted_publisher),
           method: :delete, class: DANGER_BTN)
       end
 

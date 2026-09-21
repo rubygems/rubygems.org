@@ -26,7 +26,7 @@
       <% @ownerships.each do |ownership| %>
         <tr class="block md:table-row border-b border-neutral-200 py-4 dark:border-neutral-800 md:border-0 md:py-0">
           <td data-title="Name" class="<%= cell_class %> font-medium">
-            <%= link_to(ownership.owner_name, profile_path(ownership.user.display_id), class: "text-orange-500 hover:underline dark:text-orange-400") %>
+            <%= link_to(ownership.owner_name, profile_path(id: ownership.user.display_id), class: "text-orange-500 hover:underline dark:text-orange-400") %>
             <% if ownership.user == current_user %>
               <span class="text-b4 text-neutral-500">(<%= t("owners.index.current_user_badge") %>)</span>
             <% end %>
@@ -55,7 +55,7 @@
                 <% if can_modify_owners?(@rubygem) %>
                   <%= render ButtonComponent.new(
                     t("edit"),
-                    edit_rubygem_owner_path(@rubygem.name, ownership.user.display_id),
+                    edit_rubygem_owner_path(rubygem_id: @rubygem.name, handle: ownership.user.display_id),
                     color: :secondary,
                     disabled: ownership.user == current_user) %>
                 <% end %>
@@ -95,7 +95,7 @@
                               data: { action: "confirm-remove-self#close" }) %>
                             <%= render ButtonComponent.new(
                               t("owners.index.remove_self_dialog.submit"),
-                              rubygem_owner_path(@rubygem.slug, ownership.user.display_id),
+                              rubygem_owner_path(rubygem_id: @rubygem.slug, handle: ownership.user.display_id),
                               method: "delete",
                               disabled: true,
                               data: { "confirm-remove-self-target": "submitButton" },
@@ -108,7 +108,7 @@
                   <% else %>
                     <%= render ButtonComponent.new(
                       t("remove"),
-                      rubygem_owner_path(@rubygem.slug, ownership.user.display_id),
+                      rubygem_owner_path(rubygem_id: @rubygem.slug, handle: ownership.user.display_id),
                       method: "delete",
                       data: { confirm: t("owners.index.confirm_remove") },
                       color: :red) %>
