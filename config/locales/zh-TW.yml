@@ -316,7 +316,6 @@ zh-TW:
           <br class="hidden lg:block"> 由以下支持
         uptime: 上線時間
         secured_by:
-        looking_for_maintainers: 徵求維護者
       header:
         profile: 個人檔案
         dashboard: 儀表板

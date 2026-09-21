@@ -324,7 +324,6 @@ pt-BR:
           <br class="hidden lg:block"> é apoiado por
         uptime: Uptime
         secured_by:
-        looking_for_maintainers:
       header:
         profile: Perfil
         dashboard: Painel de Controle

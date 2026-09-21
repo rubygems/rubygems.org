@@ -317,7 +317,6 @@ zh-CN:
           <br class="hidden lg:block"> 由以下支持
         uptime: 服务运行时间
         secured_by: 安全保护
-        looking_for_maintainers: 招募维护者
       header:
         profile: 个人信息
         dashboard: 仪表盘

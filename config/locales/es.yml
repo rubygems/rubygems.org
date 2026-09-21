@@ -334,7 +334,6 @@ es:
           es respaldado por
         uptime: Uptime
         secured_by: Protegido por
-        looking_for_maintainers: Se buscan mantenedores/as
       header:
         profile: Perfil
         dashboard: Dashboard
