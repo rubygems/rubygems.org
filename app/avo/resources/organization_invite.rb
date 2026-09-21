@@ -2,7 +2,7 @@
 
 class Avo::Resources::OrganizationInvite < Avo::BaseResource
   self.title = :id
-  self.includes = [:invitable]
+  self.includes = %i[invitable user]
 
   def fields
     field :id, as: :id

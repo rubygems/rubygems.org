@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Avo::Resources::Subscription < Avo::BaseResource
+  self.includes = %i[rubygem user]
+
   def fields
     field :id, as: :id
     field :rubygem_id, as: :number

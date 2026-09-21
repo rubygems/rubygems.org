@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Avo::Resources::Membership < Avo::BaseResource
-  self.includes = []
+  self.includes = %i[user organization]
 
   class ConfirmedFilter < Avo::Filters::ScopeBooleanFilter; end
 
@@ -14,5 +14,6 @@ class Avo::Resources::Membership < Avo::BaseResource
     field :user, as: :belongs_to
     field :organization, as: :belongs_to
     field :role, as: :select, enum: Membership.roles
+    field :push_notifier, as: :boolean
   end
 end

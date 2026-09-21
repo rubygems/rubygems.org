@@ -109,6 +109,10 @@ ja:
           attributes:
             expires_at:
               inclusion: 未来でなければなりません
+        gem_name_reservation:
+          attributes:
+            base:
+              organization_limit_reached:
         organization:
           attributes:
             handle:
@@ -313,7 +317,6 @@ ja:
           は以下から支援を受けています
         uptime: 稼働時間
         secured_by: セキュリティ
-        looking_for_maintainers: メンテナの募集
       header:
         profile: プロフィール
         dashboard: ダッシュボード
@@ -334,6 +337,8 @@ ja:
     gems: gem
     members: メンバー
     invite_member: メンバーを招待
+    reservations:
+    reserve_gem_name:
   mailer:
     confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
     confirmation_subject: "%{host}に登録されたメールアドレスを確認してください"
@@ -478,6 +483,7 @@ ja:
       add_member: メンバーを招待
       invite: 招待
       transfer: 移動
+      reservations:
     members:
       create:
         user_already_invited: ユーザーは既に組織に招待されています。
@@ -503,6 +509,26 @@ ja:
         role: ロール
         create: 作成
         invite: 招待
+    gem_name_reservations:
+      create:
+        gem_name_reserved:
+      destroy:
+        gem_name_reservation_removed:
+      index:
+        description:
+        no_reservations:
+        reserve:
+        remove:
+        confirm_remove:
+      new:
+        title:
+        name:
+        name_hint:
+        reserve:
+        limit_html:
+        limit_reached_html:
+        unlimited:
+        disclaimer:
     invitations:
       show:
         accept: 承認
@@ -675,6 +701,9 @@ ja:
       update: 更新
       owner_heading: 所有権の通知
       push_heading: プッシュ通知
+      gems_heading:
+      organizations_heading:
+      organization_info:
   webauthn_verifications:
     expired_or_already_used: 使用されたリンク中のトークンは期限切れか既に使われています。
     no_port: ポートが与えられていません。再試行してください。

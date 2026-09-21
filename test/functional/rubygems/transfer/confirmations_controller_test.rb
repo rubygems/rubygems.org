@@ -20,6 +20,21 @@ class Rubygems::Transfer::ConfirmationsControllerTest < ActionDispatch::Integrat
     assert_equal flash[:notice], "Successfully transferred 1 gem to #{@organization.name}."
   end
 
+  test "PATCH /rubygems/:rubygem_id/transfer/confirm as an admin inviting an owner is forbidden" do
+    @organization.memberships.find_by!(user: @owner).update!(role: :admin)
+    invite = @transfer.invites.first
+    invite.update!(role: :owner)
+
+    assert_no_difference -> { Membership.where(organization: @organization, user: invite.user).count } do
+      patch confirm_transfer_rubygems_path(as: @owner)
+    end
+
+    assert_response :unprocessable_content
+    assert_select "li", text: "Invites contain a role the transferrer does not have permission to grant"
+    assert_predicate @transfer.reload, :failed?
+    assert_nil @rubygem.reload.organization
+  end
+
   test "PATCH /rubygems/:rubygem_id/transfer/confirm when transfer is invalid" do
     error_message = "Sorry"
     # cause transferring to fail

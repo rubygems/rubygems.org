@@ -173,4 +173,44 @@ class OrganizationTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "gem name reservation limits" do
+    setup do
+      @organization = create(:organization)
+    end
+
+    should "report the default limit" do
+      refute_predicate @organization, :gem_name_reservations_unlimited?
+      assert_equal GemNameReservation::ORGANIZATION_LIMIT, @organization.gem_name_reservation_limit
+      assert_equal GemNameReservation::ORGANIZATION_LIMIT, @organization.gem_name_reservations_remaining
+    end
+
+    should "subtract existing reservations from the remaining count" do
+      create_list(:gem_name_reservation, 2, organization: @organization)
+
+      assert_equal GemNameReservation::ORGANIZATION_LIMIT - 2, @organization.gem_name_reservations_remaining
+    end
+
+    should "never report a negative remaining count" do
+      with_feature(FeatureFlag::UNLIMITED_GEM_NAME_RESERVATIONS, actor: @organization) do
+        create_list(:gem_name_reservation, GemNameReservation::ORGANIZATION_LIMIT + 1, organization: @organization)
+      end
+
+      assert_equal 0, @organization.gem_name_reservations_remaining
+    end
+
+    should "report no limit when the feature flag is enabled for the organization" do
+      with_feature(FeatureFlag::UNLIMITED_GEM_NAME_RESERVATIONS, actor: @organization) do
+        assert_predicate @organization, :gem_name_reservations_unlimited?
+        assert_nil @organization.gem_name_reservation_limit
+        assert_nil @organization.gem_name_reservations_remaining
+      end
+    end
+
+    should "not report no limit when the feature flag is enabled for another organization" do
+      with_feature(FeatureFlag::UNLIMITED_GEM_NAME_RESERVATIONS, actor: create(:organization)) do
+        refute_predicate @organization, :gem_name_reservations_unlimited?
+      end
+    end
+  end
 end

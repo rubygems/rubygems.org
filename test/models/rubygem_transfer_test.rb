@@ -54,7 +54,7 @@ class RubygemTransferTest < ActiveSupport::TestCase
     non_owner = create(:user)
     @transfer.created_by = non_owner
 
-    assert_not @transfer.valid?
+    refute_predicate @transfer, :valid?
     assert_includes @transfer.errors[:created_by], "must be an owner of the #{@rubygem.name} gem"
     assert_includes @transfer.errors[:created_by], "does not have permission to transfer gems to this organization"
   end
@@ -75,13 +75,41 @@ class RubygemTransferTest < ActiveSupport::TestCase
     end
   end
 
+  test "not creating a membership with a role the transferrer cannot grant" do
+    @organization.memberships.find_by!(user: @owner).update!(role: :admin)
+    invite = build(:organization_invite, invitable: @transfer, role: :owner)
+    @transfer.invites << invite
+
+    assert_raises ActiveRecord::RecordInvalid do
+      @transfer.transfer!
+    end
+
+    refute Membership.exists?(user: invite.user, organization: @organization)
+    assert_nil @rubygem.reload.organization
+  end
+
+  test "admin creating memberships with roles they can grant" do
+    @organization.memberships.find_by!(user: @owner).update!(role: :admin)
+    invites = %i[admin maintainer].map do |role|
+      build(:organization_invite, invitable: @transfer, role: role)
+    end
+    @transfer.invites << invites
+
+    @transfer.transfer!
+
+    invites.each do |invite|
+      assert Membership.exists?(user: invite.user, organization: @organization, role: invite.role)
+    end
+    assert_equal @organization, @rubygem.reload.organization
+  end
+
   test "not creating memberships for invites without a specified role" do
     invites = build_list(:organization_invite, 2, invitable: @transfer, role: nil)
     @transfer.invites << invites
     @transfer.transfer!
 
     invites.each do |invite|
-      assert_not Membership.exists?(user: invite.user, organization: @organization)
+      refute Membership.exists?(user: invite.user, organization: @organization)
     end
   end
 
@@ -116,7 +144,7 @@ class RubygemTransferTest < ActiveSupport::TestCase
     @transfer.invites.create!(user: user, invitable: @transfer, role: :outside_contributor)
     @transfer.transfer!
 
-    assert_not Membership.exists?(user: user, organization: @organization)
+    refute Membership.exists?(user: user, organization: @organization)
   end
 
   test "updates the status and completed_at fields when transfer is successful" do
@@ -130,7 +158,85 @@ class RubygemTransferTest < ActiveSupport::TestCase
     existing_organization = create(:organization)
     @rubygem.update!(organization: existing_organization)
 
-    assert_not @transfer.valid?
+    refute_predicate @transfer, :valid?
     assert_includes @transfer.errors[:rubygems], "#{@rubygem.name} is already owned by an organization"
+  end
+
+  test "skips existing members instead of creating a duplicate or changing their role" do
+    co_owner = create(:user)
+    create(:ownership, rubygem: @rubygem, user: co_owner, role: :owner)
+    membership = create(:membership, :maintainer, user: co_owner, organization: @organization)
+    @transfer.invites.create!(user: co_owner, role: :admin)
+
+    OrganizationMailer.expects(:user_invited).never
+
+    assert_no_difference -> { Membership.unscoped.where(organization: @organization).count } do
+      @transfer.transfer!
+    end
+
+    assert_predicate @transfer, :completed?
+    assert_equal "maintainer", membership.reload.role
+    refute Ownership.exists?(user: co_owner, rubygem: @rubygem)
+    assert_equal @organization, @rubygem.reload.organization
+  end
+
+  test "removes ownership for existing members even when invite is outside contributor" do
+    co_owner = create(:user)
+    create(:ownership, rubygem: @rubygem, user: co_owner, role: :owner)
+    membership = create(:membership, :admin, user: co_owner, organization: @organization)
+    @transfer.invites.create!(user: co_owner, role: :outside_contributor)
+
+    @transfer.transfer!
+
+    assert_equal "admin", membership.reload.role
+    refute Ownership.exists?(user: co_owner, rubygem: @rubygem)
+  end
+
+  test "creates membership for new invitee and leaves existing member unchanged" do
+    existing_member = create(:user)
+    new_invitee = create(:user)
+    create(:ownership, rubygem: @rubygem, user: existing_member, role: :owner)
+    create(:ownership, rubygem: @rubygem, user: new_invitee, role: :owner)
+    membership = create(:membership, :maintainer, user: existing_member, organization: @organization)
+    @transfer.invites.create!(user: existing_member, role: :owner)
+    @transfer.invites.create!(user: new_invitee, role: :admin)
+
+    OrganizationMailer.expects(:user_invited).once.returns(stub(deliver_later: true))
+
+    assert_difference -> { Membership.unscoped.where(organization: @organization).count }, 1 do
+      @transfer.transfer!
+    end
+
+    assert_equal "maintainer", membership.reload.role
+    assert Membership.exists?(user: new_invitee, organization: @organization, role: :admin)
+    refute Ownership.exists?(user: existing_member, rubygem: @rubygem)
+    refute Ownership.exists?(user: new_invitee, rubygem: @rubygem)
+  end
+
+  test "removes ownership for existing members even without an invite role" do
+    co_owner = create(:user)
+    create(:ownership, rubygem: @rubygem, user: co_owner, role: :owner)
+    membership = create(:membership, :admin, user: co_owner, organization: @organization)
+    @transfer.invites.create!(user: co_owner, role: nil)
+
+    @transfer.transfer!
+
+    assert_equal "admin", membership.reload.role
+    refute Ownership.exists?(user: co_owner, rubygem: @rubygem)
+  end
+
+  test "does not review existing organization members on the users step" do
+    co_owner = create(:user)
+    outsider = create(:user)
+    other_rubygem = create(:rubygem, owners: [@owner, co_owner, outsider])
+    create(:membership, :admin, user: co_owner, organization: @organization)
+
+    @transfer.rubygems = [other_rubygem.id]
+    @transfer.save!
+
+    reviewable_user_ids = @transfer.reviewable_invites.map(&:user_id)
+
+    assert_includes reviewable_user_ids, outsider.id
+    refute_includes reviewable_user_ids, co_owner.id
   end
 end

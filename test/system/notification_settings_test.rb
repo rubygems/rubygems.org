@@ -67,6 +67,53 @@ class NotificationSettingsTest < ApplicationSystemTestCase
     assert_no_text I18n.t("notifiers.show.title")
   end
 
+  test "email notification settings shown to organization members" do
+    user = create(:user)
+    create(:organization, maintainers: [user])
+
+    visit edit_settings_path(as: user)
+
+    click_link I18n.t("notifiers.show.title")
+
+    membership = user.memberships.sole
+
+    assert_checked_field membership_notifier_on_radio(membership)
+    assert_unchecked_field membership_notifier_off_radio(membership)
+  end
+
+  test "changing organization email notification settings" do
+    user = create(:user)
+    organization = create(:organization, maintainers: [user])
+    membership = user.memberships.sole
+
+    visit edit_settings_path(as: user)
+
+    click_link I18n.t("notifiers.show.title")
+
+    notifier_form_selector = "form[action='/notifier']"
+
+    within_element notifier_form_selector do
+      choose membership_notifier_off_radio(membership)
+    end
+
+    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+      within_element notifier_form_selector do
+        click_button I18n.t("notifiers.show.update")
+      end
+
+      assert_selector "#flash_notice", text: I18n.t("notifiers.update.success")
+    end
+
+    assert_emails 1
+    assert_equal I18n.t("mailer.notifiers_changed.subject", host: Gemcutter::HOST_DISPLAY), last_email.subject
+    assert_includes last_email.body.raw_source, organization.handle
+
+    within_element notifier_form_selector do
+      assert_unchecked_field membership_notifier_on_radio(membership)
+      assert_checked_field membership_notifier_off_radio(membership)
+    end
+  end
+
   test "email notification setting does not show for yanked gems" do
     user = create(:user)
     create(:rubygem, number: "0.0.1", owners: [user])
@@ -87,5 +134,13 @@ class NotificationSettingsTest < ApplicationSystemTestCase
 
   def notifier_off_radio(ownership, type)
     "ownerships_#{ownership.id}_#{type}_off"
+  end
+
+  def membership_notifier_on_radio(membership)
+    "memberships_#{membership.id}_push_on"
+  end
+
+  def membership_notifier_off_radio(membership)
+    "memberships_#{membership.id}_push_off"
   end
 end

@@ -8,10 +8,6 @@ SimpleCov.start "rails" do
   if ENV["CI"]
     require "simplecov-cobertura"
     formatter SimpleCov::Formatter::CoberturaFormatter
-
-    # Avo tests are super fragile :'(
-    require "minitest/retry"
-    Minitest::Retry.use!
   end
 end
 
@@ -170,7 +166,7 @@ class ActiveSupport::TestCase
       original = original_attributes[attribute]
       latest = reloaded_object.send(attribute)
 
-      assert_not_equal original, latest,
+      refute_equal original, latest,
         "Expected #{object.class} #{attribute} to change but still #{latest}"
     end
   end

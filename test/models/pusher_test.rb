@@ -135,8 +135,8 @@ class PusherTest < ActiveSupport::TestCase
       refute @cutter.pull_spec
 
       assert_includes @cutter.message, "RubyGems.org cannot process this gem"
-      assert_not_includes @cutter.message, "Error:"
-      assert_not_includes @cutter.message, "unexpected internal error"
+      refute_includes @cutter.message, "Error:"
+      refute_includes @cutter.message, "unexpected internal error"
       assert_equal 422, @cutter.code
     end
   end
@@ -150,6 +150,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.expects(:platform).returns "ruby"
       spec.expects(:cert_chain).returns nil
       spec.stubs(:required_ruby_version).returns Gem::Requirement.default
+      spec.stubs(:required_rubygems_version).returns Gem::Requirement.default
       @cutter.stubs(:spec).returns spec
       @cutter.stubs(:spec_contents).returns "spec"
       @cutter.stubs(:size).returns 5
@@ -195,20 +196,21 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:platform).returns "ruby"
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:required_ruby_version).returns Gem::Requirement.default
+      spec.stubs(:required_rubygems_version).returns Gem::Requirement.default
       spec.stubs(:metadata).returns({})
       @cutter.stubs(:spec).returns spec
       @cutter.stubs(:spec_contents).returns "spec"
       @cutter.find
 
       assert_equal @rubygem, @cutter.rubygem
-      assert_not_nil @cutter.version
+      refute_nil @cutter.version
     end
 
     should "error out when changing case with usuable versions" do
       @rubygem = create(:rubygem)
       create(:version, rubygem: @rubygem)
 
-      assert_not_equal @rubygem.name, @rubygem.name.upcase
+      refute_equal @rubygem.name, @rubygem.name.upcase
 
       spec = mock
       spec.expects(:name).returns @rubygem.name.upcase
@@ -217,6 +219,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.expects(:original_platform).returns "ruby"
       spec.expects(:cert_chain).returns nil
       spec.stubs(:required_ruby_version).returns Gem::Requirement.default
+      spec.stubs(:required_rubygems_version).returns Gem::Requirement.default
       @cutter.stubs(:spec).returns spec
       @cutter.stubs(:spec_contents).returns "spec"
 
@@ -228,7 +231,7 @@ class PusherTest < ActiveSupport::TestCase
     should "update the DB to reflect the case in the spec" do
       @rubygem = create(:rubygem)
 
-      assert_not_equal @rubygem.name, @rubygem.name.upcase
+      refute_equal @rubygem.name, @rubygem.name.upcase
 
       spec = mock
       spec.stubs(:name).returns @rubygem.name.upcase
@@ -237,6 +240,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:platform).returns "ruby"
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:required_ruby_version).returns Gem::Requirement.default
+      spec.stubs(:required_rubygems_version).returns Gem::Requirement.default
       spec.stubs(:metadata).returns({})
       @cutter.stubs(:spec).returns spec
       @cutter.stubs(:spec_contents).returns "spec"
@@ -260,13 +264,14 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:platform).returns Gem::Platform.new("universal-darwin-6000")
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:required_ruby_version).returns Gem::Requirement.default
+      spec.stubs(:required_rubygems_version).returns Gem::Requirement.default
       @cutter.stubs(:spec).returns spec
       @cutter.stubs(:spec_contents).returns "spec"
 
       @cutter.find
 
       assert_equal @rubygem, @cutter.rubygem
-      assert_not_nil @cutter.version
+      refute_nil @cutter.version
 
       assert_equal "universal-darwin-6000", @cutter.version.platform
       assert_equal "universal-darwin-6000", @cutter.version.gem_platform
@@ -282,6 +287,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:platform).returns Gem::Platform.new("arm64-darwin-25")
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:required_ruby_version).returns Gem::Requirement.new("~> 3.4.0")
+      spec.stubs(:required_rubygems_version).returns Gem::Requirement.default
       spec.stubs(:metadata).returns({})
 
       @cutter.stubs(:spec).returns spec
@@ -292,7 +298,7 @@ class PusherTest < ActiveSupport::TestCase
       assert @cutter.find
 
       assert_equal rubygem, @cutter.rubygem
-      assert_not_predicate @cutter.version, :persisted?
+      refute_predicate @cutter.version, :persisted?
       assert_equal "1.0.0", @cutter.version.number
       assert_equal "arm64-darwin-25", @cutter.version.platform
       assert_equal "~> 3.4.0", @cutter.version.required_ruby_version
@@ -303,7 +309,7 @@ class PusherTest < ActiveSupport::TestCase
       FeatureFlag.enable_for_actor(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, @user)
       rubygem = create(:rubygem, name: "sandworm")
       create(:version, rubygem: rubygem, number: "1.0.0", platform: "arm64-darwin-25",
-        required_ruby_version: "~> 3.3.0", ruby_abi: "3.3")
+        required_ruby_version: "~> 3.3.0", required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.3")
 
       spec = mock
       spec.stubs(:name).returns "sandworm"
@@ -312,6 +318,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:platform).returns Gem::Platform.new("arm64-darwin-25")
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:required_ruby_version).returns Gem::Requirement.new("~> 3.4.0")
+      spec.stubs(:required_rubygems_version).returns Gem::Requirement.new(Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION)
       spec.stubs(:metadata).returns({})
 
       @cutter.stubs(:spec).returns spec
@@ -322,7 +329,7 @@ class PusherTest < ActiveSupport::TestCase
       assert @cutter.find
 
       assert_equal rubygem, @cutter.rubygem
-      assert_not_predicate @cutter.version, :persisted?
+      refute_predicate @cutter.version, :persisted?
       assert_equal "1.0.0", @cutter.version.number
       assert_equal "arm64-darwin-25", @cutter.version.platform
       assert_equal "~> 3.4.0", @cutter.version.required_ruby_version
@@ -340,6 +347,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:platform).returns "ruby"
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:required_ruby_version).returns Gem::Requirement.new("~> 3.4.0")
+      spec.stubs(:required_rubygems_version).returns Gem::Requirement.default
       spec.stubs(:metadata).returns({})
 
       @cutter.stubs(:spec).returns spec
@@ -358,7 +366,7 @@ class PusherTest < ActiveSupport::TestCase
       FeatureFlag.enable_for_actor(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, @user)
       rubygem = create(:rubygem, name: "sandworm")
       create(:version, rubygem: rubygem, number: "1.0.0", platform: "arm64-darwin-25",
-        required_ruby_version: "~> 3.4.0", ruby_abi: "3.4")
+        required_ruby_version: "~> 3.4.0", required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, ruby_abi: "3.4")
 
       spec = mock
       spec.stubs(:name).returns "sandworm"
@@ -367,6 +375,7 @@ class PusherTest < ActiveSupport::TestCase
       spec.stubs(:platform).returns Gem::Platform.new("arm64-darwin-25")
       spec.stubs(:cert_chain).returns nil
       spec.stubs(:required_ruby_version).returns Gem::Requirement.new("~> 3.4.0")
+      spec.stubs(:required_rubygems_version).returns Gem::Requirement.new(Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION)
       spec.stubs(:metadata).returns({})
 
       @cutter.stubs(:spec).returns spec
@@ -381,7 +390,7 @@ class PusherTest < ActiveSupport::TestCase
     end
   end
 
-  context "validating uploaded spec platform attributes" do
+  context "validating uploaded spec content addressable attributes" do
     should "allow content-addressable versions whose uploaded spec keeps platform identity" do
       rubygem = create(:rubygem, name: "sandworm")
       version = create(
@@ -391,6 +400,7 @@ class PusherTest < ActiveSupport::TestCase
         platform: "arm64-darwin-25",
         gem_platform: "arm64-darwin-25",
         required_ruby_version: "~> 3.4.0",
+        required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION,
         ruby_abi: "3.4",
         sha256: Digest::SHA2.base64digest("sandworm-1.0.0-arm64-darwin-25-3.4")
       )

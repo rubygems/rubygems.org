@@ -186,6 +186,12 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
   def workflow_slug = ".github/workflows/#{workflow_filename}"
 
+  # The `actor` block on request and gem.push.* log lines. Deliberately no
+  # account_age_seconds, so a CI release can never trip a new-account rule.
+  def log_actor_attributes
+    { gid: to_gid.to_s, type: "trusted_publisher", repository:, workflow: workflow_slug, repository_owner_id: }
+  end
+
   def owns_gem?(rubygem) = rubygem_trusted_publishers.exists?(rubygem: rubygem)
 
   private

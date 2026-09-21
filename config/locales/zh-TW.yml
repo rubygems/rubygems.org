@@ -108,6 +108,10 @@ zh-TW:
           attributes:
             expires_at:
               inclusion:
+        gem_name_reservation:
+          attributes:
+            base:
+              organization_limit_reached:
         organization:
           attributes:
             handle:
@@ -312,7 +316,6 @@ zh-TW:
           <br class="hidden lg:block"> 由以下支持
         uptime: 上線時間
         secured_by:
-        looking_for_maintainers: 徵求維護者
       header:
         profile: 個人檔案
         dashboard: 儀表板
@@ -332,6 +335,8 @@ zh-TW:
     gems:
     members:
     invite_member:
+    reservations:
+    reserve_gem_name:
   mailer:
     confirm_your_email: 已寄送連結，請點擊連結來確認您的電子郵件地址。
     confirmation_subject: "%{host} 電子郵件地址確認"
@@ -472,6 +477,7 @@ zh-TW:
       add_member:
       invite:
       transfer:
+      reservations:
     members:
       create:
         user_already_invited:
@@ -497,6 +503,26 @@ zh-TW:
         role:
         create:
         invite:
+    gem_name_reservations:
+      create:
+        gem_name_reserved:
+      destroy:
+        gem_name_reservation_removed:
+      index:
+        description:
+        no_reservations:
+        reserve:
+        remove:
+        confirm_remove:
+      new:
+        title:
+        name:
+        name_hint:
+        reserve:
+        limit_html:
+        limit_reached_html:
+        unlimited:
+        disclaimer:
     invitations:
       show:
         accept:
@@ -661,6 +687,9 @@ zh-TW:
       update: 更新
       owner_heading: 所有權通知
       push_heading: 推送通知
+      gems_heading:
+      organizations_heading:
+      organization_info:
   webauthn_verifications:
     expired_or_already_used: 您所使用的連結中的權杖已過期或被使用。
     no_port: 未提供連接埠。請再試一次。

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Avo::Resources::OIDCIdToken < Avo::BaseResource
-  self.includes = []
+  self.includes = %i[api_key_role api_key provider]
   self.model_class = ::OIDC::IdToken
 
   def fields

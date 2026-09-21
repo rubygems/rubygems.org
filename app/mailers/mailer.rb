@@ -56,6 +56,7 @@ class Mailer < ApplicationMailer
   def notifiers_changed(user_id)
     @user = User.find(user_id)
     @ownerships = @user.ownerships.by_indexed_gem_name
+    @memberships = @user.memberships.confirmed.by_organization_handle.includes(:organization)
 
     mail to: @user.email,
          subject: I18n.t("mailer.notifiers_changed.subject", host: Gemcutter::HOST_DISPLAY,

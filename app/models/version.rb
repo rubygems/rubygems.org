@@ -6,7 +6,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   RUBYGEMS_IMPORT_DATE = Date.parse("2009-07-25")
   DEFAULT_CONTENT_ADDRESS_LENGTH = 8
   CONTENT_ADDRESS_FORMAT = /\A[0-9a-f]{#{DEFAULT_CONTENT_ADDRESS_LENGTH},64}\z/
-  CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION = ">= 4.1.0.beta1"
+  CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION = ">= 4.1.0.a"
 
   belongs_to :rubygem, touch: true
   has_many :dependencies, lambda {
@@ -53,16 +53,18 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     length: { minimum: 0, maximum: Gemcutter::MAX_TEXT_FIELD_LENGTH },
     allow_blank: true
   validates :sha256, :spec_sha256, format: { with: Patterns::BASE64_SHA256_PATTERN }, allow_nil: true
-  validates :sha256, presence: true, if: :content_addressable?
-  validates :content_address, format: { with: CONTENT_ADDRESS_FORMAT }, allow_nil: true
-  validates :content_address, absence: true, unless: :content_addressable?
-  validates :ruby_abi, format: { with: /\A\d+\.\d+\z/ }, allow_nil: true
-  validates :ruby_abi, absence: true, unless: :platformed?
 
   validates :number, :platform, :gem_platform, :full_name, :gem_full_name, :canonical_number,
     name_format: { requires_letter: false },
     if: -> { validation_context == :create || number_changed? || platform_changed? },
     presence: true
+
+  validates :sha256, presence: true, if: :content_addressable?
+  validates :content_address, format: { with: CONTENT_ADDRESS_FORMAT }, allow_nil: true
+  validates :content_address, absence: true, unless: :content_addressable?
+  validates :ruby_abi, format: { with: /\A\d+\.\d+\z/ }, allow_nil: true
+  validates :ruby_abi, absence: true, unless: :platformed?
+  validate :content_addressable_required_rubygems_version, if: :content_addressable?
 
   validate :unique_canonical_number, on: :create
   validate :platform_and_number_are_unique, on: :create
@@ -499,37 +501,26 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     platform.present? && platform != "ruby"
   end
 
-  def normalize_content_addressable_gem_metadata!
-    return unless content_addressable?
-    return if required_rubygems_version_satisfies_content_addressable_floor?
-    preserved = required_rubygems_version.to_s.split(/\s*,\s*/).filter_map do |req|
-      req = req.strip
-      if req.start_with?("~>")
-        "< #{Gem::Version.new(req[2..].strip).bump}"
-      elsif req.start_with?("<", "!=")
-        req
-      end
-    end
-    update!(required_rubygems_version: [CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION, *preserved].join(", "))
+  private
+
+  def content_addressable_required_rubygems_version
+    return if meets_content_addressable_rubygems_floor?
+
+    errors.add(:required_rubygems_version,
+               "must be #{CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION} for content-addressable gems (set required_rubygems_version in the gemspec)")
   end
 
-  def required_rubygems_version_satisfies_content_addressable_floor?
+  def meets_content_addressable_rubygems_floor?
+    floor = Gem::Requirement.new(CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION)
     requirements = required_rubygems_version.presence&.split(/\s*,\s*/) || [">= 0"]
     requirement = Gem::Requirement.new(requirements)
 
     requirement.requirements.any? do |operator, required_version|
-      case operator
-      when ">=", "~>", "=", ">"
-        Gem::Requirement.new(CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION).satisfied_by?(required_version)
-      else
-        false
-      end
+      [">=", "~>", "=", ">"].include?(operator) && floor.satisfied_by?(required_version)
     end
   rescue Gem::Requirement::BadRequirementError
     false
   end
-
-  private
 
   def update_prerelease
     self[:prerelease] = prerelease

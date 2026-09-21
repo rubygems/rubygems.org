@@ -41,15 +41,15 @@ class Gemcutter::RequestIpAddressTest < ActiveSupport::TestCase
   end
 
   should "not record GEOIP_INFO without RUBYGEMS-PROXY-TOKEN set" do
-    stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, "abc") do
+    stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKENS, ["abc"]) do
       assert_nil @request.ip_address.geoip_info
     end
   end
 
-  should "not record GEOIP_INFO without Gemcutter::PROXY_TOKEN set" do
+  should "not record GEOIP_INFO without any PROXY_TOKENS configured" do
     @request.headers["RUBYGEMS-PROXY-TOKEN"] = "abc"
 
-    stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, nil) do
+    stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKENS, []) do
       assert_nil @request.ip_address.geoip_info
     end
   end
@@ -57,7 +57,7 @@ class Gemcutter::RequestIpAddressTest < ActiveSupport::TestCase
   should "record empty GEOIP_INFO" do
     @request.headers["RUBYGEMS-PROXY-TOKEN"] = "abc"
 
-    stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, "abc") do
+    stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKENS, ["abc"]) do
       geoip_info = @request.ip_address.geoip_info
 
       refute_nil geoip_info
@@ -73,7 +73,7 @@ class Gemcutter::RequestIpAddressTest < ActiveSupport::TestCase
       @request.headers[header] = info[field]
     end
 
-    stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, "abc") do
+    stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKENS, ["abc"]) do
       geoip_info = @request.ip_address.geoip_info
 
       refute_nil geoip_info
@@ -92,12 +92,68 @@ class Gemcutter::RequestIpAddressTest < ActiveSupport::TestCase
     @request.headers["GEOIP-CONTINENT-CODE"] = "NAH"
     @request.headers["GEOIP-COUNTRY-CODE3"] = "NAH"
 
-    stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKEN, "abc") do
+    stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKENS, ["abc"]) do
       geoip_info = @request.ip_address.geoip_info
 
       refute_nil geoip_info
       refute_predicate geoip_info, :persisted?
       assert_predicate @request.ip_address, :persisted?
+    end
+  end
+
+  context "edge verification" do
+    should "be bypassed without a RUBYGEMS-PROXY-TOKEN header" do
+      stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKENS, ["abc"]) do
+        refute_predicate @request, :edge_verified?
+        assert_predicate @request, :edge_bypassed?
+      end
+    end
+
+    should "be bypassed with a wrong RUBYGEMS-PROXY-TOKEN header" do
+      @request.headers["RUBYGEMS-PROXY-TOKEN"] = "nope"
+
+      stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKENS, ["abc"]) do
+        assert_predicate @request, :edge_bypassed?
+      end
+    end
+
+    should "be bypassed when no PROXY_TOKENS are configured, even with a header" do
+      @request.headers["RUBYGEMS-PROXY-TOKEN"] = "abc"
+
+      stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKENS, []) do
+        assert_predicate @request, :edge_bypassed?
+      end
+    end
+
+    should "be verified with a matching RUBYGEMS-PROXY-TOKEN header" do
+      @request.headers["RUBYGEMS-PROXY-TOKEN"] = "abc"
+
+      stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKENS, ["abc"]) do
+        assert_predicate @request, :edge_verified?
+        refute_predicate @request, :edge_bypassed?
+      end
+    end
+
+    should "be verified by any configured token during a rotation" do
+      @request.headers["RUBYGEMS-PROXY-TOKEN"] = "new"
+
+      stub_const(Gemcutter::RequestIpAddress, :PROXY_TOKENS, %w[old new]) do
+        assert_predicate @request, :edge_verified?
+      end
+    end
+  end
+
+  context "proxy token parsing" do
+    should "accept a single token" do
+      assert_equal ["abc"], Gemcutter::RequestIpAddress.parse_proxy_tokens("abc")
+    end
+
+    should "accept several tokens, ignoring whitespace and empty entries" do
+      assert_equal %w[abc def], Gemcutter::RequestIpAddress.parse_proxy_tokens(" abc, def,,")
+    end
+
+    should "be empty when unset" do
+      assert_empty Gemcutter::RequestIpAddress.parse_proxy_tokens(nil)
     end
   end
 end

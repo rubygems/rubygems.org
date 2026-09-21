@@ -225,7 +225,7 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
 
     expected = <<~VERSIONS_FILE
       ---
-      2.9.0-#{content_address} |checksum:#{Version._sha256_hex(version.sha256)},ruby:~> 3.2.0,rubygems:>= 4.1.0.beta1,platform:= x86_64-linux-musl,created_at:#{version.created_at.utc.iso8601}
+      2.9.0-#{content_address} |checksum:#{Version._sha256_hex(version.sha256)},ruby:~> 3.2.0,rubygems:>= 4.1.0.beta1,platform:x86_64-linux-musl,created_at:#{version.created_at.utc.iso8601}
     VERSIONS_FILE
 
     expected_digest = digest(expected)
@@ -307,7 +307,7 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
       get info_path(gem_name: "v2yank")
 
       assert_response :success
-      assert_not_includes @response.body, "1.0.0"
+      refute_includes @response.body, "1.0.0"
       assert_equal "#{current_info_prefix}/* gem/v2yank #{current_info_prefix}/v2yank", @response.headers["Surrogate-Key"]
     end
   end

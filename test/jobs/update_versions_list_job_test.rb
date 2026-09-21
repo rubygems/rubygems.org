@@ -28,15 +28,15 @@ class UpdateVersionsListJobTest < ActiveJob::TestCase
   end
 
   test "discards unsupported versions" do
-    assert_nothing_raised do
-      UpdateVersionsListJob.perform_now(version: 1)
-    end
+    UpdateVersionsListJob.perform_now(version: 1)
+
+    assert_nil RubygemFs.instance.get("versions/versions_v2.list")
   end
 
   test "discards invalid versions" do
-    assert_nothing_raised do
-      UpdateVersionsListJob.perform_now(version: "not-a-version")
-    end
+    UpdateVersionsListJob.perform_now(version: "not-a-version")
+
+    assert_nil RubygemFs.instance.get("versions/versions_v2.list")
   end
 
   test "logs when discarding unsupported versions" do
@@ -50,8 +50,6 @@ class UpdateVersionsListJobTest < ActiveJob::TestCase
     job = UpdateVersionsListJob.new(version: 1)
     job.stubs(:logger).returns(logger)
 
-    assert_nothing_raised do
-      job.perform_now
-    end
+    job.perform_now
   end
 end

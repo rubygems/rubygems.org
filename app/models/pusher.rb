@@ -137,6 +137,7 @@ class Pusher
       )
 
     version.required_ruby_version = spec.required_ruby_version.to_s
+    version.required_rubygems_version = spec.required_rubygems_version.to_s
     unless @rubygem.new_record?
       # Return success for idempotent pushes
       return notify("Gem was already pushed: #{version.to_title}", 200) if version.indexed?
@@ -261,10 +262,7 @@ class Pusher
   def persist_version
     retries = 0
     begin
-      rubygem.transaction do
-        rubygem.update_attributes_from_gem_specification!(version, spec)
-        version.normalize_content_addressable_gem_metadata!
-      end
+      rubygem.update_attributes_from_gem_specification!(version, spec)
     rescue ActiveRecord::RecordNotUnique => e
       raise e unless e.message.include?("index_versions_number_content_address")
 

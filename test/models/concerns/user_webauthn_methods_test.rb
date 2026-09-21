@@ -135,8 +135,8 @@ class UserWebauthnMethodsTest < ActiveSupport::TestCase
     should "reset the otp each time the method is called" do
       @webauthn_verification.generate_otp
 
-      assert_not_nil @user.webauthn_verification.otp
-      assert_not_nil @user.webauthn_verification.otp_expires_at
+      refute_nil @user.webauthn_verification.otp
+      refute_nil @user.webauthn_verification.otp_expires_at
 
       @user.refresh_webauthn_verification
 

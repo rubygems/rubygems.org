@@ -27,8 +27,8 @@ class CacheExposureMailerTest < ActionMailer::TestCase
       email = CacheExposureMailer.cache_exposure_notice(@user)
 
       assert_predicate email, :multipart?
-      assert_not_nil email.html_part
-      assert_not_nil email.text_part
+      refute_nil email.html_part
+      refute_nil email.text_part
       # decoded unwraps the transfer encoding, so this is robust to quoted-printable.
       assert_includes email.html_part.decoded, "has been expired"
       assert_includes email.text_part.decoded, "has been expired"

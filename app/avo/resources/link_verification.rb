@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Avo::Resources::LinkVerification < Avo::BaseResource
-  self.includes = []
+  self.includes = [:linkable]
 
   def fields
     field :id, as: :id

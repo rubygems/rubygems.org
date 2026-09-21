@@ -11,12 +11,16 @@ class RubygemTransfer < ApplicationRecord
 
   accepts_nested_attributes_for :invites
 
-  validate :rubygems_owned_by_transferrer, :created_by_organization_ownership, :rubygem_existing_organization
+  validate :rubygems_owned_by_transferrer, :created_by_organization_ownership, :created_by_invite_permissions,
+    :rubygem_existing_organization
 
   before_save :sync_invites, if: :rubygems_changed?
 
   def transfer!
     transaction do
+      organization.memberships.lock.find_by!(user: created_by)
+      raise ActiveRecord::RecordInvalid, self unless valid?
+
       memberships = approved_invites.filter_map { it.to_membership(actor: created_by) }
       organization.memberships << memberships
 
@@ -42,7 +46,11 @@ class RubygemTransfer < ApplicationRecord
   end
 
   def approved_invites
-    invites.includes(:user).select { |invite| invite.user.present? && invite.role.present? }
+    reviewable_invites.select { |invite| invite.role.present? }
+  end
+
+  def reviewable_invites
+    invites.includes(:user).select { |invite| invite.user.present? && !existing_organization_member?(invite.user) }
   end
 
   def available_rubygems
@@ -61,11 +69,18 @@ class RubygemTransfer < ApplicationRecord
 
   private
 
-  def remove_ownerships_for_joining_members
-    invited_users = invites.includes(:user).reject { |invite| invite.role.nil? || invite.outside_contributor? }.map(&:user)
-    invited_users << created_by
+  def existing_organization_member?(user)
+    member_user_ids.include?(user.id)
+  end
 
-    Ownership.includes(:rubygem, :user, :api_key_rubygem_scopes).where(user: invited_users, rubygem: selected_rubygems).destroy_all
+  def remove_ownerships_for_joining_members
+    joining_user_ids = invites.filter_map do |invite|
+      invite.user_id if member_user_ids.include?(invite.user_id) || (invite.role.present? && !invite.outside_contributor?)
+    end
+
+    Ownership.includes(:rubygem, :user, :api_key_rubygem_scopes)
+      .where(user_id: [created_by_id, *joining_user_ids], rubygem: selected_rubygems)
+      .destroy_all
   end
 
   def demote_outside_contributors_to_maintainer
@@ -89,6 +104,12 @@ class RubygemTransfer < ApplicationRecord
     self.invites = users_for_rubygem.map { |user| existing_invites[user.id] || OrganizationInvite.new(user: user) }
   end
 
+  def member_user_ids
+    return [] if organization_id.nil?
+
+    @member_user_ids ||= Membership.where(organization_id: organization_id).pluck(:user_id)
+  end
+
   def rubygems_owned_by_transferrer
     return if created_by.blank? || rubygems.blank?
 
@@ -102,6 +123,15 @@ class RubygemTransfer < ApplicationRecord
   def created_by_organization_ownership
     return if OrganizationPolicy.new(created_by, organization).transfer_gem?
     errors.add(:created_by, "does not have permission to transfer gems to this organization")
+  end
+
+  def created_by_invite_permissions
+    invites.filter_map { it.to_membership(actor: created_by) }.uniq(&:role).each do |membership|
+      membership.organization = organization
+      next if MembershipPolicy.new(created_by, membership).create?
+
+      errors.add(:invites, "contain a role the transferrer does not have permission to grant")
+    end
   end
 
   def rubygem_existing_organization

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Avo::Resources::OIDCPendingTrustedPublisher < Avo::BaseResource
-  self.includes = []
+  self.includes = %i[user trusted_publisher]
   self.model_class = ::OIDC::PendingTrustedPublisher
 
   class ExpiredFilter < Avo::Filters::ScopeBooleanFilter; end

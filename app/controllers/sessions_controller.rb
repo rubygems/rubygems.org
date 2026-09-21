@@ -101,6 +101,7 @@ class SessionsController < Clearance::SessionsController
   def do_login(two_factor_label:, two_factor_method:, authentication_method:)
     sign_in(@user) do |status|
       if status.success?
+        Current.user = @user
         StatsD.increment "login.success"
         current_user.record_event!(Events::UserEvent::LOGIN_SUCCESS, request:,
           two_factor_method:, two_factor_label:, authentication_method:)
