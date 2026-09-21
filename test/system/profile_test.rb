@@ -12,7 +12,7 @@ class ProfileTest < ApplicationSystemTestCase
   test "changing handle" do
     sign_in
 
-    visit profile_path(id: "nick1")
+    visit profile_path("nick1")
 
     assert_text "nick1"
 
@@ -28,7 +28,7 @@ class ProfileTest < ApplicationSystemTestCase
     create(:user, email: "nick2@rubygems-test.org", handle: "nick2")
 
     sign_in
-    visit profile_path(id: "nick1")
+    visit profile_path("nick1")
     click_link "Edit Profile"
 
     fill_in "user_handle", with: "nick2"
@@ -40,7 +40,7 @@ class ProfileTest < ApplicationSystemTestCase
 
   test "changing to invalid handle does not affect rendering" do
     sign_in
-    visit profile_path(id: "nick1")
+    visit profile_path("nick1")
     click_link "Edit Profile"
 
     fill_in "user_handle", with: "nick1" * 10
@@ -53,7 +53,7 @@ class ProfileTest < ApplicationSystemTestCase
 
   test "changing email does not change email and asks to confirm email" do
     sign_in
-    visit profile_path(id: "nick1")
+    visit profile_path("nick1")
     click_link "Edit Profile"
 
     fill_in "Email address", with: "nick2@rubygems-test.org"
@@ -90,12 +90,12 @@ class ProfileTest < ApplicationSystemTestCase
 
   test "enabling email on profile" do
     # email is hidden at public profile by default
-    visit profile_path(id: "nick1")
+    visit profile_path("nick1")
 
     assert_no_text("Email Me")
 
     sign_in
-    visit profile_path(id: "nick1")
+    visit profile_path("nick1")
     click_link "Edit Profile"
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
@@ -105,14 +105,14 @@ class ProfileTest < ApplicationSystemTestCase
     assert_text "Your profile was updated."
     sign_out
 
-    visit profile_path(id: "nick1")
+    visit profile_path("nick1")
 
     assert_text("Email Me")
   end
 
   test "adding X(formerly Twitter) username" do
     sign_in
-    visit profile_path(id: "nick1")
+    visit profile_path("nick1")
 
     click_link "Edit Profile"
     fill_in "user_twitter_username", with: "nick1"
@@ -122,7 +122,7 @@ class ProfileTest < ApplicationSystemTestCase
     assert_text "Your profile was updated."
 
     sign_out
-    visit profile_path(id: "nick1")
+    visit profile_path("nick1")
 
     assert page.has_link?("@nick1", href: "https://twitter.com/nick1")
   end
@@ -131,7 +131,7 @@ class ProfileTest < ApplicationSystemTestCase
     twitter_username = "nick1twitter"
 
     sign_in
-    visit profile_path(id: "nick1")
+    visit profile_path("nick1")
 
     click_link "Edit Profile"
     fill_in "user_twitter_username", with: twitter_username
@@ -152,7 +152,7 @@ class ProfileTest < ApplicationSystemTestCase
 
   test "deleting profile" do
     sign_in
-    visit profile_path(id: "nick1")
+    visit profile_path("nick1")
     click_link "Edit Profile"
 
     click_button "Delete"
@@ -215,7 +215,7 @@ class ProfileTest < ApplicationSystemTestCase
       created_at: Time.zone.parse("2026-01-01"))
 
     sign_in
-    visit profile_path(id: "nick1")
+    visit profile_path("nick1")
 
     assert_equal %w[platform-gem prerelease-gem simple-gem], page.all("article li h4").map(&:text)
 
@@ -224,7 +224,7 @@ class ProfileTest < ApplicationSystemTestCase
       [prerelease_gem, stable_release, "5"],
       [simple_gem, simple_release, "2"]
     ].each do |rubygem, version, downloads|
-      row = page.find("a[href='#{rubygem_path(id: rubygem.slug)}']")
+      row = page.find("a[href='#{rubygem_path(rubygem.slug)}']")
 
       assert_equal version.description, row[:title]
       assert_equal version.number, row.find("[data-testid='rubygem-version']").text

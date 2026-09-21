@@ -32,7 +32,7 @@ class RubygemsController < ApplicationController
     @versions = @rubygem.public_versions.limit(5)
     @advisories = @rubygem.advisories.visible.to_a
     if @versions.to_a.any?
-      add_breadcrumb @rubygem.name, rubygem_path(id: @rubygem.slug)
+      add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
       add_breadcrumb t("breadcrumbs.latest_version", version: @latest_version.slug)
       render "show"
     else
@@ -46,7 +46,7 @@ class RubygemsController < ApplicationController
   def security_events
     authorize @rubygem, :show_events?
     @security_events = @rubygem.events.order(id: :desc).page(params[:page]).per(50)
-    add_breadcrumb @rubygem.name, rubygem_path(id: @rubygem.slug)
+    add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
     add_breadcrumb t(".title")
   end
 

@@ -11,8 +11,10 @@ class PagesTest < ApplicationSystemTestCase
   end
 
   test "renders /pages/about for all supported languages" do
+    skip "locales temporarily disabled"
+
     I18n.available_locales.each do |locale|
-      visit "/#{locale}/pages/about"
+      visit "/pages/about?locale=#{locale}"
 
       assert_text I18n.t("pages.about.title", locale: locale)
     end

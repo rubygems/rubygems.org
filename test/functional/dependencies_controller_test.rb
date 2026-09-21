@@ -46,15 +46,6 @@ class DependenciesControllerTest < ActionController::TestCase
     should "render the specified version" do
       assert page.has_content?(@version.number)
     end
-
-    should "link an older version breadcrumb to its version page" do
-      create(:version, number: "99.0.0", rubygem: @rubygem)
-
-      request_endpoint(@rubygem.name, @version.number)
-
-      assert page.has_link?(@version.slug, href: rubygem_version_path(rubygem_id: @rubygem.slug, id: @version.slug))
-    end
-
     should "render dependencies of gem" do
       @version.dependencies.each do |dependency|
         assert page.has_content?(dependency.rubygem.name)

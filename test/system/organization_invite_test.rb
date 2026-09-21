@@ -12,7 +12,7 @@ class OrganizationInviteSystemTest < ApplicationSystemTestCase
   test "invite user to organization" do
     sign_in(@owner)
 
-    visit organization_path(id: @organization)
+    visit organization_path(@organization)
 
     click_on "Members"
     click_on "Invite"

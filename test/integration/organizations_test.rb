@@ -12,7 +12,7 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
     organization = create(:organization, owners: [@user], handle: "arrakis", name: "Arrakis")
     organization.rubygems << create(:rubygem, name: "arrakis", number: "1.0.0")
 
-    get organization_path(id: organization)
+    get organization_path(organization)
 
     assert_response :success
     assert page.has_content? "arrakis"
@@ -22,13 +22,13 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
     organization = create(:organization, owners: [@user], handle: "arrakis", name: "Arrakis")
     delete sign_out_path
 
-    get organization_path(id: organization)
+    get organization_path(organization)
 
     assert_response :success
   end
 
   test "should render not found when an organization doesn't exist" do
-    get organization_path(id: "nonexistent")
+    get organization_path("nonexistent")
 
     assert_response :not_found
   end
@@ -52,21 +52,21 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
   test "should render organization edit form" do
     organization = create(:organization, owners: [@user])
 
-    get edit_organization_path(id: organization)
+    get edit_organization_path(organization)
 
     assert_response :success
-    assert_select "form[action=?]", organization_path(id: organization)
+    assert_select "form[action=?]", organization_path(organization)
     assert_select "input[name=?]", "organization[name]"
   end
 
   test "should update an organization display name" do
     organization = create(:organization, owners: [@user])
 
-    patch organization_path(id: organization), params: {
+    patch organization_path(organization), params: {
       organization: { name: "New Name" }
     }
 
-    assert_redirected_to organization_path(id: organization)
+    assert_redirected_to organization_path(organization)
     follow_redirect!
 
     assert page.has_content? "New Name"
@@ -75,7 +75,7 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
   test "should render user roles for users in the organization" do
     organization = create(:organization, owners: [@user])
 
-    get organization_path(id: organization)
+    get organization_path(organization)
 
     assert page.has_content? "#{@user.handle} owner", normalize_ws: true
   end
@@ -84,7 +84,7 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
     owner = create(:user)
     organization = create(:organization, owners: [owner])
 
-    get organization_path(id: organization)
+    get organization_path(organization)
 
     refute page.has_content? "#{owner.handle} owner", normalize_ws: true
   end
@@ -92,15 +92,15 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
   test "should render an invite button for admins+" do
     organization = create(:organization, owners: [@user])
 
-    get organization_path(id: organization)
+    get organization_path(organization)
 
-    assert_select "a[href=?]", new_organization_membership_path(organization_id: organization), text: "Invite"
+    assert_select "a[href=?]", new_organization_membership_path(organization), text: "Invite"
   end
 
   test "should not render the invite button for users with less access than admins" do
     organization = create(:organization, maintainers: [@user])
 
-    get organization_path(id: organization)
+    get organization_path(organization)
 
     refute page.has_content? "Invite"
   end

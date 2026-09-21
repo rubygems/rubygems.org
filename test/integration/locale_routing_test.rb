@@ -195,11 +195,11 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     assert_includes response.body, %(<html lang="zh-CN")
   end
 
-  test "keyword route helper arguments target non-locale segments" do
+  test "positional route helper arguments target non-locale segments" do
     rubygem = create(:rubygem, name: "rails")
 
-    assert_equal "/gems/rails", rubygem_path(id: rubygem.slug)
-    assert_equal "/gems/rails/versions/7.0.0", rubygem_version_path(rubygem_id: rubygem.slug, id: "7.0.0")
+    assert_equal "/gems/rails", rubygem_path(rubygem.slug)
+    assert_equal "/gems/rails/versions/7.0.0", rubygem_version_path(rubygem.slug, "7.0.0")
   end
 
   test "admin routes are not affected by locale scope" do
