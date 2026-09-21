@@ -62,6 +62,19 @@ class ApiKeysControllerTest < ActionController::TestCase
       session[:verified_user] = nil
     end
 
+    context "without a verified session" do
+      should "return to the API key edit page after verifying an update" do
+        api_key = create(:api_key, owner: @user)
+        session[:verification] = nil
+        session[:verified_user] = nil
+
+        patch :update, params: { api_key: { name: "updated" }, id: api_key.id }
+
+        assert_redirected_to verify_session_path
+        assert_equal edit_profile_api_key_path(id: api_key.id), session[:redirect_uri]
+      end
+    end
+
     context "on GET to index" do
       context "no api key exists" do
         setup do
