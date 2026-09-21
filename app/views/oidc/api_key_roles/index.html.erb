@@ -38,7 +38,7 @@
         <tr class="text-sm">
           <td data-title="Name">
             <%= link_to api_key_role.name,
-              profile_oidc_api_key_role_path(api_key_role.token),
+              profile_oidc_api_key_role_path(token: api_key_role.token),
               class: "hover:underline" %>
           </td>
           <td data-title="Role Token">
@@ -46,7 +46,7 @@
           </td>
           <td data-title="Provider">
             <%= link_to api_key_role.provider.issuer,
-              profile_oidc_provider_path(api_key_role.provider),
+              profile_oidc_provider_path(id: api_key_role.provider),
               class: "text-b3 text-orange-500 hover:underline dark:text-orange-400" %>
           </td>
         </tr>

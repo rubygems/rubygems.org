@@ -13,7 +13,7 @@
     <dd class="mt-1">
       <%= to_sentence(
         api_key_permissions.gems.presence&.map { |gem|
-          link_to(gem, rubygem_path(gem), class: "text-orange-500 hover:underline dark:text-orange-400")
+          link_to(gem, rubygem_path(id: gem), class: "text-orange-500 hover:underline dark:text-orange-400")
         } || [t("api_keys.all_gems")]
       ) %>
     </dd>

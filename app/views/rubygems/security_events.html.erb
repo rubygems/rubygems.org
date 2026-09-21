@@ -1,5 +1,5 @@
 <% @title = @rubygem.name %>
-<% @title_url = rubygem_path(@rubygem.slug) %>
+<% @title_url = rubygem_path(id: @rubygem.slug) %>
 <% @subtitle = @latest_version&.slug %>
 
 <% if @latest_version %>
@@ -16,7 +16,7 @@
   <div>
     <h1 class="text-h4 font-semibold text-neutral-900 dark:text-white"><%= t(".title") %></h1>
     <p class="text-b2 mt-2">
-      <%= t(".description_html", gem: link_to(@rubygem.name, rubygem_path(@rubygem.slug), class: "text-orange-500 hover:text-orange-600")) %>
+      <%= t(".description_html", gem: link_to(@rubygem.name, rubygem_path(id: @rubygem.slug), class: "text-orange-500 hover:text-orange-600")) %>
     </p>
   </div>
 
