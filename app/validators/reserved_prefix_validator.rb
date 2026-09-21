@@ -11,7 +11,7 @@ class ReservedPrefixValidator < ActiveModel::EachValidator
     return if value.blank?
 
     reservation = PrefixReservation.covering(value).first
-    return if reservation.nil? || reservation.permits?(record)
+    return if reservation.nil? || reservation.permitted?(record)
 
     record.errors.add(attribute, reservation.conflict_message(value))
   end
