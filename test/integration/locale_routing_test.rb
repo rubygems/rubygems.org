@@ -102,6 +102,20 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     assert page.has_link?(href: "/de/stats")
   end
 
+  test "positional route helpers preserve the current page locale" do
+    create(:rubygem, name: "sandworm", number: "1.0.0")
+
+    get "/gems/sandworm"
+
+    assert_response :success
+    assert page.has_link?("sandworm", href: "/gems/sandworm")
+
+    get "/de/gems/sandworm"
+
+    assert_response :success
+    assert page.has_link?("sandworm", href: "/de/gems/sandworm")
+  end
+
   test "the default locale strip can never produce an external redirect" do
     redirected_externally =
       begin
@@ -129,7 +143,7 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     get "/de/gems/sandworm"
 
     assert_response :success
-    assert_equal "/api/v1/downloads/sandworm-1.0.0.json", api_v1_download_path(id: "sandworm-1.0.0", format: :json)
+    assert_equal "/api/v1/downloads/sandworm-1.0.0.json", api_v1_download_path("sandworm-1.0.0", format: :json)
   end
 
   test "localized pages emit a self-referential canonical plus hreflang alternates" do

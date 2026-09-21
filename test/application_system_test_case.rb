@@ -15,6 +15,11 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     desktop: [1400, 1400].freeze
   }.freeze
 
+  def after_setup
+    super
+    self.default_url_options = default_url_options.merge(path_params: { locale: nil })
+  end
+
   parallelize_setup do |worker|
     SimpleCov.command_name "system-worker-#{worker}"
     RubygemFs.mock!
