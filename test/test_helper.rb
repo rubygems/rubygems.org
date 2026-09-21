@@ -334,10 +334,25 @@ class ActionController::TestCase
   end
 end
 
+class ActionView::TestCase
+  setup do
+    controller.define_singleton_method(:default_url_options) { { path_params: { locale: nil } } }
+  end
+end
+
+class ActionMailer::TestCase
+  def default_url_options
+    { path_params: { locale: nil } }
+  end
+end
+
 class ActionDispatch::IntegrationTest
   include OauthHelpers
 
-  setup { host! Gemcutter::HOST }
+  setup do
+    host! Gemcutter::HOST
+    self.default_url_options = default_url_options.merge(path_params: { locale: nil })
+  end
 
   def assert_signed_in_as(user)
     flunk "Expected to be signed in as User #{user.handle.inspect}, but was not signed in." unless request.env[:clearance].signed_in?
@@ -427,6 +442,10 @@ class ComponentTest < ActiveSupport::TestCase
 
   attr_reader :page
 
+  def default_url_options
+    { path_params: { locale: nil } }
+  end
+
   def render(component, &block)
     response = if block
                  view_context.render(component, &block)
@@ -447,7 +466,9 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   def controller
-    @controller ||= ActionView::TestCase::TestController.new
+    @controller ||= ActionView::TestCase::TestController.new.tap do |controller|
+      controller.define_singleton_method(:default_url_options) { { path_params: { locale: nil } } }
+    end
   end
 
   def preview(path = preview_path, scenario: :default, **params)
