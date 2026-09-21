@@ -150,7 +150,7 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
     post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
     post authenticate_session_path(verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD })
 
-    payload = capture_request_payload { get edit_profile_api_key_path(id: api_key) }
+    payload = capture_request_payload { get edit_profile_api_key_path(api_key) }
 
     assert_response :success
     assert_equal({ user_id: user.id }, payload[:identity])

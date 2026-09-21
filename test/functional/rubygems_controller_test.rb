@@ -509,7 +509,7 @@ class RubygemsControllerTest < ActionController::TestCase
     should respond_with :success
 
     should "link the dependencies tab to the dependencies page" do
-      assert page.has_link?("Dependencies", href: rubygem_version_dependencies_path(rubygem_id: @version.rubygem.slug, version_id: @version.slug))
+      assert page.has_link?("Dependencies", href: rubygem_version_dependencies_path(@version.rubygem.slug, @version.slug))
     end
   end
 

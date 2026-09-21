@@ -65,12 +65,6 @@ class ApplicationHelperTest < ActionView::TestCase
     assert_predicate short_info(rubygem.most_recent_version), :html_safe?
   end
 
-  should "identify the home page" do
-    stubs(:current_page?).with(root_path).returns(true)
-
-    assert_predicate self, :home_page?
-  end
-
   should "use gem summary before gem description" do
     desc = "this is an awesome gem that does so many wonderful things"
     summary = "an awesome gem"

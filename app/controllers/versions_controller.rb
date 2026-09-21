@@ -13,7 +13,7 @@ class VersionsController < ApplicationController
     @versions = @rubygem.versions.by_display_order.page(@page).per(Gemcutter::VERSIONS_PER_PAGE)
     @advisories = @rubygem.advisories.visible.to_a
     if @latest_version
-      add_breadcrumb @rubygem.name, rubygem_path(id: @rubygem.slug)
+      add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
       add_breadcrumb t("breadcrumbs.versions")
     end
     set_surrogate_key "gem/#{@rubygem.name}/versions"
@@ -27,7 +27,7 @@ class VersionsController < ApplicationController
     @previous_version, @next_version = @latest_version.previous_and_next_in_display_order
     @advisories = @rubygem.advisories.visible.to_a
     @on_version_page = true
-    add_breadcrumb @rubygem.name, rubygem_path(id: @rubygem.slug)
+    add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
     if @latest_version == @rubygem.most_recent_version
       add_breadcrumb t("breadcrumbs.latest_version", version: @latest_version.display_id)
     else

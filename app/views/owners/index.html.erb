@@ -2,7 +2,7 @@
 <% @subtitle = t(".info", gem: @rubygem.name) %>
 <% @roles = Ownership.roles.map { |k,_| [Ownership.human_attribute_name("role.#{k}"), k] } %>
 
-<% add_breadcrumb @rubygem.name, rubygem_path(id: @rubygem.slug) %>
+<% add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug) %>
 <% add_breadcrumb t(".title") %>
 
 <h1 class="text-h2 mb-2"><%= @rubygem.name %></h1>

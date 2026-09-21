@@ -12,7 +12,7 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
   layout "subject"
 
   def index
-    add_breadcrumb @rubygem.name, rubygem_path(id: @rubygem.slug)
+    add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
     add_breadcrumb t(".title")
     render OIDC::RubygemTrustedPublishers::IndexView.new(
       rubygem: @rubygem,
@@ -21,7 +21,7 @@ class OIDC::RubygemTrustedPublishersController < ApplicationController
   end
 
   def new
-    add_breadcrumb @rubygem.name, rubygem_path(id: @rubygem.slug)
+    add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
     add_breadcrumb t(".title")
     render OIDC::RubygemTrustedPublishers::NewView.new(
       rubygem_trusted_publisher: @rubygem.oidc_rubygem_trusted_publishers.new(trusted_publisher: gh_actions_trusted_publisher)

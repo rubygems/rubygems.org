@@ -538,7 +538,7 @@ class SessionsControllerTest < ActionController::TestCase
   context "on GET to verify" do
     setup do
       rubygem = create(:rubygem)
-      session[:redirect_uri] = rubygem_owners_url(rubygem_id: rubygem.slug)
+      session[:redirect_uri] = rubygem_owners_url(rubygem.slug)
     end
 
     context "when signed in" do
@@ -567,7 +567,7 @@ class SessionsControllerTest < ActionController::TestCase
   context "on POST to authenticate" do
     setup do
       rubygem = create(:rubygem)
-      session[:redirect_uri] = rubygem_owners_url(rubygem_id: rubygem.slug)
+      session[:redirect_uri] = rubygem_owners_url(rubygem.slug)
     end
 
     context "when signed in" do
@@ -575,14 +575,14 @@ class SessionsControllerTest < ActionController::TestCase
         @user = create(:user)
         @rubygem = create(:rubygem)
         sign_in_as(@user)
-        session[:redirect_uri] = rubygem_owners_url(rubygem_id: @rubygem.slug)
+        session[:redirect_uri] = rubygem_owners_url(@rubygem.slug)
       end
 
       context "on correct password" do
         setup do
           post :authenticate, params: { user_id: @user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD } }
         end
-        should redirect_to("redirect uri") { rubygem_owners_path(rubygem_id: @rubygem.slug) }
+        should redirect_to("redirect uri") { rubygem_owners_path(@rubygem.slug) }
       end
 
       context "on incorrect password" do
@@ -765,7 +765,7 @@ class SessionsControllerTest < ActionController::TestCase
       @user = create(:user)
       sign_in_as(@user)
       @rubygem = create(:rubygem)
-      session[:redirect_uri] = rubygem_owners_url(rubygem_id: @rubygem.slug)
+      session[:redirect_uri] = rubygem_owners_url(@rubygem.slug)
       create(:ownership, rubygem: @rubygem, user: @user)
       GemDownload.increment(
         Rubygem::MFA_REQUIRED_THRESHOLD + 1,
@@ -839,7 +839,7 @@ class SessionsControllerTest < ActionController::TestCase
       context "on POST to authenticate" do
         setup { post :authenticate, params: { user_id: @user.id, verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD } } }
 
-        should redirect_to("redirect uri") { rubygem_owners_path(rubygem_id: @rubygem.slug) }
+        should redirect_to("redirect uri") { rubygem_owners_path(@rubygem.slug) }
       end
     end
   end

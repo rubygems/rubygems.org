@@ -14,7 +14,7 @@
         <%= render partial: '/users/form', object: form %>
 
         <p class="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
-          <%= t('by_signing_up') %> <%= link_to t('sign_up_terms'), policy_path(policy: 'terms-of-service'), class: "text-orange-500 underline dark:text-orange-400" %>
+          <%= t('by_signing_up') %> <%= link_to t('sign_up_terms'), policy_path('terms-of-service'), class: "text-orange-500 underline dark:text-orange-400" %>
         </p>
 
         <div class="mt-6">

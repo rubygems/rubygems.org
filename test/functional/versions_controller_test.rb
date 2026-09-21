@@ -43,8 +43,8 @@ class VersionsControllerTest < ActionController::TestCase
     should "render information about versions" do
       @versions.each do |v|
         assert_select "entry > title", count: 1, text: v.to_title
-        assert_select "entry > link[href='#{rubygem_version_url(rubygem_id: v.rubygem.slug, id: v.slug)}']", count: 1
-        assert_select "entry > id", count: 1, text: rubygem_version_url(rubygem_id: v.rubygem.slug, id: v.slug)
+        assert_select "entry > link[href='#{rubygem_version_url(v.rubygem.slug, v.slug)}']", count: 1
+        assert_select "entry > id", count: 1, text: rubygem_version_url(v.rubygem.slug, v.slug)
         # assert_select "entry > updated", :count => @versions.count, :text => v.created_at.iso8601
       end
     end
@@ -195,7 +195,7 @@ class VersionsControllerTest < ActionController::TestCase
     should respond_with :success
 
     should "link to the latest version of the gem" do
-      assert_select "a[href=?]", rubygem_path(id: @rubygem.slug), text: /Latest Version/
+      assert_select "a[href=?]", rubygem_path(@rubygem.slug), text: /Latest Version/
     end
   end
 
@@ -237,7 +237,7 @@ class VersionsControllerTest < ActionController::TestCase
     end
 
     should "renders owner gems overview link" do
-      assert page.has_selector?("a[href='#{profile_path(id: 'johndoe')}']")
+      assert page.has_selector?("a[href='#{profile_path('johndoe')}']")
     end
   end
 

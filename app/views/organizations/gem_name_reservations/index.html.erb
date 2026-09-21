@@ -1,7 +1,7 @@
 <%
   add_breadcrumb "Dashboard", dashboard_path
-  add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle), organization_path(id: @organization)
-  add_breadcrumb t("breadcrumbs.reservations"), organization_gem_name_reservations_path(organization_id: @organization)
+  add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle), organization_path(@organization)
+  add_breadcrumb t("breadcrumbs.reservations"), organization_gem_name_reservations_path(@organization)
 %>
 
 <% content_for :subject do %>
@@ -14,7 +14,7 @@
   <%= c.head do %>
     <%= c.title t("organizations.show.reservations"), icon: "description", count: @gem_name_reservations_count %>
     <% if policy(@organization).manage_gem_name_reservations? %>
-      <%= render ButtonComponent.new t(".reserve"), new_organization_gem_name_reservation_path(organization_id: @organization), type: :link, size: :small, data: { testid: "reserve-gem-name" } %>
+      <%= render ButtonComponent.new t(".reserve"), new_organization_gem_name_reservation_path(@organization), type: :link, size: :small, data: { testid: "reserve-gem-name" } %>
     <% end %>
   <% end %>
 
@@ -33,7 +33,7 @@
             <% if policy(gem_name_reservation).destroy? %>
               <%= render ButtonComponent.new(
                 t(".remove"),
-                organization_gem_name_reservation_path(organization_id: @organization, id: gem_name_reservation),
+                organization_gem_name_reservation_path(@organization, gem_name_reservation),
                 method: :delete,
                 style: :plain,
                 color: :red,
