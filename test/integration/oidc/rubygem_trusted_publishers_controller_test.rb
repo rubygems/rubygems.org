@@ -188,6 +188,14 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
         @trusted_publisher.reload
       end
     end
+
+    should "return to the trusted publishers list when destroy fails" do
+      OIDC::RubygemTrustedPublisher.any_instance.stubs(:destroy).returns(false)
+
+      delete rubygem_trusted_publisher_url(rubygem_id: @rubygem.slug, id: @trusted_publisher)
+
+      assert_redirected_to rubygem_trusted_publishers_url(rubygem_id: @rubygem.slug)
+    end
   end
 
   context "without a verified session" do
