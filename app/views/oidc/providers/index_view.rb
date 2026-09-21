@@ -35,7 +35,7 @@ class OIDC::Providers::IndexView < ApplicationView
           providers.each do |provider|
             tr(class: "text-sm") do
               td(data: { title: "Issuer" }) do
-                link_to provider.issuer, profile_oidc_provider_path(provider), class: LINK_CLASSES
+                link_to provider.issuer, profile_oidc_provider_path(id: provider), class: LINK_CLASSES
               end
             end
           end

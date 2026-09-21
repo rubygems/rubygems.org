@@ -17,7 +17,7 @@
     <div class="py-4">
       <%= render ButtonComponent.new(
         "#{t(".automate_gh_actions_publishing")} →",
-        github_actions_workflow_profile_oidc_api_key_role_path(@api_key_role.token),
+        github_actions_workflow_profile_oidc_api_key_role_path(token: @api_key_role.token),
         method: "get") %>
     </div>
   <% end %>
@@ -36,7 +36,7 @@
   <div class="mt-1 mb-6">
     <%= render ButtonComponent.new(
       "#{t(".view_provider", issuer: @api_key_role.provider.issuer)} →",
-      profile_oidc_provider_path(@api_key_role.provider)) %>
+      profile_oidc_provider_path(id: @api_key_role.provider)) %>
   </div>
 
   <h3 class="<%= heading %>"><%= OIDC::ApiKeyRole.human_attribute_name(:api_key_permissions) %></h3>
@@ -53,12 +53,12 @@
     <div class="flex flex-wrap gap-4 mb-6">
       <%= render ButtonComponent.new(
         t(".edit_role"),
-        edit_profile_oidc_api_key_role_path(@api_key_role.token),
+        edit_profile_oidc_api_key_role_path(token: @api_key_role.token),
         method: "get",
         color: :secondary) %>
       <%= render ButtonComponent.new(
         t(".delete_role"),
-        profile_oidc_api_key_role_path(@api_key_role.token),
+        profile_oidc_api_key_role_path(token: @api_key_role.token),
         method: :delete,
         color: :red,
         data: { confirm: t(".confirm_delete") }) %>

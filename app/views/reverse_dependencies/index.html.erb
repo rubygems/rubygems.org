@@ -1,8 +1,8 @@
 <% @title = t('.title', name: @rubygem.name) %>
-<% @title_url = rubygem_path(@rubygem.slug) %>
+<% @title_url = rubygem_path(id: @rubygem.slug) %>
 <% @subtitle = @latest_version&.slug %>
 
-<% add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug) %>
+<% add_breadcrumb @rubygem.name, rubygem_path(id: @rubygem.slug) %>
 <% add_breadcrumb @title %>
 
 <% content_for :subject do %>
@@ -37,7 +37,7 @@
             <% version = reverse_dependency.most_recent_version %>
             <tr>
               <td class="<%= td_class %> text-b3">
-                <%= link_to rubygem_path(reverse_dependency.slug),
+                <%= link_to rubygem_path(id: reverse_dependency.slug),
                       class: "text-neutral-900 dark:text-white hover:text-orange-700 dark:hover:text-orange-400" do %>
                   <%= reverse_dependency.name %>
                   <span class="sm:hidden block mt-1 text-b4 text-neutral-700 dark:text-neutral-400">

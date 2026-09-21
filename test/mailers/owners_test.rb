@@ -27,7 +27,7 @@ class OwnersMailerTest < ActionMailer::TestCase
       ownership = create(:ownership, :unconfirmed, rubygem: @rubygem)
       OwnersMailer.ownership_confirmation(ownership).deliver_now
 
-      assert_cta_button confirm_rubygem_owners_url(@rubygem.slug, token: ownership.token, host: Gemcutter::HOST), "VERIFY"
+      assert_cta_button confirm_rubygem_owners_url(rubygem_id: @rubygem.slug, token: ownership.token, host: Gemcutter::HOST), "VERIFY"
     end
   end
 

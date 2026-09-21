@@ -16,7 +16,7 @@ class OIDC::RubygemTrustedPublishers::NewView < ApplicationView
       render CardComponent.new do
         form_with(
           model: rubygem_trusted_publisher,
-          url: rubygem_trusted_publishers_path(rubygem.slug)
+          url: rubygem_trusted_publishers_path(rubygem_id: rubygem.slug)
         ) do |f|
           div class: "py-4" do
             f.label :trusted_publisher_type, class: label_class

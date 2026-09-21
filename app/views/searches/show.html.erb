@@ -19,7 +19,7 @@
     <% @subtitle = t('.subtitle_html', query: params[:query]) %>
 
     <% if @yanked_gem.present? %>
-      <%= link_to rubygem_path(@yanked_gem.slug), class: "flex flex-col w-full px-4 py-4 rounded-md hover:bg-orange-50 dark:hover:bg-orange-950 border-b border-neutral-200 dark:border-neutral-800 group no-underline" do %>
+      <%= link_to rubygem_path(id: @yanked_gem.slug), class: "flex flex-col w-full px-4 py-4 rounded-md hover:bg-orange-50 dark:hover:bg-orange-950 border-b border-neutral-200 dark:border-neutral-800 group no-underline" do %>
         <div class="flex flex-row w-full items-center">
           <h2 class="text-b1 font-semibold text-neutral-900 dark:text-white group-hover:text-orange-500 transition-colors">
             <%= @yanked_gem.name %>

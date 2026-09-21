@@ -27,6 +27,6 @@ class OrganizationMailerTest < ActionMailer::TestCase
 
     OrganizationMailer.user_invited(membership).deliver_now
 
-    assert_cta_button organization_invitation_url(organization, host: Gemcutter::HOST), "ACCEPT INVITATION"
+    assert_cta_button organization_invitation_url(organization_id: organization, host: Gemcutter::HOST), "ACCEPT INVITATION"
   end
 end

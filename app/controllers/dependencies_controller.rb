@@ -40,11 +40,11 @@ class DependenciesController < ApplicationController
   private
 
   def add_breadcrumbs
-    add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
+    add_breadcrumb @rubygem.name, rubygem_path(id: @rubygem.slug)
     if @latest_version == @rubygem.most_recent_version
-      add_breadcrumb t("breadcrumbs.latest_version", version: @latest_version.slug), rubygem_path(@rubygem.slug)
+      add_breadcrumb t("breadcrumbs.latest_version", version: @latest_version.slug), rubygem_path(id: @rubygem.slug)
     else
-      add_breadcrumb @latest_version.slug, rubygem_version_path(@rubygem.slug, @latest_version.slug)
+      add_breadcrumb @latest_version.slug, rubygem_version_path(rubygem_id: @rubygem.slug, id: @latest_version.slug)
     end
     add_breadcrumb t("rubygems.show.tabs.dependencies")
   end
