@@ -2,7 +2,7 @@
 
 ## Shape
 
-Limit `collection` to records the task needs. Make `process` handle one record per call and `count` match the collection's size.
+Limit `collection` to records the task needs. Make `process` handle one record per call. Do not define `count` when it would only call `collection.count`; the framework already does that.
 
 ## Safety
 
@@ -18,7 +18,7 @@ Keep the application working throughout the backfill, even when it is partly com
 
 Write the fewest tests needed to catch distinct, realistic mistakes. Combine overlapping cases when one test catches the same mistakes as separate tests.
 
-Check which records `collection` returns, that `count` matches, and what `process` saves to the database. Test reruns, application changes, and deletion when relevant to the task.
+Check which records `collection` returns and what `process` saves to the database. Test reruns, application changes, and deletion when relevant to the task.
 
 To test an application write between loading and processing, load a record from `collection`, then update it through a separate model instance or direct database update. Pass the original object to `process` without changing or reloading it. Check that the database still holds the newer value.
 

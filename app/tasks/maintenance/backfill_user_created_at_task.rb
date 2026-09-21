@@ -11,6 +11,4 @@ class Maintenance::BackfillUserCreatedAtTask < MaintenanceTasks::Task
   def process(user)
     User.with_deleted.where(id: user.id, created_at: nil).update_all(created_at: TIMESTAMPS_INTRODUCED_AT)
   end
-
-  delegate :count, to: :collection
 end

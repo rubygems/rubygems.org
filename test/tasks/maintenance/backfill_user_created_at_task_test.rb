@@ -7,7 +7,7 @@ class Maintenance::BackfillUserCreatedAtTaskTest < ActiveSupport::TestCase
     @task = Maintenance::BackfillUserCreatedAtTask.new
   end
 
-  test "#collection and #count include active and deleted users without created_at" do
+  test "#collection includes active and deleted users without created_at" do
     missing_created_at = create(:user)
     missing_created_at.update_column(:created_at, nil)
     create(:user)
@@ -15,7 +15,6 @@ class Maintenance::BackfillUserCreatedAtTaskTest < ActiveSupport::TestCase
     deleted.update_columns(created_at: nil, deleted_at: Time.current)
 
     assert_equal [missing_created_at.id, deleted.id], @task.collection.order(:id).ids
-    assert_equal 2, @task.count
   end
 
   test "#process backfills created_at and preserves a later value on rerun" do
