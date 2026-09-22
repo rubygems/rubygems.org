@@ -173,6 +173,10 @@ es:
         id_token_signing_alg_values_supported:
     errors:
       models:
+        oidc/access_policy:
+          attributes:
+            statements:
+              too_complex:
         oidc/api_key_permissions:
           attributes:
             valid_for:

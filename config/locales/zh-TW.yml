@@ -165,6 +165,10 @@ zh-TW:
         id_token_signing_alg_values_supported: IP 權杖簽署演算法
     errors:
       models:
+        oidc/access_policy:
+          attributes:
+            statements:
+              too_complex:
         oidc/api_key_permissions:
           attributes:
             valid_for:

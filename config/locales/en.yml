@@ -170,6 +170,10 @@ en:
         id_token_signing_alg_values_supported: ID Token signing algorithms supported
     errors:
       models:
+        oidc/access_policy:
+          attributes:
+            statements:
+              too_complex: "must contain at most %{max_statements} statements and %{max_conditions} conditions in total"
         oidc/api_key_permissions:
           attributes:
             valid_for:

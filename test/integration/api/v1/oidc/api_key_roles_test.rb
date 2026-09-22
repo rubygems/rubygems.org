@@ -86,6 +86,20 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
     JSON::JWT.new(claims).sign(key.to_jwk)
   end
 
+  def access_policy_with_conditions(condition_count)
+    {
+      statements: [
+
+        effect: "allow",
+        principal: { oidc: @role.provider.issuer },
+        conditions: Array.new(condition_count) do
+          { operator: "string_matches", claim: "sub", value: "\\A#{Regexp.escape(@claims.fetch('sub'))}\\z" }
+        end
+
+      ]
+    }
+  end
+
   context "on POST to assume_role" do
     setup do
       @pkey = OpenSSL::PKey::RSA.generate(2048)
@@ -263,6 +277,36 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           hashed_key = @user.api_keys.sole.hashed_key
 
           assert_equal hashed_key, Digest::SHA256.hexdigest(resp["rubygems_api_key"])
+        end
+
+        should "return API key with a policy at the complexity limits" do
+          @role.update!(access_policy: access_policy_with_conditions(10))
+
+          assert_enqueued_emails 1 do
+            post assume_role_api_v1_oidc_api_key_role_path(@role.token),
+              params: { jwt: jwt.to_s },
+              headers: {}
+          end
+
+          assert_response :created
+          assert_equal 1, @user.api_keys.count
+          assert_equal 1, @role.id_tokens.count
+        end
+
+        should "reject a legacy policy over the complexity limits before creating side effects" do
+          @role.update_column(:access_policy, access_policy_with_conditions(11))
+          api_key_count = ApiKey.count
+          id_token_count = OIDC::IdToken.count
+
+          assert_no_enqueued_emails do
+            post assume_role_api_v1_oidc_api_key_role_path(@role.token),
+              params: { jwt: jwt.to_s },
+              headers: {}
+          end
+
+          assert_response :not_found
+          assert_equal api_key_count, ApiKey.count
+          assert_equal id_token_count, OIDC::IdToken.count
         end
       end
 

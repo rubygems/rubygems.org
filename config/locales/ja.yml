@@ -166,6 +166,10 @@ ja:
         id_token_signing_alg_values_supported: サポート対象のIDトークン書名アルゴリズム
     errors:
       models:
+        oidc/access_policy:
+          attributes:
+            statements:
+              too_complex:
         oidc/api_key_permissions:
           attributes:
             valid_for:
