@@ -70,8 +70,7 @@ class Advisory::OSV::Mapper
   end
 
   # One record per gem: several affected entries for the same name are merged.
-  # Prefer ECOSYSTEM/SEMVER ranges; fall back to enumerated versions when those
-  # are missing or only GIT ranges are present.
+  # Keep ECOSYSTEM/SEMVER ranges and enumerated versions; GIT ranges are dropped.
   def packages
     Array(@document["affected"]).each_with_object({}) do |entry, grouped|
       package = entry["package"] || {}
@@ -81,7 +80,8 @@ class Advisory::OSV::Mapper
       next unless name
 
       grouped[name] ||= []
-      grouped[name].concat(normalized_ranges(entry).presence || normalized_versions(entry))
+      grouped[name].concat(normalized_ranges(entry))
+      grouped[name].concat(normalized_versions(entry))
     end
   end
 

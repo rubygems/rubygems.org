@@ -163,18 +163,21 @@ class Advisory::OSV::MapperTest < ActiveSupport::TestCase
       ], records.first[:ranges]
     end
 
-    should "prefer ecosystem ranges over versions" do
+    should "keep listed versions that fall outside a supported range" do
       records = Advisory::OSV::Mapper.call(
         document(
           "affected" => [
             "package" => { "name" => "actionpack", "ecosystem" => "RubyGems" },
             "ranges" => ["type" => "ECOSYSTEM", "events" => [{ "introduced" => "7.0.0" }, "fixed" => "7.0.1"]],
-            "versions" => ["7.0.0"]
+            "versions" => ["8.0.0"]
           ]
         )
       )
 
-      assert_equal ["introduced" => "7.0.0", "fixed" => "7.0.1"], records.first[:ranges]
+      assert_equal [
+        { "introduced" => "7.0.0", "fixed" => "7.0.1" },
+        { "introduced" => "8.0.0", "last_affected" => "8.0.0" }
+      ], records.first[:ranges]
     end
 
     should "set withdrawn_at when the document is withdrawn" do
