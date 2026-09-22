@@ -7,12 +7,13 @@ class GemPackageEnumeratorTest < ActiveSupport::TestCase
     @gem = gem_file("bin_and_img-0.1.0.gem")
     @gem_package = Gem::Package.new(@gem)
     @enum = GemPackageEnumerator.new(@gem_package)
-    @destination_dir = Rails.root.join("tmp", "gems", @gem_package.spec.full_name)
-    @gem_package.extract_files(@destination_dir.to_s) unless @destination_dir.exist?
+    @destination_dir = Pathname.new(Dir.mktmpdir(@gem_package.spec.full_name))
+    @gem_package.extract_files(@destination_dir.to_s)
   end
 
   teardown do
     @gem&.close
+    FileUtils.remove_entry(@destination_dir) if @destination_dir&.exist?
   end
 
   context "#map" do
