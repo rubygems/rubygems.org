@@ -121,10 +121,20 @@ class SearchQuerySanitizer
 
   def escape_dangerous_patterns!
     @query = @query.gsub(/\*{2,}/, "*").gsub(/\?{2,}/, "?") # Collapse repeated wildcards
-    @query = @query.gsub(%r{(\\*)/}) do
-      backslashes = ::Regexp.last_match(1)
-      backslashes.length.even? ? "#{backslashes}\\/" : "#{backslashes}/"
-    end
+    escape_forward_slashes!
     @query = @query.delete("\u0000") # Remove null bytes
+  end
+
+  def escape_forward_slashes!
+    backslash_count = 0
+    @query = @query.each_char.with_object(+"") do |character, escaped_query|
+      if character == "\\"
+        backslash_count += 1
+      else
+        escaped_query << "\\" if character == "/" && backslash_count.even?
+        backslash_count = 0
+      end
+      escaped_query << character
+    end
   end
 end
