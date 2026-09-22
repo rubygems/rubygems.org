@@ -56,6 +56,7 @@ class Rubygem::AdvisoriesComponentTest < ComponentTest
     )
 
     assert page.has_css?(".bg-red-200")
+    assert page.has_css?("span.rounded-full.bg-red-600")
     assert page.has_text?("2 known security vulnerabilities")
   end
 
@@ -66,6 +67,7 @@ class Rubygem::AdvisoriesComponentTest < ComponentTest
     )
 
     assert page.has_text?("Malware")
+    assert page.has_css?("span.rounded-full.bg-red-700")
     assert page.has_css?(".bg-red-200")
   end
 

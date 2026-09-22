@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 class Rubygem::AdvisoriesComponent < ApplicationComponent
-  include Phlex::Rails::Helpers::LinkTo
-
   SEVERITY_RANK = { "critical" => 0, "high" => 1, "moderate" => 2, "low" => 3 }.freeze
   HIGH_SEVERITIES = %w[critical high].freeze
-  LINK = "text-orange-500 underline hover:text-orange-600 dark:text-orange-400 dark:hover:text-orange-300"
+  SEVERITY_PILL = {
+    "critical" => "bg-red-600 text-white dark:bg-red-500",
+    "high" => "bg-orange-600 text-white dark:bg-orange-500",
+    "moderate" => "bg-yellow-500 text-neutral-900 dark:bg-yellow-400",
+    "low" => "bg-blue-600 text-white dark:bg-blue-500",
+    "malware" => "bg-red-700 text-white dark:bg-red-600"
+  }.freeze
 
   def initialize(advisories:, version:)
     super()
@@ -53,15 +57,16 @@ class Rubygem::AdvisoriesComponent < ApplicationComponent
 
   def advisory_item(advisory)
     label = advisory_label(advisory)
-    li(class: "flex flex-col gap-1") do
-      div(class: "flex flex-wrap items-baseline gap-x-2 gap-y-1") do
-        span(class: "font-semibold uppercase text-b4") { label } if label
+    li(class: "flex flex-col gap-2 py-3 first:pt-0 last:pb-0") do
+      div(class: "flex flex-wrap items-center gap-x-2 gap-y-1") do
+        span(class: advisory_label_class(advisory)) { label } if label
         span(class: "font-mono text-c4") { advisory.identifier }
         span(class: "text-b4") { "(#{advisory.aliases.join(', ')})" } if advisory.aliases.present?
       end
       p { advisory.summary }
-      p do
-        link_to t("rubygems.advisories.view_advisory"), advisory.url, class: LINK, target: "_blank", rel: "noopener"
+
+      div do
+        render ButtonComponent.new(t("rubygems.advisories.view_advisory"), advisory.url, type: :link, size: :small, target: "_blank", rel: "noopener")
       end
     end
   end
@@ -70,5 +75,15 @@ class Rubygem::AdvisoriesComponent < ApplicationComponent
     return t("rubygems.advisories.malware") if advisory.malware?
 
     advisory.severity.presence
+  end
+
+  def advisory_label_class(advisory)
+    pill_color = if advisory.malware?
+                   SEVERITY_PILL.fetch("malware")
+                 elsif advisory.severity.present?
+                   SEVERITY_PILL.fetch(advisory.severity)
+                 end
+
+    "inline-flex items-center rounded-full px-2 py-0.5 text-b4 font-semibold uppercase #{pill_color}"
   end
 end
