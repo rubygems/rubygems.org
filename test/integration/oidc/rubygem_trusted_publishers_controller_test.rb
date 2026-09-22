@@ -33,6 +33,12 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
       assert_response :success
     end
 
+    should "respond not found for a nonexistent rubygem" do
+      get rubygem_trusted_publishers_url("nonexistent")
+
+      assert_response :not_found
+    end
+
     should "get new" do
       get new_rubygem_trusted_publisher_url(@rubygem.slug)
 
