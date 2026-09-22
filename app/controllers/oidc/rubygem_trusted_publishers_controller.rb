@@ -64,6 +64,8 @@ flash: { error: @rubygem_trusted_publisher.errors.full_messages.to_sentence })
 
   def find_rubygem
     super
+    return unless @rubygem
+
     authorize @rubygem, :configure_trusted_publishers?
   end
 
