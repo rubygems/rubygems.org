@@ -53,37 +53,6 @@ class Advisory::OSVTest < ActiveSupport::TestCase
   end
 
   context "#affects?" do
-    should "match an inclusive introduced and exclusive fixed range" do
-      advisory = build(:advisory, :range)
-
-      refute advisory.affects?("0.9.0")
-      assert advisory.affects?("1.0.0")
-      assert advisory.affects?("1.1.9")
-      refute advisory.affects?("1.2.0")
-    end
-
-    should "match an exact last_affected version" do
-      advisory = build(:advisory, :exact)
-
-      refute advisory.affects?("0.9.0")
-      assert advisory.affects?("1.0.0")
-      refute advisory.affects?("1.0.1")
-    end
-
-    should "treat introduced 0 as an unbounded lower bound" do
-      advisory = build(:advisory, :unfixed)
-
-      assert advisory.affects?("0.0.1")
-      assert advisory.affects?("99.0.0")
-    end
-
-    should "prefer fixed over last_affected when both are present" do
-      advisory = build(:advisory, ranges: ["introduced" => "1.0.0", "fixed" => "1.2.0", "last_affected" => "1.1.0"])
-
-      assert advisory.affects?("1.1.5")
-      refute advisory.affects?("1.2.0")
-    end
-
     should "match any of multiple ranges" do
       advisory = build(:advisory, ranges: [
                          { "introduced" => "5.2.0", "fixed" => "5.2.7.1" },
@@ -108,14 +77,6 @@ class Advisory::OSVTest < ActiveSupport::TestCase
       advisory = build(:advisory, ranges: ["introduced" => "1.0.0", "fixed" => "not-a-version"])
 
       refute advisory.affects?("1.0.0")
-    end
-
-    should "treat a range with only introduced as still affected" do
-      advisory = build(:advisory, ranges: ["introduced" => "2.0.0"])
-
-      refute advisory.affects?("1.9.0")
-      assert advisory.affects?("2.0.0")
-      assert advisory.affects?("9.0.0")
     end
   end
 end

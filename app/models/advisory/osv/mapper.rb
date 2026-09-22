@@ -29,7 +29,7 @@ class Advisory::OSV::Mapper
         published_at:,
         modified_at:,
         withdrawn_at:,
-        ranges:
+        ranges: ranges.map(&:as_json)
       }
     end
   end
@@ -85,8 +85,6 @@ class Advisory::OSV::Mapper
     end
   end
 
-  # Split OSV events into {introduced, fixed|last_affected} hashes. GIT ranges
-  # and limit events are dropped. Each introduced starts a new interval. See tests for examples.
   def normalized_ranges(entry)
     Array(entry["ranges"]).flat_map do |range|
       next [] unless RANGE_TYPES.include?(range["type"])
@@ -94,15 +92,22 @@ class Advisory::OSV::Mapper
       Array(range["events"])
         .filter_map { |event| event.slice(*RANGE_EVENTS).presence }
         .slice_when { |_, event| event.key?("introduced") }
-        .map { |events| events.reduce({}, :merge) }
+        .map { |group| affected_range(group.reduce({}, :merge)) }
     end
   end
 
-  # Enumerated versions become exact ranges so they share the same matching path.
   def normalized_versions(entry)
     Array(entry["versions"]).filter_map do |version|
-      { "introduced" => version.to_s, "last_affected" => version.to_s } if version.present?
+      affected_range("introduced" => version, "last_affected" => version) if version.present?
     end
+  end
+
+  def affected_range(bounds)
+    Advisory::OSV::AffectedRange.new(
+      introduced: bounds["introduced"],
+      fixed: bounds["fixed"],
+      last_affected: bounds["last_affected"]
+    )
   end
 
   def parse_time(value)
