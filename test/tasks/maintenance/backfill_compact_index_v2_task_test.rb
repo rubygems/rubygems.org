@@ -18,7 +18,7 @@ class Maintenance::BackfillCompactIndexV2TaskTest < ActiveSupport::TestCase
       task.min_rubygem_id = gem1.id
       task.max_rubygem_id = gem2.id
 
-      assert_equal [gem1, gem2], task.collection.to_a
+      assert_same_elements [gem1, gem2], task.collection.to_a
     end
   end
 
