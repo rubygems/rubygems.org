@@ -9,6 +9,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   parallelize_setup do |worker|
     SimpleCov.command_name "system-worker-#{worker}"
+    RubygemFs.mock!
   end
 
   # Rails' driven_by registers the :playwright Capybara driver itself, so any

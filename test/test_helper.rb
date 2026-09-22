@@ -88,6 +88,7 @@ class ActiveSupport::TestCase
   parallelize_setup do |worker|
     self.parallel_worker_number = worker
     SimpleCov.command_name "rails-worker-#{worker}"
+    RubygemFs.mock!
     Version.reset_column_information
     SemanticLogger.reopen
     Searchkick.index_suffix = "_#{worker}"
