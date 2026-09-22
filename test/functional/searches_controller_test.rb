@@ -146,25 +146,23 @@ class SearchesControllerTest < ActionController::TestCase
   end
 
   context "on GET to show with malformed query containing range syntax" do
-    setup do
-      get :show, params: { query: "aws-sdk AND updated:[2025-06-18 TO *}" }
-    end
+    should "show an error message without reporting an application error" do
+      assert_no_rescue_from_notification do
+        get :show, params: { query: "aws-sdk AND updated:[2025-06-18 TO *}" }
+      end
 
-    should respond_with :success
-
-    should "show error message" do
+      assert_response :success
       assert page.has_content?("Invalid search query. Please simplify your search and try again.")
     end
   end
 
   context "on GET to show with query exceeding max length" do
-    setup do
-      get :show, params: { query: "a" * (SearchQuerySanitizer::MAX_QUERY_LENGTH + 1) }
-    end
+    should "show an error message without reporting an application error" do
+      assert_no_rescue_from_notification do
+        get :show, params: { query: "a" * (SearchQuerySanitizer::MAX_QUERY_LENGTH + 1) }
+      end
 
-    should respond_with :success
-
-    should "show error message" do
+      assert_response :success
       assert page.has_content?("Invalid search query. Please simplify your search and try again.")
     end
   end
@@ -199,5 +197,20 @@ class SearchesControllerTest < ActionController::TestCase
         assert page.has_content?("Search is currently unavailable. Please try again later.")
       end
     end
+  end
+
+  private
+
+  def assert_no_rescue_from_notification
+    handled_exceptions = []
+    subscriber = ActiveSupport::Notifications.subscribe("rescue_from_callback.action_controller") do |event|
+      handled_exceptions << event.payload[:exception]
+    end
+
+    yield
+
+    assert_empty handled_exceptions
+  ensure
+    ActiveSupport::Notifications.unsubscribe(subscriber) if subscriber
   end
 end

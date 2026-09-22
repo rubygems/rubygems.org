@@ -5,8 +5,6 @@ class Api::V1::SearchesController < Api::BaseController
   before_action :verify_query_string, only: %i[show autocomplete]
 
   rescue_from ElasticSearcher::SearchNotAvailableError, with: :search_not_available_error
-  rescue_from SearchQuerySanitizer::QueryTooLongError,
-              SearchQuerySanitizer::MalformedQueryError, with: :render_invalid_query
 
   def show
     @rubygems = ElasticSearcher.new(query_params, page: @page).api_search
@@ -16,11 +14,15 @@ class Api::V1::SearchesController < Api::BaseController
     end
   rescue ElasticSearcher::InvalidQueryError => e
     render_bad_request(e)
+  rescue SearchQuerySanitizer::QueryTooLongError, SearchQuerySanitizer::MalformedQueryError
+    render_invalid_query
   end
 
   def autocomplete
     results = ElasticSearcher.new(query_params, page: @page).suggestions
     render json: results
+  rescue SearchQuerySanitizer::QueryTooLongError, SearchQuerySanitizer::MalformedQueryError
+    render_invalid_query
   end
 
   private

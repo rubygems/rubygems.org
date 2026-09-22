@@ -322,8 +322,8 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       context "Searchkick::InvalidQueryError" do
         setup do
           # Use a query that passes sanitization but is invalid OpenSearch syntax
-          # (can't start with AND operator)
-          @ill_formated_query = "AND other"
+          # (unbalanced quote)
+          @ill_formated_query = 'foo"'
         end
 
         should "give correct error message" do
@@ -333,6 +333,24 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
           assert_nil result
           assert_equal expected_msg, @error_msg
+        end
+      end
+
+      context "queries sanitized into valid OpenSearch syntax" do
+        should "handle redundant fields joined by boolean operators" do
+          query = "rails AND updated:>2024-01-01 AND updated:<2025-01-01 AND updated:>2023-01-01"
+
+          error_msg, result = ElasticSearcher.new(query).search
+
+          assert_nil error_msg
+          refute_nil result
+        end
+
+        should "handle forward slashes as literal text" do
+          error_msg, result = ElasticSearcher.new("pdf/reader").search
+
+          assert_nil error_msg
+          refute_nil result
         end
       end
 

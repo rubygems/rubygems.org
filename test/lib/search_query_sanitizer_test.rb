@@ -27,6 +27,7 @@ class SearchQuerySanitizerTest < ActiveSupport::TestCase
     result = SearchQuerySanitizer.sanitize("updated:>a AND updated:>b AND updated:>c AND updated:>d")
 
     assert_equal 2, result.scan(/updated:/i).length
+    assert_equal "updated:>a AND updated:>b", result
   end
 
   test "collapse redundant fields across all allowed fields" do
@@ -46,6 +47,12 @@ class SearchQuerySanitizerTest < ActiveSupport::TestCase
 
   test "remove null bytes" do
     assert_equal "railstest", SearchQuerySanitizer.sanitize("rails\u0000test")
+  end
+
+  test "escape forward slashes" do
+    assert_equal "pdf\\/reader", SearchQuerySanitizer.sanitize("pdf/reader")
+    assert_equal "pdf\\/reader", SearchQuerySanitizer.sanitize("pdf\\/reader")
+    assert_equal "pdf\\\\\\/reader", SearchQuerySanitizer.sanitize("pdf\\\\/reader")
   end
 
   test "preserve AND operator" do
@@ -146,6 +153,12 @@ class SearchQuerySanitizerTest < ActiveSupport::TestCase
     total_fields = SearchQuerySanitizer::ALLOWED_FIELDS.sum { |f| result.scan(/#{f}:/i).length }
 
     assert_operator total_fields, :<=, SearchQuerySanitizer::MAX_TOTAL_FIELD_FILTERS
+  end
+
+  test "remove boolean operators attached to fields above the total limit" do
+    query = "name:a AND name:b AND summary:c AND summary:d AND description:e AND description:f AND downloads:>1"
+
+    assert_equal "name:a AND name:b AND summary:c AND summary:d AND description:e AND description:f", SearchQuerySanitizer.sanitize(query)
   end
 
   test "allow queries at or below total field filter limit" do
