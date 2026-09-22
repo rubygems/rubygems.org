@@ -66,11 +66,21 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     end
 
     context "invalid query" do
-      should "returns friendly error message" do
-        get :show, params: { query: "AND other" }, format: :json
+      should "return a friendly bad request without reporting an application error" do
+        handled_exceptions = []
+        subscriber = ActiveSupport::Notifications.subscribe("rescue_from_callback.action_controller") do |event|
+          handled_exceptions << event.payload[:exception]
+        end
+
+        begin
+          get :show, params: { query: "AND other" }, format: :json
+        ensure
+          ActiveSupport::Notifications.unsubscribe(subscriber)
+        end
 
         assert_response :bad_request
         assert_equal "Failed to parse search term: 'AND other'.", JSON.parse(@response.body)["error"]
+        assert_empty handled_exceptions
       end
     end
 
