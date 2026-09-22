@@ -17,8 +17,8 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
     too_many_statements = access_policy_with_conditions([1, 1, 1, 1, 1, 1])
     too_many_conditions = access_policy_with_conditions([11])
 
-    assert_not_predicate too_many_statements, :valid?
-    assert_not_predicate too_many_conditions, :valid?
+    refute_predicate too_many_statements, :valid?
+    refute_predicate too_many_conditions, :valid?
     expected_error = ["must contain at most 5 statements and 10 conditions in total"]
 
     assert_equal expected_error, too_many_statements.errors.messages[:statements]
