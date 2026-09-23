@@ -164,6 +164,30 @@ class AutocompletesTest < ApplicationSystemTestCase
     assert_text "rubocop"
   end
 
+  test "holding the pointer down on a suggestion still submits the search" do
+    page.driver.with_playwright_page do |playwright_page|
+      option = playwright_page.get_by_role("option", name: "rubocop", exact: true)
+      box = option.bounding_box
+      playwright_page.mouse.move(box.fetch("x") + 1, box.fetch("y") + 1)
+      playwright_page.mouse.down
+      sleep 0.1
+      playwright_page.mouse.up
+    end
+
+    assert_current_path search_path, ignore_query: true
+    assert_field "query", with: "rubocop"
+  end
+
+  test "opening a prefilled search on a narrow layout loads suggestions" do
+    page.current_window.resize_to(393, 852)
+    visit search_path(query: "rubo")
+
+    find("button[aria-label='Open search']").click
+
+    assert_selector "#query.autocomplete-done"
+    assert_selector "#query_suggestions [role='option']", count: 2
+  end
+
   private
 
   SUGGESTIONS = "[data-autocomplete-target='suggestions']"

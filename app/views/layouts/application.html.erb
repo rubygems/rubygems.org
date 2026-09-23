@@ -116,7 +116,7 @@
           <div class="ml-auto flex flex-row items-center xl:ml-0 xl:order-3">
             <!-- Search button -->
             <% if show_header_search? %>
-              <button type="button" data-action="reveal-search#toggle" data-reveal-search-target="button toggle" aria-label="Open search" aria-controls="header-search" aria-expanded="false" class="flex xl:hidden h-9 w-9 box-border text-neutral-800 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-400 items-center justify-center rounded border-neutral-300 dark:border-neutral-700">
+              <button type="button" data-action="reveal-search#toggle:stop" data-reveal-search-target="button toggle" aria-label="Open search" aria-controls="header-search" aria-expanded="false" class="flex xl:hidden h-9 w-9 box-border text-neutral-800 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-400 items-center justify-center rounded border-neutral-300 dark:border-neutral-700">
                 <%= icon_tag "search", class: "h-6 w-6" %>
               </button>
             <% end %>
@@ -134,7 +134,7 @@
                 <ul id="query_suggestions" role="listbox" data-autocomplete-target="suggestions" class="hidden absolute z-40 start-0 mt-2 w-full bg-white dark:bg-black text-b2 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-800 rounded shadow-md divide-y divide-neutral-200 dark:divide-neutral-800"></ul>
 
                 <template id="suggestion" data-autocomplete-target="template">
-                  <li class="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" role="option" aria-selected="false" data-autocomplete-target="item" data-action="click->autocomplete#choose mouseover->autocomplete#highlight"></li>
+                  <li class="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" role="option" aria-selected="false" data-autocomplete-target="item" data-action="mousedown->autocomplete#keepFocus click->autocomplete#choose mouseover->autocomplete#highlight"></li>
                 </template>
 
                 <%= label_tag :query, id: "querylabel" do %>

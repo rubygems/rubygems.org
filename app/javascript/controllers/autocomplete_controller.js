@@ -47,6 +47,10 @@ export default class extends Controller {
     }
   }
 
+  keepFocus(e) {
+    e.preventDefault();
+  }
+
   next() {
     if (this.suggestLength === 0) return;
     this.indexNumber++;
