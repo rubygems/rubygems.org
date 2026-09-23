@@ -8,6 +8,10 @@ module ApplicationHelper
     @title.present? ? "#{@title} | #{combo}" : combo
   end
 
+  def show_header_search?
+    controller_path != "home" || action_name != "index"
+  end
+
   def atom_feed_link(title, url)
     tag.link(rel: "alternate",
                 type: "application/atom+xml",
@@ -82,6 +86,7 @@ module ApplicationHelper
   end
 
   def rubygem_search_field(**kwargs)
+    input_id = kwargs[:id] || "query"
     data = {
       autocomplete_target: "query",
       action: %w[
@@ -95,7 +100,7 @@ module ApplicationHelper
         blur->autocomplete#hide
       ].join(" ")
     }
-    aria = { autocomplete: "list" }
+    aria = { autocomplete: "list", controls: "#{input_id}_suggestions", expanded: false }
 
     data.merge!(kwargs.delete(:data) || {})
     aria.merge!(kwargs.delete(:aria) || {})
@@ -107,6 +112,7 @@ module ApplicationHelper
       autofocus: kwargs.delete(:autofocus).present?,
       class: kwargs[:class],
       autocomplete: "off",
+      role: "combobox",
       aria:,
       data:,
       **kwargs

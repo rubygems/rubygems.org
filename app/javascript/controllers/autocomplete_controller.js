@@ -19,8 +19,10 @@ export default class extends Controller {
   clear() {
     this.suggestionsTarget.classList.add("hidden");
     this.suggestionsTarget.innerHTML = "";
-    this.suggestionsTarget.removeAttribute("tabindex");
-    this.suggestionsTarget.removeAttribute("aria-activedescendant");
+    this.queryTarget.setAttribute("aria-expanded", "false");
+    this.queryTarget.removeAttribute("aria-activedescendant");
+    this.indexNumber = -1;
+    this.suggestLength = 0;
   }
 
   hide(e) {
@@ -88,9 +90,8 @@ export default class extends Controller {
       return;
     }
     items.forEach((item, idx) => this.appendItem(item, idx));
-    this.suggestionsTarget.setAttribute("tabindex", 0);
-    this.suggestionsTarget.setAttribute("role", "listbox");
     this.suggestionsTarget.classList.remove("hidden");
+    this.queryTarget.setAttribute("aria-expanded", "true");
 
     this.suggestLength = items.length;
     this.indexNumber = -1;
@@ -108,11 +109,13 @@ export default class extends Controller {
     if (!el) {
       return;
     }
-    this.itemTargets.forEach((el) =>
-      el.classList.remove(...this.selectedClasses),
-    );
+    this.itemTargets.forEach((el) => {
+      el.classList.remove(...this.selectedClasses);
+      el.setAttribute("aria-selected", "false");
+    });
     el.classList.add(...this.selectedClasses);
-    this.suggestionsTarget.setAttribute("aria-activedescendant", el.id);
+    el.setAttribute("aria-selected", "true");
+    this.queryTarget.setAttribute("aria-activedescendant", el.id);
     if (change) {
       this.queryTarget.value = el.textContent;
       this.queryTarget.focus();

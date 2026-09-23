@@ -10,7 +10,8 @@ class HomepageTest < ActionDispatch::IntegrationTest
     assert_select "#homepage_gem_query", count: 1
     assert_select "#query", count: 0
     assert_select "button[aria-label='Open search']", count: 0
-    assert_select "[data-controller~='reveal-search']", count: 0
+    assert_select "[data-controller~='reveal-search']", count: 1
+    assert_select "[data-reveal-search-target='input']", count: 1
 
     get stats_path
 
@@ -18,6 +19,10 @@ class HomepageTest < ActionDispatch::IntegrationTest
     assert_select "#query", count: 1
     assert_select "button[aria-label='Open search']", count: 1
     assert_select "[data-controller~='reveal-search']", count: 1
+    assert_select "[data-reveal-search-target='input']", count: 1
+    assert_select "button[aria-label='Open search'][aria-controls='header-search'][aria-expanded='false']", count: 1
+    assert_select "#header-search[role='search']", count: 0
+    assert_select "#header-search form[role='search']", count: 1
   end
 
   test "anonymous request does not set a session cookie" do

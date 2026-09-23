@@ -28,6 +28,22 @@ class AutocompletesTest < ApplicationSystemTestCase
     assert_text "rubocop"
   end
 
+  test "suggestions use the combobox focus model" do
+    assert_equal "combobox", @fill_field["role"]
+    assert_equal "homepage_gem_query_suggestions", @fill_field["aria-controls"]
+    assert_equal "true", @fill_field["aria-expanded"]
+    assert_equal "list", @fill_field["aria-autocomplete"]
+    assert_nil suggestions_list["tabindex"]
+
+    @fill_field.send_keys :down
+
+    option = suggestion_options.first
+
+    assert_equal option["id"], @fill_field["aria-activedescendant"]
+    assert_equal "true", option["aria-selected"]
+    assert_selector "#homepage_gem_query:focus"
+  end
+
   test "only one suggestion is selected when hovering" do
     suggestion_options.each(&:hover)
 
@@ -36,7 +52,7 @@ class AutocompletesTest < ApplicationSystemTestCase
 
   test "only one suggestion is selected when using arrow keys" do
     @fill_field.send_keys :down
-    @form.assert_selector "#{SUGGESTIONS}[aria-activedescendant]"
+    @form.assert_selector "[data-autocomplete-target='query'][aria-activedescendant]"
     @fill_field.send_keys :down
 
     assert_single_active_suggestion
@@ -46,6 +62,8 @@ class AutocompletesTest < ApplicationSystemTestCase
     @fill_field.set "ruxyz"
 
     assert @form.has_no_selector?("[role='option']")
+    assert_equal "false", @fill_field["aria-expanded"]
+    assert_nil @fill_field["aria-activedescendant"]
   end
 
   test "suggestions don't appear unless the search field is focused" do
@@ -68,14 +86,14 @@ class AutocompletesTest < ApplicationSystemTestCase
 
   test "down arrow key should loop" do
     @fill_field.send_keys :down, :down, :down, :down
-    @form.assert_selector "#{SUGGESTIONS}[aria-activedescendant]"
+    @form.assert_selector "[data-autocomplete-target='query'][aria-activedescendant]"
 
     assert_equal suggestion_options.last["id"], active_descendant
   end
 
   test "up arrow key should loop" do
     @fill_field.send_keys :up, :up, :up, :up
-    @form.assert_selector "#{SUGGESTIONS}[aria-activedescendant]"
+    @form.assert_selector "[data-autocomplete-target='query'][aria-activedescendant]"
 
     assert_equal suggestion_options.first["id"], active_descendant
   end
@@ -84,7 +102,7 @@ class AutocompletesTest < ApplicationSystemTestCase
     option = @form.first("[role='option']", text: "rubocop")
     option.hover
 
-    @form.assert_selector "#{SUGGESTIONS}[aria-activedescendant]"
+    @form.assert_selector "[data-autocomplete-target='query'][aria-activedescendant]"
 
     assert_equal option["id"], active_descendant
   end
@@ -99,7 +117,7 @@ class AutocompletesTest < ApplicationSystemTestCase
     @form.assert_selector "[role='option']", count: 2
 
     @fill_field.send_keys :down
-    @form.assert_selector "#{SUGGESTIONS}[aria-activedescendant='suggest-0']"
+    @form.assert_selector "[data-autocomplete-target='query'][aria-activedescendant='suggest-0']"
 
     assert_selector "body[data-stale-responses]"
     settle_pending_renders
@@ -127,11 +145,11 @@ class AutocompletesTest < ApplicationSystemTestCase
   end
 
   def active_descendant
-    suggestions_list["aria-activedescendant"]
+    @fill_field["aria-activedescendant"]
   end
 
   def assert_single_active_suggestion
-    @form.assert_selector "#{SUGGESTIONS}[aria-activedescendant]"
+    @form.assert_selector "[data-autocomplete-target='query'][aria-activedescendant]"
 
     assert_equal(1, suggestion_options.count { |option| option["id"] == active_descendant })
   end
