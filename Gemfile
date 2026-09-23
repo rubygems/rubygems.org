@@ -7,8 +7,8 @@ ruby file: ".ruby-version"
 gem "rails", "~> 8.1.3"
 gem "rails-i18n", "~> 8.1.0"
 
-gem "aws-sdk-s3", "~> 1.229"
-gem "aws-sdk-sqs", "~> 1.117"
+gem "aws-sdk-s3", "~> 1.232"
+gem "aws-sdk-sqs", "~> 1.119"
 gem "bootsnap", "~> 1.26"
 gem "clearance", "~> 2.12"
 gem "dalli", "~> 3.2"
@@ -125,7 +125,7 @@ group :development, :test do
   gem "pg_query", "~> 6.2"
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
-  gem "rubocop", "~> 1.90", require: false
+  gem "rubocop", "~> 1.91", require: false
   gem "rubocop-rails", "~> 2.37", require: false
   gem "rubocop-performance", "~> 1.27", require: false
   gem "rubocop-minitest", "~> 0.40", require: false
@@ -153,7 +153,7 @@ group :test do
   gem "shoulda-matchers", "~> 8.0"
   gem "capybara-playwright-driver", "~> 0.5"
   gem "webmock", "~> 3.26"
-  gem "simplecov", "~> 1.2", require: false
+  gem "simplecov", "~> 1.3", require: false
   gem "simplecov-cobertura", "~> 4.0", require: false
   gem "aggregate_assertions", "~> 0.3.0"
   gem "minitest-gcstats", "~> 1.3"
