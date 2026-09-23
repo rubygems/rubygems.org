@@ -1,9 +1,10 @@
 <%
   th_class    = "py-2 pr-4 text-b4 font-semibold text-neutral-900 dark:text-white"
-  cell_class  = "block md:table-cell py-2 md:py-4 pr-4 align-top " \
+  cell_class  = "block md:table-cell py-2 md:py-4 pr-4 align-middle " \
                 "before:content-[attr(data-title)] before:block before:text-c4 before:font-semibold " \
                 "before:uppercase before:tracking-wide before:text-neutral-500 md:before:content-none"
   can_modify_or_remove  = can_modify_or_remove_owners?(@rubygem)
+  confirmed_ownership_count = @ownerships.count(&:confirmed?)
 %>
 
 <div class="overflow-x-auto">
@@ -49,7 +50,7 @@
             <%= ownership.confirmed_at.strftime("%Y-%m-%d %H:%M %Z") if ownership.confirmed? %>
           </td>
           <% if can_modify_or_remove %>
-            <td class="block py-2 align-top md:table-cell md:py-4">
+            <td class="block py-2 align-middle md:table-cell md:py-4">
               <div class="flex flex-wrap gap-2">
                 <% if can_modify_owners?(@rubygem) %>
                   <%= render ButtonComponent.new(
@@ -58,7 +59,7 @@
                     color: :secondary,
                     disabled: ownership.user == current_user) %>
                 <% end %>
-                <% if can_remove_owners?(@rubygem) %>
+                <% if can_remove_owners?(@rubygem) && (ownership.unconfirmed? || confirmed_ownership_count > 1) %>
                   <% if ownership.user == current_user %>
                     <div data-controller="confirm-remove-self"
                          data-confirm-remove-self-username-value="<%= current_user.display_id %>">

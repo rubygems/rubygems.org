@@ -59,12 +59,10 @@ class OwnershipTest < ActiveSupport::TestCase
       assert_equal 1, @rubygem.owners_including_unconfirmed.length
     end
 
-    should "not allow deletion of only confirmed ownerships" do
-      @ownership_two.safe_destroy
-
+    should "not allow deletion of the sole confirmed ownership when a pending ownership exists" do
       refute @ownership_one.safe_destroy
-      assert_equal 1, @rubygem.owners.length
-      assert_equal @ownership_one.user, @rubygem.owners.last
+      assert Ownership.exists?(@ownership_one.id)
+      assert Ownership.exists?(@ownership_two.id)
     end
   end
 
