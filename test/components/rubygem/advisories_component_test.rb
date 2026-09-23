@@ -47,6 +47,7 @@ class Rubygem::AdvisoriesComponentTest < ComponentTest
     assert page.has_text?("Cross-site Scripting Vulnerability")
     assert page.has_link?("View advisory", href: "https://osv.dev/vulnerability/GHSA-mm33-5vfq-3mm3")
     assert page.has_css?(".bg-yellow-200")
+    assert page.has_css?("span.rounded-full.bg-yellow-100.text-yellow-900", text: "moderate")
   end
 
   should "use the error style when a high or critical advisory is present" do
@@ -56,7 +57,7 @@ class Rubygem::AdvisoriesComponentTest < ComponentTest
     )
 
     assert page.has_css?(".bg-red-200")
-    assert page.has_css?("span.rounded-full.bg-red-600")
+    assert page.has_css?("span.rounded-full.bg-red-100.text-red-900", text: "critical")
     assert page.has_text?("2 known security vulnerabilities")
   end
 
@@ -67,8 +68,43 @@ class Rubygem::AdvisoriesComponentTest < ComponentTest
     )
 
     assert page.has_text?("Malware")
-    assert page.has_css?("span.rounded-full.bg-red-700")
+    assert page.has_css?("span.rounded-full.bg-red-100.text-red-900", text: "Malware")
     assert page.has_css?(".bg-red-200")
+  end
+
+  should "use readable severity-specific pill colors" do
+    page = render_page Rubygem::AdvisoriesComponent.new(
+      advisories: [
+        advisory(severity: :critical),
+        advisory(severity: :high),
+        advisory(severity: :moderate),
+        advisory(severity: :low)
+      ],
+      version: build(:version, number: "1.0.0")
+    )
+
+    assert page.has_css?("span.bg-red-100.text-red-900", text: "critical")
+    assert page.has_css?("span.bg-orange-100.text-orange-900", text: "high")
+    assert page.has_css?("span.bg-yellow-100.text-yellow-900", text: "moderate")
+    assert page.has_css?("span.bg-blue-100.text-blue-900", text: "low")
+  end
+
+  should "preview the highest-severity advisory and disclose the rest with severity counts" do
+    page = render_page Rubygem::AdvisoriesComponent.new(
+      advisories: [
+        advisory(identifier: "GHSA-loww-0000-0001", severity: :low),
+        advisory(identifier: "GHSA-modr-0000-0002", severity: :moderate),
+        advisory(identifier: "GHSA-modr-0000-0001", severity: :moderate)
+      ],
+      version: build(:version, number: "1.0.0")
+    )
+
+    assert page.has_css?("details summary [data-testid='advisory-severity-counts'] span.bg-yellow-100", text: "1 moderate")
+    assert page.has_css?("[data-testid='advisory-severity-counts'] span.bg-blue-100", text: "1 low")
+    assert page.has_css?("[data-testid='primary-advisory']", text: "GHSA-modr-0000-0001")
+    assert page.has_css?("details[data-testid='additional-advisories'] summary", text: "Show 2 more vulnerabilities")
+    assert page.has_css?("details[data-testid='additional-advisories']", text: "GHSA-modr-0000-0002")
+    assert page.has_css?("details[data-testid='additional-advisories']", text: "GHSA-loww-0000-0001")
   end
 
   should "sort advisories by severity" do

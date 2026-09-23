@@ -6,6 +6,9 @@ class Avo::Actions::SyncAdvisories < Avo::Actions::ApplicationAction
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :index
   }
+  self.authorize = lambda {
+    Admin::AdvisoryPolicy.new(current_user, Advisory).act_on?
+  }
   self.standalone = true
   self.confirm_button_label = "Sync"
 

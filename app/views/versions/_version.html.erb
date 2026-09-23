@@ -13,6 +13,15 @@
     <span class="text-b4 font-semibold text-red-600 dark:text-red-400"><%= t ".yanked" %></span>
   <% end %>
   <% if version_advisory?(@advisories, version) %>
-    <span class="text-b4 font-semibold text-red-600 dark:text-red-400"><%= t ".vulnerable" %></span>
+    <span data-testid="version-vulnerability">
+      <%= render TooltipComponent.new(
+        text: t(".vulnerable"),
+        placement: :right,
+        trigger_class: "text-red-600 dark:text-red-400 align-middle",
+        trigger_label: t(".vulnerable")
+      ) do %>
+        <%= icon_tag "warning", size: 5, aria: { hidden: "true" } %>
+      <% end %>
+    </span>
   <% end %>
 </li>

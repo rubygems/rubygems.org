@@ -285,18 +285,21 @@ class VersionsControllerTest < ActionController::TestCase
              identifier: "GHSA-test-idx-0001")
     end
 
-    should "badge affected versions when the source is enabled" do
+    should "mark affected versions with a warning tooltip when the source is enabled" do
       with_feature FeatureFlag::OSV_ADVISORIES do
         get :index, params: { rubygem_id: @rubygem.name }
       end
 
-      assert page.has_content?("vulnerable")
+      warning = css_select("[data-testid='version-vulnerability'] button[aria-describedby]").sole
+
+      assert_select "[data-testid='version-vulnerability'] svg", count: 1
+      assert_select "##{warning['aria-describedby']}[role='tooltip'].left-full", text: "vulnerable", count: 1
     end
 
-    should "not badge versions when the source flag is off" do
+    should "not mark affected versions when the source flag is off" do
       get :index, params: { rubygem_id: @rubygem.name }
 
-      refute page.has_content?("vulnerable")
+      assert_select "[data-testid='version-vulnerability']", count: 0
     end
   end
 end

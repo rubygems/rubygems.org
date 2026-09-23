@@ -54,7 +54,14 @@ class Avo::AdvisoriesTest < ActionDispatch::IntegrationTest
     assert_equal admin, audit.auditable
   end
 
-  test "not syncing advisories when unauthenticated" do
+  test "not syncing advisories as an operator outside the rubygems.org team" do
+    admin = create(:admin_github_user, :is_admin)
+    info_data = admin.info_data.deep_dup
+    info_data[:viewer][:organization][:teams][:edges].reject! { |edge| edge.dig(:node, :slug) == "rubygems-org" }
+    admin.update!(info_data:)
+    admin_sign_in_as admin
+    advisory = create(:advisory)
+    advisory_attributes = advisory.attributes
     Advisory::OSV::Fetcher.any_instance.expects(:fetch).never
 
     assert_no_enqueued_jobs only: SyncAdvisoriesJob do
@@ -70,8 +77,8 @@ class Avo::AdvisoriesTest < ActionDispatch::IntegrationTest
         as: :turbo_stream
     end
 
-    assert_response :success
-    assert page.has_content? "Log in with GitHub"
+    assert_redirected_to avo.root_path
     assert_empty Audit.where(action: "Sync Advisories")
+    assert_equal advisory_attributes, Advisory.find(advisory.id).attributes
   end
 end
