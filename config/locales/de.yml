@@ -315,6 +315,7 @@ de:
         about: Über uns
         api: API
         blog: Blog
+        bluesky:
         contribute: Beitragen
         data: Daten
         docs: Dokumentation
@@ -334,6 +335,7 @@ de:
         statistics: Statistiken
         status: Status
         support_us:
+        x:
         supported_by: Unterstützt von
         operated_by:
         supported_by_html: |

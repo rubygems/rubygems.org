@@ -297,6 +297,7 @@ nl:
         about: Over ons
         api: API
         blog: Blog
+        bluesky:
         contribute: Bijdragen
         data: Data
         docs: Documentatie
@@ -316,6 +317,7 @@ nl:
         statistics: Statistieken
         status: Status
         support_us:
+        x:
         supported_by: Ondersteuning
         operated_by:
         supported_by_html: |

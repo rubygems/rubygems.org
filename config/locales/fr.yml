@@ -303,6 +303,7 @@ fr:
         about: À propos
         api: API
         blog: Blog
+        bluesky:
         contribute: Contribuer
         data: Données
         docs: Documentation
@@ -322,6 +323,7 @@ fr:
         statistics: Stats
         status: Statut
         support_us:
+        x:
         supported_by: Soutenu par
         operated_by:
         supported_by_html: |

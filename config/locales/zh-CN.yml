@@ -295,6 +295,7 @@ zh-CN:
         about: 关于
         api: API
         blog: 博客
+        bluesky:
         contribute: 贡献
         data: 数据
         docs: 文档
@@ -314,6 +315,7 @@ zh-CN:
         statistics: 统计
         status: 状态
         support_us:
+        x:
         supported_by: 支持
         operated_by:
         supported_by_html: |

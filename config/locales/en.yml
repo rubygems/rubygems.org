@@ -299,6 +299,7 @@ en:
         about: About
         api: API
         blog: Blog
+        bluesky: Bluesky
         contribute: Contribute
         data: Data
         docs: Docs
@@ -318,6 +319,7 @@ en:
         statistics: Stats
         status: Status
         support_us: Support Us
+        x: X (formerly Twitter)
         supported_by: Supported by
         operated_by: Operated by
         supported_by_html: |
