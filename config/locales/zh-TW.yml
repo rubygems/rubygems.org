@@ -294,6 +294,7 @@ zh-TW:
         about: 關於
         api: API
         blog: 部落格
+        bluesky:
         contribute: 貢獻
         data: 資料
         docs: 文件
@@ -313,6 +314,7 @@ zh-TW:
         statistics: 統計
         status: 狀態
         support_us:
+        x:
         supported_by: 支持
         operated_by:
         supported_by_html: |

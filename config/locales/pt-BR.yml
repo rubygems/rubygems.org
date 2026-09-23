@@ -302,6 +302,7 @@ pt-BR:
         about: Sobre
         api: API
         blog: Blog
+        bluesky:
         contribute: Como Contribuir
         data: Dump de Dados
         docs: Documentação
@@ -321,6 +322,7 @@ pt-BR:
         statistics: Estatísticas
         status: Status
         support_us:
+        x:
         supported_by: Patrocínio
         operated_by:
         supported_by_html: |

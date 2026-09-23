@@ -295,6 +295,7 @@ ja:
         about: 概要
         api: API
         blog: ブログ
+        bluesky:
         contribute: 貢献
         data: データ
         docs: ドキュメント
@@ -314,6 +315,7 @@ ja:
         statistics: 統計
         status: 状態
         support_us: 支援
+        x:
         supported_by: 協賛
         operated_by: 運営
         supported_by_html: |
