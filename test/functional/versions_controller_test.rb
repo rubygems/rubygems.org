@@ -133,7 +133,7 @@ class VersionsControllerTest < ActionController::TestCase
         get :index, params: { rubygem_id: @rubygem.name }
 
         assert_response :success
-        page_versions = css_select("[data-testid='gem-versions'] a").map(&:text)
+        page_versions = css_select("[data-testid='gem-versions'] > li > div > span").map(&:text)
 
         assert_includes page_versions, "1.1.2"
         refute_includes page_versions, "1.1.1"
@@ -143,7 +143,7 @@ class VersionsControllerTest < ActionController::TestCase
         get :index, params: { rubygem_id: @rubygem.name, page: 2 }
 
         assert_response :success
-        page_versions = css_select("[data-testid='gem-versions'] a").map(&:text)
+        page_versions = css_select("[data-testid='gem-versions'] > li > div > span").map(&:text)
 
         refute_includes page_versions, "1.1.2"
         assert_includes page_versions, "1.1.1"
@@ -238,5 +238,58 @@ class VersionsControllerTest < ActionController::TestCase
     should "renders owner gems overview link" do
       assert page.has_selector?("a[href='#{profile_path('johndoe')}']")
     end
+  end
+
+  context "with content-addressable versions" do
+    setup do
+      @rubygem = create(:rubygem, name: "content-addressable-test")
+      @newest = create_content_addressable_version(number: "0.2.0", platform: "arm64-darwin", ruby_abi: "4.0")
+      @source = create(:version, rubygem: @rubygem, number: "0.1.0")
+      @fat = create(:version, rubygem: @rubygem, number: "0.1.0", platform: "arm64-darwin", gem_platform: "arm64-darwin")
+      @arm64 = create_content_addressable_version(number: "0.1.0", platform: "arm64-darwin", ruby_abi: "4.0")
+      @x86 = create_content_addressable_version(number: "0.1.0", platform: "x86_64-linux", ruby_abi: "3.3")
+    end
+
+    should "use display order" do
+      get :index, params: { rubygem_id: @rubygem.name }
+
+      assert_response :success
+      assert_equal [@newest, @source, @fat, @arm64, @x86].map { |version| rubygem_version_path(@rubygem.slug, version.slug) }, version_link_paths
+    end
+
+    should "link previous and next versions by slug in display order" do
+      get :show, params: { rubygem_id: @rubygem.name, id: @newest.slug }
+
+      assert_response :success
+      assert_select "[data-testid='version-navigation'] a[href=?]",
+                    rubygem_version_path(@rubygem.slug, @source.slug), text: /Previous version/
+      assert_select "[data-testid='version-navigation'] a", text: /Next version/, count: 0
+
+      get :show, params: { rubygem_id: @rubygem.name, id: @fat.slug }
+
+      assert_response :success
+      assert_select "[data-testid='version-navigation'] a[href=?]",
+                    rubygem_version_path(@rubygem.slug, @source.slug), text: /Next version/
+      assert_select "[data-testid='version-navigation'] a[href=?]",
+                    rubygem_version_path(@rubygem.slug, @arm64.slug), text: /Previous version/
+    end
+  end
+
+  private
+
+  def create_content_addressable_version(number:, platform:, ruby_abi:)
+    create(:version,
+           rubygem: @rubygem,
+           number: number,
+           platform: platform,
+           gem_platform: platform,
+           ruby_abi: ruby_abi,
+           required_ruby_version: "~> #{ruby_abi}.0",
+           required_rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION,
+           sha256: Digest::SHA2.base64digest([@rubygem.name, number, platform, ruby_abi].join("-")))
+  end
+
+  def version_link_paths
+    css_select("[data-testid='gem-versions'] a").pluck("href").uniq
   end
 end
