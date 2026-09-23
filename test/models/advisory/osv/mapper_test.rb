@@ -147,6 +147,12 @@ class Advisory::OSV::MapperTest < ActiveSupport::TestCase
       assert_equal ["introduced" => "0.0.1", "last_affected" => "0.0.1"], records.first[:ranges]
     end
 
+    should "link identifiers from other databases to osv.dev" do
+      records = Advisory::OSV::Mapper.call(document("id" => "OSV-2026-1"))
+
+      assert_equal "https://osv.dev/vulnerability/OSV-2026-1", records.first[:url]
+    end
+
     should "use versions when only GIT ranges are present" do
       records = Advisory::OSV::Mapper.call(
         document(

@@ -5,7 +5,7 @@ FactoryBot.define do
     sequence(:identifier) { |n| format("GHSA-%04x-%04x-%04x", n, n, n) }
     rubygem_name { "example" }
     summary { "Example advisory summary" }
-    url { "https://osv.dev/vulnerability/#{identifier}" }
+    url { "https://github.com/advisories/#{identifier}" }
     severity { :moderate }
     modified_at { Time.current }
     aliases { [] }

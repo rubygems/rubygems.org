@@ -32,7 +32,7 @@ class Rubygem::AdvisoriesComponentTest < ComponentTest
       aliases: ["CVE-2022-22577"],
       summary: "Cross-site Scripting Vulnerability",
       severity: :moderate,
-      url: "https://osv.dev/vulnerability/GHSA-mm33-5vfq-3mm3"
+      url: "https://github.com/advisories/GHSA-mm33-5vfq-3mm3"
     )
     page = render_page Rubygem::AdvisoriesComponent.new(
       advisories: [advisory],
@@ -45,7 +45,7 @@ class Rubygem::AdvisoriesComponentTest < ComponentTest
     assert page.has_text?("GHSA-mm33-5vfq-3mm3")
     assert page.has_text?("CVE-2022-22577")
     assert page.has_text?("Cross-site Scripting Vulnerability")
-    assert page.has_link?("View advisory", href: "https://osv.dev/vulnerability/GHSA-mm33-5vfq-3mm3")
+    assert page.has_link?("View advisory", href: "https://github.com/advisories/GHSA-mm33-5vfq-3mm3")
     assert page.has_css?(".bg-yellow-200")
     assert page.has_css?("span.rounded-full.bg-yellow-100.text-yellow-900", text: "moderate")
   end
