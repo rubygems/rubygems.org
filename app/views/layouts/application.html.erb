@@ -3,7 +3,7 @@
 <head>
   <title><%= page_title %></title>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-site-verification" content="AuesbWQ9MCDMmC1lbDlw25RJzyqWOcDYpuaCjgPxEZY" />
   <link rel="apple-touch-icon" href="/apple-touch-icons/apple-touch-icon.png" />
   <% ["57x57", "72x72", "76x76", "114x114","120x120", "144x144", "152x152", "180x180"].each do |size| %>
@@ -24,12 +24,12 @@
   <%= javascript_importmap_tags %>
 </head>
 <body class="bg-neutral-050 dark:bg-neutral-950">
-  <div class="min-h-screen flex flex-col">
+  <div class="min-h-screen flex flex-col" data-controller="reveal-search" data-action="keydown@window->reveal-search#focus" data-reveal-search-toggle-class="bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border">
     <!-- Header -->
     <header class="bg-white dark:bg-black">
       <!-- Header Nav -->
       <div class="py-4 px-8 border-b border-neutral-400 dark:border-neutral-800">
-        <div class="flex flex-wrap justify-between max-w-screen-xl mx-auto" data-controller="reveal-search" data-action="keydown@window->reveal-search#focus" data-reveal-search-toggle-class="bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border">
+        <div class="flex flex-wrap justify-between max-w-screen-xl mx-auto">
           <!-- Menu button, Logo, desktop nav, mobile nav dialog -->
           <div class="flex flex-row items-center xl:mr-auto" data-controller="dialog">
             <!-- Mobile Menu Button -->
@@ -115,34 +115,38 @@
           <!-- Search button and Profile -->
           <div class="ml-auto flex flex-row items-center xl:ml-0 xl:order-3">
             <!-- Search button -->
-            <button type="button" data-action="reveal-search#toggle" data-reveal-search-target="toggle" aria-label="Open search" class="flex xl:hidden h-9 w-9 box-border text-neutral-800 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-400 items-center justify-center rounded border-neutral-300 dark:border-neutral-700">
-              <%= icon_tag "search", class: "h-6 w-6" %>
-            </button>
+            <% if show_header_search? %>
+              <button type="button" data-action="reveal-search#toggle:stop" data-reveal-search-target="button toggle" aria-label="Open search" aria-controls="header-search" aria-expanded="false" class="flex xl:hidden h-9 w-9 box-border text-neutral-800 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-400 items-center justify-center rounded border-neutral-300 dark:border-neutral-700">
+                <%= icon_tag "search", class: "h-6 w-6" %>
+              </button>
+            <% end %>
 
             <!-- Profile -->
             <%= render "layouts/session" %>
           </div>
 
           <!-- Search Bar -->
-          <div data-reveal-search-target="item" class="hidden pt-4 w-full items-center xl:flex xl:pt-0 xl:w-72 xl:order-2" role="search">
-            <%= form_tag(search_path, method: :get, data: { controller: "autocomplete", autocomplete_selected_class: "bg-neutral-100 dark:bg-neutral-800", reveal_target: "item" }, class: "relative w-full items-center", role: "search") do %>
-              <%= rubygem_search_field(data: { reveal_search_target: "input" }, class: "w-full md h-9 pr-12 bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded border-neutral-300 dark:border-neutral-700 box-border outline-none focus:ring-0 focus:border-neutral-500") %>
+          <% if show_header_search? %>
+            <div id="header-search" data-reveal-search-target="item" class="hidden pt-4 w-full items-center xl:flex xl:pt-0 xl:w-72 xl:order-2">
+              <%= form_tag(search_path, method: :get, data: { controller: "autocomplete", autocomplete_selected_class: "bg-neutral-100 dark:bg-neutral-800", reveal_target: "item" }, class: "relative w-full items-center", role: "search") do %>
+                <%= rubygem_search_field(data: { reveal_search_target: "input" }, class: "w-full md h-9 pr-12 bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded border-neutral-300 dark:border-neutral-700 box-border outline-none focus:ring-0 focus:border-neutral-500") %>
 
-              <ul role="listbox" data-autocomplete-target="suggestions" class="hidden absolute z-40 start-0 mt-2 w-full bg-white dark:bg-black text-b2 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-800 rounded shadow-md divide-y divide-neutral-200 dark:divide-neutral-800"></ul>
+                <ul id="query_suggestions" role="listbox" data-autocomplete-target="suggestions" class="hidden absolute z-40 start-0 mt-2 w-full bg-white dark:bg-black text-b2 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-800 rounded shadow-md divide-y divide-neutral-200 dark:divide-neutral-800"></ul>
 
-              <template id="suggestion" data-autocomplete-target="template">
-                <li class="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" role="option" tabindex="-1" data-autocomplete-target="item" data-action="click->autocomplete#choose mouseover->autocomplete#highlight"></li>
-              </template>
+                <template id="suggestion" data-autocomplete-target="template">
+                  <li class="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" role="option" aria-selected="false" data-autocomplete-target="item" data-action="mousedown->autocomplete#keepFocus click->autocomplete#choose mouseover->autocomplete#highlight"></li>
+                </template>
 
-              <%= label_tag :query, id: "querylabel" do %>
-                <span class="hidden"><%= t('layouts.application.header.search_gem_html') %></span>
+                <%= label_tag :query, id: "querylabel" do %>
+                  <span class="sr-only"><%= t('layouts.application.header.search_gem_html') %></span>
+                <% end %>
+
+                <button type="submit" id="search_submit" aria-labelledby="querylabel" class="absolute end-[1px] top-[1px] p-[5px] text-neutral-900 dark:text-white focus:outline-neutral-700 dark:focus:outline-white border-l border-neutral-300 dark:border-neutral-700 hover:text-neutral-600 dark:hover:text-neutral-400 rounded-r">
+                  <%= icon_tag "search", class: "h-6 w-6" %>
+                </button>
               <% end %>
-
-              <button type="submit" id="search_submit" aria-labelledby="querylabel" class="absolute end-[1px] top-[1px] p-[5px] text-neutral-900 dark:text-white focus:outline-neutral-700 dark:focus:outline-white border-l border-neutral-300 dark:border-neutral-700 hover:text-neutral-600 dark:hover:text-neutral-400 rounded-r">
-                <%= icon_tag "search", class: "h-6 w-6" %>
-              </button>
-            <% end %>
-          </div>
+            </div>
+          <% end %>
         </div>
       </div>
 

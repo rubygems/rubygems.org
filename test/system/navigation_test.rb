@@ -3,6 +3,17 @@
 require "application_system_test_case"
 
 class NavigationTest < ApplicationSystemTestCase
+  test "slash focuses the homepage search" do
+    visit root_path
+    find("body").click
+
+    assert_no_selector "#homepage_gem_query:focus"
+
+    find("body").send_keys("/")
+
+    assert_selector "#homepage_gem_query:focus"
+  end
+
   test "slash focuses the header search" do
     visit stats_path
 
@@ -11,18 +22,34 @@ class NavigationTest < ApplicationSystemTestCase
     assert_selector "#query:focus"
   end
 
+  test "header search controls have accessible names" do
+    visit stats_path
+
+    page.driver.with_playwright_page do |playwright_page|
+      assert_equal 1, playwright_page.get_by_role("combobox", name: "Search Gems…").count
+      assert_equal 1, playwright_page.get_by_role("button", name: "Search Gems…").count
+    end
+  end
+
   test "slash reveals and focuses the header search on mobile" do
     page.current_window.resize_to(393, 852)
     visit stats_path
 
     assert_no_selector "[data-reveal-search-target='item']", visible: true
+    assert_selector "button[aria-label='Open search'][aria-expanded='false']"
 
     find("body").send_keys("/")
 
     assert_selector "[data-reveal-search-target='item']", visible: true
     assert_selector "#query:focus"
+    assert_selector "button[aria-label='Open search'][aria-expanded='true']"
     assert_no_selector "dialog[open]"
     assert_selector "button[aria-label='Open menu'][aria-expanded='false']"
+
+    find("button[aria-label='Open search']").click
+
+    assert_no_selector "[data-reveal-search-target='item']", visible: true
+    assert_selector "button[aria-label='Open search'][aria-expanded='false']"
   end
 
   test "slash does not reveal search when the mobile nav is open" do

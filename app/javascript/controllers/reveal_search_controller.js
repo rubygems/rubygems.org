@@ -23,6 +23,11 @@ export default class extends Reveal {
     this.inputTarget.focus();
   }
 
+  show() {
+    super.show();
+    this.setAriaExpanded("true");
+  }
+
   toggle() {
     super.toggle();
     if (!this.itemTarget.classList.contains("hidden")) {

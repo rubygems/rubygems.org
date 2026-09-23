@@ -13,13 +13,14 @@
         <%= rubygem_search_field(
           id: "homepage_gem_query",
           autofocus: true,
-          class: "h-14 w-full rounded border border-neutral-500 bg-neutral-050 px-4 pr-14 text-b2 text-neutral-800 outline-none focus:border-neutral-500 focus:ring-0 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200"
+          data: { reveal_search_target: "input" },
+          class: "h-14 w-full rounded border border-neutral-500 bg-neutral-050 px-4 pr-14 text-b2 text-neutral-800 focus:border-orange-500 focus:outline-2 focus:outline-offset-2 focus:outline-orange-500 focus:ring-0 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:focus:border-orange-200 dark:focus:outline-orange-200"
         ) %>
 
-        <ul role="listbox" data-autocomplete-target="suggestions" class="absolute start-0 z-40 mt-2 hidden w-full divide-y divide-neutral-200 rounded border border-neutral-200 bg-white text-b2 text-neutral-800 shadow-md dark:divide-neutral-800 dark:border-neutral-800 dark:bg-black dark:text-neutral-200"></ul>
+        <ul id="homepage_gem_query_suggestions" role="listbox" data-autocomplete-target="suggestions" class="absolute start-0 z-40 mt-2 hidden w-full divide-y divide-neutral-200 rounded border border-neutral-200 bg-white text-b2 text-neutral-800 shadow-md dark:divide-neutral-800 dark:border-neutral-800 dark:bg-black dark:text-neutral-200"></ul>
 
         <template id="home_suggestion" data-autocomplete-target="template">
-          <li class="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" role="option" tabindex="-1" data-autocomplete-target="item" data-action="click->autocomplete#choose mouseover->autocomplete#highlight"></li>
+          <li class="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" role="option" aria-selected="false" data-autocomplete-target="item" data-action="mousedown->autocomplete#keepFocus click->autocomplete#choose mouseover->autocomplete#highlight"></li>
         </template>
 
         <%= label_tag :homepage_gem_query, id: "homepage_gem_querylabel" do %>
