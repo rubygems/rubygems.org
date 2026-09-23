@@ -10,6 +10,7 @@ export default class extends Controller {
     this.indexNumber = -1;
     this.suggestLength = 0;
     this.requestNumber = 0;
+    this.blurFrame = null;
   }
 
   disconnect() {
@@ -17,8 +18,18 @@ export default class extends Controller {
   }
 
   clear() {
+    if (this.blurFrame) {
+      cancelAnimationFrame(this.blurFrame);
+      this.blurFrame = null;
+    }
+    this.requestNumber++;
+    this.resetSuggestions();
+  }
+
+  resetSuggestions() {
     this.suggestionsTarget.classList.add("hidden");
     this.suggestionsTarget.innerHTML = "";
+    this.queryTarget.classList.remove("autocomplete-loading");
     this.queryTarget.setAttribute("aria-expanded", "false");
     this.queryTarget.removeAttribute("aria-activedescendant");
     this.indexNumber = -1;
@@ -26,8 +37,14 @@ export default class extends Controller {
   }
 
   hide(e) {
-    // Allows adjusting the cursor in the input without hiding the suggestions.
-    if (!this.queryTarget.contains(e.target)) this.clear();
+    if (e.type === "blur") {
+      this.blurFrame = requestAnimationFrame(() => {
+        this.blurFrame = null;
+        if (!this.queryTarget.matches(":focus")) this.clear();
+      });
+    } else if (e.type === "keydown" || !this.queryTarget.contains(e.target)) {
+      this.clear();
+    }
   }
 
   next() {
@@ -85,7 +102,7 @@ export default class extends Controller {
   }
 
   showSuggestions(items) {
-    this.clear();
+    this.resetSuggestions();
     if (items.length === 0) {
       return;
     }

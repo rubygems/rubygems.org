@@ -72,6 +72,38 @@ class AutocompletesTest < ApplicationSystemTestCase
     assert @form.has_no_selector?("[role='option']")
   end
 
+  test "escape dismisses suggestions" do
+    @fill_field.send_keys :escape
+
+    assert @form.has_no_selector?("[role='option']")
+    assert_equal "false", @fill_field["aria-expanded"]
+  end
+
+  test "leaving the search field dismisses suggestions" do
+    @fill_field.send_keys :tab
+
+    assert @form.has_no_selector?("[role='option']")
+    assert_equal "false", @fill_field["aria-expanded"]
+  end
+
+  test "a delayed response does not reopen dismissed suggestions" do
+    visit root_path
+    delay_responses_for_shorter_terms
+    @fill_field = find_by_id "homepage_gem_query"
+    @form = @fill_field.ancestor("form")
+
+    @fill_field.set "rub"
+
+    assert_selector "#homepage_gem_query.autocomplete-loading"
+    find("h1").click
+
+    assert_selector "body[data-stale-responses]"
+    settle_pending_renders
+
+    assert @form.has_no_selector?("[role='option']")
+    assert_equal "false", @fill_field["aria-expanded"]
+  end
+
   test "down arrow key fills the field with a suggestion" do
     @fill_field.send_keys :down
 
