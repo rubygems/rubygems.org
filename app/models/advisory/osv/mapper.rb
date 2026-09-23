@@ -3,7 +3,8 @@
 # OSV schema: https://ossf.github.io/osv-schema
 class Advisory::OSV::Mapper
   ECOSYSTEM = "RubyGems"
-  URL_PREFIX = "https://osv.dev/vulnerability/"
+  GITHUB_URL_PREFIX = "https://github.com/advisories/"
+  OSV_URL_PREFIX = "https://osv.dev/vulnerability/"
   RANGE_TYPES = %w[ECOSYSTEM SEMVER].freeze
   RANGE_EVENTS = %w[introduced fixed last_affected].freeze
 
@@ -54,7 +55,7 @@ class Advisory::OSV::Mapper
   end
 
   def url
-    "#{URL_PREFIX}#{identifier}"
+    "#{identifier.start_with?('GHSA-') ? GITHUB_URL_PREFIX : OSV_URL_PREFIX}#{identifier}"
   end
 
   def published_at

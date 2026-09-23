@@ -130,7 +130,7 @@ class Advisory::OSV::FetcherTest < ActiveSupport::TestCase
       assert_equal "Cross-site Scripting Vulnerability in Action Pack", actionpack.summary
       assert_equal "moderate", actionpack.severity
       assert_equal ["CVE-2022-22577"], actionpack.aliases
-      assert_equal "https://osv.dev/vulnerability/GHSA-mm33-5vfq-3mm3", actionpack.url
+      assert_equal "https://github.com/advisories/GHSA-mm33-5vfq-3mm3", actionpack.url
       assert_equal ["introduced" => "5.2.0", "fixed" => "5.2.7.1"], actionpack.ranges
       assert_equal actionpack.summary, rails.summary
     end

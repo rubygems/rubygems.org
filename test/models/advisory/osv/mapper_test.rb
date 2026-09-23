@@ -33,7 +33,7 @@ class Advisory::OSV::MapperTest < ActiveSupport::TestCase
       assert_equal ["CVE-2022-22577"], record[:aliases]
       assert_equal "Cross-site Scripting Vulnerability in Action Pack", record[:summary]
       assert_equal "moderate", record[:severity]
-      assert_equal "https://osv.dev/vulnerability/GHSA-mm33-5vfq-3mm3", record[:url]
+      assert_equal "https://github.com/advisories/GHSA-mm33-5vfq-3mm3", record[:url]
       assert_equal Time.zone.parse("2022-04-27T22:28:59Z"), record[:published_at]
       assert_equal Time.zone.parse("2024-02-18T05:32:29Z"), record[:modified_at]
       assert_nil record[:withdrawn_at]
@@ -143,6 +143,7 @@ class Advisory::OSV::MapperTest < ActiveSupport::TestCase
 
       assert_equal 1, records.size
       assert_equal "zztxtwtmp12", records.first[:rubygem_name]
+      assert_equal "https://osv.dev/vulnerability/MAL-2026-9999", records.first[:url]
       assert_equal ["introduced" => "0.0.1", "last_affected" => "0.0.1"], records.first[:ranges]
     end
 
