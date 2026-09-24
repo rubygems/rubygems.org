@@ -7,6 +7,14 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include OauthHelpers
   include AvoHelpers
 
+  # Viewport profiles only; these do not emulate touch, user agents, or device pixel ratios.
+  DEVICE_PROFILES = {
+    mobile: [393, 852].freeze,
+    tablet: [768, 1024].freeze,
+    laptop: [1366, 768].freeze,
+    desktop: [1400, 1400].freeze
+  }.freeze
+
   parallelize_setup do |worker|
     SimpleCov.command_name "system-worker-#{worker}"
     RubygemFs.mock!
@@ -16,7 +24,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   # standalone Capybara.register_driver block would be overwritten. Pass the
   # Capybara::Playwright::Driver options through `options:` instead — that's
   # what gets forwarded to the driver constructor.
-  driven_by :playwright, screen_size: [1400, 1400], options: {
+  driven_by :playwright, screen_size: DEVICE_PROFILES.fetch(:desktop), options: {
     playwright_cli_executable_path: File.expand_path("../bin/playwright", __dir__),
     browser_type: :chromium,
     headless: true
@@ -24,6 +32,10 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   teardown do
     clear_browser_cache(clear_cookies: true)
+  end
+
+  def use_device_profile(profile)
+    page.current_window.resize_to(*DEVICE_PROFILES.fetch(profile))
   end
 
   # Clear the browser's HTTP cache, and optionally its cookies. Pages served with

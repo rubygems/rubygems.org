@@ -330,6 +330,10 @@ nl:
         dashboard: Dashboard
         settings: Instellingen
         edit_profile: Wijzig profiel
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
         search_gem_html: Gems Zoeken&hellip;
         members:
       mfa_banner_html:

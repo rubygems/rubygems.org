@@ -328,6 +328,10 @@ zh-CN:
         dashboard: 仪表盘
         settings: 设置
         edit_profile: 编辑个人信息
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
         search_gem_html: 搜索 Gem &hellip;&hellip;
         members:
       mfa_banner_html:

@@ -179,7 +179,7 @@ class AutocompletesTest < ApplicationSystemTestCase
   end
 
   test "opening a prefilled search on a narrow layout loads suggestions" do
-    page.current_window.resize_to(393, 852)
+    use_device_profile :mobile
     visit search_path(query: "rubo")
 
     find("button[aria-label='Open search']").click

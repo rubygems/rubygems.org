@@ -345,6 +345,10 @@ es:
         dashboard: Dashboard
         settings: Configuración
         edit_profile: Editar
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
         search_gem_html: Buscar gemas&hellip;
         members:
       mfa_banner_html:

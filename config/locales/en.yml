@@ -332,6 +332,10 @@ en:
         dashboard: Dashboard
         settings: Settings
         edit_profile: Edit profile
+        account_menu: Account menu
+        close_account_menu: Close account menu
+        signed_in_as: Signed in as
+        main_navigation: Main navigation
         search_gem_html: Search Gems&hellip;
         members: Members
       mfa_banner_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. [Learn more](link to blog post)!
