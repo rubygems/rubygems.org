@@ -1157,6 +1157,8 @@ ja:
         title: 新しい待機中の信頼できる発行元
     trusted_publisher:
       unsupported_type: サポートされていない信頼できる発行元の種類
+      select_provider:
+      select:
       github_actions:
         repository_owner_help_html: リポジトリを所有するGitHubの組織名またはGitHubのユーザー名
         repository_name_help_html: 公開ワークフローを含むGitHubリポジトリ名
@@ -1171,6 +1173,11 @@ ja:
         workflow_repository_owner_help_html:
         workflow_repository_name_help_html:
       gitlab:
+        name:
+        ref_types:
+          any:
+          tag:
+          branch:
         project_path_help_html:
         ci_config_path_help_html:
         environment_help_html:

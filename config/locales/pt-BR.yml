@@ -1152,6 +1152,8 @@ pt-BR:
         title:
     trusted_publisher:
       unsupported_type:
+      select_provider:
+      select:
       github_actions:
         repository_owner_help_html:
         repository_name_help_html:
@@ -1160,6 +1162,11 @@ pt-BR:
         workflow_repository_owner_help_html:
         workflow_repository_name_help_html:
       gitlab:
+        name:
+        ref_types:
+          any:
+          tag:
+          branch:
         project_path_help_html:
         ci_config_path_help_html:
         environment_help_html:
