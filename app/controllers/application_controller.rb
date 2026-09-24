@@ -44,8 +44,6 @@ class ApplicationController < ActionController::Base
 
   def switch_locale(&action)
     I18n.with_locale(request.path_parameters[:locale] || I18n.default_locale, &action)
-  rescue I18n::InvalidLocale
-    I18n.with_locale(I18n.default_locale, &action)
   end
 
   def default_url_options
