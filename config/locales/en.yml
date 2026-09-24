@@ -907,6 +907,17 @@ en:
     index:
       downloads: Downloads
       title: Gems
+    advisories:
+      title:
+        one: "1 known security vulnerability"
+        other: "%{count} known security vulnerabilities"
+      malware: Malware
+      severity_count: "%{count} %{severity}"
+      show_fewer: Show fewer vulnerabilities
+      show_more:
+        one: Show 1 more vulnerability
+        other: Show %{count} more vulnerabilities
+      view_advisory: View advisory
     show:
       bundler_header: Gemfile
       install: install
@@ -1025,6 +1036,7 @@ en:
     version:
       yanked: yanked
       ruby_abi: Ruby ABI
+      vulnerable: vulnerable
   webauthn_credentials:
     callback:
       success: You have successfully registered a security device.

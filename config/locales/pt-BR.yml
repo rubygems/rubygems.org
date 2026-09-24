@@ -913,6 +913,17 @@ pt-BR:
     index:
       downloads: Downloads
       title: Gems
+    advisories:
+      title:
+        one:
+        other:
+      malware:
+      severity_count:
+      show_fewer:
+      show_more:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: instalar
@@ -1041,6 +1052,7 @@ pt-BR:
     version:
       yanked: removida
       ruby_abi:
+      vulnerable:
   webauthn_credentials:
     callback:
       success:

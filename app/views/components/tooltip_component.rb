@@ -4,8 +4,9 @@ class TooltipComponent < ApplicationComponent
   attr_reader :text, :placement, :id, :trigger_class, :trigger_label
 
   PLACEMENTS = {
-    top: "bottom-full mb-2",
-    bottom: "top-full mt-2"
+    top: "left-1/2 bottom-full mb-2 -translate-x-1/2",
+    bottom: "left-1/2 top-full mt-2 -translate-x-1/2",
+    right: "left-full top-1/2 ml-2 -translate-y-1/2"
   }.freeze
 
   # NOTE: When using an icon instead of text, add a trigger_label for the aria-describedby
@@ -32,7 +33,7 @@ class TooltipComponent < ApplicationComponent
 
   WRAPPER = "group/tooltip relative inline-block"
   TRIGGER = "cursor-help rounded-sm focus:outline-2 focus:outline-offset-2 focus:outline-orange-500"
-  BUBBLE = "pointer-events-none absolute left-1/2 z-20 w-max max-w-xs -translate-x-1/2 " \
+  BUBBLE = "pointer-events-none absolute z-20 w-max max-w-xs " \
            "rounded-md px-2 py-1 text-left text-b4 font-normal normal-case shadow-md " \
            "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 " \
            "invisible opacity-0 transition-opacity duration-150 " \

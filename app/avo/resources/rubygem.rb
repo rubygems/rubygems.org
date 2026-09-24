@@ -50,6 +50,7 @@ class Avo::Resources::Rubygem < Avo::BaseResource
 
       field :link_verifications, as: :has_many
       field :oidc_rubygem_trusted_publishers, as: :has_many
+      field :advisories, as: :has_many
 
       field :audits, as: :has_many
       field :events, as: :has_many

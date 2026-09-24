@@ -1001,6 +1001,17 @@ es:
     index:
       downloads: Descargas
       title: Gemas
+    advisories:
+      title:
+        one:
+        other:
+      malware:
+      severity_count:
+      show_fewer:
+      show_more:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: instalar
@@ -1135,6 +1146,7 @@ es:
     version:
       yanked: borrada
       ruby_abi:
+      vulnerable:
   webauthn_credentials:
     callback:
       success: Has dado de alta con éxito un dispositivo de seguridad.

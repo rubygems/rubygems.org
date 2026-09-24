@@ -988,6 +988,17 @@ de:
     index:
       downloads: Downloads
       title: Gems
+    advisories:
+      title:
+        one:
+        other:
+      malware:
+      severity_count:
+      show_fewer:
+      show_more:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: installieren
@@ -1106,6 +1117,7 @@ de:
     version:
       yanked:
       ruby_abi:
+      vulnerable:
   webauthn_credentials:
     callback:
       success:
