@@ -220,11 +220,12 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
       ci_config_path: ".gitlab-ci.yml",
       ref_type: "tag")
 
-    jwt = { ref: "v1.0.0", ref_path: "refs/tags/v1.0.0", sha: "abc123" }
+    jwt = { ref: "v1.0.0", ref_path: "refs/tags/v1.0.0", sha: "abc123",
+            ci_config_ref_uri: "gitlab.com/myns/rubygem1//.gitlab-ci.yml@refs/tags/v1.0.0" }
 
     policy = publisher.to_access_policy(jwt)
 
-    assert_equal 2, policy.statements.size
+    assert_equal 1, policy.statements.size
 
     conditions = policy.statements.first["conditions"]
 
@@ -247,11 +248,12 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
       ref_type: "branch",
       branch_name: "main")
 
-    jwt = { ref: "main", ref_path: "refs/heads/main", sha: "abc123" }
+    jwt = { ref: "main", ref_path: "refs/heads/main", sha: "abc123",
+            ci_config_ref_uri: "gitlab.com/myns/rubygem1//.gitlab-ci.yml@refs/heads/main" }
 
     policy = publisher.to_access_policy(jwt)
 
-    assert_equal 2, policy.statements.size
+    assert_equal 1, policy.statements.size
     assert_equal "allow", policy.statements.first["effect"]
     assert_equal OIDC::Provider::GITLAB_ISSUER, policy.statements.first["principal"]["oidc"]
 
@@ -293,6 +295,7 @@ class OIDC::TrustedPublisher::GitLabTest < ActiveSupport::TestCase
       project_path: "a/b/c",
       ci_config_path: ".gitlab-ci.yml")
 
+    jwt[:ci_config_ref_uri] = "gitlab.com/a/b/c//.gitlab-ci.yml@refs/heads/main"
     nested_policy = nested_publisher.to_access_policy(jwt)
     nested_conditions = nested_policy.statements.first["conditions"]
 
