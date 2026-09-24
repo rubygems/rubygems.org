@@ -334,7 +334,7 @@ zh-CN:
         main_navigation:
         open_menu:
         close_menu:
-        language:
+        language: 语言
         search_gem_html: 搜索 Gem &hellip;&hellip;
         members:
       mfa_banner_html:

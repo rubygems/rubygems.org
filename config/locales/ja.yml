@@ -334,7 +334,7 @@ ja:
         main_navigation:
         open_menu:
         close_menu:
-        language:
+        language: 言語
         search_gem_html: gemを検索...
         members: メンバー
       mfa_banner_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。[詳細はこちら](link
