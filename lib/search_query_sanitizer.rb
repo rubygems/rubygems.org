@@ -92,7 +92,8 @@ class SearchQuerySanitizer
       next unless occurrences.length > MAX_FIELD_OCCURRENCES
 
       count = 0
-      @query = @query.gsub(pattern) do |match|
+      pattern_with_operator = /(?:\s+\b(?:AND|OR|NOT)\b)*\s*#{pattern}/i
+      @query = @query.gsub(pattern_with_operator) do |match|
         count += 1
         count <= MAX_FIELD_OCCURRENCES ? match : ""
       end
@@ -109,9 +110,10 @@ class SearchQuerySanitizer
     # Uses (?:[^"\\]|\\.)* to handle escaped quotes within quoted strings
     # Length caps {0,200} prevent regex performance issues on malformed inputs
     combined_pattern = /\b(?:#{ALLOWED_FIELDS.join('|')}):(?:"(?:[^"\\]|\\.){0,200}"|\S{1,200})/i
+    pattern_with_operator = /(?:\s+\b(?:AND|OR|NOT)\b)*\s*#{combined_pattern}/i
     kept_count = 0
 
-    @query = @query.gsub(combined_pattern) do |match|
+    @query = @query.gsub(pattern_with_operator) do |match|
       kept_count += 1
       kept_count <= MAX_TOTAL_FIELD_FILTERS ? match : ""
     end
@@ -119,6 +121,20 @@ class SearchQuerySanitizer
 
   def escape_dangerous_patterns!
     @query = @query.gsub(/\*{2,}/, "*").gsub(/\?{2,}/, "?") # Collapse repeated wildcards
+    escape_forward_slashes!
     @query = @query.delete("\u0000") # Remove null bytes
+  end
+
+  def escape_forward_slashes!
+    backslash_count = 0
+    @query = @query.each_char.with_object(+"") do |character, escaped_query|
+      if character == "\\"
+        backslash_count += 1
+      else
+        escaped_query << "\\" if character == "/" && backslash_count.even?
+        backslash_count = 0
+      end
+      escaped_query << character
+    end
   end
 end

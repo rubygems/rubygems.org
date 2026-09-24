@@ -4,6 +4,7 @@ require "app_revision"
 require "datadog/kit/identity"
 require "datadog/kit/appsec/events"
 require "datadog/kit/appsec/events/v2"
+require "gemcutter/datadog_search_error_processor"
 
 Datadog.configure do |c|
   # unified service tagging
@@ -56,8 +57,10 @@ end
 # Only set up span filtering when tracing is enabled
 if Datadog.configuration.tracing.enabled
   Datadog::Tracing.before_flush(
-    # Remove spans for the /internal/ping endpoint
-    Datadog::Tracing::Pipeline::SpanFilter.new { |span| span.resource == "Internal::PingController#index" }
+    # Remove spans for the /internal/ping endpoint.
+    Datadog::Tracing::Pipeline::SpanFilter.new { |span| span.resource == "Internal::PingController#index" },
+    # Keep expected query parser rejection spans, but do not classify them as application errors.
+    Gemcutter::DatadogSearchErrorProcessor.new
   )
 end
 

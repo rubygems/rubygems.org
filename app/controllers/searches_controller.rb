@@ -3,9 +3,6 @@
 class SearchesController < ApplicationController
   before_action -> { set_page Gemcutter::SEARCH_MAX_PAGES }, only: :show
 
-  rescue_from SearchQuerySanitizer::QueryTooLongError,
-              SearchQuerySanitizer::MalformedQueryError, with: :render_invalid_query
-
   def show
     # Return early for blank queries. Non-string params (e.g., arrays) are converted
     # to strings by SearchQuerySanitizer via to_s, which handles them safely.
@@ -20,6 +17,8 @@ class SearchesController < ApplicationController
     exact_match = Rubygem.name_is(params[:query]).first
     @yanked_gem = exact_match unless exact_match&.indexed_versions?
     @yanked_filter = true if params[:yanked] == "true"
+  rescue SearchQuerySanitizer::QueryTooLongError, SearchQuerySanitizer::MalformedQueryError
+    render_invalid_query
   end
 
   def advanced

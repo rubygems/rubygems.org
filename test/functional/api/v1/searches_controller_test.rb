@@ -66,17 +66,21 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     end
 
     context "invalid query" do
-      should "returns friendly error message" do
-        get :show, params: { query: "AND other" }, format: :json
+      should "return a friendly bad request without reporting an application error" do
+        assert_no_rescue_from_notification do
+          get :show, params: { query: 'foo"' }, format: :json
+        end
 
         assert_response :bad_request
-        assert_equal "Failed to parse search term: 'AND other'.", JSON.parse(@response.body)["error"]
+        assert_equal "Failed to parse search term: 'foo\"'.", JSON.parse(@response.body)["error"]
       end
     end
 
     context "malformed query with range syntax" do
-      should "return bad request" do
-        get :show, params: { query: "test:[a TO b]" }, format: :json
+      should "return bad request without reporting an application error" do
+        assert_no_rescue_from_notification do
+          get :show, params: { query: "test:[a TO b]" }, format: :json
+        end
 
         assert_response :bad_request
         assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
@@ -84,8 +88,10 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     end
 
     context "query exceeding max length" do
-      should "return bad request" do
-        get :show, params: { query: "a" * (SearchQuerySanitizer::MAX_QUERY_LENGTH + 1) }, format: :json
+      should "return bad request without reporting an application error" do
+        assert_no_rescue_from_notification do
+          get :show, params: { query: "a" * (SearchQuerySanitizer::MAX_QUERY_LENGTH + 1) }, format: :json
+        end
 
         assert_response :bad_request
         assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
@@ -140,8 +146,10 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     end
 
     context "malformed query with range syntax" do
-      should "return bad request" do
-        get :autocomplete, params: { query: "test:[a TO b]" }
+      should "return bad request without reporting an application error" do
+        assert_no_rescue_from_notification do
+          get :autocomplete, params: { query: "test:[a TO b]" }
+        end
 
         assert_response :bad_request
         assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
@@ -149,12 +157,29 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
     end
 
     context "query exceeding max length" do
-      should "return bad request" do
-        get :autocomplete, params: { query: "a" * (SearchQuerySanitizer::MAX_QUERY_LENGTH + 1) }
+      should "return bad request without reporting an application error" do
+        assert_no_rescue_from_notification do
+          get :autocomplete, params: { query: "a" * (SearchQuerySanitizer::MAX_QUERY_LENGTH + 1) }
+        end
 
         assert_response :bad_request
         assert_equal "Invalid search query. Please simplify your search and try again.", @response.body
       end
     end
+  end
+
+  private
+
+  def assert_no_rescue_from_notification
+    handled_exceptions = []
+    subscriber = ActiveSupport::Notifications.subscribe("rescue_from_callback.action_controller") do |event|
+      handled_exceptions << event.payload[:exception]
+    end
+
+    yield
+
+    assert_empty handled_exceptions
+  ensure
+    ActiveSupport::Notifications.unsubscribe(subscriber) if subscriber
   end
 end
