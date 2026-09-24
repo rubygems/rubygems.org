@@ -6,7 +6,10 @@ class OIDC::TrustedPublisher::GitLab::FormComponent < OIDC::TrustedPublisher::Fo
       field trusted_publisher_form, :text_field, :project_path, autocomplete: :off, placeholder: "group/project"
       field trusted_publisher_form, :text_field, :ci_config_path, autocomplete: :off, optional: true, placeholder: ".gitlab-ci.yml"
       field trusted_publisher_form, :text_field, :environment, autocomplete: :off, optional: true
-      field trusted_publisher_form, :select, :ref_type, [["Any", nil], %w[Tag tag], %w[Branch branch]], {}, optional: true
+      field trusted_publisher_form, :select, :ref_type,
+        [[t("oidc.trusted_publisher.gitlab.ref_types.any"), nil],
+         [t("oidc.trusted_publisher.gitlab.ref_types.tag"), "tag"],
+         [t("oidc.trusted_publisher.gitlab.ref_types.branch"), "branch"]], {}, optional: true
       field trusted_publisher_form, :text_field, :branch_name, autocomplete: :off, optional: true
     end
   end

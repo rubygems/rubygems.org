@@ -16,13 +16,13 @@ class OIDC::RubygemTrustedPublishers::NewView < ApplicationView
   def view_template
     gem_subject_page do
       form_with(url: new_rubygem_trusted_publisher_path(rubygem_trusted_publisher.rubygem.slug), method: :get, class: "mb-4") do |f|
-        f.label :trusted_publisher_type, "Select CI/CD Provider:", class: label_class
+        f.label :trusted_publisher_type, t("oidc.trusted_publisher.select_provider"), class: label_class
         f.select :trusted_publisher_type, trusted_publisher_types.map { |type|
                                             [type.publisher_name, type.url_identifier]
                                           }, { selected: selected_trusted_publisher_type&.url_identifier }, class: field_class
-        f.submit "Select", class: "inline-flex items-center justify-center rounded border-2 border-orange-600 " \
-                                  "text-orange-600 px-4 h-9 min-h-9 text-b3 hover:bg-orange-600/5 " \
-                                  "active:bg-orange-600/10 transition focus:outline-none mt-2"
+        f.submit t("oidc.trusted_publisher.select"), class: "inline-flex items-center justify-center rounded border-2 border-orange-600 " \
+                                                            "text-orange-600 px-4 h-9 min-h-9 text-b3 hover:bg-orange-600/5 " \
+                                                            "active:bg-orange-600/10 transition focus:outline-none mt-2"
       end
 
       if selected_trusted_publisher_type
