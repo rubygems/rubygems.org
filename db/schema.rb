@@ -47,15 +47,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
     t.index ["type", "identifier", "rubygem_name"], name: "index_advisories_on_type_and_identifier_and_rubygem_name", unique: true
   end
 
-  create_table "api_key_organization_scopes", force: :cascade do |t|
-    t.bigint "api_key_id", null: false
-    t.datetime "created_at", null: false
-    t.bigint "membership_id", null: false
-    t.datetime "updated_at", null: false
-    t.index ["api_key_id"], name: "index_api_key_organization_scopes_on_api_key_id", unique: true
-    t.index ["membership_id"], name: "index_api_key_organization_scopes_on_membership_id"
-  end
-
   create_table "api_key_rubygem_scopes", force: :cascade do |t|
     t.bigint "api_key_id", null: false
     t.datetime "created_at", null: false
@@ -836,8 +827,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
     t.index ["user_id"], name: "index_webauthn_verifications_on_user_id", unique: true
   end
 
-  add_foreign_key "api_key_organization_scopes", "api_keys", name: "api_key_organization_scopes_api_key_id_fk"
-  add_foreign_key "api_key_organization_scopes", "memberships"
   add_foreign_key "api_key_rubygem_scopes", "api_keys", name: "api_key_rubygem_scopes_api_key_id_fk"
   add_foreign_key "attestations", "versions"
   add_foreign_key "audits", "admin_github_users", name: "audits_admin_github_user_id_fk"
