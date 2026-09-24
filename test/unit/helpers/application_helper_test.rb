@@ -26,23 +26,23 @@ class ApplicationHelperTest < ActionView::TestCase
     end
   end
 
-  context "show_header_search?" do
-    should "hide the header search on the homepage" do
+  context "home_page?" do
+    should "identify the homepage" do
       stubs(controller_path: "home", action_name: "index")
 
-      refute_predicate self, :show_header_search?
+      assert_predicate self, :home_page?
     end
 
-    should "show the header search on other pages" do
+    should "not identify other pages as the homepage" do
       stubs(controller_path: "stats", action_name: "index")
 
-      assert_predicate self, :show_header_search?
+      refute_predicate self, :home_page?
     end
 
-    should "show the header search on namespaced home pages" do
+    should "not identify namespaced home pages as the homepage" do
       stubs(controller_name: "home", controller_path: "admin/home", action_name: "index")
 
-      assert_predicate self, :show_header_search?
+      refute_predicate self, :home_page?
     end
   end
 

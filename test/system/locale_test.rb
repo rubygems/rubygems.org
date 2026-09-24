@@ -4,23 +4,46 @@ require "application_system_test_case"
 
 class LocaleTest < ApplicationSystemTestCase
   test "html lang attribute is set from locale" do
-    skip "locales temporarily disabled"
     I18n.available_locales.each do |locale|
-      visit root_path(locale: locale)
+      visit "/#{locale}"
 
       assert_equal locale.to_s, page.find("html")[:lang]
     end
   end
 
   test "locale is switched via locale menu" do
-    skip "locales temporarily disabled"
-
     visit root_path
 
     assert_equal I18n.default_locale.to_s, page.find("html")[:lang]
 
+    language_button = find(%(button[aria-label="#{I18n.t('layouts.application.header.language')}"]))
+
+    assert_equal "false", language_button["aria-expanded"]
+
+    language_button.click
+
+    assert_equal "true", language_button["aria-expanded"]
+
+    language_button.click
+
+    assert_equal "false", language_button["aria-expanded"]
+
+    language_button.click
     click_link "Deutsch"
 
     assert_equal "de", page.find("html")[:lang]
+  end
+
+  test "localized root keeps the home page layout" do
+    visit "/de"
+
+    assert_selector "input#homepage_gem_query"
+    assert_text I18n.t("home.index.learn.install_rubygems", locale: :de)
+    assert_no_selector "nav[aria-label='Breadcrumb']"
+  end
+
+  test "positional route helper arguments target non-locale segments" do
+    assert_equal "/gems/rails", rubygem_path("rails")
+    assert_equal "/gems/rails/versions/7.0.0", rubygem_version_path("rails", "7.0.0")
   end
 end

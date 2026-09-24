@@ -351,6 +351,7 @@ es:
         main_navigation:
         open_menu:
         close_menu:
+        language: Idioma
         search_gem_html: Buscar gemas&hellip;
         members:
       mfa_banner_html:

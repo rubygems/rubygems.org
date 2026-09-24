@@ -342,6 +342,7 @@ fr:
         main_navigation:
         open_menu:
         close_menu:
+        language: Langue
         search_gem_html: Recherche de Gems&hellip;
         members:
       mfa_banner_html:
