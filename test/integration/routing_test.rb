@@ -24,11 +24,13 @@ class RoutingTest < ActionDispatch::IntegrationTest
     @ui_paths_verb.each do |path, verb|
       concrete_path = concrete_ui_path(path)
       next if root_route_path?(concrete_path) # adding random format after root (/) gives 404
-      next if path.end_with?("/:id(.:format)")
+
+      formatted_path = concrete_path.gsub("(.:format)", ".something")
+      next if extension_is_path_parameter?(formatted_path, verb)
 
       assert_raises(ActionController::RoutingError, "#{verb} #{path} should raise") do
         # ex: get(/password/new.json)
-        send(verb.downcase, concrete_path.gsub("(.:format)", ".something"))
+        send(verb.downcase, formatted_path)
       end
     end
   end
@@ -87,6 +89,13 @@ class RoutingTest < ActionDispatch::IntegrationTest
 
   def root_route_path?(path)
     ["/", "(.:format)", "/(.:format)"].include?(path)
+  end
+
+  def extension_is_path_parameter?(path, verb)
+    parameters = Rails.application.routes.recognize_path(path, method: verb.downcase)
+    parameters.except(:controller, :action, :format).value?("someid.something")
+  rescue ActionController::RoutingError
+    false
   end
 
   teardown do
