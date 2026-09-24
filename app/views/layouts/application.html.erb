@@ -111,7 +111,7 @@
             <% end %>
 
             <div class="relative ml-2 xl:ml-3" data-controller="dropdown">
-              <button type="button" data-action="dropdown#toggle click@window->dropdown#hide" aria-label="<%= t('layouts.application.header.language') %>" aria-haspopup="true" class="flex h-9 items-center gap-1 rounded border border-neutral-300 bg-white px-2 text-b3 font-semibold text-neutral-800 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:border-neutral-700 dark:bg-black dark:text-white dark:hover:bg-neutral-800">
+              <button type="button" data-action="dropdown#toggle click@window->dropdown#hide" data-dropdown-target="button" aria-label="<%= t('layouts.application.header.language') %>" aria-haspopup="true" aria-expanded="false" class="flex h-9 items-center gap-1 rounded border border-neutral-300 bg-white px-2 text-b3 font-semibold text-neutral-800 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:border-neutral-700 dark:bg-black dark:text-white dark:hover:bg-neutral-800">
                 <%= icon_tag "language", class: "h-5 w-5" %>
                 <span><%= I18n.locale.to_s.split("-").first.upcase %></span>
                 <%= icon_tag "arrow-drop-down", class: "h-5 w-5" %>

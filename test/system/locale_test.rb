@@ -16,7 +16,19 @@ class LocaleTest < ApplicationSystemTestCase
 
     assert_equal I18n.default_locale.to_s, page.find("html")[:lang]
 
-    find(%(button[aria-label="#{I18n.t('layouts.application.header.language')}"])).click
+    language_button = find(%(button[aria-label="#{I18n.t('layouts.application.header.language')}"]))
+
+    assert_equal "false", language_button["aria-expanded"]
+
+    language_button.click
+
+    assert_equal "true", language_button["aria-expanded"]
+
+    language_button.click
+
+    assert_equal "false", language_button["aria-expanded"]
+
+    language_button.click
     click_link "Deutsch"
 
     assert_equal "de", page.find("html")[:lang]

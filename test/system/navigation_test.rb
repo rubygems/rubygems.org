@@ -134,7 +134,7 @@ class NavigationTest < ApplicationSystemTestCase
 
     assert_selector "a[title='RubyGems']:focus"
 
-    find("body").send_keys(:tab, :tab, :tab)
+    find("body").send_keys(:tab, :tab, :tab, :tab)
 
     assert_selector "button[aria-label='Open menu']:focus"
     assert_no_selector "dialog[open]"

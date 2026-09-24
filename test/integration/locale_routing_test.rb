@@ -70,10 +70,43 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_content
   end
 
+  test "locale switching does not retry actions that raise an invalid locale error" do
+    controller = ApplicationController.new
+    request = ActionController::TestRequest.create(ApplicationController)
+    request.path_parameters = { locale: :en }
+    controller.request = request
+    calls = 0
+
+    assert_raises(I18n::InvalidLocale) do
+      controller.switch_locale do
+        calls += 1
+        raise I18n::InvalidLocale, :invalid
+      end
+    end
+    assert_equal 1, calls
+  end
+
   test "the localized sponsors alias redirects with the locale preserved" do
     get "/de/pages/sponsors"
 
     assert_redirected_to "/de/pages/supporters"
+  end
+
+  test "the localized gem transfer alias redirects with the locale preserved" do
+    user = create(:user)
+
+    get transfer_rubygems_path(locale: :de, as: user)
+
+    assert_redirected_to organization_transfer_rubygems_path(locale: :de)
+  end
+
+  test "the localized organization onboarding alias redirects with the locale preserved" do
+    user = create(:user)
+    FeatureFlag.enable_for_actor(FeatureFlag::ORGANIZATIONS, user)
+
+    get organization_onboarding_path(locale: :de, as: user)
+
+    assert_redirected_to organization_onboarding_name_path(locale: :de)
   end
 
   test "localized page path works" do
