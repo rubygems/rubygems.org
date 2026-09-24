@@ -328,6 +328,12 @@ ja:
         dashboard: ダッシュボード
         settings: 設定
         edit_profile: プロフィールを編集
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: gemを検索...
         members: メンバー
       mfa_banner_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。[詳細はこちら](link

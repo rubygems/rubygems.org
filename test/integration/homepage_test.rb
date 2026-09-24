@@ -3,6 +3,22 @@
 require "test_helper"
 
 class HomepageTest < ActionDispatch::IntegrationTest
+  test "mobile menu buttons use translated accessible names" do
+    original_backend = I18n.backend
+    translations = I18n::Backend::Simple.new
+    translations.eager_load!
+    translations.store_translations(:en, layouts: { application: { header: { open_menu: "Open navigation", close_menu: "Close navigation" } } })
+    I18n.backend = translations
+
+    get root_path
+
+    assert_response :success
+    assert_select "button[data-action='dialog#open'][aria-label='Open navigation']", count: 1
+    assert_select "button[data-action='dialog#close'][aria-label='Close navigation']", count: 1
+  ensure
+    I18n.backend = original_backend
+  end
+
   test "header search is hidden only on the homepage" do
     get root_path
 

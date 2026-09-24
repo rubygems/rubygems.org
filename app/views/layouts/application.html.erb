@@ -29,14 +29,9 @@
     <header class="bg-white dark:bg-black">
       <!-- Header Nav -->
       <div class="py-4 px-8 border-b border-neutral-400 dark:border-neutral-800">
-        <div class="flex flex-wrap justify-between max-w-screen-xl mx-auto">
-          <!-- Menu button, Logo, desktop nav, mobile nav dialog -->
-          <div class="flex flex-row items-center xl:mr-auto" data-controller="dialog">
-            <!-- Mobile Menu Button -->
-            <button data-action="dialog#open" data-dialog-target="button" aria-label="Open menu" class="px-2 py-1 w-10 h-9 mr-3 items-center rounded text-white bg-orange hover:bg-orange-600 dark:bg-orange-600 dark:hover:bg-orange-700 lg:hidden focus:outline-none">
-              <%= icon_tag "menu" %>
-            </button>
-
+        <div class="flex flex-wrap justify-between max-w-screen-xl mx-auto" data-controller="dialog">
+          <!-- Logo, desktop nav, mobile nav dialog -->
+          <div class="flex flex-row items-center xl:mr-auto">
             <!-- Logo -->
             <%= link_to(root_path, title: "RubyGems", class: "flex h-8 items-center text-orange text-b1") do %>
               <%= icon_tag "logo", size: 8, class: "w-7 h-7 lg:w-8 lg:h-8", aria: { label: "RubyGems Home" } %>
@@ -67,44 +62,37 @@
               <%# Locale switcher temporarily disabled to improve cacheability and mitigate bot abuse %>
             </nav>
 
-            <!-- Mobile Left Navigation Menu -->
+            <!-- Mobile Right Navigation Menu -->
             <dialog
               data-dialog-target="dialog" data-action="click->dialog#backdropClose"
-              role="dialog" aria-modal="true"
-              class="fixed left-0 top-0 h-full w-screen max-h-full max-w-screen bg-white bg-opacity-20 z-50 overflow-hidden">
-              <div class="h-full w-72 bg-white dark:bg-black overflow-y-auto border-r border-neutral-400 dark:border-neutral-800 shadow-[5px_0px_9px_3px_rgba(0,0,0,0.10)]">
+              role="dialog" aria-modal="true" aria-label="<%= t('layouts.application.header.main_navigation') %>"
+              class="fixed inset-0 m-0 p-0 h-full w-screen max-h-full max-w-screen bg-white bg-opacity-20 z-50 overflow-hidden">
+              <div class="ml-auto h-full w-72 max-w-full bg-white dark:bg-black overflow-y-auto border-l border-neutral-400 dark:border-neutral-800 shadow-[-5px_0px_9px_3px_rgba(0,0,0,0.10)]">
                 <!-- Mobile nav header -->
-                <div class="flex flex-row items-center px-8 py-4 border-b border-neutral-400 dark:border-neutral-800">
+                <div class="flex items-center justify-end px-8 py-4 border-b border-neutral-400 dark:border-neutral-800">
                   <!-- Close Menu Button -->
-                  <button data-action="dialog#close" aria-label="Close menu" class="px-2 py-1 w-10 h-9 mr-3 rounded text-white bg-orange dark:bg-orange-600 hover:bg-orange-700 dark:hover:bg-orange-700 focus:outline-none items-center">
-                    <%= icon_tag "close" %>
+                  <button data-action="dialog#close" aria-label="<%= t('layouts.application.header.close_menu') %>" class="flex w-9 h-9 shrink-0 items-center justify-center rounded-lg border border-neutral-400 dark:border-neutral-700 text-neutral-900 dark:text-white bg-white dark:bg-black hover:bg-neutral-100 dark:hover:bg-neutral-800 active:bg-neutral-200 dark:active:bg-neutral-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">
+                    <%= icon_tag "close", class: "w-6 h-6", aria: { hidden: true } %>
                   </button>
-                  <!-- Logo -->
-                  <%= link_to(root_path, title: "RubyGems", class: "flex h-8 items-center text-orange text-b1") do %>
-                    <%= icon_tag "logo", size: 8, class: "w-7 h-7 lg:w-8 lg:h-8", aria: { label: "RubyGems Home" } %>
-                    <span class="ml-1 text-h5 lg:text-h4 text-orange">RubyGems</span>
-                  <% end %>
                 </div>
 
                 <!-- Mobile nav links -->
-                <nav class="flex flex-col py-6 text-left text-b2 text-neutral-900 dark:text-white">
-                  <%= link_to t("layouts.application.footer.blog"), "https://blog.rubygems.org", class: "px-8 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
-                  <%= link_to t("layouts.application.footer.statistics"), stats_path, class: "px-8 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
-                  <%= link_to t("layouts.application.footer.docs"), "https://guides.rubygems.org/command-reference/#gem-install", class: "px-8 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                <nav class="flex flex-col py-3 text-left text-[18px] leading-6 text-neutral-900 dark:text-white">
+                  <%= link_to t("layouts.application.footer.blog"), "https://blog.rubygems.org", class: "px-6 py-2 font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                  <%= link_to t("layouts.application.footer.statistics"), stats_path, class: "px-6 py-2 font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                  <%= link_to t("layouts.application.footer.docs"), "https://guides.rubygems.org/command-reference/#gem-install", class: "px-6 py-2 font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
 
-                  <!-- About links expand -->
-                  <div data-controller="reveal" data-reveal-toggle-class="rotate-180" class="flex flex-col">
-                    <button class="flex items-center px-8 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none justify-between" data-action="reveal#toggle" data-reveal-target="button">
-                      <span><%= t("layouts.application.footer.about") %></span>
-                      <%= icon_tag "keyboard-arrow-down", class:"transition-transform transform", data: { reveal_target: "toggle" } %>
-                    </button>
-
-                    <%= link_to t('title'), page_path("about"), data: { reveal_target: "item" }, class: "hidden px-16 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
-                    <%= link_to t('layouts.application.footer.status'), "https://status.rubygems.org", data: { reveal_target: "item" }, class: "hidden px-16 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
-                    <%= link_to t('layouts.application.footer.data'), page_path("data"), data: { reveal_target: "item" }, class: "hidden px-16 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
-                    <%= link_to t('layouts.application.footer.security'), page_path("security"), data: { reveal_target: "item" }, class: "hidden px-16 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
-                    <%= mail_to "support@rubygems.org", t('layouts.application.footer.help'), data: { reveal_target: "item" }, class: "mb-4 hidden px-16 py-3 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
-                  </div>
+                  <!-- About hierarchy -->
+                  <section aria-labelledby="mobile-about-heading">
+                    <h2 id="mobile-about-heading" class="px-6 pt-3.5 pb-2 font-semibold"><%= t("layouts.application.footer.about") %></h2>
+                    <ul class="text-b3">
+                      <li><%= link_to t('title'), page_path("about"), class: "block px-6 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %></li>
+                      <li><%= link_to t('layouts.application.footer.status'), "https://status.rubygems.org", class: "block px-6 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %></li>
+                      <li><%= link_to t('layouts.application.footer.data'), page_path("data"), class: "block px-6 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %></li>
+                      <li><%= link_to t('layouts.application.footer.security'), page_path("security"), class: "block px-6 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %></li>
+                      <li><%= mail_to "support@rubygems.org", t('layouts.application.footer.help'), class: "block px-6 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %></li>
+                    </ul>
+                  </section>
 
                   <%# Mobile locale switcher temporarily disabled to improve cacheability and mitigate bot abuse %>
                 </nav>
@@ -112,7 +100,7 @@
             </dialog>
           </div>
 
-          <!-- Search button and Profile -->
+          <!-- Search button, Profile, and mobile menu button -->
           <div class="ml-auto flex flex-row items-center xl:ml-0 xl:order-3">
             <!-- Search button -->
             <% if show_header_search? %>
@@ -123,6 +111,11 @@
 
             <!-- Profile -->
             <%= render "layouts/session" %>
+
+            <!-- Mobile Menu Button -->
+            <button data-action="dialog#open" data-dialog-target="button" aria-label="<%= t('layouts.application.header.open_menu') %>" class="flex w-9 h-9 ml-3 shrink-0 items-center justify-center rounded-lg border border-neutral-400 dark:border-neutral-700 text-neutral-900 dark:text-white bg-white dark:bg-black hover:bg-neutral-100 dark:hover:bg-neutral-800 active:bg-neutral-200 dark:active:bg-neutral-700 lg:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">
+              <%= icon_tag "menu", class: "w-6 h-6", aria: { hidden: true } %>
+            </button>
           </div>
 
           <!-- Search Bar -->

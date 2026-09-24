@@ -26,8 +26,8 @@ export default class extends Dialog {
   }
 
   close(e) {
+    e?.preventDefault();
     super.close();
-    e.preventDefault();
     this.setAriaExpanded("false");
   }
 
