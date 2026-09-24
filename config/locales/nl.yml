@@ -152,6 +152,7 @@ nl:
             rubygem_name:
               unavailable:
               reserved:
+              reserved_prefix:
     models:
       user:
       api_key:

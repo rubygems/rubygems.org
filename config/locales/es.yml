@@ -160,6 +160,7 @@ es:
             rubygem_name:
               unavailable:
               reserved:
+              reserved_prefix:
     models:
       user: Usuario
       api_key:
