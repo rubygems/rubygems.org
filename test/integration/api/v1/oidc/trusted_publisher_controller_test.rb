@@ -600,6 +600,33 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       assert_equal api_key.owner, trusted_publisher
     end
 
+    should "verify SHA-based GitLab configuration URIs with branch and environment restrictions" do
+      @gitlab_claims["environment"] = "production"
+      @gitlab_claims["ci_config_ref_uri"] = "gitlab.com/my-group/my-project//.gitlab-ci.yml@#{@gitlab_claims['sha']}"
+      trusted_publisher = create(:oidc_trusted_publisher_gitlab,
+        project_path: "my-group/my-project",
+        ci_config_path: ".gitlab-ci.yml",
+        ref_type: "branch",
+        branch_name: "feature-branch-1",
+        environment: "production")
+
+      assert_difference "ApiKey.count", 1 do
+        post api_v1_oidc_trusted_publisher_exchange_token_path,
+          params: { jwt: @gitlab_jwt.call.to_s }
+      end
+
+      assert_response :created
+      assert_equal trusted_publisher, trusted_publisher.api_keys.sole.owner
+
+      @gitlab_claims["ci_config_ref_uri"] = "gitlab.com/my-group/my-project//.gitlab-ci.yml@wrong-sha"
+      assert_no_difference "ApiKey.count" do
+        post api_v1_oidc_trusted_publisher_exchange_token_path,
+          params: { jwt: @gitlab_jwt.call.to_s }
+      end
+
+      assert_response :not_found
+    end
+
     should "return not found when GitLab environment does not match" do
       @gitlab_claims["environment"] = "staging"
 

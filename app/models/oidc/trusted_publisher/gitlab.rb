@@ -92,6 +92,9 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
     refs = [jwt[:ref_path], jwt[:sha]].compact_blank
     raise OIDC::AccessPolicy::AccessError, "ref and sha are both missing" if refs.empty?
 
+    # Exclude statements that cannot match this token to stay within policy complexity limits.
+    refs = refs.uniq.select { |ref| ci_config_ref_uri_condition(ref).value == jwt[:ci_config_ref_uri] }
+
     OIDC::AccessPolicy.new(
       statements: refs.map do |ref|
         OIDC::AccessPolicy::Statement.new(
@@ -112,6 +115,10 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
       (ref_type? ? "[#{ref_type}]" : nil),
       (branch_name? ? "[#{branch_name}]" : nil)
     ].compact.join(" ")
+  end
+
+  def log_actor_attributes
+    { gid: to_gid.to_s, type: "trusted_publisher", repository: project_path, workflow: ci_config_path, project_id: }
   end
 
   def owns_gem?(rubygem) = rubygem_trusted_publishers.exists?(rubygem: rubygem)
