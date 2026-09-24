@@ -71,7 +71,7 @@
                 <!-- Mobile nav header -->
                 <div class="flex items-center justify-end px-8 py-4 border-b border-neutral-400 dark:border-neutral-800">
                   <!-- Close Menu Button -->
-                  <button data-action="dialog#close" aria-label="Close menu" class="flex w-9 h-9 shrink-0 items-center justify-center rounded-lg border border-neutral-400 dark:border-neutral-700 text-neutral-900 dark:text-white bg-white dark:bg-black hover:bg-neutral-100 dark:hover:bg-neutral-800 active:bg-neutral-200 dark:active:bg-neutral-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">
+                  <button data-action="dialog#close" aria-label="<%= t('layouts.application.header.close_menu') %>" class="flex w-9 h-9 shrink-0 items-center justify-center rounded-lg border border-neutral-400 dark:border-neutral-700 text-neutral-900 dark:text-white bg-white dark:bg-black hover:bg-neutral-100 dark:hover:bg-neutral-800 active:bg-neutral-200 dark:active:bg-neutral-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">
                     <%= icon_tag "close", class: "w-6 h-6", aria: { hidden: true } %>
                   </button>
                 </div>
@@ -113,7 +113,7 @@
             <%= render "layouts/session" %>
 
             <!-- Mobile Menu Button -->
-            <button data-action="dialog#open" data-dialog-target="button" aria-label="Open menu" class="flex w-9 h-9 ml-3 shrink-0 items-center justify-center rounded-lg border border-neutral-400 dark:border-neutral-700 text-neutral-900 dark:text-white bg-white dark:bg-black hover:bg-neutral-100 dark:hover:bg-neutral-800 active:bg-neutral-200 dark:active:bg-neutral-700 lg:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">
+            <button data-action="dialog#open" data-dialog-target="button" aria-label="<%= t('layouts.application.header.open_menu') %>" class="flex w-9 h-9 ml-3 shrink-0 items-center justify-center rounded-lg border border-neutral-400 dark:border-neutral-700 text-neutral-900 dark:text-white bg-white dark:bg-black hover:bg-neutral-100 dark:hover:bg-neutral-800 active:bg-neutral-200 dark:active:bg-neutral-700 lg:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">
               <%= icon_tag "menu", class: "w-6 h-6", aria: { hidden: true } %>
             </button>
           </div>

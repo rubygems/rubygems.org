@@ -340,6 +340,8 @@ fr:
         close_account_menu:
         signed_in_as:
         main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: Recherche de Gems&hellip;
         members:
       mfa_banner_html:

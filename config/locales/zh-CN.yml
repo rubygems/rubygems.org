@@ -332,6 +332,8 @@ zh-CN:
         close_account_menu:
         signed_in_as:
         main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: 搜索 Gem &hellip;&hellip;
         members:
       mfa_banner_html:
