@@ -104,7 +104,7 @@
           <!-- Search button, Profile, and mobile menu button -->
           <div class="ml-auto flex flex-row items-center xl:ml-0 xl:order-3">
             <!-- Search button -->
-            <% if show_header_search? %>
+            <% unless home_page? %>
               <button type="button" data-action="reveal-search#toggle:stop" data-reveal-search-target="button toggle" aria-label="Open search" aria-controls="header-search" aria-expanded="false" class="flex xl:hidden h-9 w-9 box-border text-neutral-800 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-400 items-center justify-center rounded border-neutral-300 dark:border-neutral-700">
                 <%= icon_tag "search", class: "h-6 w-6" %>
               </button>
@@ -139,7 +139,7 @@
           </div>
 
           <!-- Search Bar -->
-          <% if show_header_search? %>
+          <% unless home_page? %>
             <div id="header-search" data-reveal-search-target="item" class="hidden pt-4 w-full items-center xl:flex xl:pt-0 xl:w-72 xl:order-2">
               <%= form_tag(search_path, method: :get, data: { controller: "autocomplete", autocomplete_selected_class: "bg-neutral-100 dark:bg-neutral-800", reveal_target: "item" }, class: "relative w-full items-center", role: "search") do %>
                 <%= rubygem_search_field(data: { reveal_search_target: "input" }, class: "w-full md h-9 pr-12 bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded border-neutral-300 dark:border-neutral-700 box-border outline-none focus:ring-0 focus:border-neutral-500") %>

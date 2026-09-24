@@ -8,8 +8,8 @@ module ApplicationHelper
     @title.present? ? "#{@title} | #{combo}" : combo
   end
 
-  def show_header_search?
-    controller_path != "home" || action_name != "index"
+  def home_page?
+    controller_path == "home" && action_name == "index"
   end
 
   def atom_feed_link(title, url)
@@ -67,10 +67,6 @@ module ApplicationHelper
 
   def active_status(path)
     "is-active" if request.path_info == path
-  end
-
-  def home_page?
-    current_page?(root_path)
   end
 
   # replacement for Kaminari::ActionViewExtension#paginate
