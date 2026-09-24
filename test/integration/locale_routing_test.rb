@@ -168,11 +168,15 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     refute page.has_css?(%(link[rel="alternate"][hreflang]), visible: false)
   end
 
-  test "the footer language switcher is rendered" do
+  test "the header language switcher is rendered" do
     get "/"
 
     assert_response :success
-    assert page.has_link?(I18n.t(:locale_name, locale: :de), href: "/de")
+    assert page.has_css?(%(button[aria-label="#{I18n.t('layouts.application.header.language')}"]))
+    language_menu = %(nav[aria-label="#{I18n.t('layouts.application.header.language')}"])
+
+    assert page.has_css?("#{language_menu} a[href='/de']", text: I18n.t(:locale_name, locale: :de), visible: false)
+    refute page.has_css?(%(footer nav[aria-label="Languages"]))
   end
 
   test "the language switcher keeps the current path when changing locale" do
