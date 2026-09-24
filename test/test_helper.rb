@@ -336,7 +336,7 @@ end
 
 class ActionView::TestCase
   setup do
-    controller.define_singleton_method(:default_url_options) { { path_params: { locale: nil } } }
+    controller.default_url_options = { path_params: { locale: nil } }
   end
 end
 
@@ -467,7 +467,7 @@ class ComponentTest < ActiveSupport::TestCase
 
   def controller
     @controller ||= ActionView::TestCase::TestController.new.tap do |controller|
-      controller.define_singleton_method(:default_url_options) { { path_params: { locale: nil } } }
+      controller.default_url_options = { path_params: { locale: nil } }
     end
   end
 
