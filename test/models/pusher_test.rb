@@ -756,6 +756,35 @@ class PusherTest < ActiveSupport::TestCase
       assert_predicate rubygem.ownerships.where(user: @user), :exists?
     end
 
+    should "keep personal ownership when republishing a protected yanked gem for an organization the owner cannot add gems to" do
+      rubygem = create(:rubygem, name: "protected-outsider-gem", owners: [@user])
+      create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+      rubygem.update_columns(created_at: 60.days.ago)
+      outsider_org = create(:organization, handle: "outsider-org")
+      cutter = push_gem_named(rubygem.name, version: "2.0.0", organization_handle: outsider_org.handle)
+
+      assert cutter.process
+      rubygem.reload
+
+      assert_nil rubygem.organization
+      assert_predicate rubygem.ownerships.where(user: @user), :exists?
+      assert rubygem.versions.indexed.find_by(number: "2.0.0")
+    end
+
+    should "keep personal ownership when republishing a protected yanked gem for an organization the owner is admin" do
+      rubygem = create(:rubygem, name: "protected-admin-gem", owners: [@user])
+      create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+      rubygem.update_columns(created_at: 60.days.ago)
+      cutter = push_gem_named(rubygem.name, version: "2.0.0", organization_handle: @organization.handle)
+
+      assert cutter.process
+      rubygem.reload
+
+      assert_nil rubygem.organization
+      assert_predicate rubygem.ownerships.where(user: @user), :exists?
+      assert rubygem.versions.indexed.find_by(number: "2.0.0")
+    end
+
     should "ignore organization metadata on an existing organization-owned gem" do
       rubygem = create(:rubygem, name: "already-org-gem", number: "1.0.0")
       @organization.rubygems << rubygem
