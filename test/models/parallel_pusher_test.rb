@@ -4,6 +4,8 @@ require "test_helper"
 require "concurrent/atomics"
 
 class ParallelPusherTest < ActiveSupport::TestCase
+  LOCK_WAIT_TIMEOUT = 5
+
   self.use_transactional_tests = false
 
   setup do
@@ -142,7 +144,65 @@ class ParallelPusherTest < ActiveSupport::TestCase
     end
   end
 
+  context "when another transaction holds the per-gem advisory lock" do
+    setup do
+      @rubygem = create(:rubygem, name: track_gem("hola-lock-order"))
+      @older = create(:version, rubygem: @rubygem, number: "1.0.0")
+      @newer = create(:version, rubygem: @rubygem, number: "2.0.0")
+    end
+
+    should "wait for the lock before writing the version row" do
+      pid_queue = Queue.new
+      writer = nil
+
+      Rubygem.transaction do
+        Rubygem.advisory_xact_lock!("rubygem_version_reorder", @rubygem.id)
+
+        writer = Thread.new do
+          ActiveRecord::Base.connection_pool.with_connection do |connection|
+            pid_queue << connection.select_value("SELECT pg_backend_pid()")
+            Version.find(@newer.id).update!(indexed: false)
+          end
+        end
+
+        writer_pid = pid_queue.pop(timeout: LOCK_WAIT_TIMEOUT)
+
+        refute_nil writer_pid, "writer thread never started"
+        assert waited_for_advisory_lock?(writer_pid), "writer never waited on the per-gem advisory lock"
+
+        # Raises ActiveRecord::LockWaitTimeout if the writer already holds the row lock.
+        assert_equal [@newer.id], Version.where(id: @newer.id).lock("FOR UPDATE NOWAIT").pluck(:id)
+      end
+
+      refute_nil writer.join(LOCK_WAIT_TIMEOUT), "writer did not finish after the advisory lock was released"
+      writer.value
+
+      refute_predicate @newer.reload, :indexed?
+      assert_predicate @older.reload, :latest?
+      refute_predicate @newer, :latest?
+    ensure
+      writer&.join(LOCK_WAIT_TIMEOUT)
+    end
+  end
+
   private
+
+  def waited_for_advisory_lock?(pid)
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + LOCK_WAIT_TIMEOUT
+    until Process.clock_gettime(Process::CLOCK_MONOTONIC) > deadline
+      waiting = ActiveRecord::Base.uncached do
+        ActiveRecord::Base.connection.select_value(
+          ActiveRecord::Base.sanitize_sql_array(
+            ["SELECT EXISTS (SELECT 1 FROM pg_locks WHERE locktype = 'advisory' AND NOT granted AND pid = ?)", pid]
+          )
+        )
+      end
+      return true if waiting
+
+      sleep 0.01
+    end
+    false
+  end
 
   def track_gem(name)
     unique_name = "#{name}-#{SecureRandom.hex(6)}"
