@@ -20,8 +20,9 @@ export default class extends Controller {
         return;
     } else if (e.type === "focusout") {
       if (
+        e.relatedTarget === null ||
         this.element.contains(e.relatedTarget) ||
-        this.element.matches(":hover")
+        (!this.hasButtonTarget && this.element.matches(":hover"))
       )
         return;
     } else if (this.element.contains(e.target)) {
@@ -30,6 +31,15 @@ export default class extends Controller {
 
     this.menuTarget.classList.add("hidden");
     this.setExpanded(false);
+  }
+
+  close(e) {
+    if (this.menuTarget.classList.contains("hidden")) return;
+
+    e.preventDefault();
+    this.menuTarget.classList.add("hidden");
+    this.setExpanded(false);
+    if (this.hasButtonTarget) this.buttonTarget.focus();
   }
 
   toggle(e) {
