@@ -328,6 +328,10 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
         assert_includes response.body, "Please close this browser."
       end
 
+      should "tell search engines not to index the session-dependent page" do
+        assert_noindex_without_search_engine_links
+      end
+
       should "clear show_webauthn_status" do
         refute @controller.session[:show_webauthn_status]
       end
@@ -360,6 +364,10 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       should "set the title and body" do
         assert_includes response.body, "Error - Verification Failed"
         assert_includes response.body, "Please close this browser and try again."
+      end
+
+      should "tell search engines not to index the session-dependent page" do
+        assert_noindex_without_search_engine_links
       end
 
       should "clear show_webauthn_status" do
