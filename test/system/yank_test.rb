@@ -60,6 +60,7 @@ class YankTest < ApplicationSystemTestCase
   end
 
   test "yanked gem entirely then someone else pushes a new version" do
+    enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS)
     create(:version, rubygem: @rubygem, number: "0.0.0")
 
     visit rubygem_path(@rubygem.slug)

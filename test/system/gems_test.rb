@@ -98,6 +98,7 @@ class GemsSystemTest < ApplicationSystemTestCase
   end
 
   test "shows a prior owner in the owners list" do
+    enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS)
     former_owner = create(:user, handle: "former_owner")
     create(:ownership, rubygem: @rubygem, user: former_owner).destroy
 
@@ -107,7 +108,18 @@ class GemsSystemTest < ApplicationSystemTestCase
     assert_text(/until/i)
   end
 
+  test "does not show a prior owner when the historical ownerships feature is disabled" do
+    former_owner = create(:user, handle: "former_owner")
+    create(:ownership, rubygem: @rubygem, user: former_owner).destroy
+
+    visit rubygem_path(@rubygem.slug)
+
+    assert page.has_no_selector?("a.gem__prior-owner")
+    assert page.has_no_text?("former_owner")
+  end
+
   test "does not style a current owner as a prior owner" do
+    enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS)
     current_owner = create(:user, handle: "current_owner")
     former_owner = create(:user, handle: "former_owner")
     create(:ownership, rubygem: @rubygem, user: current_owner)
@@ -121,6 +133,7 @@ class GemsSystemTest < ApplicationSystemTestCase
   end
 
   test "does not show a discarded prior owner" do
+    enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS)
     visible_owner = create(:user, handle: "visible_owner")
     discarded_owner = create(:user, handle: "discarded_owner")
     create(:ownership, rubygem: @rubygem, user: visible_owner).destroy

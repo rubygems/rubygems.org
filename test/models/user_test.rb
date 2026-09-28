@@ -875,6 +875,7 @@ class UserTest < ActiveSupport::TestCase
 
   context "rubygems" do
     setup do
+      enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS)
       @user     = create(:user)
       @rubygems = [2000, 1000, 3000].map do |download|
         create(:rubygem, downloads: download).tap do |rubygem|
@@ -955,6 +956,34 @@ class UserTest < ActiveSupport::TestCase
       create(:ownership, user: @user, rubygem: former_rubygem).destroy
 
       assert_equal 3, @user.total_rubygems_count
+    end
+
+    context "when the historical ownerships feature is disabled" do
+      setup do
+        @former_rubygem = create(:rubygem, downloads: 500)
+        create(:version, rubygem: @former_rubygem)
+        create(:ownership, user: @user, rubygem: @former_rubygem).destroy
+      end
+
+      should "only count currently-owned gems" do
+        with_feature(FeatureFlag::HISTORICAL_OWNERSHIPS, enabled: false) do
+          assert_equal 6000, @user.total_downloads_count
+          assert_equal 3, @user.total_rubygems_count
+        end
+      end
+
+      should "only include prior gems for viewers the feature is enabled for" do
+        viewer = create(:user)
+
+        with_feature(FeatureFlag::HISTORICAL_OWNERSHIPS, enabled: false) do
+          enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS, actor: viewer)
+
+          assert_equal 6500, @user.total_downloads_count(viewer)
+          assert_equal 4, @user.total_rubygems_count(viewer)
+          assert_equal 6000, @user.total_downloads_count(create(:user))
+          assert_equal 3, @user.total_rubygems_count
+        end
+      end
     end
   end
 

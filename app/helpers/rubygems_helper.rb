@@ -184,8 +184,8 @@ module RubygemsHelper
     rubygem.versions_count > 5 || rubygem.yanked_versions?
   end
 
-  def display_owners?(rubygem)
-    rubygem.owned_by_organization? || rubygem.owners.present? || prior_owners_of(rubygem).any?
+  def display_owners?(rubygem, include_prior: true)
+    rubygem.owned_by_organization? || rubygem.owners.present? || (include_prior && prior_owners_of(rubygem).any?)
   end
 
   def prior_owners_of(rubygem)

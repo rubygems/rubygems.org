@@ -9,10 +9,11 @@
 
 <%= render CardComponent.new do |c| %>
   <%= c.head do %>
-    <%= c.title t(".gems"), icon: "gems", count: @user.total_rubygems_count %>
+    <%= c.title t(".gems"), icon: "gems", count: @user.total_rubygems_count(current_user) %>
   <% end %>
 
-  <% items = rubygems_with_history_for(@rubygems, prior_rubygems_of(@user)) %>
+  <% prior_rubygems = historical_ownerships_enabled?(current_user) ? prior_rubygems_of(@user) : [] %>
+  <% items = rubygems_with_history_for(@rubygems, prior_rubygems) %>
   <% if items.empty? %>
     <%= prose do %>
       <i><%= t(".no_gems") %></i>

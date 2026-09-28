@@ -97,14 +97,61 @@ class ProfilesControllerTest < ActionController::TestCase
         @former_rubygem = create(:rubygem, name: "former_rubygem")
         create(:version, rubygem: @former_rubygem)
         create(:ownership, rubygem: @former_rubygem, user: @user).destroy
-
-        get :show, params: { id: @user.handle }
       end
 
-      should respond_with :success
+      context "with the historical ownerships feature enabled" do
+        setup do
+          enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS)
+          get :show, params: { id: @user.handle }
+        end
 
-      should "display the prior gem" do
-        assert page.has_content?(@former_rubygem.name)
+        should respond_with :success
+
+        should "display the prior gem" do
+          assert page.has_content?(@former_rubygem.name)
+        end
+
+        should "count the prior gem in the profile totals" do
+          assert page.has_selector?("dd", exact_text: "1")
+        end
+      end
+
+      context "with the historical ownerships feature disabled" do
+        setup do
+          get :show, params: { id: @user.handle }
+        end
+
+        should respond_with :success
+
+        should "not display the prior gem" do
+          refute page.has_content?(@former_rubygem.name)
+        end
+
+        should "not count the prior gem in the profile totals" do
+          refute page.has_selector?("dd", exact_text: "1")
+        end
+      end
+
+      context "with the feature enabled only for another user" do
+        setup do
+          enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS, actor: create(:user))
+          get :show, params: { id: @user.handle }
+        end
+
+        should "not display the prior gem" do
+          refute page.has_content?(@former_rubygem.name)
+        end
+      end
+
+      context "with the feature enabled for the viewing user" do
+        setup do
+          enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS, actor: @user)
+          get :show, params: { id: @user.handle }
+        end
+
+        should "display the prior gem" do
+          assert page.has_content?(@former_rubygem.name)
+        end
       end
     end
 
@@ -112,6 +159,7 @@ class ProfilesControllerTest < ActionController::TestCase
       setup do
         @former_rubygem = create(:rubygem, name: "unpublished_former_rubygem")
         create(:ownership, rubygem: @former_rubygem, user: @user).destroy
+        enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS)
 
         get :show, params: { id: @user.handle }
       end

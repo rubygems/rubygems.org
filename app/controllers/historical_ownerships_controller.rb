@@ -4,6 +4,7 @@ class HistoricalOwnershipsController < ApplicationController
   before_action :redirect_to_signin, unless: :signed_in?
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?
+  before_action :render_not_found, unless: :historical_ownerships_enabled?
 
   before_action :find_historical_ownership, only: :update
 
@@ -24,6 +25,10 @@ class HistoricalOwnershipsController < ApplicationController
   end
 
   private
+
+  def historical_ownerships_enabled?
+    FeatureFlag.enabled?(FeatureFlag::HISTORICAL_OWNERSHIPS, current_user)
+  end
 
   def find_historical_ownership
     @historical_ownership = current_user.historical_ownerships.find(params.expect(:id))

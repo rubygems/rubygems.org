@@ -1,5 +1,5 @@
 <% heading_class = "text-b4 font-bold uppercase tracking-wide text-neutral-800 dark:text-neutral-200" %>
-<% prior_owners = prior_owners_of(rubygem) %>
+<% prior_owners = historical_ownerships_enabled?(current_user) ? prior_owners_of(rubygem) : [] %>
 <% if rubygem.owned_by_organization? %>
   <div class="flex flex-col gap-2">
     <h3 class="<%= heading_class %>"><%= t "rubygems.release_info.managed_by" %></h3>

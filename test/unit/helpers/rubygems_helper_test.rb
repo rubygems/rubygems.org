@@ -327,6 +327,13 @@ class RubygemsHelperTest < ActionView::TestCase
       assert display_owners?(rubygem)
     end
 
+    should "return false for a gem with only a prior owner when prior owners are excluded" do
+      rubygem = create(:rubygem)
+      create(:ownership, rubygem: rubygem, user: create(:user)).destroy
+
+      refute display_owners?(rubygem, include_prior: false)
+    end
+
     should "return true when the gem has a current owner" do
       rubygem = create(:rubygem, owners: [create(:user)])
 

@@ -219,12 +219,12 @@ class User < ApplicationRecord
     self.api_key = SecureRandom.hex(16)
   end
 
-  def total_downloads_count
-    Rubygem.joins(:gem_download).where(id: public_rubygem_ids).sum("gem_downloads.count")
+  def total_downloads_count(viewer = nil)
+    Rubygem.joins(:gem_download).where(id: counted_rubygem_ids(viewer)).sum("gem_downloads.count")
   end
 
-  def total_rubygems_count
-    Rubygem.with_versions.where(id: public_rubygem_ids).count
+  def total_rubygems_count(viewer = nil)
+    Rubygem.with_versions.where(id: counted_rubygem_ids(viewer)).count
   end
 
   def confirm_email!
@@ -333,8 +333,11 @@ class User < ApplicationRecord
     @keep_gems_published == true
   end
 
-  def public_rubygem_ids
-    (ownerships.pluck(:rubygem_id) + historical_ownerships.not_private.pluck(:rubygem_id)).uniq
+  def counted_rubygem_ids(viewer)
+    current_ids = ownerships.pluck(:rubygem_id)
+    return current_ids unless FeatureFlag.enabled?(FeatureFlag::HISTORICAL_OWNERSHIPS, viewer)
+
+    (current_ids + historical_ownerships.not_private.pluck(:rubygem_id)).uniq
   end
 
   def update_email

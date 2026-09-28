@@ -36,6 +36,7 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
   end
 
   test "removing an owner" do
+    enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS)
     create(:ownership, user: @other_user, rubygem: @rubygem)
     delete api_v1_rubygem_owners_path(@rubygem.slug),
       params: { email: @other_user.email },
@@ -49,6 +50,7 @@ class Api::V1::OwnerTest < ActionDispatch::IntegrationTest
   end
 
   test "transferring ownership" do
+    enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS)
     create(:ownership, user: @other_user, rubygem: @rubygem)
 
     delete api_v1_rubygem_owners_path(@rubygem.slug),

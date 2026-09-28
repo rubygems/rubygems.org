@@ -21,6 +21,7 @@ class HistoricalOwnershipsControllerTest < ActionController::TestCase
     setup do
       @user = create(:user)
       sign_in_as(@user)
+      enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS)
     end
 
     context "on GET to index" do
@@ -73,5 +74,64 @@ class HistoricalOwnershipsControllerTest < ActionController::TestCase
         refute_predicate @historical_ownership.reload, :private?
       end
     end
+  end
+  context "when logged in with the historical ownerships feature disabled" do
+    setup do
+      @user = create(:user)
+      sign_in_as(@user)
+      @historical_ownership = create(:historical_ownership, user: @user, private_at: nil)
+    end
+
+    context "on GET to index" do
+      setup { get :index }
+
+      should respond_with :not_found
+    end
+
+    context "on PATCH to update" do
+      setup { patch :update, params: { id: @historical_ownership.id, private: true } }
+
+      should respond_with :not_found
+
+      should "not change the ownership's privacy" do
+        refute_predicate @historical_ownership.reload, :private?
+      end
+    end
+  end
+
+  context "when logged in with the feature enabled only for another user" do
+    setup do
+      @user = create(:user)
+      sign_in_as(@user)
+      enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS, actor: create(:user))
+      @historical_ownership = create(:historical_ownership, user: @user, private_at: nil)
+    end
+
+    context "on GET to index" do
+      setup { get :index }
+
+      should respond_with :not_found
+    end
+
+    context "on PATCH to update" do
+      setup { patch :update, params: { id: @historical_ownership.id, private: true } }
+
+      should respond_with :not_found
+
+      should "not change the ownership's privacy" do
+        refute_predicate @historical_ownership.reload, :private?
+      end
+    end
+  end
+
+  context "when logged in with the feature enabled for the user" do
+    setup do
+      @user = create(:user)
+      sign_in_as(@user)
+      enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS, actor: @user)
+      get :index
+    end
+
+    should respond_with :success
   end
 end

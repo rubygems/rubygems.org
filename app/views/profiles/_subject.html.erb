@@ -43,10 +43,10 @@
 <dl class="flex lg:flex-col gap-8 lg:gap-4">
   <div>
     <dt class="text-b4 font-bold uppercase tracking-wide text-neutral-800 dark:text-neutral-200"><%= t("stats.index.total_gems") %></dt>
-    <dd class="text-h4 font-semibold text-neutral-900 dark:text-white"><%= number_with_delimiter(user.total_rubygems_count) %></dd>
+    <dd class="text-h4 font-semibold text-neutral-900 dark:text-white"><%= number_with_delimiter(user.total_rubygems_count(current_user)) %></dd>
   </div>
   <div>
     <dt class="text-b4 font-bold uppercase tracking-wide text-neutral-800 dark:text-neutral-200"><%= t("total_downloads") %></dt>
-    <dd class="text-h4 font-semibold text-neutral-900 dark:text-white"><%= number_with_delimiter(user.total_downloads_count) %></dd>
+    <dd class="text-h4 font-semibold text-neutral-900 dark:text-white"><%= number_with_delimiter(user.total_downloads_count(current_user)) %></dd>
   </div>
 </dl>
