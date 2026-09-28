@@ -43,6 +43,43 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal I18n.t("email_confirmations.update.token_failure"), flash[:alert]
   end
 
+  test "confirmation succeeds with forgery protection and the rendered authenticity token" do
+    original_allow_forgery_protection = ActionController::Base.allow_forgery_protection
+    ActionController::Base.allow_forgery_protection = true
+
+    get update_email_confirmations_path(token: @token)
+    authenticity_token = css_select("form[action='#{confirm_email_confirmations_path}'] input[name=authenticity_token]").sole[:value]
+    post confirm_email_confirmations_path, params: { authenticity_token: }
+
+    assert_redirected_to sign_in_path
+    assert_predicate @user.reload, :email_confirmed?
+    assert_nil @user.email_confirmation_token_digest
+  ensure
+    ActionController::Base.allow_forgery_protection = original_allow_forgery_protection
+  end
+
+  test "opening another user's link does not sign out the current user until confirmation is submitted" do
+    other = create(:user)
+    post session_path(session: { who: other.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+    remember_token = other.reload.remember_token
+
+    get update_email_confirmations_path(token: @token)
+
+    assert_response :success
+    assert_equal remember_token, other.reload.remember_token
+    refute_predicate @user.reload, :email_confirmed?
+
+    get dashboard_path
+
+    assert_response :success
+
+    post confirm_email_confirmations_path
+
+    assert_redirected_to sign_in_path
+    refute_equal remember_token, other.reload.remember_token
+    assert_predicate @user.reload, :email_confirmed?
+  end
+
   test "a replacement token invalidates the previous link" do
     replacement = @user.issue_email_confirmation!(@user.email)
 

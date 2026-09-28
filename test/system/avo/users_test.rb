@@ -552,6 +552,8 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       avo_sign_in_as admin_user
 
       user = create(:user)
+      user.update!(unconfirmed_email: "stale-pending@rubygems-test.org")
+      setup_event_ids = user.events.ids
       user_attributes = user.attributes.with_indifferent_access
 
       visit avo.resources_user_path(user)
@@ -579,7 +581,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       user.reload
 
       audit = user.audits.sole
-      email_added_event = user.events.where(tag: Events::UserEvent::EMAIL_ADDED).sole
+      email_added_event = user.events.where.not(id: setup_event_ids).where(tag: Events::UserEvent::EMAIL_ADDED).sole
       email_sent_event = user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole
 
       page.assert_text audit.id
@@ -593,12 +595,14 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "changes" => {
                 "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
                 "email" => [user_attributes[:email], user.email],
-                "email_confirmed" => [true, false]
+                "email_confirmed" => [true, false],
+                "unconfirmed_email" => ["stale-pending@rubygems-test.org", nil]
               },
               "unchanged" => user.attributes
                 .except(
                   "email",
                   "email_confirmed",
+                  "unconfirmed_email",
                   "updated_at"
                 ).merge(
                   "email_confirmation_email" => user_attributes[:email_confirmation_email],

@@ -42,6 +42,15 @@ class MailerTest < ActionMailer::TestCase
       assert @user.valid_email_confirmation_token?(token)
       assert_in_delta 3.hours.from_now, @user.email_confirmation_token_expires_at, 2.seconds
     end
+
+    should "skip jobs enqueued without a target email" do
+      @user.update!(unconfirmed_email: "new@mailinator.com")
+
+      email = Mailer.email_reset(@user).deliver_now
+
+      assert_nil email
+      assert_nil @user.reload.email_confirmation_token_digest
+    end
   end
 
   private

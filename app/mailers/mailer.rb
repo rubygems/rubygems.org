@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 class Mailer < ApplicationMailer
-  def email_reset(user, target_email = user.unconfirmed_email, token: nil)
+  # target_email is captured at enqueue time. Jobs enqueued before it existed
+  # carry no target and are skipped rather than issuing a token for the
+  # user's current (possibly changed) address.
+  def email_reset(user, target_email = nil, token: nil)
     @user = user
-    @token = token || user.issue_email_confirmation!(target_email)
-    return unless @token
+    @token = token || (target_email && user.issue_email_confirmation!(target_email))
+    return log_skipped_confirmation unless @token
 
     mail to: target_email,
         subject: I18n.t("mailer.confirmation_subject", host: Gemcutter::HOST_DISPLAY,
@@ -20,20 +23,17 @@ class Mailer < ApplicationMailer
          subject: I18n.t("mailer.email_reset_update.subject", host: Gemcutter::HOST_DISPLAY)
   end
 
-  def email_confirmation(user, target_email = user.email, token: nil)
+  def email_confirmation(user, target_email = nil, token: nil)
     @user = user
-    @token = token || user.issue_email_confirmation!(target_email)
+    @token = token || (target_email && user.issue_email_confirmation!(target_email))
+    return log_skipped_confirmation unless @token
 
-    if @token
-      mail to: target_email,
-           subject: I18n.t("mailer.confirmation_subject", host: Gemcutter::HOST_DISPLAY,
-           default: "Please confirm your email address with #{Gemcutter::HOST_DISPLAY}") do |format|
-             format.html
-             format.text
-           end
-    else
-      Rails.logger.info("[mailer:email_confirmation] confirmation target changed. skipping sending mail for #{@user.handle}")
-    end
+    mail to: target_email,
+         subject: I18n.t("mailer.confirmation_subject", host: Gemcutter::HOST_DISPLAY,
+         default: "Please confirm your email address with #{Gemcutter::HOST_DISPLAY}") do |format|
+           format.html
+           format.text
+         end
   end
 
   def admin_manual(user, subject, body)
@@ -151,5 +151,11 @@ class Mailer < ApplicationMailer
     @enabled_scopes = enabled_scopes
     mail to: @user.email,
       subject: I18n.t("mail.api_key_revoked.subject", default: "One of your API keys was revoked on rubygems.org")
+  end
+
+  private
+
+  def log_skipped_confirmation
+    Rails.logger.info("[mailer:#{action_name}] confirmation target missing or changed. skipping sending mail for #{@user.handle}")
   end
 end

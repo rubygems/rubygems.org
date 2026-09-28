@@ -11,11 +11,11 @@ require_relative "../config/environment"
 from_user = User.find_by_email!(from_email)
 from_user.email = to_email
 from_user.email_confirmed = false
-from_user.generate_confirmation_token
+from_user.unconfirmed_email = nil
 
 if from_user.save
   puts "#{from_user.name}'s email is now: #{to_email}"
-  Mailer.email_confirmation(from_user).deliver_later
+  Mailer.email_confirmation(from_user, from_user.email).deliver_later
   puts "enqueued email confirmation mail."
 else
   puts "could not save user"

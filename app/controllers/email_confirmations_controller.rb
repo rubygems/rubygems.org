@@ -12,6 +12,7 @@ class EmailConfirmationsController < ApplicationController
   prepend_before_action :protect_email_confirmation_response, only: %i[update confirm otp_update webauthn_update]
   before_action :begin_email_confirmation, only: :update
   before_action :load_email_confirmation, only: %i[confirm otp_update webauthn_update]
+  before_action :sign_out_other_user, only: :confirm
   before_action :require_mfa, only: :confirm
   before_action :validate_otp, only: :otp_update
   before_action :validate_webauthn, only: :webauthn_update
@@ -68,9 +69,11 @@ class EmailConfirmationsController < ApplicationController
   def begin_email_confirmation
     token = token_params.to_s
     @user = User.find_by_email_confirmation_token(token)
-    return login_failure(t("email_confirmations.update.token_failure")) unless @user&.valid_email_confirmation_token?(token)
+    unless @user&.valid_email_confirmation_token?(token)
+      delete_email_confirmation_session
+      return redirect_to root_path, alert: t("email_confirmations.update.token_failure")
+    end
 
-    sign_out if signed_in? && @user != current_user
     session[:email_confirmation_user] = @user.id
     session[:email_confirmation_token] = token
   end
@@ -81,6 +84,10 @@ class EmailConfirmationsController < ApplicationController
     return if @user&.id == session[:email_confirmation_user] && @user&.valid_email_confirmation_token?(token)
 
     login_failure(t("email_confirmations.update.token_failure"))
+  end
+
+  def sign_out_other_user
+    sign_out if signed_in? && @user != current_user
   end
 
   def confirm_email
@@ -128,7 +135,7 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def delete_email_confirmation_session
-    delete_mfa_session
+    delete_mfa_session if session[:mfa_user].present? && session[:mfa_user] == session[:email_confirmation_user]
     session.delete(:email_confirmation_user)
     session.delete(:email_confirmation_token)
   end

@@ -17,6 +17,7 @@ class Avo::Actions::ChangeUserEmail < Avo::Actions::ApplicationAction
     def handle_record(user)
       user.email = fields["from_email"]
       user.email_confirmed = false
+      user.unconfirmed_email = nil
 
       return unless user.save!
 
