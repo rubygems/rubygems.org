@@ -257,11 +257,12 @@ class ProfilesControllerTest < ActionController::TestCase
             @new_email = "change@tothis.com"
           end
 
-          should "set unconfirmed email and confirmation token" do
+          should "set unconfirmed email without persisting a plaintext token" do
             put :update, params: { user: { unconfirmed_email: @new_email, password: @user.password } }
 
             assert_equal @new_email, @user.unconfirmed_email
-            assert @user.confirmation_token
+            assert_nil @user.confirmation_token
+            assert_nil @user.email_confirmation_token_digest
           end
 
           should "not update the current email" do
@@ -271,7 +272,7 @@ class ProfilesControllerTest < ActionController::TestCase
           end
 
           should "send email reset mails to new and current email addresses" do
-            assert_enqueued_email_with Mailer, :email_reset, args: [@user] do
+            assert_enqueued_email_with Mailer, :email_reset, args: [@user, @new_email] do
               assert_enqueued_email_with Mailer, :email_reset_update, args: [@user] do
                 put :update, params: { user: { unconfirmed_email: @new_email, password: @user.password } }
               end

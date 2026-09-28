@@ -597,17 +597,17 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "changes" => {
                 "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
                 "email" => [user_attributes[:email], user.email],
-                "email_confirmed" => [true, false],
-                "confirmation_token" => [user_attributes[:confirmation_token], user.confirmation_token],
-                "token_expires_at" => [user_attributes[:token_expires_at].as_json, user.token_expires_at.as_json]
+                "email_confirmed" => [true, false]
               },
               "unchanged" => user.attributes
                 .except(
                   "email",
-                  "token_expires_at",
                   "email_confirmed",
-                  "confirmation_token",
                   "updated_at"
+                ).merge(
+                  "email_confirmation_email" => user_attributes[:email_confirmation_email],
+                  "email_confirmation_token_digest" => user_attributes[:email_confirmation_token_digest],
+                  "email_confirmation_token_expires_at" => user_attributes[:email_confirmation_token_expires_at]
                 ).transform_values(&:as_json)
             },
             email_added_event.to_gid.as_json => {

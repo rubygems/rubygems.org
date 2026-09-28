@@ -1,0 +1,13 @@
+<% @title = t(".title") %>
+<% add_breadcrumb @title %>
+
+<div class="flex items-center justify-center">
+  <div class="max-w-lg w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">
+    <h1 class="text-xl font-semibold text-neutral-900 dark:text-white mb-3"><%= @title %></h1>
+    <p class="text-neutral-700 dark:text-neutral-300 mb-6"><%= t(".explanation") %></p>
+
+    <%= form_with url: confirm_email_confirmations_path, data: { turbo: false } do %>
+      <%= render ButtonComponent.new(t(".submit"), type: :submit, color: :primary) %>
+    <% end %>
+  </div>
+</div>

@@ -7,7 +7,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
   include ActiveJob::TestHelper
 
   setup do
-    @user = create(:user)
+    @user = create(:user, email_confirmed: false)
   end
 
   def request_confirmation_mail(email)
@@ -32,7 +32,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
     link = last_email_link
 
     refute_nil link
-    visit link
+    confirm_email_from(link)
 
     assert_text "Sign in"
     assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
@@ -42,7 +42,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
     request_confirmation_mail @user.email
 
     link = last_email_link
-    visit link
+    confirm_email_from(link)
 
     assert_text "Sign in"
     assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
@@ -54,19 +54,20 @@ class EmailConfirmationTest < ApplicationSystemTestCase
   end
 
   test "requesting multiple confirmation email" do
-    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-      request_confirmation_mail @user.email
-    end
     request_confirmation_mail @user.email
+    replaced_link = last_email_link
 
-    performed = 0
-    perform_enqueued_jobs only: ->(job) { job.is_a?(ActionMailer::MailDeliveryJob) && (performed += 1) == 1 }
-    link = confirmation_link
-    visit link
+    request_confirmation_mail @user.email
+    replacement_link = last_email_link
 
-    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
+    visit replaced_link
+
+    assert page.has_selector? "#flash_alert", text: "Please double check the URL or try submitting it again."
+
+    confirm_email_from(replacement_link)
 
     assert_no_enqueued_jobs
+    assert_predicate @user.reload, :email_confirmed?
   end
 
   test "requesting confirmation mail with mfa enabled" do
@@ -77,6 +78,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
 
     refute_nil link
     visit link
+    click_button "Confirm email address"
 
     fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
     click_button "Authenticate"
@@ -86,7 +88,9 @@ class EmailConfirmationTest < ApplicationSystemTestCase
   end
 
   test "requesting confirmation mail with webauthn enabled" do
+    @user.confirm_email!
     create_webauthn_credential
+    @user.update!(email_confirmed: false)
 
     request_confirmation_mail @user.email
 
@@ -94,6 +98,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
 
     refute_nil link
     visit link
+    click_button "Confirm email address"
 
     assert_text "Multi-factor authentication"
     assert_text "Security Device"
@@ -107,7 +112,9 @@ class EmailConfirmationTest < ApplicationSystemTestCase
   end
 
   test "requesting confirmation mail with webauthn enabled using recovery codes" do
+    @user.confirm_email!
     create_webauthn_credential
+    @user.update!(email_confirmed: false)
 
     request_confirmation_mail @user.email
 
@@ -115,6 +122,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
 
     refute_nil link
     visit link
+    click_button "Confirm email address"
 
     assert_text "Multi-factor authentication"
     assert_text "Security Device"
@@ -134,6 +142,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
 
     refute_nil link
     visit link
+    click_button "Confirm email address"
 
     fill_in "otp", with: ROTP::TOTP.new(@user.totp_seed).now
     travel 16.minutes do
@@ -146,5 +155,14 @@ class EmailConfirmationTest < ApplicationSystemTestCase
   teardown do
     disable_virtual_authenticator
     Capybara.reset_sessions!
+  end
+
+  private
+
+  def confirm_email_from(link)
+    visit link
+
+    assert_text "Confirm email address"
+    click_button "Confirm email address"
   end
 end

@@ -3,8 +3,7 @@
 class MailerPreview < ActionMailer::Preview
   def email_reset
     user = User.first
-    user.generate_confirmation_token(reset_unconfirmed_email: false)
-    Mailer.email_reset(user)
+    Mailer.email_reset(user, user.unconfirmed_email, token: SecureRandom.hex(24))
   end
 
   def email_reset_update
@@ -13,8 +12,7 @@ class MailerPreview < ActionMailer::Preview
 
   def email_confirmation
     user = User.last
-    user.generate_confirmation_token(reset_unconfirmed_email: false)
-    Mailer.email_confirmation(user)
+    Mailer.email_confirmation(user, user.email, token: SecureRandom.hex(24))
   end
 
   def change_password

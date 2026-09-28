@@ -266,6 +266,9 @@ zh-TW:
       will_email_notice: 我們將會通過電子郵件傳送帳號認證信連結給您。
     update:
       confirmed_email: 電子郵件地址驗證成功。
+      explanation:
+      submit:
+      title:
       token_failure: 請確認 URL 或再次提交
   home:
     index:
@@ -346,16 +349,19 @@ zh-TW:
   mailer:
     confirm_your_email: 已寄送連結，請點擊連結來確認您的電子郵件地址。
     confirmation_subject: "%{host} 電子郵件地址確認"
-    link_expiration_explanation_html: 請注意，此連結將在 3 小時後過期。您可以前往<a href='https://rubygems.org/email_confirmations/new'>確認信</a>頁面要求傳送新連結。
     email_confirmation:
       title: 電子郵件地址確認
       subtitle: 就快完成了！
       confirmation_link: 確認電子郵件地址
       welcome_message: 歡迎來到 RubyGems.org！點擊下方的連結來驗證您的電子郵件地址。
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     email_reset:
       title: 電子郵件地址重設
       subtitle: 嗨 %{handle}！
       visit_link_instructions: 您已變更您在 %{host} 的電子郵件地址。請點擊下列網址來重新啟用您的帳號。
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     deletion_complete:
       title: 刪除完成
       subtitle: 掰掰！

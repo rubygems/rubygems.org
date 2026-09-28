@@ -90,6 +90,8 @@ module Gemcutter
   DEFAULT_PAGE = 1
   DEFAULT_PAGINATION = 20
   EMAIL_TOKEN_EXPIRES_AFTER = 3.hours
+  EMAIL_CONFIRMATION_TOKEN_EXPIRES_AFTER = 24.hours
+  EMAIL_CHANGE_TOKEN_EXPIRES_AFTER = 3.hours
   HOST = config["host"].freeze
   HOST_DISPLAY = Gemcutter.config[:host_display].freeze
   NEWS_DAYS_LIMIT = 7.days

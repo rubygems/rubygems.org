@@ -271,6 +271,9 @@ en:
       will_email_notice: We will email you confirmation link to activate your account.
     update:
       confirmed_email: Your email address has been verified.
+      explanation: Confirm that you want to verify this email address. Your account will not change until you continue.
+      submit: Confirm email address
+      title: Confirm email address
       token_failure: Please double check the URL or try submitting it again.
   home:
     index:
@@ -351,16 +354,19 @@ en:
   mailer:
     confirm_your_email: Please confirm your email address with the link sent to your email.
     confirmation_subject: Please confirm your email address with %{host}
-    link_expiration_explanation_html: Please keep in mind that this link is valid for only 3 hours. You can request the updated link using <a href='https://rubygems.org/email_confirmations/new'>resend confirmation mail</a> page.
     email_confirmation:
       title: EMAIL CONFIRMATION
       subtitle: Almost done!
       confirmation_link: Confirm email address
       welcome_message: Welcome to %{host}! Visit the link below to verify your email.
+      link_expiration_explanation: This link is valid for 24 hours. Requesting another confirmation email replaces this link.
+      link_expiration_explanation_html: This link is valid for 24 hours. Requesting another confirmation email replaces this link.
     email_reset:
       title: EMAIL RESET
       subtitle: Hi %{handle}!
-      visit_link_instructions: You changed your email address on %{host}. Please visit the following url to re-activate your account.
+      visit_link_instructions: You requested an email address change on %{host}. Visit the link below to confirm your new email address.
+      link_expiration_explanation: This link is valid for 3 hours. Requesting another confirmation email replaces this link.
+      link_expiration_explanation_html: This link is valid for 3 hours. Requesting another confirmation email replaces this link.
     deletion_complete:
       title: DELETION COMPLETE
       subtitle: Bye!

@@ -33,9 +33,11 @@ de:
   forbidden: Nicht erlaubt
   api_gem_not_found: Dieses Gem wurde nicht gefunden
   api_key_forbidden: Dieser API-Key hat kein Zugang
-  api_key_soft_deleted: Ein ungültiger API-Key kann nicht verwendet werden. Bitte diesen löschen und einen neuen erstellen. 
+  api_key_soft_deleted: Ein ungültiger API-Key kann nicht verwendet werden. Bitte
+    diesen löschen und einen neuen erstellen.
   api_key_insufficient_scope:
-  email_not_confirmed: Bitte bestätigen Sie ihre E-Mail-Adresse um die API zu nutzen. Prüfen Sie ihr Postfach nach einem Bestätigungs-Link.
+  email_not_confirmed: Bitte bestätigen Sie ihre E-Mail-Adresse um die API zu nutzen.
+    Prüfen Sie ihr Postfach nach einem Bestätigungs-Link.
   please_sign_up: Zugriff verweigert. Bitte melden Sie sich unter https://rubygems.org
     mit einem Konto an
   please_sign_in: Bitte melden Sie sich an, um fortzufahren.
@@ -287,6 +289,9 @@ de:
         Konto zu aktivieren.
     update:
       confirmed_email: Ihre E-Mail-Adresse wurde verifiziert.
+      explanation:
+      submit:
+      title:
       token_failure: Bitte überprüfen Sie die URL oder versuchen Sie es erneut.
   home:
     index:
@@ -368,20 +373,21 @@ de:
     confirm_your_email: Bitte bestätigen Sie Ihre E-Mail-Adresse mit dem Link, der
       an Ihre E-Mail gesendet wurde.
     confirmation_subject: Bitte bestätigen Sie Ihre E-Mail-Adresse mit %{host}
-    link_expiration_explanation_html: Bitte beachten Sie, dass dieser Link nur 3 Stunden
-      gültig ist. Sie können den aktualisierten Link über die Seite <a href='https://rubygems.org/email_confirmations/new'>Bestätigungsmail
-      erneut senden</a> anfordern.
     email_confirmation:
       title: E-MAIL-BESTÄTIGUNG
       subtitle: Fast geschafft!
       confirmation_link: E-Mail-Adresse bestätigen
       welcome_message: Willkommen bei %{host}! Besuchen Sie den unten stehenden Link,
         um Ihre E-Mail zu verifizieren.
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     email_reset:
       title: E-MAIL-ZURÜCKSETZEN
       subtitle: Hallo %{handle}!
       visit_link_instructions: Sie haben Ihre E-Mail-Adresse auf %{host} geändert.
         Bitte besuchen Sie die folgende URL, um Ihr Konto erneut zu aktivieren.
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     deletion_complete:
       title: LÖSCHUNG ABGESCHLOSSEN
       subtitle: Tschüss!

@@ -2,724 +2,209 @@
 
 require "test_helper"
 
-class EmailConfirmationsControllerTest < ActionController::TestCase
+class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
   include ActionMailer::TestHelper
   include ActiveJob::TestHelper
 
-  context "on GET to update" do
-    setup { @user = create(:user, :unconfirmed) }
-
-    context "user exists and token has not expired" do
-      setup do
-        get :update, params: { token: @user.confirmation_token }
-      end
-
-      should "should confirm user account" do
-        assert @user.reload.email_confirmed
-      end
-      should "not sign in user" do
-        refute cookies[:remember_token]
-      end
-      should "instruct the browser not to send referrer that contains the token" do
-        assert_equal "no-referrer", response.headers["Referrer-Policy"]
-      end
-    end
-
-    context "successful confirmation while signed in" do
-      setup do
-        @user.confirm_email! # must be confirmed to sign in
-        sign_in_as(@user)
-        @user.update!(unconfirmed_email: "new@rubygems-test.org")
-        get :update, params: { token: @user.confirmation_token }
-      end
-
-      should redirect_to("the dashboard") { dashboard_url }
-
-      should "should confirm user account" do
-        assert @user.reload.email_confirmed
-      end
-      should "keep the user signed in" do
-        assert cookies[:remember_token]
-      end
-    end
-
-    context "user does not exist" do
-      setup { get :update, params: { token: Clearance::Token.new } }
-
-      should "warn about invalid url" do
-        assert_equal "Please double check the URL or try submitting it again.", flash[:alert]
-      end
-      should "not sign in user" do
-        refute cookies[:remember_token]
-      end
-    end
-
-    context "array of tokens" do
-      setup do
-        get :update, params: { token: [@user.confirmation_token, Clearance::Token.new, Clearance::Token.new] }
-      end
-
-      should respond_with :bad_request
-
-      should "not sign in user" do
-        refute cookies[:remember_token]
-      end
-    end
-
-    context "token has expired" do
-      setup do
-        @user.update_attribute("token_expires_at", 2.minutes.ago)
-        get :update, params: { token: @user.confirmation_token }
-      end
-
-      should "warn about invalid url" do
-        assert_equal "Please double check the URL or try submitting it again.", flash[:alert]
-      end
-      should "not sign in user" do
-        refute cookies[:remember_token]
-      end
-    end
-
-    context "mutliple user has same unconfirmed email" do
-      setup do
-        @email = "some@email.com"
-        @user.update_attribute(:unconfirmed_email, @email)
-        @second_user = create(:user, unconfirmed_email: @email)
-        get :update, params: { token: @user.confirmation_token }
-      end
-
-      should redirect_to("the sign in page") { sign_in_url }
-
-      should "confirm email for first user" do
-        assert_equal @email, @user.reload.email
-      end
-
-      context "second user sends confirmation request" do
-        setup do
-          get :update, params: { token: @second_user.confirmation_token }
-        end
-
-        should "show error to second user on confirmation request" do
-          assert_equal "Email address has already been taken", flash[:alert]
-        end
-
-        should "not confirm email for first user" do
-          assert_predicate @second_user, :unconfirmed_email?
-          refute_equal @email, @second_user.reload.email
-        end
-      end
-    end
-
-    context "user has totp enabled" do
-      setup do
-        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
-        get :update, params: { token: @user.confirmation_token }
-      end
-
-      should respond_with :success
-
-      should "display otp form" do
-        assert page.has_content?("Multi-factor authentication")
-        assert page.has_content?("OTP or recovery code")
-      end
-    end
-
-    context "user has webauthn enabled but no recovery codes" do
-      setup do
-        create(:webauthn_credential, user: @user)
-        @user.new_mfa_recovery_codes = nil
-        @user.mfa_hashed_recovery_codes = []
-        @user.save!
-        get :update, params: { token: @user.confirmation_token }
-      end
-
-      should respond_with :success
-
-      should "display webauthn form" do
-        assert page.has_content?("Multi-factor authentication")
-        assert page.has_button?("Authenticate with security device")
-      end
-
-      should "not display recovery code prompt" do
-        refute page.has_content?("Recovery code")
-      end
-    end
-
-    context "user has webauthn enabled and recovery codes" do
-      setup do
-        create(:webauthn_credential, user: @user)
-        get :update, params: { token: @user.confirmation_token }
-      end
-
-      should respond_with :success
-
-      should "display webauthn form" do
-        assert page.has_content?("Multi-factor authentication")
-        assert page.has_button?("Authenticate with security device")
-      end
-
-      should "display recovery code prompt" do
-        assert page.has_content?("Recovery code")
-      end
-    end
-
-    context "when user has webauthn and totp" do
-      setup do
-        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
-        create(:webauthn_credential, user: @user)
-        get :update, params: { token: @user.confirmation_token }
-      end
-
-      should respond_with :success
-
-      should "display webauthn prompt" do
-        assert page.has_button?("Authenticate with security device")
-      end
-
-      should "display otp prompt" do
-        assert page.has_content?("OTP or recovery code")
-      end
-    end
+  setup do
+    @user = create(:user, :unconfirmed)
+    @token = @user.issue_email_confirmation!(@user.email)
   end
 
-  context "on POST to otp_update" do
-    context "user has mfa enabled" do
-      setup do
-        @user = create(:user, :unconfirmed)
-        @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
-      end
+  test "opening a confirmation link does not confirm or consume it" do
+    get update_email_confirmations_path(token: @token)
 
-      context "when OTP is correct" do
-        setup do
-          get :update, params: { token: @user.confirmation_token }
-          post :otp_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
-        end
+    assert_response :success
+    assert_select "form[action=?][method=post]", confirm_email_confirmations_path
+    refute_predicate @user.reload, :email_confirmed?
+    assert @user.valid_email_confirmation_token?(@token)
+    assert_email_confirmation_response_headers
 
-        should set_flash[:notice]
-        should redirect_to("the sign in page") { sign_in_url }
+    get update_email_confirmations_path(token: @token)
 
-        should "should confirm user account" do
-          assert @user.reload.email_confirmed
-        end
-
-        should "clear mfa_expires_at" do
-          assert_nil @controller.session[:mfa_expires_at]
-        end
-      end
-
-      context "user is already signed in and OTP is correct" do
-        setup do
-          @user.confirm_email!
-          sign_in_as(@user)
-          @user.update!(unconfirmed_email: "new@rubygems-test.org")
-
-          assert @user.confirmation_token
-          get :update, params: { token: @user.confirmation_token }
-          post :otp_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
-        end
-
-        should redirect_to("the dashboard") { dashboard_url }
-
-        should "should confirm user account" do
-          assert @user.reload.email_confirmed
-        end
-        should "keep the user signed in" do
-          assert cookies[:remember_token]
-        end
-      end
-
-      context "when OTP is incorrect" do
-        setup do
-          get :update, params: { token: @user.confirmation_token }
-          post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
-        end
-
-        should respond_with :unauthorized
-
-        should "alert about otp being incorrect" do
-          assert_equal "Your OTP code is incorrect.", flash[:alert]
-        end
-      end
-
-      context "when the OTP session is expired" do
-        setup do
-          get :update, params: { token: @user.confirmation_token }
-          travel 16.minutes do
-            post :otp_update, params: { token: @user.confirmation_token, otp: ROTP::TOTP.new(@user.totp_seed).now }
-          end
-        end
-
-        should set_flash.now[:alert]
-        should respond_with :unauthorized
-
-        should "clear mfa_expires_at" do
-          assert_nil @controller.session[:mfa_expires_at]
-        end
-
-        should "render sign in page" do
-          assert page.has_content? "Sign in"
-        end
-
-        should "not sign in the user" do
-          refute_predicate @controller.request.env[:clearance], :signed_in?
-        end
-      end
-    end
+    assert_response :success
+    refute_predicate @user.reload, :email_confirmed?
   end
 
-  context "on POST to webauthn_update" do
-    setup do
-      @user = create(:user, :unconfirmed)
-      @webauthn_credential = create(:webauthn_credential, user: @user)
-      get :update, params: { token: @user.confirmation_token }
-      @origin = WebAuthn.configuration.allowed_origins.first
-      @rp_id = URI.parse(@origin).host
-      @client = WebAuthn::FakeClient.new(@origin, encoding: false)
-    end
+  test "confirmation POST consumes the token and replay is denied" do
+    begin_email_confirmation
 
-    context "with webauthn enabled" do
-      setup do
-        @challenge = session[:webauthn_authentication]["challenge"]
-        WebauthnHelpers.create_credential(
-          webauthn_credential: @webauthn_credential,
-          client: @client
-        )
-        post(
-          :webauthn_update,
-          params: {
-            token: @user.confirmation_token,
-            credentials:
-            WebauthnHelpers.get_result(
-              client: @client,
-              challenge: @challenge
-            )
-          }
-        )
-      end
+    post confirm_email_confirmations_path
 
-      should redirect_to("the sign in page") { sign_in_url }
+    assert_redirected_to sign_in_path
+    assert_predicate @user.reload, :email_confirmed?
+    assert_nil @user.email_confirmation_token_digest
+    assert_nil @user.email_confirmation_token_expires_at
+    assert_nil @user.email_confirmation_email
 
-      should "change the user's email" do
-        assert @user.reload.email_confirmed
-      end
+    get update_email_confirmations_path(token: @token)
 
-      should "clear mfa_expires_at" do
-        assert_nil @controller.session[:mfa_expires_at]
-      end
-
-      should "set flash notice" do
-        assert_equal "Your email address has been verified.", flash[:notice]
-      end
-    end
-
-    context "while signed in with successful webauthn" do
-      setup do
-        @user.confirm_email!
-        sign_in_as(@user)
-        @user.update!(unconfirmed_email: "new@rubygems-test.org")
-        @challenge = session[:webauthn_authentication]["challenge"]
-        WebauthnHelpers.create_credential(
-          webauthn_credential: @webauthn_credential,
-          client: @client
-        )
-        post(
-          :webauthn_update,
-          params: {
-            token: @user.confirmation_token,
-            credentials:
-            WebauthnHelpers.get_result(
-              client: @client,
-              challenge: @challenge
-            )
-          }
-        )
-      end
-
-      should redirect_to("the dashboard") { dashboard_url }
-
-      should "change the user's email" do
-        assert @user.reload.email_confirmed
-        assert_equal "new@rubygems-test.org", @user.email
-      end
-
-      should "clear mfa_expires_at" do
-        assert_nil @controller.session[:mfa_expires_at]
-      end
-
-      should "set flash notice" do
-        assert_equal "Your email address has been verified.", flash[:notice]
-      end
-    end
-
-    context "when not providing credentials" do
-      setup do
-        post(
-          :webauthn_update,
-          params: {
-            token: @user.confirmation_token
-          }
-        )
-      end
-
-      should respond_with :unauthorized
-
-      should "set flash notice" do
-        assert_equal "Credentials required", flash[:alert]
-      end
-    end
-
-    context "when providing wrong credential" do
-      setup do
-        @wrong_challenge = SecureRandom.hex
-        WebauthnHelpers.create_credential(
-          webauthn_credential: @webauthn_credential,
-          client: @client
-        )
-        post(
-          :webauthn_update,
-          params: {
-            token: @user.confirmation_token,
-            credentials:
-            WebauthnHelpers.get_result(
-              client: @client,
-              challenge: @wrong_challenge
-            )
-          }
-        )
-      end
-
-      should respond_with :unauthorized
-
-      should "set flash notice" do
-        assert_equal "WebAuthn::ChallengeVerificationError", flash[:alert]
-      end
-      should "still have the webauthn form url" do
-        refute_nil page.find(".js-webauthn-session--form")[:action]
-      end
-    end
-
-    context "when webauthn session is expired" do
-      setup do
-        @challenge = session[:webauthn_authentication]["challenge"]
-        WebauthnHelpers.create_credential(
-          webauthn_credential: @webauthn_credential,
-          client: @client
-        )
-        travel 16.minutes do
-          post(
-            :webauthn_update,
-            params: {
-              token: @user.confirmation_token,
-              credentials:
-              WebauthnHelpers.get_result(
-                client: @client,
-                challenge: @challenge
-              )
-            }
-          )
-        end
-      end
-
-      should respond_with :unauthorized
-      should set_flash.now[:alert]
-
-      should "clear mfa_expires_at" do
-        assert_nil @controller.session[:mfa_expires_at]
-      end
-
-      should "render sign in page" do
-        assert page.has_content? "Sign in"
-      end
-
-      should "not sign in the user" do
-        refute_predicate @controller.request.env[:clearance], :signed_in?
-      end
-    end
+    assert_redirected_to root_path
+    assert_equal I18n.t("email_confirmations.update.token_failure"), flash[:alert]
   end
 
-  context "on GET to new" do
-    setup do
-      get :new
-    end
+  test "a replacement token invalidates the previous link" do
+    replacement = @user.issue_email_confirmation!(@user.email)
 
-    should respond_with :success
+    get update_email_confirmations_path(token: @token)
 
-    should "display resend instructions" do
-      assert page.has_content?("We will email you confirmation link to activate your account.")
-    end
+    assert_redirected_to root_path
+    refute_predicate @user.reload, :email_confirmed?
+
+    get update_email_confirmations_path(token: replacement)
+
+    assert_response :success
   end
 
-  context "on POST to create" do
-    context "user exists" do
-      setup do
-        create(:user, email: "foo@bar.com")
-        perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
-          post :create, params: { email_confirmation: { email: "foo@bar.com" } }
-        end
-      end
+  test "an expired token is denied without changing account state" do
+    @user.update_column(:email_confirmation_token_expires_at, 1.second.ago)
 
-      should respond_with :redirect
-      should redirect_to("the homepage") { root_url }
+    get update_email_confirmations_path(token: @token)
 
-      should "deliver confirmation email" do
-        refute_empty ActionMailer::Base.deliveries
-        email = ActionMailer::Base.deliveries.last
-
-        assert_equal ["foo@bar.com"], email.to
-        assert_equal ["no-reply@mailer.rubygems.org"], email.from
-        assert_equal "Please confirm your email address with RubyGems.org", email.subject
-      end
-
-      should "promise to send email if account exists" do
-        assert_equal "We will email you confirmation link to activate your account if one exists.", flash[:notice]
-      end
-    end
-
-    context "invalid params" do
-      should "fail friendly" do
-        post :create, params: { email_confirmation: "ABC" }
-
-        assert_response :bad_request # bad status raised by strong params
-      end
-
-      should "handle non-scalar params" do
-        post :create, params: { email_confirmation: { email: { foo: "bar" } } }
-
-        assert_response :bad_request # bad status raised by strong params
-      end
-    end
-
-    context "user does not exist" do
-      should "not deliver confirmation email" do
-        post :create, params: { email_confirmation: { email: "someone@else.com" } }
-
-        assert_no_enqueued_emails
-      end
-    end
+    assert_redirected_to root_path
+    refute_predicate @user.reload, :email_confirmed?
+    refute_nil @user.email_confirmation_token_digest
   end
 
-  context "on POST to unconfirmed" do
-    context "user is not signed in" do
-      should "not send confirmation mail" do
-        Mailer.expects(:email_reset).times(0)
-        perform_enqueued_jobs do
-          post :unconfirmed
-        end
-      end
+  test "email change is completed only by POST and clears all authority" do
+    user = create(:user, email: "old@rubygems-test.org")
+    user.update!(unconfirmed_email: "new@rubygems-test.org")
+    token = user.issue_email_confirmation!(user.unconfirmed_email)
 
-      should "redirect to sign in page" do
-        post :unconfirmed
+    get update_email_confirmations_path(token:)
 
-        assert_redirected_to sign_in_path
-        assert_equal "Please sign in to continue.", flash[:alert]
-      end
+    assert_response :success
+    assert_equal "old@rubygems-test.org", user.reload.email
+    assert_equal "new@rubygems-test.org", user.unconfirmed_email
+
+    post confirm_email_confirmations_path
+
+    assert_redirected_to sign_in_path
+    assert_equal "new@rubygems-test.org", user.reload.email
+    assert_nil user.unconfirmed_email
+    assert_nil user.email_confirmation_token_digest
+    assert_nil user.email_confirmation_email
+  end
+
+  test "changing the pending target invalidates a previously issued token" do
+    user = create(:user)
+    user.update!(unconfirmed_email: "first@rubygems-test.org")
+    token = user.issue_email_confirmation!(user.unconfirmed_email)
+
+    user.update!(unconfirmed_email: "second@rubygems-test.org")
+    get update_email_confirmations_path(token:)
+
+    assert_redirected_to root_path
+    assert_equal "second@rubygems-test.org", user.reload.unconfirmed_email
+    assert_nil user.email_confirmation_token_digest
+  end
+
+  test "MFA confirmation requires a valid OTP before consuming the email token" do
+    @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+    begin_email_confirmation
+
+    post confirm_email_confirmations_path
+
+    assert_response :success
+    assert_select "h1", text: /Multi-factor authentication/
+    refute_predicate @user.reload, :email_confirmed?
+    assert @user.valid_email_confirmation_token?(@token)
+
+    post otp_update_email_confirmations_path, params: { otp: "incorrect" }
+
+    assert_response :unauthorized
+    refute_predicate @user.reload, :email_confirmed?
+    assert @user.valid_email_confirmation_token?(@token)
+
+    post otp_update_email_confirmations_path, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+
+    assert_redirected_to sign_in_path
+    assert_predicate @user.reload, :email_confirmed?
+    assert_nil @user.email_confirmation_token_digest
+  end
+
+  test "token replacement during MFA prevents confirmation" do
+    @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+    begin_email_confirmation
+    post confirm_email_confirmations_path
+    @user.issue_email_confirmation!(@user.email)
+
+    post otp_update_email_confirmations_path, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+
+    assert_redirected_to root_path
+    refute_predicate @user.reload, :email_confirmed?
+  end
+
+  test "token expiry during MFA prevents confirmation" do
+    @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+    begin_email_confirmation
+    post confirm_email_confirmations_path
+    @user.update_column(:email_confirmation_token_expires_at, 1.second.ago)
+
+    post otp_update_email_confirmations_path, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+
+    assert_redirected_to root_path
+    refute_predicate @user.reload, :email_confirmed?
+    refute_nil @user.email_confirmation_token_digest
+  end
+
+  test "invalid CSRF is rejected without changing or consuming confirmation authority" do
+    original_allow_forgery_protection = ActionController::Base.allow_forgery_protection
+    begin_email_confirmation
+    ActionController::Base.allow_forgery_protection = true
+
+    post confirm_email_confirmations_path
+
+    assert_response :forbidden
+    refute_predicate @user.reload, :email_confirmed?
+    assert @user.valid_email_confirmation_token?(@token)
+    assert_email_confirmation_response_headers
+  ensure
+    ActionController::Base.allow_forgery_protection = original_allow_forgery_protection
+  end
+
+  test "public resend cannot rotate or send a pending email-change token" do
+    user = create(:user, email: "old@rubygems-test.org")
+    user.update!(unconfirmed_email: "new@rubygems-test.org")
+    token = user.issue_email_confirmation!(user.unconfirmed_email)
+    digest = user.email_confirmation_token_digest
+
+    assert_no_enqueued_emails do
+      post email_confirmations_path, params: { email_confirmation: { email: user.email } }
     end
 
-    context "user is signed in" do
-      setup do
-        @user = create(:user, confirmation_token: "something", unconfirmed_email: "new@rubygems-test.org")
-        sign_in_as(@user)
-      end
+    assert_redirected_to root_path
+    assert_equal digest, user.reload.email_confirmation_token_digest
+    assert user.valid_email_confirmation_token?(token)
+  end
 
-      context "on successful token generation" do
-        should "regenerate confirmation token" do
-          post :unconfirmed
+  test "authenticated resend replaces a pending email-change token" do
+    user = create(:user)
+    user.update!(unconfirmed_email: "new@rubygems-test.org")
+    user.issue_email_confirmation!(user.unconfirmed_email)
+    old_digest = user.email_confirmation_token_digest
+    post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
 
-          refute_equal "something", @user.reload.confirmation_token
-        end
-
-        should "send confirmation mail" do
-          assert_enqueued_email_with Mailer, :email_reset, args: [@user] do
-            post :unconfirmed
-          end
-        end
-
-        should "set success flash and redirect to edit path" do
-          post :unconfirmed
-
-          assert_redirected_to edit_profile_path
-          expected_notice = "You will receive an email within the next few minutes. It contains instructions for confirming your new email address."
-
-          assert_equal expected_notice, flash[:notice]
-        end
-      end
-
-      context "on failed confirmation token save" do
-        setup do
-          post :unconfirmed
-          @user.stubs(:save).returns(false)
-        end
-
-        should redirect_to("the edit settings page") { edit_profile_path }
-
-        should "set error flash" do
-          post :unconfirmed
-
-          assert_equal "Something went wrong. Please try again.", flash[:notice]
-        end
-      end
-
-      context "when user owns a gem with more than MFA_REQUIRED_THRESHOLD downloads" do
-        setup do
-          @rubygem = create(:rubygem)
-          create(:ownership, rubygem: @rubygem, user: @user)
-          GemDownload.increment(
-            Rubygem::MFA_REQUIRED_THRESHOLD + 1,
-            rubygem_id: @rubygem.id
-          )
-        end
-
-        context "user has mfa disabled" do
-          context "on GET to update" do
-            setup do
-              get :update, params: { token: @user.confirmation_token }
-            end
-
-            should "should confirm user account" do
-              assert @user.reload.email_confirmed
-            end
-          end
-
-          context "on POST to otp_update" do
-            setup do
-              post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
-            end
-
-            should respond_with :unauthorized
-          end
-
-          context "on PATCH to unconfirmed" do
-            setup { patch :unconfirmed }
-            should redirect_to("the edit settings page") { edit_settings_path }
-
-            should "set mfa_redirect_uri" do
-              assert_equal unconfirmed_email_confirmations_path, session[:mfa_redirect_uri]
-            end
-          end
-
-          context "on GET to new" do
-            setup { get :new }
-            should "not redirect to mfa" do
-              assert_response :success
-              assert page.has_content? "Resend confirmation email"
-            end
-          end
-
-          context "on POST to create" do
-            setup do
-              create(:user, email: "foo@bar.com")
-              perform_enqueued_jobs do
-                post :create, params: { email_confirmation: { email: "foo@bar.com" } }
-              end
-            end
-
-            should respond_with :redirect
-            should redirect_to("the homepage") { root_url }
-          end
-        end
-
-        context "user has mfa set to weak level" do
-          setup do
-            @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
-          end
-
-          context "on GET to update" do
-            setup do
-              get :update, params: { token: @user.confirmation_token }
-            end
-
-            should "should confirm user account" do
-              assert @user.reload.email_confirmed
-            end
-          end
-
-          context "on POST to otp_update" do
-            setup do
-              post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
-            end
-
-            should respond_with :unauthorized
-          end
-
-          context "on PATCH to unconfirmed" do
-            setup { patch :unconfirmed }
-            should redirect_to("the edit settings page") { edit_settings_path }
-
-            should "set mfa_redirect_uri" do
-              assert_equal unconfirmed_email_confirmations_path, session[:mfa_redirect_uri]
-            end
-          end
-
-          context "on GET to new" do
-            setup { get :new }
-            should "not redirect to mfa" do
-              assert_response :success
-              assert page.has_content? "Resend confirmation email"
-            end
-          end
-
-          context "on POST to create" do
-            setup do
-              create(:user, email: "foo@bar.com")
-              perform_enqueued_jobs do
-                post :create, params: { email_confirmation: { email: "foo@bar.com" } }
-              end
-            end
-
-            should respond_with :redirect
-            should redirect_to("the homepage") { root_url }
-          end
-        end
-
-        context "user has MFA set to strong level, expect normal behaviour" do
-          setup do
-            @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
-          end
-
-          context "on GET to update" do
-            setup do
-              get :update, params: { token: @user.confirmation_token }
-            end
-
-            should "should confirm user account" do
-              assert @user.reload.email_confirmed
-            end
-          end
-
-          context "on POST to otp_update" do
-            setup do
-              post :otp_update, params: { token: @user.confirmation_token, otp: "incorrect" }
-            end
-
-            should respond_with :unauthorized
-          end
-
-          context "on PATCH to unconfirmed" do
-            setup { patch :unconfirmed }
-            should redirect_to("edit profile page") { edit_profile_path }
-          end
-
-          context "on GET to new" do
-            setup { get :new }
-            should "not redirect to mfa" do
-              assert_response :success
-              assert page.has_content? "Resend confirmation email"
-            end
-          end
-
-          context "on POST to create" do
-            setup do
-              create(:user, email: "foo@bar.com")
-              perform_enqueued_jobs do
-                post :create, params: { email_confirmation: { email: "foo@bar.com" } }
-              end
-            end
-
-            should respond_with :redirect
-            should redirect_to("the homepage") { root_url }
-          end
-        end
-      end
+    assert_enqueued_email_with Mailer, :email_reset, args: [user, user.unconfirmed_email] do
+      patch unconfirmed_email_confirmations_path
     end
+
+    assert_redirected_to edit_profile_path
+    assert_nil user.reload.email_confirmation_token_digest
+    refute_equal old_digest, user.email_confirmation_token_digest
+  end
+
+  private
+
+  def begin_email_confirmation
+    get update_email_confirmations_path(token: @token)
+
+    assert_response :success
+  end
+
+  def assert_email_confirmation_response_headers
+    assert_equal "private, no-store", response.headers["Cache-Control"]
+    assert_includes %w[no-store max-age=0], response.headers["Surrogate-Control"]
+    assert_equal "no-referrer", response.headers["Referrer-Policy"]
   end
 end

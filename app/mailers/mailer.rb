@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 class Mailer < ApplicationMailer
-  def email_reset(user)
+  def email_reset(user, target_email = user.unconfirmed_email, token: nil)
     @user = user
-    mail to: @user.unconfirmed_email,
+    @token = token || user.issue_email_confirmation!(target_email)
+    return unless @token
+
+    mail to: target_email,
         subject: I18n.t("mailer.confirmation_subject", host: Gemcutter::HOST_DISPLAY,
         default: "Please confirm your email address with #{Gemcutter::HOST_DISPLAY}") do |format|
           format.html
@@ -17,18 +20,19 @@ class Mailer < ApplicationMailer
          subject: I18n.t("mailer.email_reset_update.subject", host: Gemcutter::HOST_DISPLAY)
   end
 
-  def email_confirmation(user)
+  def email_confirmation(user, target_email = user.email, token: nil)
     @user = user
+    @token = token || user.issue_email_confirmation!(target_email)
 
-    if @user.confirmation_token
-      mail to: @user.email,
+    if @token
+      mail to: target_email,
            subject: I18n.t("mailer.confirmation_subject", host: Gemcutter::HOST_DISPLAY,
            default: "Please confirm your email address with #{Gemcutter::HOST_DISPLAY}") do |format|
              format.html
              format.text
            end
     else
-      Rails.logger.info("[mailer:email_confirmation] confirmation token not found. skipping sending mail for #{@user.handle}")
+      Rails.logger.info("[mailer:email_confirmation] confirmation target changed. skipping sending mail for #{@user.handle}")
     end
   end
 

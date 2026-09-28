@@ -21,19 +21,33 @@ class MailerTest < ActionMailer::TestCase
 
   context "#email_confirmation" do
     should "render the confirmation link as a button" do
-      @user.generate_confirmation_token
-      Mailer.email_confirmation(@user).deliver_now
+      @user.update_column(:email_confirmed, false)
+      email = Mailer.email_confirmation(@user, @user.email).deliver_now
+      token = confirmation_token_from_email(email)
 
-      assert_cta_button update_email_confirmations_url(token: @user.confirmation_token, host: Gemcutter::HOST), "VERIFY"
+      assert_cta_button update_email_confirmations_url(token:, host: Gemcutter::HOST), "VERIFY"
+      refute_equal token, @user.reload.email_confirmation_token_digest
+      assert @user.valid_email_confirmation_token?(token)
+      assert_in_delta 24.hours.from_now, @user.email_confirmation_token_expires_at, 2.seconds
     end
   end
 
   context "#email_reset" do
     should "render the confirmation link as a button" do
       @user.update!(unconfirmed_email: "new@mailinator.com")
-      Mailer.email_reset(@user).deliver_now
+      email = Mailer.email_reset(@user, @user.unconfirmed_email).deliver_now
+      token = confirmation_token_from_email(email)
 
-      assert_cta_button update_email_confirmations_url(token: @user.confirmation_token, host: Gemcutter::HOST), "VERIFY"
+      assert_cta_button update_email_confirmations_url(token:, host: Gemcutter::HOST), "VERIFY"
+      assert @user.valid_email_confirmation_token?(token)
+      assert_in_delta 3.hours.from_now, @user.email_confirmation_token_expires_at, 2.seconds
     end
+  end
+
+  private
+
+  def confirmation_token_from_email(email)
+    uri = URI(email.body.encoded[%r{https?://[^\s<]+/email_confirmations/confirm\?token=[^\s<]+}])
+    Rack::Utils.parse_query(uri.query).fetch("token")
   end
 end

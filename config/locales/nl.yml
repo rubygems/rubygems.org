@@ -269,6 +269,9 @@ nl:
       will_email_notice: We zullen je een nieuwe email sturen met een bevestigingslink
     update:
       confirmed_email:
+      explanation:
+      submit:
+      title:
       token_failure: Controleer het webadres, en probeer het opnieuw.
   home:
     index:
@@ -349,16 +352,19 @@ nl:
   mailer:
     confirm_your_email:
     confirmation_subject:
-    link_expiration_explanation_html:
     email_confirmation:
       title:
       subtitle:
       confirmation_link:
       welcome_message:
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     email_reset:
       title:
       subtitle:
       visit_link_instructions:
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     deletion_complete:
       title:
       subtitle:

@@ -267,6 +267,9 @@ zh-CN:
       will_email_notice: 我们将会通过 Email 发送确认激活账号的链接给您。
     update:
       confirmed_email: 邮箱地址验证成功。
+      explanation:
+      submit:
+      title:
       token_failure: 请再次确认 URL 或尝试重新提交
   home:
     index:
@@ -347,16 +350,19 @@ zh-CN:
   mailer:
     confirm_your_email: 请在发送到您的邮件中点击链接，确认您的邮箱地址。
     confirmation_subject: 请确认您的邮箱地址
-    link_expiration_explanation_html: 请记住，此链接仅在 3 小时内有效。您可以用<a href='https://rubygems.org/email_confirmations/new'>重新发送确认邮件</a>页面来请求获得一个新链接。
     email_confirmation:
       title: 邮箱确认
       subtitle: 即将完成！
       confirmation_link: 确认邮箱地址
       welcome_message: 欢迎来到 RubyGems.org！请点击下面的链接来验证您的邮箱。
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     email_reset:
       title: 邮箱重置
       subtitle: 你好啊，%{handle}！
       visit_link_instructions: 您在 RubyGems.org 上更改了您的邮箱地址，请点击以下链接重新激活您的帐户。
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     deletion_complete:
       title: 删除完成
       subtitle: 拜拜！

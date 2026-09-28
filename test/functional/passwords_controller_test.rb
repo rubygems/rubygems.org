@@ -42,6 +42,9 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         refute @user.reload.valid_password_reset_token?(token)
         assert_nil @user.password_reset_token_digest
         assert_nil @user.password_reset_token_expires_at
+        assert_nil @user.email_confirmation_token_digest
+        assert_nil @user.email_confirmation_token_expires_at
+        assert_nil @user.email_confirmation_email
       end
 
       should "store only a digest of the password reset token" do
