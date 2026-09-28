@@ -115,4 +115,51 @@ class GemsTest < ActionDispatch::IntegrationTest
     assert_includes response.headers["Set-Cookie"].to_s, "_rubygems_session"
     refute_includes response.headers["Cache-Control"], "public"
   end
+
+  test "signed-in gem and version pages omit canonical and hreflang links" do
+    create(:version, rubygem: @rubygem, number: "1.1.1")
+    post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    [rubygem_path(@rubygem.slug), rubygem_version_path(@rubygem.slug, "1.0.0")].each do |path|
+      get path
+
+      assert_response :success
+      assert_equal 0, search_engine_link_count, "#{path} emitted search engine links for a signed-in user"
+      assert page.has_css?(%(link[rel="alternate"][type="application/atom+xml"]), visible: false), "#{path} lost its Atom feed link"
+    end
+  end
+
+  test "gem page keeps its explicit canonical target regardless of query parameters" do
+    ["", "?locale=de", "?utm_source=newsletter", "?anything=1"].each do |query|
+      get "#{rubygem_path(@rubygem.slug)}#{query}"
+
+      assert page.has_css?(%(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"]), visible: false),
+        "gem page#{query} lost its canonical target"
+    end
+  end
+
+  test "unindexable gem pages are noindex for anonymous and signed-in users" do
+    yanked_gem = create(:rubygem, name: "yankedgem")
+    create(:version, :yanked, rubygem: yanked_gem, number: "1.0.0")
+    create(:gem_name_reservation, name: "reservedgem")
+    pages = {
+      "reserved namespace" => rubygem_path("reservedgem"),
+      "all-yanked gem" => rubygem_path(yanked_gem.slug)
+    }
+    queries = ["", "?utm_source=test"]
+
+    [false, true].each do |signed_in|
+      post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD }) if signed_in
+      pages.each do |name, path|
+        queries.each do |query|
+          get "#{path}#{query}"
+
+          assert_response :success
+          assert_noindex_without_search_engine_links
+        rescue Minitest::Assertion => e
+          raise e.exception("#{name}#{query} (signed_in=#{signed_in}): #{e.message}")
+        end
+      end
+    end
+  end
 end

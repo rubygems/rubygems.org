@@ -180,6 +180,16 @@ class ActiveSupport::TestCase
     assert_equal actual.additional_type.new(user_agent_info:, **expected_additional), actual.additional
   end
 
+  def search_engine_link_count(body = response.body)
+    html = Nokogiri::HTML(body)
+    html.css('link[rel="canonical"]').size + html.css('link[rel="alternate"][hreflang]').size
+  end
+
+  def assert_noindex_without_search_engine_links(body = response.body)
+    assert_equal 1, Nokogiri::HTML(body).css('meta[name="robots"][content="noindex"]').size, "expected a noindex robots tag"
+    assert_equal 0, search_engine_link_count(body), "expected no canonical/hreflang links"
+  end
+
   # Hashes with different orders will still be equal according to assert_equal.
   # However, when they are not equal, the output diff will print them in their
   # original order which makes it hard to see what is actually different.
