@@ -36,6 +36,7 @@ class Pusher
 
   def authorize
     return notify_reserved if rubygem.reserved_name?
+
     if rubygem.pushable? && (api_key.user? || pending_trusted_publisher)
       return true if organization_handle_from_spec.blank?
 
@@ -248,7 +249,7 @@ class Pusher
       persist_version
 
       if rubygem.unowned?
-        rubygem.update!(organization: claimed_organization) if claimed_organization
+        rubygem.update!(organization: claimed_organization) if @organization_claim_authorized
 
         if api_key.user?
           rubygem.create_ownership(owner)
@@ -457,7 +458,7 @@ class Pusher
     return notify("Could not find organization '#{organization_handle_from_spec}'.", 404) unless claimed_organization
 
     actor = api_key.user? ? owner : pending_trusted_publisher&.user
-    return true if actor && OrganizationPolicy.new(actor, claimed_organization).add_gem?
+    return @organization_claim_authorized = true if actor && OrganizationPolicy.new(actor, claimed_organization).add_gem?
 
     notify("You do not have permission to add a gem to organization '#{claimed_organization.handle}'.", 403)
   end
