@@ -17,7 +17,7 @@ module OIDC::Concerns::TrustedPublisherCreation
   def set_trusted_publisher_type
     trusted_publisher_type = params.expect(create_params_key => :trusted_publisher_type).require(:trusted_publisher_type)
 
-    @trusted_publisher_type = OIDC::TrustedPublisher.find_by_polymorphic_name(trusted_publisher_type)
+    @trusted_publisher_type = OIDC::TrustedPublisher.find_by_polymorphic_name(trusted_publisher_type, types: available_trusted_publisher_types)
 
     return if @trusted_publisher_type
     redirect_back_or_to(root_path, flash: { error: t("oidc.trusted_publisher.unsupported_type") })
@@ -26,7 +26,13 @@ module OIDC::Concerns::TrustedPublisherCreation
   private
 
   def set_selected_trusted_publisher_type
-    @selected_trusted_publisher_type = OIDC::TrustedPublisher.find_by_url_identifier(params[:trusted_publisher_type]) || OIDC::TrustedPublisher::GitHubAction
+    @selected_trusted_publisher_type =
+      OIDC::TrustedPublisher.find_by_url_identifier(params[:trusted_publisher_type], types: available_trusted_publisher_types) ||
+      OIDC::TrustedPublisher::GitHubAction
+  end
+
+  def available_trusted_publisher_types
+    @available_trusted_publisher_types ||= OIDC::TrustedPublisher.available_for(current_user)
   end
 
   def initialize_trusted_publisher(container)
