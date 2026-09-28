@@ -25,7 +25,7 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
 
     render OIDC::PendingTrustedPublishers::NewView.new(
       pending_trusted_publisher: initialize_trusted_publisher(current_user.oidc_pending_trusted_publishers),
-      trusted_publisher_types: OIDC::TrustedPublisher.all,
+      trusted_publisher_types: available_trusted_publisher_types,
       selected_trusted_publisher_type: @selected_trusted_publisher_type
     )
   end
@@ -43,7 +43,7 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
       flash.now[:error] = trusted_publisher.errors.full_messages.to_sentence
       render OIDC::PendingTrustedPublishers::NewView.new(
         pending_trusted_publisher: trusted_publisher,
-        trusted_publisher_types: OIDC::TrustedPublisher.all,
+        trusted_publisher_types: available_trusted_publisher_types,
         selected_trusted_publisher_type: @trusted_publisher_type
       ), status: :unprocessable_content
     end

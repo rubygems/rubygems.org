@@ -62,6 +62,10 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
 
   def self.publisher_name = "GitLab"
 
+  def self.available_for?(user)
+    FeatureFlag.enabled?(FeatureFlag::GITLAB_TRUSTED_PUBLISHING, user)
+  end
+
   def self.url_identifier = "gitlab"
 
   def self.form_component = OIDC::TrustedPublisher::GitLab::FormComponent
@@ -122,6 +126,16 @@ class OIDC::TrustedPublisher::GitLab < ApplicationRecord
   end
 
   def owns_gem?(rubygem) = rubygem_trusted_publishers.exists?(rubygem: rubygem)
+
+  def trusted_publishing_enabled?
+    return true if FeatureFlag.enabled?(FeatureFlag::GITLAB_TRUSTED_PUBLISHING)
+
+    rubygem_actors = rubygems.includes(:owners, :organization).flat_map { [*it.owners, it.organization] }
+    pending_actors = pending_trusted_publishers.unexpired.includes(:user).map(&:user)
+    (rubygem_actors + pending_actors).compact.uniq.any? do |actor|
+      FeatureFlag.enabled?(FeatureFlag::GITLAB_TRUSTED_PUBLISHING, actor)
+    end
+  end
 
   class UnsupportedSigstorePolicy
     def verify(_cert)

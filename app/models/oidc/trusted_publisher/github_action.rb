@@ -72,6 +72,8 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
 
   def self.publisher_name = "GitHub Actions"
 
+  def self.available_for?(_user) = true
+
   def self.url_identifier = "github_actions"
 
   def self.form_component = OIDC::TrustedPublisher::GitHubAction::FormComponent

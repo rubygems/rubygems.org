@@ -17,7 +17,12 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
 
   context "with a verified session" do
     setup do
+      enable_feature(FeatureFlag::GITLAB_TRUSTED_PUBLISHING, actor: @user)
       post(authenticate_session_path(verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD }))
+    end
+
+    teardown do
+      disable_feature(FeatureFlag::GITLAB_TRUSTED_PUBLISHING)
     end
 
     should "respond forbidden for non-owner" do
@@ -168,6 +173,30 @@ class OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::Integration
       get new_rubygem_trusted_publisher_url(@rubygem.slug, trusted_publisher_type: "gitlab")
 
       assert_response :success
+      assert_select "option[value='gitlab'][selected]"
+    end
+
+    should "hide GitLab and reject GitLab rubygem publishers when the flag is disabled" do
+      disable_feature(FeatureFlag::GITLAB_TRUSTED_PUBLISHING)
+
+      get new_rubygem_trusted_publisher_url(@rubygem.slug, trusted_publisher_type: "gitlab")
+
+      assert_response :success
+      assert_select "option[value='gitlab']", count: 0
+      assert_select "option[value='github_actions'][selected]"
+
+      assert_no_difference ["OIDC::RubygemTrustedPublisher.count", "OIDC::TrustedPublisher::GitLab.count"] do
+        post rubygem_trusted_publishers_url(@rubygem.slug), params: {
+          oidc_rubygem_trusted_publisher: {
+            trusted_publisher_type: OIDC::TrustedPublisher::GitLab.polymorphic_name,
+            trusted_publisher_attributes: { project_path: "mygroup/myproject", ci_config_path: ".gitlab-ci.yml" }
+          }
+        }
+      end
+
+      assert_response :redirect
+      assert_equal "Unsupported trusted publisher type", flash[:error]
+      assert_not_requested :get, %r{\Ahttps://gitlab\.com/api/v4/projects/}
     end
 
     should "create rubygem trusted publisher when trusted publisher already exists" do

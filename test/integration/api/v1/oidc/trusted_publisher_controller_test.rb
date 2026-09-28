@@ -428,6 +428,67 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
         "sub" => "project_path:my-group/my-project:ref_type:branch:ref:feature-branch-1",
         "aud" => Gemcutter::HOST
       }
+
+      enable_feature(FeatureFlag::GITLAB_TRUSTED_PUBLISHING)
+    end
+
+    teardown do
+      disable_feature(FeatureFlag::GITLAB_TRUSTED_PUBLISHING)
+    end
+
+    should "exchange a token when GitLab publishing is enabled for a gem owner" do
+      disable_feature(FeatureFlag::GITLAB_TRUSTED_PUBLISHING)
+      owner = create(:user)
+      trusted_publisher = create(:oidc_trusted_publisher_gitlab,
+        project_path: "my-group/my-project",
+        ci_config_path: ".gitlab-ci.yml",
+        ref_type: "branch",
+        branch_name: "feature-branch-1")
+      create(:oidc_rubygem_trusted_publisher, rubygem: create(:rubygem, owners: [owner]), trusted_publisher:)
+      enable_feature(FeatureFlag::GITLAB_TRUSTED_PUBLISHING, actor: owner)
+
+      assert_difference "ApiKey.count", 1 do
+        post api_v1_oidc_trusted_publisher_exchange_token_path, params: { jwt: @gitlab_jwt.call.to_s }
+      end
+
+      assert_response :created
+      assert_equal trusted_publisher, trusted_publisher.api_keys.sole.owner
+    end
+
+    should "exchange a token when GitLab publishing is enabled for a pending publisher user" do
+      disable_feature(FeatureFlag::GITLAB_TRUSTED_PUBLISHING)
+      user = create(:user)
+      trusted_publisher = create(:oidc_trusted_publisher_gitlab,
+        project_path: "my-group/my-project",
+        ci_config_path: ".gitlab-ci.yml",
+        ref_type: "branch",
+        branch_name: "feature-branch-1")
+      create(:oidc_pending_trusted_publisher, user:, trusted_publisher:)
+      enable_feature(FeatureFlag::GITLAB_TRUSTED_PUBLISHING, actor: user)
+
+      assert_difference "ApiKey.count", 1 do
+        post api_v1_oidc_trusted_publisher_exchange_token_path, params: { jwt: @gitlab_jwt.call.to_s }
+      end
+
+      assert_response :created
+    end
+
+    should "not exchange a token when GitLab publishing is disabled" do
+      disable_feature(FeatureFlag::GITLAB_TRUSTED_PUBLISHING)
+      owner = create(:user)
+      trusted_publisher = create(:oidc_trusted_publisher_gitlab,
+        project_path: "my-group/my-project",
+        ci_config_path: ".gitlab-ci.yml",
+        ref_type: "branch",
+        branch_name: "feature-branch-1")
+      create(:oidc_rubygem_trusted_publisher, rubygem: create(:rubygem, owners: [owner]), trusted_publisher:)
+      create(:oidc_pending_trusted_publisher, user: owner, trusted_publisher:)
+
+      assert_no_difference "ApiKey.count" do
+        post api_v1_oidc_trusted_publisher_exchange_token_path, params: { jwt: @gitlab_jwt.call.to_s }
+      end
+
+      assert_response :not_found
     end
 
     should "return not found with no matching GitLab trusted publisher" do
