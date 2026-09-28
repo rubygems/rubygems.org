@@ -245,7 +245,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
             "changes" => {
               "email" => [user_attributes[:email], user.email],
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
-              "token_expires_at" => [user_attributes[:token_expires_at].as_json, user.token_expires_at.as_json],
               "mfa_level" => %w[ui_and_api disabled],
               "totp_seed" => [user_attributes[:totp_seed], nil],
               "mfa_hashed_recovery_codes" => [user_attributes[:mfa_hashed_recovery_codes], []],
@@ -262,7 +261,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "encrypted_password",
                 "mfa_level",
                 "mfa_hashed_recovery_codes",
-                "token_expires_at",
                 "totp_seed",
                 "remember_token",
                 "updated_at"
@@ -508,7 +506,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "mfa_hashed_recovery_codes" => [user_attributes[:mfa_hashed_recovery_codes], []],
               "mfa_level" => %w[ui_and_api disabled],
               "remember_token" => [user_attributes[:remember_token], nil],
-              "token_expires_at" => [user_attributes[:token_expires_at].as_json, user.token_expires_at.as_json],
               "totp_seed" => [user_attributes[:totp_seed], nil],
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json]
             },
@@ -520,7 +517,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "encrypted_password",
                 "mfa_level",
                 "mfa_hashed_recovery_codes",
-                "token_expires_at",
                 "totp_seed",
                 "remember_token",
                 "updated_at"
