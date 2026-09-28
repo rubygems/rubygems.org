@@ -60,7 +60,6 @@
                   <%= mail_to "support@rubygems.org", t('layouts.application.footer.help'), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
                 </div>
               </div>
-              <%# Locale switcher temporarily disabled to improve cacheability and mitigate bot abuse %>
             </nav>
 
             <!-- Mobile Right Navigation Menu -->
@@ -140,14 +139,14 @@
               </button>
             <% end %>
 
-            <div class="relative ml-2 hidden lg:block xl:ml-3" data-controller="dropdown">
-              <button type="button" data-action="dropdown#toggle click@window->dropdown#hide" data-dropdown-target="button" aria-label="<%= t('layouts.application.header.language') %>" aria-haspopup="true" aria-expanded="false" class="flex h-9 items-center gap-1 rounded border border-neutral-300 bg-white px-2 text-b3 font-semibold text-neutral-800 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:border-neutral-700 dark:bg-black dark:text-white dark:hover:bg-neutral-800">
+            <div class="relative ml-2 hidden lg:block xl:ml-3" data-controller="dropdown" data-action="keydown.esc->dropdown#close focusout->dropdown#hide">
+              <button type="button" data-action="dropdown#toggle click@window->dropdown#hide" data-dropdown-target="button" aria-label="<%= t('layouts.application.header.language') %>" aria-controls="header-language-menu" aria-expanded="false" class="flex h-9 items-center gap-1 rounded border border-neutral-300 bg-white px-2 text-b3 font-semibold text-neutral-800 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:border-neutral-700 dark:bg-black dark:text-white dark:hover:bg-neutral-800">
                 <%= icon_tag "language", class: "h-5 w-5" %>
                 <span><%= I18n.locale.to_s.split("-").first.upcase %></span>
                 <%= icon_tag "arrow-drop-down", class: "h-5 w-5" %>
               </button>
 
-              <nav data-dropdown-target="menu" aria-label="<%= t('layouts.application.header.language') %>" class="hidden absolute right-0 top-11 z-50 max-h-[calc(100vh-5rem)] w-56 overflow-y-auto rounded-md border border-neutral-200 bg-white py-2 text-b2 text-neutral-800 shadow-lg dark:border-neutral-800 dark:bg-black dark:text-neutral-200">
+              <nav id="header-language-menu" data-dropdown-target="menu" aria-label="<%= t('layouts.application.header.language') %>" class="hidden absolute right-0 top-11 z-50 max-h-[calc(100vh-5rem)] w-56 overflow-y-auto rounded-md border border-neutral-200 bg-white py-2 text-b2 text-neutral-800 shadow-lg dark:border-neutral-800 dark:bg-black dark:text-neutral-200">
                 <p class="px-4 pb-2 text-b3 font-semibold text-neutral-900 dark:text-white"><%= t("layouts.application.header.language") %></p>
                 <% I18n.available_locales.each do |language| %>
                   <% current_language = language.to_s == I18n.locale.to_s %>

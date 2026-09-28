@@ -34,6 +34,31 @@ class LocaleTest < ApplicationSystemTestCase
     assert_equal "de", page.find("html")[:lang]
   end
 
+  test "the desktop language menu closes with escape and when focus leaves it" do
+    visit root_path
+
+    language_button = find(%(button[aria-label="#{I18n.t('layouts.application.header.language')}"]))
+
+    assert_equal "header-language-menu", language_button["aria-controls"]
+    assert_nil language_button["aria-haspopup"]
+
+    language_button.click
+
+    assert_selector "#header-language-menu", visible: true
+
+    find("#header-language-menu a", text: "Deutsch").send_keys(:escape)
+
+    assert_selector "#header-language-menu", visible: :hidden
+    assert_equal "false", language_button["aria-expanded"]
+    assert_selector %(button[aria-controls="header-language-menu"]:focus)
+
+    language_button.click
+    find("#header-language-menu a", text: "日本語").send_keys(:tab)
+
+    assert_selector "#header-language-menu", visible: :hidden
+    assert_equal "false", language_button["aria-expanded"]
+  end
+
   test "mobile language options open from the navigation menu" do
     use_device_profile :mobile
     visit root_path
