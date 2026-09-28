@@ -122,8 +122,4 @@ module ApplicationHelper
   def organizations_enabled?(user)
     FeatureFlag.enabled?(FeatureFlag::ORGANIZATIONS, user)
   end
-
-  def historical_ownerships_enabled?(viewer = nil)
-    FeatureFlag.enabled?(FeatureFlag::HISTORICAL_OWNERSHIPS, viewer)
-  end
 end
