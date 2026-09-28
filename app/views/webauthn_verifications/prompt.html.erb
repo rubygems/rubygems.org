@@ -10,7 +10,12 @@
       </h2>
       <p class="mb-6 text-b3 text-neutral-700 dark:text-neutral-300"><%= t("settings.edit.webauthn_credential_note") %></p>
 
-      <%= form_tag @webauthn_verification_url, method: :post, class: "js-webauthn-session-cli--form", data: { options: @webauthn_options.to_json } do %>
+      <%= form_tag @webauthn_verification_url, method: :post, class: "js-webauthn-session-cli--form",
+        data: {
+          options: @webauthn_options.to_json,
+          successful_url: successful_verification_webauthn_verification_path,
+          failed_url: failed_verification_webauthn_verification_path
+        } do %>
         <p hidden class="js-webauthn-session-cli--error mb-3 text-b3 text-red-600 dark:text-red-400"></p>
 
         <%= submit_tag t(".authenticate"),

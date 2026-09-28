@@ -3,10 +3,7 @@ document.addEventListener("click", function (event) {
   if (!trigger) return;
   event.preventDefault();
   try {
-    const gemId = trigger.dataset.gemId;
-    const versionId = trigger.dataset.version;
-    const url = `/gems/${gemId}/versions/${versionId}/dependencies.json`;
-    fetch(url, { method: "GET" })
+    fetch(trigger.dataset.url, { method: "GET" })
       .then((response) => response.json())
       .then((resp) => {
         renderDependencies(resp, trigger);
