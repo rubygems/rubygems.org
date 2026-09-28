@@ -194,9 +194,7 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
     const csrfToken = getCsrfToken(cliSessionForm);
 
     function failed_verification_url(message) {
-      const url = new URL(
-        `${location.origin}/webauthn_verification/failed_verification`,
-      );
+      const url = new URL(cliSessionForm.dataset.failedUrl, location.origin);
       url.searchParams.append("error", message);
       return url.href;
     }
@@ -206,7 +204,10 @@ import { bufferToBase64url, base64urlToBuffer } from "webauthn-json";
         .then(function (response) {
           response.text().then(function (text) {
             if (text == "success") {
-              window.location.href = `${location.origin}/webauthn_verification/successful_verification`;
+              window.location.href = new URL(
+                cliSessionForm.dataset.successfulUrl,
+                location.origin,
+              ).href;
             } else {
               window.location.href = failed_verification_url(text);
             }
