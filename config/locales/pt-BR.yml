@@ -351,6 +351,7 @@ pt-BR:
         main_navigation:
         open_menu:
         close_menu:
+        back: Voltar
         language: Idioma
         search_gem_html: Buscar Gems&hellip;
         members:
