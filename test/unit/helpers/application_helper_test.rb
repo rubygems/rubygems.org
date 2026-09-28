@@ -26,6 +26,26 @@ class ApplicationHelperTest < ActionView::TestCase
     end
   end
 
+  context "show_header_search?" do
+    should "hide the header search on the homepage" do
+      stubs(controller_path: "home", action_name: "index")
+
+      refute_predicate self, :show_header_search?
+    end
+
+    should "show the header search on other pages" do
+      stubs(controller_path: "stats", action_name: "index")
+
+      assert_predicate self, :show_header_search?
+    end
+
+    should "show the header search on namespaced home pages" do
+      stubs(controller_name: "home", controller_path: "admin/home", action_name: "index")
+
+      assert_predicate self, :show_header_search?
+    end
+  end
+
   should "return gemcutter atom feed link" do
     feed_link = '<link rel="alternate" type="application/atom+xml" ' \
                 'href="https://feeds.feedburner.com/gemcutter-latest" ' \

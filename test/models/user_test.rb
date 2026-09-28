@@ -65,6 +65,17 @@ class UserTest < ActiveSupport::TestCase
         assert_predicate build(:user, handle: nil), :valid?
       end
 
+      should "not check organization handles when the handle is unchanged" do
+        user = create(:user, handle: "someuser")
+        create(:organization).update_column(:handle, "someuser")
+
+        user.full_name = "A New Name"
+
+        assert_queries_match(/FROM "organizations"/, count: 0) do
+          assert_predicate user, :valid?
+        end
+      end
+
       should "show user id if no handle set" do
         user = build(:user, handle: nil, id: 13)
 
@@ -1179,15 +1190,6 @@ class UserTest < ActiveSupport::TestCase
 
     should "be false when the user does not have a blocked email" do
       refute_predicate @unblocked_user, :blocked?
-    end
-  end
-
-  context "#log_actor_attributes" do
-    should "omit account age when created_at is nil" do
-      user = create(:user)
-      user.created_at = nil
-
-      assert_equal({ gid: user.to_gid.to_s, type: "user" }, user.log_actor_attributes)
     end
   end
 

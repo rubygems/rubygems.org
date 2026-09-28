@@ -11,6 +11,7 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    @user.public_email = false if @user.public_email.nil?
     @user.policies_acknowledged_at = Time.zone.now
     if @user.save
       Datadog::Kit::AppSec::Events::V2.track_user_signup(

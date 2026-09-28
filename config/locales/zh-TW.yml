@@ -165,6 +165,10 @@ zh-TW:
         id_token_signing_alg_values_supported: IP 權杖簽署演算法
     errors:
       models:
+        oidc/access_policy:
+          attributes:
+            statements:
+              too_complex:
         oidc/api_key_permissions:
           attributes:
             valid_for:
@@ -290,6 +294,7 @@ zh-TW:
         about: 關於
         api: API
         blog: 部落格
+        bluesky:
         contribute: 貢獻
         data: 資料
         docs: 文件
@@ -309,6 +314,7 @@ zh-TW:
         statistics: 統計
         status: 狀態
         support_us:
+        x:
         supported_by: 支持
         operated_by:
         supported_by_html: |
@@ -321,6 +327,12 @@ zh-TW:
         dashboard: 儀表板
         settings: 設定
         edit_profile: 編輯個人檔案
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: 搜尋 Gems&hellip;
         members:
       mfa_banner_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。[了解詳情](部落格文章連結)！"
@@ -895,6 +907,17 @@ zh-TW:
     index:
       downloads: 下載
       title: Gems
+    advisories:
+      title:
+        one:
+        other:
+      malware:
+      severity_count:
+      show_fewer:
+      show_more:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: 安裝
@@ -1014,6 +1037,7 @@ zh-TW:
     version:
       yanked: 已被移除
       ruby_abi:
+      vulnerable:
   webauthn_credentials:
     callback:
       success: 您已成功註冊安全裝置。

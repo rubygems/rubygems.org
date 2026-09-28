@@ -165,6 +165,10 @@ nl:
         id_token_signing_alg_values_supported:
     errors:
       models:
+        oidc/access_policy:
+          attributes:
+            statements:
+              too_complex:
         oidc/api_key_permissions:
           attributes:
             valid_for:
@@ -293,6 +297,7 @@ nl:
         about: Over ons
         api: API
         blog: Blog
+        bluesky:
         contribute: Bijdragen
         data: Data
         docs: Documentatie
@@ -312,6 +317,7 @@ nl:
         statistics: Statistieken
         status: Status
         support_us:
+        x:
         supported_by: Ondersteuning
         operated_by:
         supported_by_html: |
@@ -324,6 +330,12 @@ nl:
         dashboard: Dashboard
         settings: Instellingen
         edit_profile: Wijzig profiel
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: Gems Zoeken&hellip;
         members:
       mfa_banner_html:
@@ -894,6 +906,17 @@ nl:
     index:
       downloads: Downloads
       title: alle gems
+    advisories:
+      title:
+        one:
+        other:
+      malware:
+      severity_count:
+      show_fewer:
+      show_more:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: Installeer
@@ -1012,6 +1035,7 @@ nl:
     version:
       yanked: verwijderd
       ruby_abi:
+      vulnerable:
   webauthn_credentials:
     callback:
       success:

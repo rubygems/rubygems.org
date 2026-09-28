@@ -80,7 +80,7 @@ class User < ApplicationRecord
 
   validates :handle, uniqueness: { case_sensitive: false }, allow_nil: true, if: :handle_changed?
   validates :handle, format: { with: Patterns::HANDLE_PATTERN }, length: { within: 2..40 }, allow_nil: true
-  validate :unique_with_org_handle
+  validate :unique_with_org_handle, if: :handle_changed?
 
   validates :twitter_username, format: {
     with: /\A[a-zA-Z0-9_]*\z/,
@@ -183,9 +183,7 @@ class User < ApplicationRecord
   # The `actor` block on request and gem.push.* log lines: GlobalIDs, not
   # PII, and the same GlobalID Rack::Attack.api_key_owner_id throttles on.
   def log_actor_attributes
-    attributes = { gid: to_gid.to_s, type: "user" }
-    attributes[:account_age_seconds] = (Time.current - created_at).to_i if created_at
-    attributes
+    { gid: to_gid.to_s, type: "user", account_age_seconds: (Time.current - created_at).to_i }
   end
 
   def reset_api_key!

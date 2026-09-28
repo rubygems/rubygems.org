@@ -166,6 +166,10 @@ ja:
         id_token_signing_alg_values_supported: サポート対象のIDトークン書名アルゴリズム
     errors:
       models:
+        oidc/access_policy:
+          attributes:
+            statements:
+              too_complex:
         oidc/api_key_permissions:
           attributes:
             valid_for:
@@ -291,6 +295,7 @@ ja:
         about: 概要
         api: API
         blog: ブログ
+        bluesky:
         contribute: 貢献
         data: データ
         docs: ドキュメント
@@ -310,6 +315,7 @@ ja:
         statistics: 統計
         status: 状態
         support_us: 支援
+        x:
         supported_by: 協賛
         operated_by: 運営
         supported_by_html: |
@@ -322,6 +328,12 @@ ja:
         dashboard: ダッシュボード
         settings: 設定
         edit_profile: プロフィールを編集
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: gemを検索...
         members: メンバー
       mfa_banner_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。[詳細はこちら](link
@@ -910,6 +922,17 @@ ja:
     index:
       downloads: ダウンロード数
       title: gem
+    advisories:
+      title:
+        one:
+        other:
+      malware:
+      severity_count:
+      show_fewer:
+      show_more:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: インストール
@@ -1032,6 +1055,7 @@ ja:
     version:
       yanked: ヤンク済み
       ruby_abi:
+      vulnerable:
   webauthn_credentials:
     callback:
       success: セキュリティ機器が正常に登録されました。

@@ -171,6 +171,10 @@ pt-BR:
         id_token_signing_alg_values_supported:
     errors:
       models:
+        oidc/access_policy:
+          attributes:
+            statements:
+              too_complex:
         oidc/api_key_permissions:
           attributes:
             valid_for:
@@ -298,6 +302,7 @@ pt-BR:
         about: Sobre
         api: API
         blog: Blog
+        bluesky:
         contribute: Como Contribuir
         data: Dump de Dados
         docs: Documentação
@@ -317,6 +322,7 @@ pt-BR:
         statistics: Estatísticas
         status: Status
         support_us:
+        x:
         supported_by: Patrocínio
         operated_by:
         supported_by_html: |
@@ -329,6 +335,12 @@ pt-BR:
         dashboard: Painel de Controle
         settings: Configurações da Conta
         edit_profile: Editar Perfil
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: Buscar Gems&hellip;
         members:
       mfa_banner_html:
@@ -907,6 +919,17 @@ pt-BR:
     index:
       downloads: Downloads
       title: Gems
+    advisories:
+      title:
+        one:
+        other:
+      malware:
+      severity_count:
+      show_fewer:
+      show_more:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: instalar
@@ -1035,6 +1058,7 @@ pt-BR:
     version:
       yanked: removida
       ruby_abi:
+      vulnerable:
   webauthn_credentials:
     callback:
       success:

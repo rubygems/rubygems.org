@@ -111,6 +111,14 @@ class UsersControllerTest < ActionController::TestCase
         assert_predicate user, :public_email?
       end
 
+      should "create a private user when public email is blank" do
+        post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, public_email: "" } }
+
+        user = User.find_by!(email: "foo@bar.com")
+
+        refute_predicate user, :public_email?
+      end
+
       should "create a user but dont assign not valid parameters" do
         post :create, params: { user: { email: "foo@bar.com", password: "secret", api_key: "nonono" } }
 

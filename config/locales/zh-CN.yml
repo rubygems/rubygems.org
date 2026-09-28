@@ -166,6 +166,10 @@ zh-CN:
         id_token_signing_alg_values_supported:
     errors:
       models:
+        oidc/access_policy:
+          attributes:
+            statements:
+              too_complex:
         oidc/api_key_permissions:
           attributes:
             valid_for:
@@ -291,6 +295,7 @@ zh-CN:
         about: 关于
         api: API
         blog: 博客
+        bluesky:
         contribute: 贡献
         data: 数据
         docs: 文档
@@ -310,6 +315,7 @@ zh-CN:
         statistics: 统计
         status: 状态
         support_us:
+        x:
         supported_by: 支持
         operated_by:
         supported_by_html: |
@@ -322,6 +328,12 @@ zh-CN:
         dashboard: 仪表盘
         settings: 设置
         edit_profile: 编辑个人信息
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: 搜索 Gem &hellip;&hellip;
         members:
       mfa_banner_html:
@@ -903,6 +915,17 @@ zh-CN:
     index:
       downloads: 下载
       title: Gem
+    advisories:
+      title:
+        one:
+        other:
+      malware:
+      severity_count:
+      show_fewer:
+      show_more:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: 安装
@@ -1026,6 +1049,7 @@ zh-CN:
     version:
       yanked: 已撤回
       ruby_abi:
+      vulnerable:
   webauthn_credentials:
     callback:
       success: 您已成功注册一个安全设备。

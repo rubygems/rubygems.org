@@ -4,6 +4,7 @@ class FeatureFlag
   ORGANIZATIONS = :organizations
   CONTENT_ADDRESSABLE_GEM_PUSHES = :content_addressable_gem_pushes
   UNLIMITED_GEM_NAME_RESERVATIONS = :unlimited_gem_name_reservations
+  OSV_ADVISORIES = :osv_advisories
 
   class << self
     def enabled?(flag_name, actor = nil)

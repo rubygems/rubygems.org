@@ -48,7 +48,7 @@ class TooltipComponentTest < ComponentTest
     refute_selector "button[aria-label]"
   end
 
-  should "place the bubble above the trigger by default and below on request" do
+  should "place the bubble above the trigger by default and below or to the right on request" do
     render TooltipComponent.new(text: "hi") { "?" }
 
     assert_includes page.first("[role='tooltip']", visible: :all)[:class], "bottom-full"
@@ -56,6 +56,10 @@ class TooltipComponentTest < ComponentTest
     render TooltipComponent.new(text: "hi", placement: :bottom) { "?" }
 
     assert_includes page.first("[role='tooltip']", visible: :all)[:class], "top-full"
+
+    render TooltipComponent.new(text: "hi", placement: :right) { "?" }
+
+    assert_includes page.first("[role='tooltip']", visible: :all)[:class], "left-full"
   end
 
   should "raise on an unknown placement" do

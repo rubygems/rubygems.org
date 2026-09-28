@@ -173,6 +173,10 @@ es:
         id_token_signing_alg_values_supported:
     errors:
       models:
+        oidc/access_policy:
+          attributes:
+            statements:
+              too_complex:
         oidc/api_key_permissions:
           attributes:
             valid_for:
@@ -308,6 +312,7 @@ es:
         about: Acerca de
         api: API
         blog: Blog
+        bluesky:
         contribute: Contribuye
         data: Datos
         docs: Documentación
@@ -327,6 +332,7 @@ es:
         statistics: Estadísticas
         status: Estado
         support_us:
+        x:
         supported_by: Con el apoyo de
         operated_by:
         supported_by_html: |
@@ -339,6 +345,12 @@ es:
         dashboard: Dashboard
         settings: Configuración
         edit_profile: Editar
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: Buscar gemas&hellip;
         members:
       mfa_banner_html:
@@ -995,6 +1007,17 @@ es:
     index:
       downloads: Descargas
       title: Gemas
+    advisories:
+      title:
+        one:
+        other:
+      malware:
+      severity_count:
+      show_fewer:
+      show_more:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: instalar
@@ -1129,6 +1152,7 @@ es:
     version:
       yanked: borrada
       ruby_abi:
+      vulnerable:
   webauthn_credentials:
     callback:
       success: Has dado de alta con éxito un dispositivo de seguridad.

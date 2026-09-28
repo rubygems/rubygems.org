@@ -104,21 +104,33 @@ class OwnerTest < ApplicationSystemTestCase
     assert_equal [@other_user.email], last_email.to
   end
 
-  test "removing last owner shows error message" do
+  test "hides the remove button when there is only one confirmed owner" do
     visit_ownerships_page
 
     within_element owner_row(@user) do
-      click_button "Remove"
-      fill_in "username_confirm_#{@ownership.id}", with: @user.handle
-      click_button "Remove my access"
+      assert_no_button "Remove"
+    end
+  end
+
+  test "allows removing a pending owner but not the sole confirmed owner" do
+    invitation = create(:ownership, :unconfirmed, user: @other_user, rubygem: @rubygem)
+
+    visit_ownerships_page
+
+    within_element owner_row(@user) do
+      assert_no_button "Remove"
     end
 
-    assert page.has_selector?("a[href='#{profile_path(@user.display_id)}']")
-    assert page.has_selector? "#flash_alert", text: "Can't remove the only owner of the gem"
+    within_element owner_row(@other_user) do
+      perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+        accept_confirm do
+          click_button "Remove"
+        end
+      end
+    end
 
-    perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
-
-    assert_no_emails
+    refute Ownership.exists?(invitation.id)
+    assert Ownership.exists?(@ownership.id)
   end
 
   test "removing self as owner shows username confirmation dialog" do
@@ -324,6 +336,20 @@ class OwnerTest < ApplicationSystemTestCase
     visit rubygem_path(@rubygem.slug)
 
     assert page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
+  end
+
+  test "shows the remove button for all owners when there are multiple confirmed owners" do
+    create(:ownership, user: @other_user, rubygem: @rubygem)
+
+    visit_ownerships_page
+
+    within_element owner_row(@user) do
+      assert_button "Remove"
+    end
+
+    within_element owner_row(@other_user) do
+      assert_button "Remove"
+    end
   end
 
   test "hides ownership link when not owner" do

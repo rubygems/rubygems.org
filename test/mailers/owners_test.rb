@@ -30,4 +30,16 @@ class OwnersMailerTest < ActionMailer::TestCase
       assert_cta_button confirm_rubygem_owners_url(@rubygem.slug, token: ownership.token, host: Gemcutter::HOST), "VERIFY"
     end
   end
+
+  context "#owner_added" do
+    should "use default locale regardless of ambient I18n.locale" do
+      I18n.with_locale(:de) do
+        email = OwnersMailer.owner_added(@owner.id, @maintainer.id, @owner.id, @rubygem.id)
+
+        assert_emails(1) { email.deliver_now }
+        assert_equal "User #{@maintainer.display_handle} was added as an owner to the #{@rubygem.name} gem", email.subject
+        assert_match "OWNER ADDED", email.body.to_s
+      end
+    end
+  end
 end
