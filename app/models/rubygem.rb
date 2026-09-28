@@ -438,12 +438,13 @@ class Rubygem < ApplicationRecord
 
   def bulk_reorder_versions
     numbers = reload.versions.pluck(:number).uniq.sort_by { |n| Gem::Version.new(n) }.reverse
+    position_by_number = numbers.each_with_index.to_h
 
     ids = []
     positions = []
     versions.each do |version|
       ids << version.id
-      positions << numbers.index(version.number)
+      positions << position_by_number.fetch(version.number)
     end
 
     update_query = ["update versions set position = positions_data.position, latest = false
