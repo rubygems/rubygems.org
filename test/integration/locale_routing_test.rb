@@ -232,7 +232,7 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     post users_path, params: { user: { handle: "", email: "", password: "" } }
 
     assert_response :unprocessable_content
-    de_href = page.find_link(I18n.t(:locale_name, locale: :de))[:href]
+    de_href = page.first(:link, I18n.t(:locale_name, locale: :de))[:href]
 
     get de_href
 

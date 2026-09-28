@@ -336,6 +336,7 @@ nl:
         main_navigation:
         open_menu:
         close_menu:
+        back: Terug
         language: Taal
         search_gem_html: Gems Zoeken&hellip;
         members:

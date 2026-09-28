@@ -334,6 +334,7 @@ ja:
         main_navigation:
         open_menu:
         close_menu:
+        back: 戻る
         language: 言語
         search_gem_html: gemを検索...
         members: メンバー

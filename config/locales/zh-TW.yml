@@ -333,6 +333,7 @@ zh-TW:
         main_navigation:
         open_menu:
         close_menu:
+        back: 返回
         language: 語言
         search_gem_html: 搜尋 Gems&hellip;
         members:
