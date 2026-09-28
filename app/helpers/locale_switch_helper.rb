@@ -2,14 +2,15 @@
 
 module LocaleSwitchHelper
   def default_search_engine_tags
-    return if signed_in?
-    return unless request.get? || request.head?
-    return if request.query_string.present?
+    return if request.query_parameters.except(:locale, "locale").present?
 
     canonical_link_tags { |locale| localized_url_for_current_page(locale) }
   end
 
   def canonical_link_tags
+    return if signed_in?
+    return unless request.get? || request.head?
+
     canonical = tag.link(rel: "canonical", href: yield(I18n.locale))
     alternates = I18n.available_locales.map do |locale|
       tag.link(rel: "alternate", hreflang: locale, href: yield(locale))

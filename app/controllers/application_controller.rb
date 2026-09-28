@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
   before_action :reject_null_char_param
   before_action :reject_path_params_param
   before_action :reject_null_char_cookie
+  before_action :discard_query_locale
   before_action :strip_default_locale
   before_action :set_error_context_user
   before_action :set_user_tag
@@ -48,6 +49,14 @@ class ApplicationController < ActionController::Base
 
   def default_url_options
     { path_params: { locale: LocaleRouting.locale_param(I18n.locale) } }
+  end
+
+  # The locale comes only from the URL path. A query-string locale must not leak into helpers
+  # that copy params into generated URLs (e.g. Kaminari pagination links on cached pages).
+  def discard_query_locale
+    return if request.path_parameters.key?(:locale)
+
+    params.delete(:locale)
   end
 
   def strip_default_locale

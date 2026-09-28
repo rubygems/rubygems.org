@@ -1,4 +1,7 @@
 <% @title = t('.title') %>
+<% content_for :search_engine_tags do %>
+  <meta name="robots" content="noindex">
+<% end %>
 <% add_breadcrumb t("sign_in"), sign_in_path %>
 <% add_breadcrumb @title %>
 
