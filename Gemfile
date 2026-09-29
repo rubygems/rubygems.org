@@ -12,7 +12,7 @@ gem "aws-sdk-sqs", "~> 1.119"
 gem "bootsnap", "~> 1.26"
 gem "clearance", "~> 2.12"
 gem "dalli", "~> 3.2"
-gem "datadog", "~> 2.42"
+gem "datadog", "~> 2.43"
 gem "dogstatsd-ruby", "~> 5.7"
 gem "google-protobuf", "~> 4.36"
 gem "faraday", "~> 2.14"
@@ -23,7 +23,7 @@ gem "flipper-active_record", "~> 1.4"
 gem "flipper-ui", "~> 1.4"
 gem "good_job", "~> 3.99"
 gem "gravtastic", "~> 3.2"
-gem "honeybadger", "~> 6.9.1", require: false
+gem "honeybadger", "~> 6.9.2", require: false
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.2"
 gem "mail", "~> 2.9"
@@ -68,7 +68,7 @@ gem "faraday-multipart", "~> 1.2"
 gem "sigstore", "~> 0.2.3"
 gem "kramdown", "~> 2.5"
 gem "zlib", "~> 3.2"
-gem "rubyzip", "~> 3.5"
+gem "rubyzip", "~> 3.7"
 gem "yaml-schema", "~> 1.2"
 
 # Admin dashboard
@@ -127,7 +127,7 @@ group :development, :test do
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
   gem "rubocop", "~> 1.91", require: false
-  gem "rubocop-rails", "~> 2.37", require: false
+  gem "rubocop-rails", "~> 2.38", require: false
   gem "rubocop-performance", "~> 1.27", require: false
   gem "rubocop-minitest", "~> 0.40", require: false
   gem "rubocop-capybara", "~> 3.0", require: false

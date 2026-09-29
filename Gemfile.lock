@@ -142,7 +142,7 @@ GEM
       rails (>= 6.0.0)
       zeitwerk
     aws-eventstream (1.4.0)
-    aws-partitions (1.1287.0)
+    aws-partitions (1.1290.0)
     aws-sdk-core (3.257.0)
       aws-eventstream (~> 1, >= 1.3.0)
       aws-partitions (~> 1, >= 1.992.0)
@@ -155,7 +155,7 @@ GEM
     aws-sdk-kms (1.132.0)
       aws-sdk-core (~> 3, >= 3.256.0)
       aws-sigv4 (~> 1.5)
-    aws-sdk-s3 (1.232.0)
+    aws-sdk-s3 (1.232.1)
       aws-sdk-core (~> 3, >= 3.256.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.5)
@@ -223,7 +223,7 @@ GEM
       ssrf_filter (~> 1.5)
     csv (3.3.6)
     dalli (3.2.8)
-    datadog (2.42.0)
+    datadog (2.43.0)
       cgi
       datadog-ruby_core_source (~> 3.5, >= 3.5.5)
       libdatadog (~> 40.0.0.2.0)
@@ -328,22 +328,22 @@ GEM
       fugit (>= 1.1)
       railties (>= 6.0.0)
       thor (>= 0.14.1)
-    google-protobuf (4.36.1)
+    google-protobuf (4.36.2)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.36.1-aarch64-linux-gnu)
+    google-protobuf (4.36.2-aarch64-linux-gnu)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.36.1-arm64-darwin)
+    google-protobuf (4.36.2-arm64-darwin)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.36.1-x86_64-darwin)
+    google-protobuf (4.36.2-x86_64-darwin)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.36.1-x86_64-linux-gnu)
+    google-protobuf (4.36.2-x86_64-linux-gnu)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.36.1-x86_64-linux-musl)
+    google-protobuf (4.36.2-x86_64-linux-musl)
       bigdecimal
       rake (~> 13.3)
     gravtastic (3.2.6)
@@ -362,7 +362,7 @@ GEM
     herb (0.10.4-x86_64-darwin)
     herb (0.10.4-x86_64-linux-gnu)
     herb (0.10.4-x86_64-linux-musl)
-    honeybadger (6.9.1)
+    honeybadger (6.9.2)
       logger
       ostruct
     htmlbeautifier (1.4.3)
@@ -729,7 +729,7 @@ GEM
     refract (1.1.0)
       prism
       zeitwerk
-    regexp_parser (2.13.0)
+    regexp_parser (2.13.1)
     reline (0.7.0)
       io-console (~> 0.5)
     rexml (3.4.4)
@@ -774,7 +774,7 @@ GEM
       lint_roller (~> 1.1)
       rubocop (>= 1.89.0, < 2.0)
       rubocop-ast (>= 1.47.1, < 2.0)
-    rubocop-rails (2.37.0)
+    rubocop-rails (2.38.0)
       activesupport (>= 4.2.0)
       lint_roller (~> 1.1)
       rack (>= 1.1)
@@ -785,7 +785,7 @@ GEM
     ruby-progressbar (1.13.0)
     ruby-statistics (4.1.1)
     ruby2_keywords (0.0.5)
-    rubyzip (3.5.0)
+    rubyzip (3.7.0)
     safely_block (1.0.0)
     safety_net_attestation (0.5.0)
       jwt (>= 2.0, < 4.0)
@@ -932,7 +932,7 @@ DEPENDENCIES
   clearance (~> 2.12)
   csv (~> 3.3)
   dalli (~> 3.2)
-  datadog (~> 2.42)
+  datadog (~> 2.43)
   debug (~> 1.0)
   derailed_benchmarks (~> 2.2)
   discard (~> 2.0)
@@ -952,7 +952,7 @@ DEPENDENCIES
   gravtastic (~> 3.2)
   groupdate (~> 6.8)
   herb (~> 0.10)
-  honeybadger (~> 6.9.1)
+  honeybadger (~> 6.9.2)
   http_accept_language (~> 2.1)
   importmap-rails (~> 2.2)
   json (< 3)
@@ -1012,9 +1012,9 @@ DEPENDENCIES
   rubocop-factory_bot (~> 2.28)
   rubocop-minitest (~> 0.40)
   rubocop-performance (~> 1.27)
-  rubocop-rails (~> 2.37)
+  rubocop-rails (~> 2.38)
   ruby-magic (~> 0.6)
-  rubyzip (~> 3.5)
+  rubyzip (~> 3.7)
   searchkick (~> 6.1)
   shoryuken (~> 7.0)
   shoulda-context (~> 3.0.0.rc1)
@@ -1069,10 +1069,10 @@ CHECKSUMS
   avo-pro (3.32.4) sha256=02570da77088ecf04851db0e98b48d0605dc5e60267ea8b806b8a61b1e00b828
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   aws-eventstream (1.4.0) sha256=116bf85c436200d1060811e6f5d2d40c88f65448f2125bc77ffce5121e6e183b
-  aws-partitions (1.1287.0) sha256=76f4c73011654553566c5db5bbef0f24738bb016e923910e8b1b3f9cb7d989ca
+  aws-partitions (1.1290.0) sha256=44613571eda66decddca594c10c9cee354ce819842b5724ca4fb5115e2f06811
   aws-sdk-core (3.257.0) sha256=a92ad19c7ff668cec6688ee3200ee562da80647a3bbeed9fda02e8b0ca6492c6
   aws-sdk-kms (1.132.0) sha256=094b0097bb3be9d5c1ac87e971ca7f5aebb746801dfb5f0f576480bf98dca69c
-  aws-sdk-s3 (1.232.0) sha256=3899ee76a776761001a22b0e6992d2f4683e03c08f2399835b8ea32c0bb44ee7
+  aws-sdk-s3 (1.232.1) sha256=124440f3a44fbc28cc3a2dec6eaeeea2a236bfc33772005010a19baa62654870
   aws-sdk-sqs (1.119.0) sha256=62d4d505303879e6e416a7346d35e6f93d0b794f2555f37ed6535b48c133795e
   aws-sigv4 (1.12.1) sha256=6973ff95cb0fd0dc58ba26e90e9510a2219525d07620c8babeb70ef831826c00
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
@@ -1102,7 +1102,7 @@ CHECKSUMS
   css_parser (3.1.0) sha256=ef68b7a629e88539fc8017fa2ecc066ad4b4d36004efdf7e58703034a519796f
   csv (3.3.6) sha256=aba61e7e507a66f03d45cb1f3c4b6359861c3504038b422962875dce099e4456
   dalli (3.2.8) sha256=2e63595084d91fae2655514a02c5d4fc0f16c0799893794abe23bf628bebaaa5
-  datadog (2.42.0) sha256=b546d98026efbbe6abe5e30fa8f6e9ae458482279889ff62f6e59dd73f32fc8c
+  datadog (2.43.0) sha256=47a336525c13621885b567db18ec31b83a2c63c16af2febfb29ac0d3938440a4
   datadog-ruby_core_source (3.5.5) sha256=5df55ea06feda22e5d4b7db62a70f19a86660bd06d3a3ff739d2f549eaff45e6
   date (3.5.1) sha256=750d06384d7b9c15d562c76291407d89e368dda4d4fff957eb94962d325a0dc0
   debug (1.11.1) sha256=2e0b0ac6119f2207a6f8ac7d4a73ca8eb4e440f64da0a3136c30343146e952b6
@@ -1142,12 +1142,12 @@ CHECKSUMS
   get_process_mem (1.0.0) sha256=d54024f3bcbf776a4d6e0155ec2b21bc3ba44e2fd158c4c00c80aa8a36e0b4aa
   globalid (1.4.0) sha256=037f12fbf1d9d7a014d501c2d5c77356fd4ddd96d7a7991d6700bba96706f427
   good_job (3.99.1) sha256=7d3869d8a8ee8ef7048fee5d746f41c21987b7822c20038a2f773036bef0830a
-  google-protobuf (4.36.1) sha256=893ac9d66b36b6ea50da5418f856bc7c2d2072099a578aeefc2d7757dcab6a77
-  google-protobuf (4.36.1-aarch64-linux-gnu) sha256=3883fa1b0e99221f68f4a8511bc4fb1888897dcb6cc8bf2805c92c16fc99b499
-  google-protobuf (4.36.1-arm64-darwin) sha256=4d82184f4582dfa123f9793cd7a73beca9b0d3f0d3717948c4120b6cc0d50f2d
-  google-protobuf (4.36.1-x86_64-darwin) sha256=e92bf3c90c0a9c410cbe430cf366190b1b9b5b2b784f6195a43a178c2ef7e338
-  google-protobuf (4.36.1-x86_64-linux-gnu) sha256=e735a3f3d6596b1010013c2030778bc030770e659106fe7e4ae0f07631b551cb
-  google-protobuf (4.36.1-x86_64-linux-musl) sha256=ae2712b7960e8b1f96d52fef8c2c0dc1cd230f2be13e48492dad0aa2a6a7cf03
+  google-protobuf (4.36.2) sha256=2f8daff50ae14aad36ab0ccdcf284065fa71d726c444efe114e6db82ffe62494
+  google-protobuf (4.36.2-aarch64-linux-gnu) sha256=c3279ec6eaa59f6ed6276eda2a33cffb4306471183ab79a332e698b8564f5169
+  google-protobuf (4.36.2-arm64-darwin) sha256=f70d810e6bbab9d8ad9c1d5fd685a21de4c10ad3ad32efb9455e17e5b1286917
+  google-protobuf (4.36.2-x86_64-darwin) sha256=8d1bd2a344f7f589703b202ad2ee4cca8ef731b4ced45782ef92d385967384ba
+  google-protobuf (4.36.2-x86_64-linux-gnu) sha256=d25a820873e423f1d209ae8c672a4a28b019e2429debd0901d26670a0b4e14db
+  google-protobuf (4.36.2-x86_64-linux-musl) sha256=0fa17686c896da96a60a705e56ddc7d4ff56413f52787c655bd4c9fb33ffe14f
   gravtastic (3.2.6) sha256=ef98abcecf7c402b61cff1ae7c50a2c6d97dd22bac21ea9b421ce05bc03d734f
   groupdate (6.8.0) sha256=16f90ea18ca981c38e41e592416480b28353aa5e5cc3e7cb13a68b8fb5d40510
   hashdiff (1.2.1) sha256=9c079dbc513dfc8833ab59c0c2d8f230fa28499cc5efb4b8dd276cf931457cd1
@@ -1161,7 +1161,7 @@ CHECKSUMS
   herb (0.10.4-x86_64-darwin) sha256=50d522b19732e38a9c6f332e1ffaf70054ad2eca9395dd3bb81dde1f73cb2e67
   herb (0.10.4-x86_64-linux-gnu) sha256=36591472b92e0f601e512b108bf25dbb761f32636703cb79d3f5388425476b1b
   herb (0.10.4-x86_64-linux-musl) sha256=3b5fc05c0224f156bb05993703c309d53c52a1385d37c65a956cb4d40695d70c
-  honeybadger (6.9.1) sha256=3e79543ab171f810306bd152b3f470ce2b905b1a27f766f3138568949078cf68
+  honeybadger (6.9.2) sha256=6f5a9c20f7a6448623c8fdc397fc3c96623b3d8fc85449810d42a0be4f8ae214
   htmlbeautifier (1.4.3) sha256=b43d08f7e2aa6ae1b5a6f0607b4ed8954c8d4a8e85fd2336f975dda1e4db385b
   htmlentities (4.4.2) sha256=bbafbdf69f2eca9262be4efef7e43e6a1de54c95eb600f26984f71d2fe96c5c3
   http_accept_language (2.1.1) sha256=0043f0d55a148cf45b604dbdd197cb36437133e990016c68c892d49dbea31634
@@ -1303,7 +1303,7 @@ CHECKSUMS
   rdoc (8.0.0) sha256=03bf8c08a9639658855a0cfd77c0abca8325c227693f7f33f82957811348c469
   redcarpet (3.6.1) sha256=d444910e6aa55480c6bcdc0cdb057626e8a32c054c29e793fa642ba2f155f445
   refract (1.1.0) sha256=ee3b9627e39f7692831101e2fedd73e0d09a592ff5d5c05f171d14211fc7a9c7
-  regexp_parser (2.13.0) sha256=d105d95d2138954e73914d2fbfb3d0a8f8605a49a3e89864c32e78b9107cb770
+  regexp_parser (2.13.1) sha256=5aedb6b7c35688f51e86eef17a15374dfd287c83f4ca644b2c5f3ec50a33b44b
   reline (0.7.0) sha256=5b012d8e55dbf9d450f12bde2cf7d15ff546ae80b3f8f3b30e570d431815583d
   rexml (3.4.4) sha256=19e0a2c3425dfbf2d4fc1189747bdb2f849b6c5e74180401b15734bc97b5d142
   roadie (5.3.1) sha256=665a6a8df15fbc805583b341331cbd43b9717f014a8e46dac799266af62c1cc1
@@ -1318,12 +1318,12 @@ CHECKSUMS
   rubocop-factory_bot (2.28.0) sha256=4b17fc02124444173317e131759d195b0d762844a71a29fe8139c1105d92f0cb
   rubocop-minitest (0.40.0) sha256=353c698199115f12151144cf0b5a96f69bb9d77b660cf6536df2c4250c672a9d
   rubocop-performance (1.27.0) sha256=eeeb1374d062a368ee1c787b70eb0b0cc4b184cb1f8565f424760946146d61ce
-  rubocop-rails (2.37.0) sha256=6e1645add5060e0328f8ddda0d820f55697c591394398bf14bb9dccb62f14b7e
+  rubocop-rails (2.38.0) sha256=6e2b7c532efa95e3050371bec20b8f5b025662acead8bc70ee31f0e3e6fa2f06
   ruby-magic (0.6.0) sha256=7b2138877b7d23aff812c95564eba6473b74b815ef85beb0eb792e729a2b6101
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   ruby-statistics (4.1.1) sha256=a9923db9bc4b1bda685fac2c47a9fadcc9a93cfd36465f5782a68dfbdf43c171
   ruby2_keywords (0.0.5) sha256=ffd13740c573b7301cf7a2e61fc857b2a8e3d3aff32545d6f8300d8bae10e3ef
-  rubyzip (3.5.0) sha256=f77c49d737a849b662f6ca4de473f31b4ecd8288f1c9f901a5c820641f0f8d7c
+  rubyzip (3.7.0) sha256=65c19294da75297a939006f3516deacc33185fbd721ff1954f7a231db6d3e121
   safely_block (1.0.0) sha256=bea80e084e620adeada62fd98cf461bbb9888d40dc0f06d337df9d01e1a658e5
   safety_net_attestation (0.5.0) sha256=c8cd01dd550dbe8553862918af6355a04672db11d218ec96104ce3955293f2aa
   sanitize (7.0.0) sha256=269d1b9d7326e69307723af5643ec032ff86ad616e72a3b36d301ac75a273984
