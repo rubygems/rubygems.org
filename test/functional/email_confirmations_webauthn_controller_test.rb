@@ -11,7 +11,7 @@ class EmailConfirmationsWebauthnControllerTest < ActionController::TestCase
     token = user.issue_email_confirmation!(user.email)
 
     get :update, params: { token: }
-    post :confirm
+    post :confirm, params: { confirmation: session[:email_confirmation_id] }
 
     assert_response :success
     challenge = session[:webauthn_authentication]["challenge"]
@@ -20,6 +20,7 @@ class EmailConfirmationsWebauthnControllerTest < ActionController::TestCase
     WebauthnHelpers.create_credential(webauthn_credential: credential, client:)
 
     post :webauthn_update, params: {
+      confirmation: session[:email_confirmation_id],
       credentials: WebauthnHelpers.get_result(client:, challenge:)
     }
 
@@ -34,16 +35,17 @@ class EmailConfirmationsWebauthnControllerTest < ActionController::TestCase
     token = user.issue_email_confirmation!(user.email)
 
     get :update, params: { token: }
-    post :confirm
+    post :confirm, params: { confirmation: session[:email_confirmation_id] }
     origin = WebAuthn.configuration.allowed_origins.first
     client = WebAuthn::FakeClient.new(origin, encoding: false)
     WebauthnHelpers.create_credential(webauthn_credential: credential, client:)
 
-    post :webauthn_update
+    post :webauthn_update, params: { confirmation: session[:email_confirmation_id] }
 
     assert_response :unauthorized
 
     post :webauthn_update, params: {
+      confirmation: session[:email_confirmation_id],
       credentials: WebauthnHelpers.get_result(client:, challenge: SecureRandom.hex)
     }
 
@@ -58,18 +60,21 @@ class EmailConfirmationsWebauthnControllerTest < ActionController::TestCase
     token = user.issue_email_confirmation!(user.email)
 
     get :update, params: { token: }
-    post :confirm
+    post :confirm, params: { confirmation: session[:email_confirmation_id] }
     challenge = session[:webauthn_authentication]["challenge"]
     origin = WebAuthn.configuration.allowed_origins.first
     client = WebAuthn::FakeClient.new(origin, encoding: false)
     WebauthnHelpers.create_credential(webauthn_credential: credential, client:)
     user.issue_email_confirmation!(user.email)
+    sign_count = credential.reload.sign_count
 
     post :webauthn_update, params: {
+      confirmation: session[:email_confirmation_id],
       credentials: WebauthnHelpers.get_result(client:, challenge:)
     }
 
     assert_redirected_to root_path
     refute_predicate user.reload, :email_confirmed?
+    assert_equal sign_count, credential.reload.sign_count
   end
 end

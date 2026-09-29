@@ -59,7 +59,7 @@ module PasswordResettable
       else
         self.password = new_password
         if valid?
-          self.confirmation_token = nil
+          clear_email_confirmation
           self.password_reset_token_digest = nil
           self.password_reset_token_expires_at = nil
           generate_remember_token

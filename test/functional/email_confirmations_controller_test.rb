@@ -33,7 +33,7 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
   test "confirmation POST consumes the token and replay is denied" do
     begin_email_confirmation
 
-    post confirm_email_confirmations_path
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
 
     assert_redirected_to sign_in_path
     assert_predicate @user.reload, :email_confirmed?
@@ -53,7 +53,7 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
 
     get update_email_confirmations_path(token: @token)
     authenticity_token = css_select("form[action='#{confirm_email_confirmations_path}'] input[name=authenticity_token]").sole[:value]
-    post confirm_email_confirmations_path, params: { authenticity_token: }
+    post confirm_email_confirmations_path, params: { authenticity_token:, confirmation: session[:email_confirmation_id] }
 
     assert_redirected_to sign_in_path
     assert_predicate @user.reload, :email_confirmed?
@@ -77,7 +77,7 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
 
-    post confirm_email_confirmations_path
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
 
     assert_redirected_to sign_in_path
     refute_equal remember_token, other.reload.remember_token
@@ -95,6 +95,56 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     get update_email_confirmations_path(token: replacement)
 
     assert_response :success
+  end
+
+  test "submitting an older confirmation page does not confirm a different target" do
+    other = create(:user, :unconfirmed)
+    other_token = other.issue_email_confirmation!(other.email)
+    @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+
+    get update_email_confirmations_path(token: @token)
+    first_form_confirmation = css_select("form[action='#{confirm_email_confirmations_path}'] input[name=confirmation]").sole[:value]
+    get update_email_confirmations_path(token: other_token)
+
+    post confirm_email_confirmations_path, params: { confirmation: first_form_confirmation }
+
+    assert_redirected_to root_path
+    assert_equal I18n.t("email_confirmations.update.token_failure"), flash[:alert]
+    refute_predicate @user.reload, :email_confirmed?
+    refute_predicate other.reload, :email_confirmed?
+    assert @user.valid_email_confirmation_token?(@token)
+    assert other.valid_email_confirmation_token?(other_token)
+    assert_nil session[:mfa_user]
+  end
+
+  test "the confirmation page binding is carried through MFA and rejected when stale" do
+    @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+    get update_email_confirmations_path(token: @token)
+    confirmation = css_select("input[name=confirmation]").sole[:value]
+
+    post confirm_email_confirmations_path, params: { confirmation: }
+
+    assert_response :success
+    assert_select "form[action=?]", otp_update_email_confirmations_url(confirmation:)
+
+    post otp_update_email_confirmations_path, params: { confirmation: "stale", otp: ROTP::TOTP.new(@user.totp_seed).now }
+
+    assert_redirected_to root_path
+    refute_predicate @user.reload, :email_confirmed?
+  end
+
+  test "an invalid confirmation link does not clear a same-user sign-in MFA challenge" do
+    @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+    get update_email_confirmations_path(token: @token)
+    post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    assert_equal @user.id, session[:mfa_user]
+    mfa_state = session.to_hash.slice("mfa_user", "mfa_expires_at", "mfa_login_started_at", "webauthn_authentication")
+
+    get update_email_confirmations_path(token: "invalid")
+
+    assert_redirected_to root_path
+    assert_equal mfa_state, session.to_hash.slice("mfa_user", "mfa_expires_at", "mfa_login_started_at", "webauthn_authentication")
   end
 
   test "an expired token is denied without changing account state" do
@@ -121,7 +171,7 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "old@rubygems-test.org", user.reload.email
     assert_equal "new@rubygems-test.org", user.unconfirmed_email
 
-    post confirm_email_confirmations_path
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
 
     assert_redirected_to sign_in_path
     assert_equal "new@rubygems-test.org", user.reload.email
@@ -147,20 +197,20 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
     begin_email_confirmation
 
-    post confirm_email_confirmations_path
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
 
     assert_response :success
     assert_select "h1", text: /Multi-factor authentication/
     refute_predicate @user.reload, :email_confirmed?
     assert @user.valid_email_confirmation_token?(@token)
 
-    post otp_update_email_confirmations_path, params: { otp: "incorrect" }
+    post otp_update_email_confirmations_path, params: { confirmation: session[:email_confirmation_id], otp: "incorrect" }
 
     assert_response :unauthorized
     refute_predicate @user.reload, :email_confirmed?
     assert @user.valid_email_confirmation_token?(@token)
 
-    post otp_update_email_confirmations_path, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+    post otp_update_email_confirmations_path, params: { confirmation: session[:email_confirmation_id], otp: ROTP::TOTP.new(@user.totp_seed).now }
 
     assert_redirected_to sign_in_path
     assert_predicate @user.reload, :email_confirmed?
@@ -169,23 +219,28 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
 
   test "token replacement during MFA prevents confirmation" do
     @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+    recovery_code = @user.new_mfa_recovery_codes.first
+    recovery_digests = @user.reload.mfa_hashed_recovery_codes
+
+    refute_nil recovery_code
     begin_email_confirmation
-    post confirm_email_confirmations_path
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
     @user.issue_email_confirmation!(@user.email)
 
-    post otp_update_email_confirmations_path, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+    post otp_update_email_confirmations_path, params: { confirmation: session[:email_confirmation_id], otp: recovery_code }
 
     assert_redirected_to root_path
     refute_predicate @user.reload, :email_confirmed?
+    assert_equal recovery_digests, @user.mfa_hashed_recovery_codes
   end
 
   test "token expiry during MFA prevents confirmation" do
     @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
     begin_email_confirmation
-    post confirm_email_confirmations_path
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
     @user.update_column(:email_confirmation_token_expires_at, 1.second.ago)
 
-    post otp_update_email_confirmations_path, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+    post otp_update_email_confirmations_path, params: { confirmation: session[:email_confirmation_id], otp: ROTP::TOTP.new(@user.totp_seed).now }
 
     assert_redirected_to root_path
     refute_predicate @user.reload, :email_confirmed?
@@ -197,7 +252,7 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     begin_email_confirmation
     ActionController::Base.allow_forgery_protection = true
 
-    post confirm_email_confirmations_path
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
 
     assert_response :forbidden
     refute_predicate @user.reload, :email_confirmed?

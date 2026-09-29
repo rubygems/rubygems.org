@@ -13,7 +13,7 @@ class EmailConfirmationsController < ApplicationController
   before_action :begin_email_confirmation, only: :update
   before_action :load_email_confirmation, only: %i[confirm otp_update webauthn_update]
   before_action :sign_out_other_user, only: :confirm
-  before_action :require_mfa, only: :confirm
+  before_action :require_email_confirmation_mfa, only: :confirm
   before_action :validate_otp, only: :otp_update
   before_action :validate_webauthn, only: :webauthn_update
   after_action :delete_mfa_expiry_session, only: %i[otp_update webauthn_update]
@@ -74,11 +74,17 @@ class EmailConfirmationsController < ApplicationController
       return redirect_to root_path, alert: t("email_confirmations.update.token_failure")
     end
 
+    delete_email_confirmation_session
     session[:email_confirmation_user] = @user.id
     session[:email_confirmation_token] = token
+    session[:email_confirmation_id] = SecureRandom.urlsafe_base64(24)
   end
 
   def load_email_confirmation
+    # Each rendered page carries its own binding. A page rendered for an
+    # earlier link must not submit whichever confirmation the session now holds.
+    return redirect_to root_path, alert: t("email_confirmations.update.token_failure") unless email_confirmation_binding_matches?
+
     token = session[:email_confirmation_token]
     @user = User.find_by_email_confirmation_token(token)
     return if @user&.id == session[:email_confirmation_user] && @user&.valid_email_confirmation_token?(token)
@@ -86,8 +92,24 @@ class EmailConfirmationsController < ApplicationController
     login_failure(t("email_confirmations.update.token_failure"))
   end
 
+  def email_confirmation_binding_matches?
+    submitted = params.permit(:confirmation).fetch(:confirmation, "").to_s
+    expected = session[:email_confirmation_id].to_s
+    expected.present? && ActiveSupport::SecurityUtils.secure_compare(submitted, expected)
+  end
+
   def sign_out_other_user
     sign_out if signed_in? && @user != current_user
+  end
+
+  def require_email_confirmation_mfa
+    return unless @user.mfa_enabled?
+
+    initialize_mfa
+    # Record which MFA challenge this flow started, so cleanup never clears a
+    # sign-in or password-reset challenge that shares the same session keys.
+    session[:email_confirmation_mfa_started_at] = session[:mfa_login_started_at]
+    prompt_mfa
   end
 
   def confirm_email
@@ -116,11 +138,11 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def otp_verification_url
-    otp_update_email_confirmations_url
+    otp_update_email_confirmations_url(confirmation: session[:email_confirmation_id])
   end
 
   def webauthn_verification_url
-    webauthn_update_email_confirmations_url
+    webauthn_update_email_confirmations_url(confirmation: session[:email_confirmation_id])
   end
 
   def mfa_failure(alert)
@@ -135,8 +157,17 @@ class EmailConfirmationsController < ApplicationController
   end
 
   def delete_email_confirmation_session
-    delete_mfa_session if session[:mfa_user].present? && session[:mfa_user] == session[:email_confirmation_user]
+    delete_mfa_session if email_confirmation_owns_mfa?
     session.delete(:email_confirmation_user)
     session.delete(:email_confirmation_token)
+    session.delete(:email_confirmation_id)
+    session.delete(:email_confirmation_mfa_started_at)
+  end
+
+  def email_confirmation_owns_mfa?
+    started_at = session[:email_confirmation_mfa_started_at]
+    started_at.present? &&
+      session[:mfa_user] == session[:email_confirmation_user] &&
+      session[:mfa_login_started_at] == started_at
   end
 end

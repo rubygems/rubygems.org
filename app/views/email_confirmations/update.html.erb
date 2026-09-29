@@ -16,6 +16,7 @@
     </div>
 
     <%= form_with url: confirm_email_confirmations_path, data: { turbo: false } do %>
+      <%= hidden_field_tag :confirmation, session[:email_confirmation_id], id: nil %>
       <%= render ButtonComponent.new(t(".submit"), type: :submit, color: :primary) %>
     <% end %>
   </div>

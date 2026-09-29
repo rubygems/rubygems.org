@@ -575,6 +575,23 @@ class UserTest < ActiveSupport::TestCase
           @user.update_password_with_token(PasswordHelpers::SECURE_TEST_PASSWORD, token:)
       end
 
+      should "revoke email confirmation authority only after a successful password reset" do
+        reset_token = @user.issue_password_reset!
+        @user.update!(unconfirmed_email: "pending-after-reset@rubygems-test.org")
+        confirmation_token = @user.issue_email_confirmation!(@user.unconfirmed_email)
+        original_email = @user.email
+
+        assert_equal :invalid_password, @user.update_password_with_token("short", token: reset_token)
+        assert @user.reload.valid_email_confirmation_token?(confirmation_token)
+
+        assert_equal :updated, @user.update_password_with_token(PasswordHelpers::SECURE_TEST_PASSWORD, token: reset_token)
+        assert_nil @user.reload.email_confirmation_token_digest
+        assert_nil @user.email_confirmation_token_expires_at
+        assert_nil @user.email_confirmation_email
+        assert_equal :invalid_token, @user.confirm_email_with_token(confirmation_token)
+        assert_equal original_email, @user.reload.email
+      end
+
       should "update the password when the persisted WebAuthn ID is missing" do
         token = @user.issue_password_reset!
         @user.update_column(:webauthn_id, nil)
