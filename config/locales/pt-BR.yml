@@ -274,7 +274,9 @@ pt-BR:
       will_email_notice:
     update:
       confirmed_email:
+      email_label:
       explanation:
+      new_email_label:
       submit:
       title:
       token_failure: Por favor, confira a URL ou tente submetê-la novamente.

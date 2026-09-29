@@ -289,7 +289,9 @@ de:
         Konto zu aktivieren.
     update:
       confirmed_email: Ihre E-Mail-Adresse wurde verifiziert.
+      email_label:
       explanation:
+      new_email_label:
       submit:
       title:
       token_failure: Bitte überprüfen Sie die URL oder versuchen Sie es erneut.

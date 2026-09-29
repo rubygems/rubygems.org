@@ -284,7 +284,9 @@ es:
         activar tu cuenta.
     update:
       confirmed_email: Tu dirección de correo se ha verificado.
+      email_label:
       explanation:
+      new_email_label:
       submit:
       title:
       token_failure: Por favor verifica la URL o inténtalo nuevamente.

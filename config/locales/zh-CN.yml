@@ -267,7 +267,9 @@ zh-CN:
       will_email_notice: 我们将会通过 Email 发送确认激活账号的链接给您。
     update:
       confirmed_email: 邮箱地址验证成功。
+      email_label:
       explanation:
+      new_email_label:
       submit:
       title:
       token_failure: 请再次确认 URL 或尝试重新提交

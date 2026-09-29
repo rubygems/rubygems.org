@@ -269,7 +269,9 @@ nl:
       will_email_notice: We zullen je een nieuwe email sturen met een bevestigingslink
     update:
       confirmed_email:
+      email_label:
       explanation:
+      new_email_label:
       submit:
       title:
       token_failure: Controleer het webadres, en probeer het opnieuw.

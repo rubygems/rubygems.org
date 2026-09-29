@@ -5,6 +5,7 @@ require "test_helper"
 class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
   include ActionMailer::TestHelper
   include ActiveJob::TestHelper
+  include UsersHelper
 
   setup do
     @user = create(:user, :unconfirmed)
@@ -19,6 +20,9 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     refute_predicate @user.reload, :email_confirmed?
     assert @user.valid_email_confirmation_token?(@token)
     assert_email_confirmation_response_headers
+    assert_select "[data-testid=email-confirmation-target]", text: obfuscate_email(@user.email)
+    assert_select "p", text: I18n.t("email_confirmations.update.email_label")
+    refute_includes response.body, @user.email
 
     get update_email_confirmations_path(token: @token)
 
@@ -111,6 +115,9 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     get update_email_confirmations_path(token:)
 
     assert_response :success
+    assert_select "[data-testid=email-confirmation-target]", text: "n**@r************.org"
+    assert_select "p", text: I18n.t("email_confirmations.update.new_email_label")
+    refute_includes response.body, "new@rubygems-test.org"
     assert_equal "old@rubygems-test.org", user.reload.email
     assert_equal "new@rubygems-test.org", user.unconfirmed_email
 

@@ -271,7 +271,9 @@ en:
       will_email_notice: We will email you confirmation link to activate your account.
     update:
       confirmed_email: Your email address has been verified.
+      email_label: 'Email address to verify:'
       explanation: Confirm that you want to verify this email address. Your account will not change until you continue.
+      new_email_label: 'New email address for your account:'
       submit: Confirm email address
       title: Confirm email address
       token_failure: Please double check the URL or try submitting it again.

@@ -266,7 +266,9 @@ zh-TW:
       will_email_notice: 我們將會通過電子郵件傳送帳號認證信連結給您。
     update:
       confirmed_email: 電子郵件地址驗證成功。
+      email_label:
       explanation:
+      new_email_label:
       submit:
       title:
       token_failure: 請確認 URL 或再次提交

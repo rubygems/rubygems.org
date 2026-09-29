@@ -275,7 +275,9 @@ fr:
         de confirmation pour l'activer.
     update:
       confirmed_email: Votre adresse email a été vérifiée.
+      email_label:
       explanation:
+      new_email_label:
       submit:
       title:
       token_failure: Veuillez vérifier l'URL ou réessayer.
