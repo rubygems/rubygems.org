@@ -18,7 +18,9 @@ class Api::V1::SearchesController < Api::BaseController
   end
 
   def autocomplete
-    results = ElasticSearcher.new(query_params, page: @page).suggestions
+    searcher = DatabaseSearcher.use_for?(query_params) ? DatabaseSearcher : ElasticSearcher
+    results = searcher.new(query_params, page: @page).suggestions
+    SearchComparisonLogger.log_suggestions(query_params, served_by: searcher.name)
     render json: results
   end
 

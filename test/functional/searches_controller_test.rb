@@ -200,4 +200,54 @@ class SearchesControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "with the db_search feature flag" do
+    setup do
+      # Created without :reindex, so these gems exist only in the database
+      @sinatra = create(:rubygem, name: "sinatra", number: "1.0.0", downloads: 100)
+      @sinatra_redux = create(:rubygem, name: "sinatra-redux", number: "1.0.0", downloads: 500)
+      @brando = create(:rubygem, name: "brando", number: "1.0.0")
+    end
+
+    should "search the database when enabled" do
+      with_feature(FeatureFlag::DB_SEARCH) do
+        get :show, params: { query: "sinatra" }
+      end
+
+      assert_response :success
+      assert_selector "a[href='#{rubygem_path(@sinatra.slug)}']"
+      assert_selector "a[href='#{rubygem_path(@sinatra_redux.slug)}']"
+      refute_selector "a[href='#{rubygem_path(@brando.slug)}']"
+      assert_text "all 2 gems"
+      assert_equal %w[sinatra sinatra-redux], page.all("[data-testid='rubygem-name']").map(&:text)
+    end
+
+    should "search OpenSearch when disabled" do
+      get :show, params: { query: "sinatra" }
+
+      assert_response :success
+      refute_selector "a[href='#{rubygem_path(@sinatra.slug)}']"
+    end
+
+    should "send advanced query syntax to OpenSearch when enabled" do
+      DatabaseSearcher.expects(:new).never
+
+      with_feature(FeatureFlag::DB_SEARCH) do
+        get :show, params: { query: "name: sinatra" }
+      end
+
+      assert_response :success
+    end
+
+    should "show the database error message when the query fails" do
+      Rubygem.stubs(:with_versions).raises(ActiveRecord::StatementInvalid, "boom")
+
+      with_feature(FeatureFlag::DB_SEARCH) do
+        get :show, params: { query: "sinatra" }
+      end
+
+      assert_response :success
+      assert_text "Search is currently unavailable. Please try again later."
+    end
+  end
 end

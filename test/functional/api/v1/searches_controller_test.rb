@@ -157,4 +157,29 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "on GET to autocomplete with the db_search feature flag" do
+    setup do
+      # Created without :reindex, so these gems exist only in the database
+      create(:rubygem, name: "match1", number: "1.0.0", downloads: 10)
+      create(:rubygem, name: "match2", number: "1.0.0", downloads: 500)
+      create(:rubygem, name: "other", number: "1.0.0")
+    end
+
+    should "suggest names from the database when enabled" do
+      with_feature(FeatureFlag::DB_SEARCH) do
+        get :autocomplete, params: { query: "ma" }
+      end
+
+      assert_response :success
+      assert_equal %w[match2 match1], JSON.parse(@response.body)
+    end
+
+    should "suggest names from OpenSearch when disabled" do
+      get :autocomplete, params: { query: "ma" }
+
+      assert_response :success
+      assert_empty JSON.parse(@response.body)
+    end
+  end
 end

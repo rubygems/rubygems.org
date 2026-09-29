@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_29_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -650,6 +650,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
     t.index "upper((name)::text) varchar_pattern_ops", name: "index_rubygems_upcase"
     t.index ["indexed"], name: "index_rubygems_on_indexed"
     t.index ["name"], name: "index_rubygems_on_name", unique: true
+    t.index ["name"], name: "index_rubygems_on_name_trigram", opclass: :gin_trgm_ops, using: :gin
     t.index ["organization_id"], name: "index_rubygems_on_organization_id"
   end
 

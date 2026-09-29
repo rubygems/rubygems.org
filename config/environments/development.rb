@@ -19,6 +19,10 @@ Rails.application.configure do
   # Enable server timing.
   config.server_timing = true
 
+  # Run plain-text searches against both the database and OpenSearch and write the
+  # results side by side to log/search_comparison.log. Set SEARCH_COMPARISON_LOG=false to skip.
+  config.x.search_comparison_log = ENV.fetch("SEARCH_COMPARISON_LOG", "true") == "true"
+
   # Enable/disable Action Controller caching. By default Action Controller caching is disabled.
   # Run rails dev:cache to toggle Action Controller caching.
   if Rails.root.join("tmp/caching-dev.txt").exist?

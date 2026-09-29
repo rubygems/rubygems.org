@@ -10,7 +10,9 @@ class SearchesController < ApplicationController
     # Return early for blank queries. Non-string params (e.g., arrays) are converted
     # to strings by SearchQuerySanitizer via to_s, which handles them safely.
     return if params[:query].blank?
-    @error_msg, @gems = ElasticSearcher.new(params[:query], page: @page).search
+    searcher = DatabaseSearcher.use_for?(params[:query]) ? DatabaseSearcher : ElasticSearcher
+    @error_msg, @gems = searcher.new(params[:query], page: @page).search
+    SearchComparisonLogger.log_search(params[:query], page: @page, served_by: searcher.name)
 
     add_breadcrumb(t(".title"), root_path)
 
