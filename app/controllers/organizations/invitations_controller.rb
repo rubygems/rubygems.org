@@ -18,7 +18,12 @@ class Organizations::InvitationsController < Organizations::BaseController
   end
 
   def destroy
-    @membership.destroy!
+    # Re-check under a row lock so a concurrent accept can't be undone by this decline.
+    @membership.with_lock do
+      raise ActiveRecord::RecordNotFound if @membership.confirmed?
+
+      @membership.destroy!
+    end
     redirect_to dashboard_path, notice: t(".declined", organization: @organization.handle)
   end
 

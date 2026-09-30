@@ -115,6 +115,17 @@ class Organizations::InvitationsControllerTest < ActionDispatch::IntegrationTest
     assert_predicate @membership.reload, :confirmed?
   end
 
+  test "DELETE /organizations/:organization_handle/invitation when the invitation is accepted after it was looked up" do
+    stale_membership = Membership.find(@membership.id)
+    @membership.update!(confirmed_at: Time.current)
+    Membership.stubs(:find_by!).returns(stale_membership)
+
+    delete organization_invitation_path(@organization, as: @user)
+
+    assert_response :not_found
+    assert_predicate @membership.reload, :confirmed?
+  end
+
   test "DELETE /organizations/:organization_handle/invitation without an invitation" do
     other_user = create(:user)
 

@@ -554,9 +554,7 @@ ja:
         accept: 承認
         decline: 拒否
         expires_html:
-        title_html: |-
-          <span class="font-bold">%{role}</span>として<br>
-          組織へ参加するよう招待されました。
+        title_html: <span class="font-bold">%{role}</span>として組織へ参加するよう招待されました。
   pages:
     index:
       title:
