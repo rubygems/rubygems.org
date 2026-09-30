@@ -542,6 +542,7 @@ ja:
         unlimited:
         disclaimer:
     invitations:
+      expired:
       show:
         accept: 承認
         decline: 拒否

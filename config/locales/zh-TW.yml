@@ -536,6 +536,7 @@ zh-TW:
         unlimited:
         disclaimer:
     invitations:
+      expired:
       show:
         accept:
         decline:

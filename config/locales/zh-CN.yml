@@ -545,6 +545,7 @@ zh-CN:
         unlimited:
         disclaimer:
     invitations:
+      expired:
       show:
         accept:
         decline:

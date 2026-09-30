@@ -585,6 +585,7 @@ de:
         unlimited:
         disclaimer:
     invitations:
+      expired:
       show:
         accept:
         decline:

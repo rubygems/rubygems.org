@@ -539,6 +539,7 @@ en:
         unlimited: Your organization can reserve an unlimited number of gem names.
         disclaimer: The RubyGems.org team reserves the right to deny any requested name reservation.
     invitations:
+      expired: This invitation has expired. Ask an organization admin to resend it.
       show:
         accept: Accept
         decline: Decline

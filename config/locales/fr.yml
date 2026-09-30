@@ -544,6 +544,7 @@ fr:
         unlimited:
         disclaimer:
     invitations:
+      expired:
       show:
         accept:
         decline:
