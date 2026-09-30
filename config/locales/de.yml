@@ -356,6 +356,8 @@ de:
         main_navigation:
         open_menu:
         close_menu:
+        back: Zurück
+        language: Sprache
         search_gem_html: Suche Gems&hellip;
         members:
       mfa_banner_html:

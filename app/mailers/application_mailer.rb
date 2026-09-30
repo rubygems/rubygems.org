@@ -11,6 +11,10 @@ class ApplicationMailer < ActionMailer::Base
   around_action :use_default_locale
   after_deliver :record_delivery
 
+  def default_url_options
+    super.merge(path_params: { locale: nil })
+  end
+
   def record_delivery
     message.to_addrs&.each do |address|
       next unless (user = User.find_by_email(address))

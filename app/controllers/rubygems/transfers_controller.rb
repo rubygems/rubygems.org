@@ -5,6 +5,10 @@ class Rubygems::TransfersController < ApplicationController
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
   before_action :find_rubygem
 
+  def new
+    redirect_to organization_transfer_rubygems_path, status: :moved_permanently
+  end
+
   def destroy
     @rubygem_transfer = RubygemTransfer.find_by(created_by: Current.user, status: %i[pending failed])
     @rubygem_transfer&.destroy!

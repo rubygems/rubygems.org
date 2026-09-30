@@ -27,6 +27,16 @@ class DependenciesTest < ApplicationSystemTestCase
     assert_text("<= 4.0.0")
   end
 
+  test "dependency links stay in the current locale" do
+    version_one = create(:version)
+    rubygem_two = create(:rubygem, number: "2.4.3")
+    create(:dependency, requirements: "<= 4.0.0", scope: :runtime, version: version_one, rubygem: rubygem_two)
+
+    visit "/de/gems/#{version_one.rubygem.slug}/versions/#{version_one.number}/dependencies"
+
+    assert_link(href: "/de/gems/#{rubygem_two.slug}/versions/2.4.3")
+  end
+
   test "resolved dependency versions match the gem platform" do
     version = create(:version, platform: "jruby")
 

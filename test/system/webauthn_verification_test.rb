@@ -26,6 +26,14 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
     assert_successful_verification_not_found
   end
 
+  test "when verifying webauthn credential from a localized page" do
+    visit webauthn_verification_path(webauthn_token: @verification.path_token, locale: :de, params: { port: @port })
+
+    click_on I18n.t("webauthn_verifications.prompt.authenticate", locale: :de)
+
+    assert_current_path("/de/webauthn_verification/successful_verification")
+  end
+
   test "when verifying webauthn credential on safari" do
     assert_poll_status("pending")
     visit webauthn_verification_path(webauthn_token: @verification.path_token, params: { port: @port })

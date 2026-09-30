@@ -23,6 +23,12 @@ class CompromisedPasswordsControllerTest < ActionController::TestCase
         assert_select "a[href=?]", sign_in_path
       end
 
+      should "tell search engines not to index the session-dependent page" do
+        get :show
+
+        assert_noindex_without_search_engine_links
+      end
+
       should "not enqueue compromised password reset email on page visit" do
         assert_enqueued_emails 0 do
           get :show

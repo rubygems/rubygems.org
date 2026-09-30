@@ -180,6 +180,16 @@ class ActiveSupport::TestCase
     assert_equal actual.additional_type.new(user_agent_info:, **expected_additional), actual.additional
   end
 
+  def search_engine_link_count(body = response.body)
+    html = Nokogiri::HTML(body)
+    html.css('link[rel="canonical"]').size + html.css('link[rel="alternate"][hreflang]').size
+  end
+
+  def assert_noindex_without_search_engine_links(body = response.body)
+    assert_equal 1, Nokogiri::HTML(body).css('meta[name="robots"][content="noindex"]').size, "expected a noindex robots tag"
+    assert_equal 0, search_engine_link_count(body), "expected no canonical/hreflang links"
+  end
+
   # Hashes with different orders will still be equal according to assert_equal.
   # However, when they are not equal, the output diff will print them in their
   # original order which makes it hard to see what is actually different.
@@ -334,10 +344,25 @@ class ActionController::TestCase
   end
 end
 
+class ActionView::TestCase
+  setup do
+    controller.default_url_options = { path_params: { locale: nil } }
+  end
+end
+
+class ActionMailer::TestCase
+  def default_url_options
+    { path_params: { locale: nil } }
+  end
+end
+
 class ActionDispatch::IntegrationTest
   include OauthHelpers
 
-  setup { host! Gemcutter::HOST }
+  setup do
+    host! Gemcutter::HOST
+    self.default_url_options = default_url_options.merge(path_params: { locale: nil })
+  end
 
   def assert_signed_in_as(user)
     flunk "Expected to be signed in as User #{user.handle.inspect}, but was not signed in." unless request.env[:clearance].signed_in?
@@ -427,6 +452,10 @@ class ComponentTest < ActiveSupport::TestCase
 
   attr_reader :page
 
+  def default_url_options
+    { path_params: { locale: nil } }
+  end
+
   def render(component, &block)
     response = if block
                  view_context.render(component, &block)
@@ -447,7 +476,9 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   def controller
-    @controller ||= ActionView::TestCase::TestController.new
+    @controller ||= ActionView::TestCase::TestController.new.tap do |controller|
+      controller.default_url_options = { path_params: { locale: nil } }
+    end
   end
 
   def preview(path = preview_path, scenario: :default, **params)
