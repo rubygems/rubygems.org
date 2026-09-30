@@ -142,6 +142,29 @@ class Organizations::InvitationsControllerTest < ActionDispatch::IntegrationTest
     assert Membership.exists?(@membership.id)
   end
 
+  test "PATCH /organizations/:organization_handle/invitation when the invitation is declined after it was looked up" do
+    stale_membership = Membership.find(@membership.id)
+    @membership.destroy!
+    Membership.stubs(:find_by!).returns(stale_membership)
+
+    patch organization_invitation_path(@organization, as: @user)
+
+    assert_response :not_found
+    assert_nil flash[:notice]
+    refute Membership.exists?(user: @user, organization: @organization)
+  end
+
+  test "PATCH /organizations/:organization_handle/invitation when the invitation is accepted after it was looked up" do
+    stale_membership = Membership.find(@membership.id)
+    @membership.update!(confirmed_at: 1.hour.ago)
+    Membership.stubs(:find_by!).returns(stale_membership)
+
+    patch organization_invitation_path(@organization, as: @user)
+
+    assert_response :not_found
+    assert_in_delta 1.hour.ago, @membership.reload.confirmed_at, 1.second
+  end
+
   test "PATCH /organizations/:organization_handle/invitation when confirmation is refused" do
     Membership.any_instance.stubs(:confirm!).returns(false)
 
