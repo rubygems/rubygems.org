@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class Organizations::InvitationsController < Organizations::BaseController
+  layout "application"
+
   before_action :find_membership
-  before_action :redirect_expired_invitation, if: -> { @membership.invitation_expired? }
+  before_action :redirect_expired_invitation, only: %i[show update], if: -> { @membership.invitation_expired? }
 
   def show
   end
@@ -13,6 +15,11 @@ class Organizations::InvitationsController < Organizations::BaseController
     else
       redirect_expired_invitation
     end
+  end
+
+  def destroy
+    @membership.destroy!
+    redirect_to dashboard_path, notice: t(".declined", organization: @organization.handle)
   end
 
   private

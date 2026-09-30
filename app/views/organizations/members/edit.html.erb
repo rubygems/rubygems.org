@@ -20,6 +20,14 @@
       <div class="flex flex-col">
         <p class="text-neutral-500 capitalize">Joined: <%= nice_date_for(@membership.confirmed_at) %></p>
       </div>
+    <% elsif @membership.invitation_expired? %>
+      <p class="text-b3 text-red-600 dark:text-red-400">
+        <%= t(".invitation_expired", days: Gemcutter::MEMBERSHIP_INVITE_EXPIRES_AFTER.in_days.to_i) %>
+      </p>
+    <% else %>
+      <p class="text-b3 text-neutral-500">
+        <%= t(".invitation_expires_html", time_html: invitation_expiry_tag(@membership)) %>
+      </p>
     <% end %>
   <% end %>
 
