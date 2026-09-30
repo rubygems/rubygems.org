@@ -1,21 +1,30 @@
 # frozen_string_literal: true
 
-# Name-only search backed by Postgres (pg_trgm), used in place of ElasticSearcher
+# Name and summary search backed by Postgres, used in place of ElasticSearcher
 # for plain-text queries when FeatureFlag::DB_SEARCH is enabled.
 #
-# Matching: the query must match the start of a name segment (names split on
-# Patterns::SPECIAL_CHARACTERS), and whitespace in the query matches those
-# separators, so "rails html" finds "rails-html-sanitizer" but "async" does not
-# find "carinariasyncytium".
+# Name matching (pg_trgm): the query must match the start of a name segment
+# (names split on Patterns::SPECIAL_CHARACTERS), and whitespace in the query
+# matches those separators, so "rails html" finds "rails-html-sanitizer" but
+# "async" does not find "carinariasyncytium".
+#
+# Summary matching (full-text, English stemming): every query word must appear in
+# the most recent version's summary (RubygemSearchSummary). Only the
+# SUMMARY_CANDIDATE_LIMIT most downloaded summary matches are considered, because
+# common words like "ruby" match a large share of all gems.
 #
 # Ranking blends match quality with popularity, mirroring ElasticSearcher's
 # log1p(downloads) boost:
-#   (similarity + exact-name bonus + prefix bonus) * ln(2 + downloads)
+#   (similarity + exact-name bonus + prefix bonus + summary bonus) * ln(2 + downloads)
 class DatabaseSearcher
   # Queries shorter than this can't use the trigram index, so they only match
   # names that start with the query.
   TRIGRAM_MIN_LENGTH = 3
   SUGGESTIONS_LIMIT = 30
+  SUMMARY_CANDIDATE_LIMIT = 500
+  # Smaller than the prefix bonus, so name matches outrank summary-only matches
+  # of similar popularity (ElasticSearcher weights name^5, summary^2).
+  SUMMARY_BONUS = 0.3
 
   # Plain-text tokens that look like gem names. Anything else (field:value,
   # quotes, wildcards, boolean operators, leading +/-) is advanced query syntax
@@ -31,6 +40,7 @@ class DatabaseSearcher
     (similarity(rubygems.name, :query)
       + (LOWER(rubygems.name) = :query)::int
       + 0.5 * (rubygems.name ILIKE :prefix)::int
+      + :summary_bonus * search_candidates.summary_match::int
     ) * LN(2 + gem_downloads.count) DESC,
     gem_downloads.count DESC,
     rubygems.name ASC
@@ -76,24 +86,61 @@ class DatabaseSearcher
   private
 
   def matching
-    scope = Rubygem.with_versions.joins(:gem_download)
-    return scope.none if @terms.empty?
+    return Rubygem.none if @terms.empty?
 
-    if @terms.join.length < TRIGRAM_MIN_LENGTH
-      # Single characters only match exactly; two characters match as a prefix.
-      # Both use index_rubygems_upcase instead of scanning the table.
-      pattern = @terms.join.length == 1 ? like_escape(@query) : "#{like_escape(@query)}%"
-      scope.where("UPPER(rubygems.name) LIKE UPPER(?)", pattern)
-    else
-      # The ILIKE lets the trigram index narrow candidates; the regex enforces
-      # that the terms start a name segment and are joined by separators.
-      scope.where("rubygems.name ILIKE ?", "%#{@terms.join('%')}%")
-        .where("rubygems.name ~* ?", SEGMENT_START + @terms.join(SEPARATOR_CLASS))
-    end
+    Rubygem.with_versions.joins(:gem_download)
+      .joins("INNER JOIN (#{candidates_sql}) search_candidates ON search_candidates.id = rubygems.id")
+  end
+
+  # One row per matching gem, flagging whether its summary matched.
+  def candidates_sql
+    parts = [name_candidates_sql]
+    parts << summary_candidates_sql unless short_query?
+
+    "SELECT id, bool_or(summary_match) AS summary_match " \
+      "FROM (#{parts.map { |sql| "(#{sql})" }.join(' UNION ALL ')}) matches GROUP BY id"
+  end
+
+  def name_candidates_sql
+    scope = Rubygem.select(:id, Arel.sql("false AS summary_match"))
+
+    scope = if short_query?
+              # Single characters only match exactly; two characters match as a prefix.
+              # Both use index_rubygems_upcase instead of scanning the table.
+              pattern = @terms.join.length == 1 ? like_escape(@query) : "#{like_escape(@query)}%"
+              scope.where("UPPER(rubygems.name) LIKE UPPER(?)", pattern)
+            else
+              # The ILIKE lets the trigram index narrow candidates; the regex enforces
+              # that the terms start a name segment and are joined by separators.
+              scope.where("rubygems.name ILIKE ?", "%#{@terms.join('%')}%")
+                .where("rubygems.name ~* ?", SEGMENT_START + @terms.join(SEPARATOR_CLASS))
+            end
+    scope.to_sql
+  end
+
+  def summary_candidates_sql
+    # Joins use their own aliases: this SQL is embedded in the outer query, and
+    # repeating "gem_downloads" there makes Active Record re-alias the outer join.
+    RubygemSearchSummary
+      .joins("INNER JOIN rubygems summary_gems ON summary_gems.id = rubygem_search_summaries.rubygem_id AND summary_gems.indexed")
+      .joins("INNER JOIN gem_downloads summary_downloads " \
+             "ON summary_downloads.rubygem_id = rubygem_search_summaries.rubygem_id AND summary_downloads.version_id = 0")
+      .where("rubygem_search_summaries.summary_tsv @@ plainto_tsquery('english', ?)", @terms.join(" "))
+      .order("summary_downloads.count DESC").limit(summary_candidate_limit)
+      .select("rubygem_search_summaries.rubygem_id AS id", "true AS summary_match")
+      .to_sql
+  end
+
+  def summary_candidate_limit
+    SUMMARY_CANDIDATE_LIMIT
+  end
+
+  def short_query?
+    @terms.join.length < TRIGRAM_MIN_LENGTH
   end
 
   def rank_sql
-    Rubygem.sanitize_sql_array([RANK_SQL, query: @query, prefix: "#{like_escape(@query)}%"])
+    Rubygem.sanitize_sql_array([RANK_SQL, query: @query, prefix: "#{like_escape(@query)}%", summary_bonus: SUMMARY_BONUS])
   end
 
   def like_escape(value)

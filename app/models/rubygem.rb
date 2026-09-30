@@ -22,6 +22,7 @@ class Rubygem < ApplicationRecord
   has_many :web_hooks, dependent: :destroy
   has_one :linkset, dependent: :destroy, inverse_of: :rubygem
   has_one :gem_download, -> { where(version_id: 0) }, inverse_of: :rubygem
+  has_one :search_summary, class_name: "RubygemSearchSummary", inverse_of: :rubygem
   has_many :audits, as: :auditable, inverse_of: :auditable
   has_many :link_verifications, as: :linkable, inverse_of: :linkable, dependent: :destroy
   has_many :oidc_rubygem_trusted_publishers, class_name: "OIDC::RubygemTrustedPublisher", inverse_of: :rubygem, dependent: :destroy

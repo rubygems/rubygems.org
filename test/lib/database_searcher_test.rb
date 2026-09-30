@@ -3,8 +3,11 @@
 require "test_helper"
 
 class DatabaseSearcherTest < ActiveSupport::TestCase
-  def gem!(name, downloads: 0)
-    create(:rubygem, name:, number: "1.0.0", downloads:)
+  def gem!(name, downloads: 0, summary: nil)
+    rubygem = create(:rubygem, name:, downloads:)
+    create(:version, rubygem:, number: "1.0.0", summary:)
+    RubygemSearchSummary.refresh!(rubygem)
+    rubygem
   end
 
   def names(query, page: 1)
@@ -162,6 +165,60 @@ class DatabaseSearcherTest < ActiveSupport::TestCase
       (DatabaseSearcher::SUGGESTIONS_LIMIT + 1).times { |i| gem!("many-#{i}") }
 
       assert_equal DatabaseSearcher::SUGGESTIONS_LIMIT, DatabaseSearcher.new("many").suggestions.size
+    end
+  end
+
+  context "#search with summaries" do
+    should "find gems whose summary matches, using English stemming" do
+      gem!("devise", summary: "Flexible authentication solution for Rails")
+      gem!("sinatra", summary: "Classy web development")
+
+      assert_equal %w[devise], names("authenticating")
+    end
+
+    should "require every query word to appear in the summary" do
+      gem!("devise", summary: "Flexible authentication solution for Rails")
+      gem!("omniauth", summary: "A generalized Rack framework for multiple-provider authentication")
+
+      assert_equal %w[devise], names("rails authentication")
+    end
+
+    should "rank a name match above a summary-only match of similar popularity" do
+      gem!("warden-strategies", summary: "Rack authentication strategies", downloads: 1_000)
+      gem!("authentication-kit", downloads: 1_000)
+
+      assert_equal %w[authentication-kit warden-strategies], names("authentication")
+    end
+
+    should "give a gem matching on both name and summary a bonus" do
+      # rack-cors would win on name similarity and alphabetical order alone
+      gem!("rack-cors", downloads: 1_000)
+      gem!("rack-timeout", summary: "Rack middleware which aborts requests", downloads: 1_000)
+
+      assert_equal %w[rack-timeout rack-cors], names("rack")
+    end
+
+    should "not search summaries for short queries" do
+      gem!("pg", summary: "Pg is the Ruby interface to PostgreSQL")
+      gem!("sequel", summary: "The Database Toolkit for Ruby, with pg support")
+
+      assert_equal %w[pg], names("pg")
+    end
+
+    should "exclude summary matches for gems without indexed versions" do
+      gem!("devise", summary: "Flexible authentication solution for Rails")
+      yanked = gem!("devise-yanked", summary: "Authentication, yanked")
+      yanked.versions.each { |v| v.update!(indexed: false) }
+
+      assert_equal %w[devise], names("authentication")
+    end
+
+    should "only consider the most downloaded summary matches" do
+      gem!("popular", summary: "An authentication library", downloads: 1_000)
+      gem!("obscure", summary: "Another authentication library", downloads: 1)
+      DatabaseSearcher.any_instance.stubs(:summary_candidate_limit).returns(1)
+
+      assert_equal %w[popular], names("authentication")
     end
   end
 end
