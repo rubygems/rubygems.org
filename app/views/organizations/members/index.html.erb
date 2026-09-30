@@ -32,7 +32,16 @@
               <% if membership.confirmed? %>
                 <p class="text-neutral-500 capitalize"><%= membership.role %></p>
               <% else %>
-                <p class="text-neutral-500 capitalize"><%= t(".pending") %></p>
+                <div class="text-right">
+                  <p class="text-neutral-500 capitalize"><%= t(".pending") %></p>
+                  <% if membership.invitation_expired? %>
+                    <p class="text-b3 text-red-600 dark:text-red-400"><%= t(".invitation_expired") %></p>
+                  <% else %>
+                    <p class="text-b3 text-neutral-500">
+                      <%= t(".invitation_expires_html", time_html: invitation_expiry_tag(membership)) %>
+                    </p>
+                  <% end %>
+                </div>
               <% end %>
             <% end %>
           </div>
