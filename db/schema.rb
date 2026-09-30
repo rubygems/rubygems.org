@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_29_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_30_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -626,6 +626,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_29_120000) do
     t.index ["user_id", "rubygem_id"], name: "index_ownerships_on_user_id_and_rubygem_id", unique: true
   end
 
+  create_table "rubygem_search_summaries", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "rubygem_id", null: false
+    t.text "summary"
+    t.virtual "summary_tsv", type: :tsvector, as: "to_tsvector('english'::regconfig, COALESCE(summary, ''::text))", stored: true
+    t.datetime "updated_at", null: false
+    t.index ["rubygem_id"], name: "index_rubygem_search_summaries_on_rubygem_id", unique: true
+    t.index ["summary_tsv"], name: "index_rubygem_search_summaries_on_summary_tsv", using: :gin
+  end
+
   create_table "rubygem_transfers", force: :cascade do |t|
     t.datetime "completed_at"
     t.datetime "created_at", null: false
@@ -848,6 +858,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_29_120000) do
   add_foreign_key "ownership_requests", "users", column: "approver_id", name: "ownership_requests_approver_id_fk"
   add_foreign_key "ownership_requests", "users", name: "ownership_requests_user_id_fk"
   add_foreign_key "ownerships", "users", on_delete: :cascade
+  add_foreign_key "rubygem_search_summaries", "rubygems", on_delete: :cascade
   add_foreign_key "rubygem_transfers", "organizations"
   add_foreign_key "rubygem_transfers", "users", column: "created_by_id"
   add_foreign_key "rubygems", "organizations", on_delete: :nullify
