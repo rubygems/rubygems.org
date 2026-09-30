@@ -99,7 +99,7 @@ gem "observer", "~> 0.1.2" # launchdarkly-server-sdk-8.0.0
 # json 3.0 dropped the positional options hash from JSON.parse, which
 # ActiveSupport::JSON.decode still uses (activesupport 8.1.3.1).
 # The change is already merged in rails
-gem "json", "< 3"
+gem "json", "< 4"
 
 # Assets
 gem "propshaft", "~> 1.3.2"
