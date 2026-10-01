@@ -15,7 +15,7 @@ class ParallelPusherTest < ActiveSupport::TestCase
   end
 
   teardown do
-    @gem_names.each { |name| Rubygem.find_by(name: name)&.destroy! }
+    @gem_names.each { |name| Rubygem.name_is(name).first&.destroy! }
     @user.destroy!
     GemDownload.delete_all
     RubygemFs.mock!
@@ -73,6 +73,7 @@ class ParallelPusherTest < ActiveSupport::TestCase
         end
       end
 
+      ActiveRecord::Base.connection_pool.release_connection
       start.count_down
       results = threads.map(&:value)
       failures = results.reject { |(_, code, _)| code == 200 }
@@ -129,6 +130,7 @@ class ParallelPusherTest < ActiveSupport::TestCase
         end
       end
 
+      ActiveRecord::Base.connection_pool.release_connection
       start.count_down
       failures = (push_threads + yank_threads).map(&:value).reject { |(_, error)| error.nil? }
 
@@ -146,6 +148,70 @@ class ParallelPusherTest < ActiveSupport::TestCase
   should "take the advisory lock before updating a version row" do
     rubygem = create(:rubygem, name: track_gem("advisory-lock-ordering"))
     version = create(:version, rubygem: rubygem)
+
+    assert_locks_before_writing(rubygem, version) { Version.find(version.id).update!(indexed: false) }
+
+    refute_predicate version.reload, :indexed?
+  end
+
+  should "take the advisory lock before changing gem name case during a push" do
+    rubygem = create(:rubygem, name: track_gem("case-lock-ordering"))
+    create(:version, rubygem: rubygem, indexed: false)
+    rubygem.create_ownership(@user)
+    gem = build_gem(new_gemspec(rubygem.name.upcase, "2.0.0", "GemCutter", "ruby"))
+    pusher = Pusher.new(@api_key, gem)
+
+    assert_locks_before_writing(rubygem, rubygem) { pusher.process }
+
+    assert_equal 200, pusher.code, pusher.message
+    assert_equal pusher.spec.name, rubygem.reload.name
+  end
+
+  should "take the advisory lock before destroying a version or its dependents" do
+    rubygem = create(:rubygem, name: track_gem("destroy-lock-ordering"))
+    version = create(:version, rubygem: rubygem)
+
+    assert_locks_before_writing(rubygem, version, version.gem_download) { Version.find(version.id).destroy! }
+
+    refute Version.exists?(version.id)
+    assert Rubygem.exists?(rubygem.id)
+  end
+
+  should "take the advisory lock before destroying a gem or any dependents" do
+    rubygem = create(:rubygem, name: track_gem("gem-destroy-lock-ordering"))
+    version = create(:version, rubygem: rubygem)
+    rubygem.create_ownership(@user)
+    ownership = rubygem.ownerships.sole
+
+    assert_locks_before_writing(rubygem, rubygem, ownership, version) { Rubygem.find(rubygem.id).destroy! }
+
+    refute Rubygem.exists?(rubygem.id)
+    refute Version.exists?(version.id)
+  end
+
+  [true, false].each do |change_indexed|
+    should "lock before writing link verifications with indexed change #{change_indexed}" do
+      rubygem = create(:rubygem, name: track_gem("links-lock-ordering"))
+      version = create(:version, rubygem: rubygem)
+      uri = "https://example.com/#{rubygem.name}"
+      verification = rubygem.link_verifications.create!(uri: uri, failures_since_last_verification: 1, last_failure_at: Time.current)
+      attributes = { metadata: { "homepage_uri" => uri } }
+      attributes[:indexed] = false if change_indexed
+
+      assert_locks_before_writing(rubygem, verification, version) { Version.find(version.id).update!(attributes) }
+
+      assert_equal 0, verification.reload.failures_since_last_verification
+      assert_equal attributes[:metadata], version.reload.metadata
+      assert_equal !change_indexed, version.indexed?
+    end
+  end
+
+  private
+
+  # While the writer waits on the advisory lock, none of its earlier writes may
+  # hold row locks. NOWAIT detects a callback or transaction entry point locking
+  # too late, without relying on a probabilistic deadlock interleaving.
+  def assert_locks_before_writing(rubygem, *records)
     backend_pid = Queue.new
     updater = nil
 
@@ -155,40 +221,43 @@ class ParallelPusherTest < ActiveSupport::TestCase
       updater = Thread.new do
         ActiveRecord::Base.connection_pool.with_connection do |connection|
           backend_pid << connection.select_value("SELECT pg_backend_pid()")
-          Version.find(version.id).update!(indexed: false)
+          yield
         end
       end
 
-      waiting_pid = backend_pid.pop
-      Timeout.timeout(5) do
-        Rubygem.uncached do
-          loop do
-            waiting = Rubygem.connection.select_value(<<~SQL.squish)
-              SELECT EXISTS (
-                SELECT 1 FROM pg_locks
-                WHERE pid = #{Integer(waiting_pid)}
-                  AND locktype = 'advisory'
-                  AND NOT granted
-              )
-            SQL
-            break if waiting
+      waiting_pid = backend_pid.pop(timeout: 5)
 
-            sleep 0.01
-          end
-        end
-      end
-
-      Version.lock("FOR UPDATE NOWAIT").find(version.id)
+      assert waiting_pid, "writer did not check out a connection within 5 seconds"
+      wait_for_advisory_lock(waiting_pid, updater)
+      records.each { |record| record.class.lock("FOR UPDATE NOWAIT").find(record.id) }
     end
 
     Timeout.timeout(5) { updater.value }
-
-    refute_predicate version.reload, :indexed?
   ensure
     updater&.kill if updater&.alive?
+    updater&.join(5)
   end
 
-  private
+  def wait_for_advisory_lock(pid, updater)
+    Timeout.timeout(5) do
+      Rubygem.uncached do
+        loop do
+          assert_predicate updater, :alive?, "writer exited without waiting for the advisory lock"
+          waiting = Rubygem.connection.select_value(<<~SQL.squish)
+            SELECT EXISTS (
+              SELECT 1 FROM pg_locks
+              WHERE pid = #{Integer(pid)}
+                AND locktype = 'advisory'
+                AND NOT granted
+            )
+          SQL
+          break if waiting
+
+          sleep 0.01
+        end
+      end
+    end
+  end
 
   def track_gem(name)
     unique_name = "#{name}-#{SecureRandom.hex(6)}"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Rubygem < ApplicationRecord
+class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
   include Patterns
   include RubygemSearchable
 
@@ -86,6 +86,7 @@ class Rubygem < ApplicationRecord
   after_create :update_unresolved
   # TODO: Remove this once we move to GemDownload only
   after_create :create_gem_download
+  before_destroy :lock_version_writes!, prepend: true
   before_destroy :mark_unresolved
 
   MFA_RECOMMENDED_THRESHOLD = 165_000_000
@@ -313,6 +314,9 @@ class Rubygem < ApplicationRecord
 
   def update_attributes_from_gem_specification!(version, spec)
     Rubygem.transaction do
+      # save! can write the gem row (a name case change) and autosave versions.
+      # Acquire the lock before either write, not just in Version's callback.
+      lock_version_writes!
       save!
       version.update_attributes_from_gem_specification!(spec)
       version.update_dependencies!(spec)
@@ -325,11 +329,17 @@ class Rubygem < ApplicationRecord
     versions.yanked.exists?
   end
 
-  # Holds the same per-gem advisory lock as Version#serialize_indexed_writes_per_gem
-  # (reentrant), so direct callers can't deadlock a concurrent push.
+  def lock_version_writes!
+    return if new_record?
+
+    Rubygem.advisory_xact_lock!("rubygem_version_reorder", id)
+  end
+
+  # Keep the lock at this public boundary too: direct callers must serialize
+  # with saves and destroys. Transaction-level advisory locks are reentrant.
   def reorder_versions
     transaction do
-      Rubygem.advisory_xact_lock!("rubygem_version_reorder", id)
+      lock_version_writes!
       bulk_reorder_versions
 
       versions_of_platforms = versions.release.indexed.group_by { |version| [version.platform, version.ruby_abi] }
@@ -437,19 +447,21 @@ class Rubygem < ApplicationRecord
   end
 
   def bulk_reorder_versions
-    numbers = reload.versions.pluck(:number).uniq.sort_by { |n| Gem::Version.new(n) }.reverse
+    version_numbers = reload.versions.pluck(:id, :number)
+    numbers = version_numbers.map(&:last).uniq.sort_by { |n| Gem::Version.new(n) }.reverse
     position_by_number = numbers.each_with_index.to_h
 
     ids = []
     positions = []
-    versions.each do |version|
-      ids << version.id
-      positions << position_by_number.fetch(version.number)
+    version_numbers.each do |version_id, number|
+      ids << version_id
+      positions << position_by_number.fetch(number)
     end
 
     update_query = ["update versions set position = positions_data.position, latest = false
       from (select unnest(array[?]) as id, unnest(array[?]) as position) as positions_data
-      where versions.id = positions_data.id", ids, positions]
+      where versions.id = positions_data.id
+        and (versions.position IS DISTINCT FROM positions_data.position OR versions.latest IS DISTINCT FROM false)", ids, positions]
 
     sanitized_query = ActiveRecord::Base.send(:sanitize_sql_array, update_query)
     ActiveRecord::Base.connection.execute(sanitized_query)
