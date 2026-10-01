@@ -527,10 +527,14 @@ en:
       index:
         invite: Invite
         pending: Pending
+        invitation_expires_html: Expires in %{time_html}
+        invitation_expired: Invitation expired
       edit:
         update: Update
         delete: Delete
         resend_invitation: Resend Invitation
+        invitation_expires_html: Invitation expires in %{time_html}
+        invitation_expired: This invitation has expired. Resend it to give them %{days} more days to accept.
       new:
         handle: Handle
         role: Role
@@ -556,11 +560,16 @@ en:
         limit_reached_html: Your organization has used all <b>%{limit}</b> of its gem name reservations. Email %{support_email} if you need more.
         unlimited: Your organization can reserve an unlimited number of gem names.
         disclaimer: The RubyGems.org team reserves the right to deny any requested name reservation.
+    invitation_expiry_title: "%{time} UTC"
     invitations:
+      expired: This invitation has expired. Ask an organization admin to resend it.
+      destroy:
+        declined: You declined the invitation to join the %{organization} organization.
       show:
         accept: Accept
         decline: Decline
-        title_html: "invited you to join their organization<br>as an <span class=\"font-bold\">%{role}</span>."
+        expires_html: This invitation expires in %{time_html}.
+        title_html: "invited you to join their organization as an <span class=\"font-bold\">%{role}</span>."
   pages:
     index:
       title: Pages

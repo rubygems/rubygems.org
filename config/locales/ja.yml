@@ -530,10 +530,14 @@ ja:
       index:
         invite: 招待
         pending: 保留
+        invitation_expires_html:
+        invitation_expired:
       edit:
         update: 更新
         delete: 削除
         resend_invitation: 招待を再送信
+        invitation_expires_html:
+        invitation_expired:
       new:
         handle: ハンドル名
         role: ロール
@@ -559,13 +563,16 @@ ja:
         limit_reached_html:
         unlimited:
         disclaimer:
+    invitation_expiry_title:
     invitations:
+      expired:
+      destroy:
+        declined:
       show:
         accept: 承認
         decline: 拒否
-        title_html: |-
-          <span class="font-bold">%{role}</span>として<br>
-          組織へ参加するよう招待されました。
+        expires_html:
+        title_html: <span class="font-bold">%{role}</span>として組織へ参加するよう招待されました。
   pages:
     index:
       title:

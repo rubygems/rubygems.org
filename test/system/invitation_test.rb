@@ -60,6 +60,26 @@ class InvitationTest < ApplicationSystemTestCase
     assert_text "You have successfully joined the #{@organization.handle} organization."
   end
 
+  test "declining an invitation to an organization" do
+    membership = create(:membership, :pending, user: @outside_user, organization: @organization, invited_by: @user)
+
+    sign_in @outside_user
+
+    visit organization_invitation_path(@organization)
+
+    assert_text "#{@organization.name} invited you to join their organization"
+
+    click_on "Decline"
+
+    assert_text "You declined the invitation to join the #{@organization.handle} organization."
+    assert_current_path dashboard_path
+    refute Membership.exists?(membership.id)
+
+    visit organization_invitation_path(@organization)
+
+    assert_text "Page not found"
+  end
+
   test "resending an invitation to an organization" do
     pending_membership = create(:membership, :pending, user: @outside_user, organization: @organization, invited_by: @user)
 
