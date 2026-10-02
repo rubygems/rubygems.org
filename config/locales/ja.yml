@@ -333,6 +333,12 @@ ja:
         dashboard: ダッシュボード
         settings: 設定
         edit_profile: プロフィールを編集
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: gemを検索...
         members: メンバー
       mfa_banner_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。[詳細はこちら](link
@@ -514,10 +520,14 @@ ja:
       index:
         invite: 招待
         pending: 保留
+        invitation_expires_html:
+        invitation_expired:
       edit:
         update: 更新
         delete: 削除
         resend_invitation: 招待を再送信
+        invitation_expires_html:
+        invitation_expired:
       new:
         handle: ハンドル名
         role: ロール
@@ -543,13 +553,16 @@ ja:
         limit_reached_html:
         unlimited:
         disclaimer:
+    invitation_expiry_title:
     invitations:
+      expired:
+      destroy:
+        declined:
       show:
         accept: 承認
         decline: 拒否
-        title_html: |-
-          <span class="font-bold">%{role}</span>として<br>
-          組織へ参加するよう招待されました。
+        expires_html:
+        title_html: <span class="font-bold">%{role}</span>として組織へ参加するよう招待されました。
   pages:
     index:
       title:

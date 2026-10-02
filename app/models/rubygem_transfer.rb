@@ -97,6 +97,7 @@ class RubygemTransfer < ApplicationRecord
       .joins(:ownerships)
       .where(ownerships: { rubygem_id: rubygems })
       .where.not(ownerships: { user_id: created_by.id })
+      .distinct
   end
 
   def sync_invites

@@ -3,6 +3,31 @@
 require "application_system_test_case"
 
 class NavigationTest < ApplicationSystemTestCase
+  test "opening and closing the account menu" do
+    user = create(:user, handle: "menu-user")
+    sign_in(user)
+    find("button[data-testid='header-popup-link'][aria-label='Account menu']").send_keys(:space)
+
+    within "dialog[open]" do
+      assert_text "Signed in as"
+      assert_text "menu-user"
+      assert_no_text user.email
+      assert_link "Profile", href: dashboard_path
+      assert_link "Edit profile", href: edit_profile_path
+      assert_link "Settings", href: edit_settings_path
+      assert_button "Sign out"
+      find("button[aria-label='Close account menu']").click
+    end
+
+    assert_no_selector "dialog[open]"
+    assert_selector "[data-testid='header-popup-link']:focus"
+
+    find("[data-testid='header-popup-link']").send_keys(:enter)
+    find("body").send_keys(:escape)
+
+    assert_no_selector "dialog[open]"
+  end
+
   test "slash focuses the homepage search" do
     visit root_path
     find("body").click
@@ -32,7 +57,7 @@ class NavigationTest < ApplicationSystemTestCase
   end
 
   test "slash reveals and focuses the header search on mobile" do
-    page.current_window.resize_to(393, 852)
+    use_device_profile :mobile
     visit stats_path
 
     assert_no_selector "[data-reveal-search-target='item']", visible: true
@@ -53,7 +78,7 @@ class NavigationTest < ApplicationSystemTestCase
   end
 
   test "slash does not reveal search when the mobile nav is open" do
-    page.current_window.resize_to(393, 852)
+    use_device_profile :mobile
     visit stats_path
 
     find("button[aria-label='Open menu']").click
@@ -102,18 +127,22 @@ class NavigationTest < ApplicationSystemTestCase
   end
 
   test "tabbing on mobile leaves the navigation menu closed" do
-    page.current_window.resize_to(393, 852)
+    use_device_profile :mobile
     visit stats_path
 
     find("body").send_keys(:tab)
+
+    assert_selector "a[title='RubyGems']:focus"
+
+    find("body").send_keys(:tab, :tab, :tab)
 
     assert_selector "button[aria-label='Open menu']:focus"
     assert_no_selector "dialog[open]"
     assert_selector "button[aria-label='Open menu'][aria-expanded='false']"
   end
 
-  test "closing the mobile menu with escape updates its expanded state" do
-    page.current_window.resize_to(393, 852)
+  test "closing the mobile menu updates its expanded state" do
+    use_device_profile :mobile
     visit root_path
 
     menu_button = find("button[aria-label='Open menu']")
@@ -126,6 +155,12 @@ class NavigationTest < ApplicationSystemTestCase
     assert_selector "button[aria-label='Open menu'][aria-expanded='true']"
 
     find("body").send_keys(:escape)
+
+    assert_no_selector "dialog[open]"
+    assert_selector "button[aria-label='Open menu'][aria-expanded='false']"
+
+    menu_button.click
+    find("button[aria-label='Close menu']").click
 
     assert_no_selector "dialog[open]"
     assert_selector "button[aria-label='Open menu'][aria-expanded='false']"

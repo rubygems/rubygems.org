@@ -29,11 +29,20 @@ class Membership < ApplicationRecord
   before_create :set_invitation_expire_time
 
   def confirm!
+    return false if invitation_expired?
+
     update_attribute(:confirmed_at, Time.zone.now)
   end
 
   def confirmed?
     confirmed_at.present?
+  end
+
+  def invitation_expired?
+    # Only a pending invitation can expire; a confirmed membership is no longer an invitation.
+    return false if confirmed?
+
+    invitation_expires_at.nil? || invitation_expires_at <= Time.zone.now
   end
 
   def refresh_invitation!

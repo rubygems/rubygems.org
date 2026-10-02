@@ -335,6 +335,12 @@ nl:
         dashboard: Dashboard
         settings: Instellingen
         edit_profile: Wijzig profiel
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: Gems Zoeken&hellip;
         members:
       mfa_banner_html:
@@ -503,10 +509,14 @@ nl:
       index:
         invite:
         pending:
+        invitation_expires_html:
+        invitation_expired:
       edit:
         update:
         delete:
         resend_invitation:
+        invitation_expires_html:
+        invitation_expired:
       new:
         handle:
         role:
@@ -532,10 +542,15 @@ nl:
         limit_reached_html:
         unlimited:
         disclaimer:
+    invitation_expiry_title:
     invitations:
+      expired:
+      destroy:
+        declined:
       show:
         accept:
         decline:
+        expires_html:
         title_html:
   pages:
     index:

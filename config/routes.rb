@@ -309,7 +309,7 @@ Rails.application.routes.draw do
           patch :resend_invitation
         end
       end
-      resource :invitation, only: %i[show update], constraints: { id: Patterns::ROUTE_PATTERN }, controller: "organizations/invitations"
+      resource :invitation, only: %i[show update destroy], constraints: { id: Patterns::ROUTE_PATTERN }, controller: "organizations/invitations"
       resources :gems, only: :index, controller: 'organizations/gems'
       resources :gem_name_reservations, only: %i[index new create destroy], path: 'reservations',
         controller: 'organizations/gem_name_reservations'

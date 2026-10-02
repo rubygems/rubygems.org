@@ -350,6 +350,12 @@ es:
         dashboard: Dashboard
         settings: Configuración
         edit_profile: Editar
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: Buscar gemas&hellip;
         members:
       mfa_banner_html:
@@ -545,10 +551,14 @@ es:
       index:
         invite:
         pending:
+        invitation_expires_html:
+        invitation_expired:
       edit:
         update:
         delete:
         resend_invitation:
+        invitation_expires_html:
+        invitation_expired:
       new:
         handle:
         role:
@@ -574,10 +584,15 @@ es:
         limit_reached_html:
         unlimited:
         disclaimer:
+    invitation_expiry_title:
     invitations:
+      expired:
+      destroy:
+        declined:
       show:
         accept:
         decline:
+        expires_html:
         title_html:
   pages:
     index:

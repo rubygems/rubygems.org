@@ -102,6 +102,12 @@ class Rack::Attack
                    model_name: api_key.association(:owner).klass.name, model_id: api_key.owner_id).to_s
   end
 
+  # email of the user signed in via the (signed) clearance remember_token cookie, or nil
+  def self.remember_token_user_email(req)
+    action_dispatch_req = ActionDispatch::Request.new(req.env)
+    User.find_by_remember_token(action_dispatch_req.cookie_jar.signed["remember_token"])&.email.presence
+  end
+
   safelist("assets path") do |req|
     req.path.starts_with?("/assets") && req.request_method == "GET"
   end
@@ -139,7 +145,7 @@ class Rack::Attack
         elsif protected_route?([mfa_password_edit_action], req.path, req.request_method)
           action_dispatch_req.session.fetch("password_reset_user", "").presence
         else
-          User.find_by_remember_token(action_dispatch_req.cookie_jar.signed["remember_token"])&.email.presence
+          remember_token_user_email(req)
         end
       end
     end
@@ -215,10 +221,7 @@ class Rack::Attack
   end
 
   throttle("password/user", limit: REQUEST_LIMIT, period: LIMIT_PERIOD) do |req|
-    if protected_route?(protected_password_actions, req.path, req.request_method)
-      action_dispatch_req = ActionDispatch::Request.new(req.env)
-      User.find_by_remember_token(action_dispatch_req.cookie_jar.signed["remember_token"])&.email.presence
-    end
+    remember_token_user_email(req) if protected_route?(protected_password_actions, req.path, req.request_method)
   end
 
   ############################# rate limit per email ############################
@@ -235,22 +238,28 @@ class Rack::Attack
     { controller: "email_confirmations", action: "unconfirmed" }
   ]
 
+  # profiles#update sends the same confirmation mails when it is given a new user[unconfirmed_email]
+  protected_email_change_action = [controller: "profiles", action: "update"]
+
   throttle("email_confirmations/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
     if protected_route?(protected_confirmation_action, req.path, req.request_method)
       if req.params['email_confirmation']
         User.normalize_email(req.params['email_confirmation']['email']).presence
       else
-        action_dispatch_req = ActionDispatch::Request.new(req.env)
-        User.find_by_remember_token(action_dispatch_req.cookie_jar.signed["remember_token"])&.email.presence
+        remember_token_user_email(req)
+      end
+    elsif protected_route?(protected_email_change_action, req.path, req.request_method)
+      unconfirmed_email = req.params["user"].is_a?(Hash) && req.params["user"]["unconfirmed_email"].presence
+      if unconfirmed_email
+        email = remember_token_user_email(req)
+        # like ProfilesController#params_user, resubmitting the current email is not an email change
+        email if email != unconfirmed_email
       end
     end
   end
 
   throttle("owners/email", limit: REQUEST_LIMIT_PER_EMAIL, period: LIMIT_PERIOD) do |req|
-    if protected_route?(protected_ui_owners_actions, req.path, req.request_method)
-      action_dispatch_req = ActionDispatch::Request.new(req.env)
-      User.find_by_remember_token(action_dispatch_req.cookie_jar.signed["remember_token"])&.email.presence
-    end
+    remember_token_user_email(req) if protected_route?(protected_ui_owners_actions, req.path, req.request_method)
   end
 
   ### Custom Throttle Response ###
