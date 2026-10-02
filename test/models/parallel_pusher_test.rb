@@ -189,6 +189,52 @@ class ParallelPusherTest < ActiveSupport::TestCase
     refute Version.exists?(version.id)
   end
 
+  %i[destroy yank].each do |operation|
+    should "reject a yank when #{operation} wins the gem lock" do
+      rubygem = create(:rubygem, name: track_gem("#{operation}-yank-ordering"))
+      version = create(:version, rubygem: rubygem)
+      create(:version, rubygem: rubygem, number: "2.0.0")
+      backend_pid = Queue.new
+      yanker = nil
+
+      Rubygem.transaction do
+        rubygem.lock_version_writes!
+        yanker = Thread.new do
+          ActiveRecord::Base.connection_pool.with_connection do |connection|
+            backend_pid << connection.select_value("SELECT pg_backend_pid()")
+            deletion = Deletion.new(user: @user, version: Version.find(version.id))
+            [deletion.save, deletion.errors.full_messages]
+          end
+        end
+        waiting_pid = backend_pid.pop(timeout: 5)
+
+        assert waiting_pid, "yanker did not check out a connection within 5 seconds"
+        wait_for_advisory_lock(waiting_pid, yanker)
+        if operation == :destroy
+          version.destroy!
+        else
+          Deletion.create!(user: @user, version: version)
+        end
+      end
+
+      saved, errors = Timeout.timeout(5) { yanker.value }
+
+      refute saved, "yank succeeded after #{operation}: #{errors.inspect}"
+      assert_predicate errors, :present?
+      if operation == :destroy
+        refute Version.exists?(version.id)
+        assert_empty Deletion.where(version_id: version.id)
+      else
+        refute_predicate version.reload, :indexed?
+        assert_equal 1, Deletion.where(version_id: version.id).count
+      end
+    ensure
+      yanker&.kill if yanker&.alive?
+      yanker&.join(5)
+      Deletion.where(version_id: version.id).delete_all if version
+    end
+  end
+
   [true, false].each do |change_indexed|
     should "lock before writing link verifications with indexed change #{change_indexed}" do
       rubygem = create(:rubygem, name: track_gem("links-lock-ordering"))
