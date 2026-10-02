@@ -320,6 +320,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       @cutter.stubs(:rubygem).returns @rubygem
       create(:version, rubygem: @rubygem, number: "0.1.1", summary: "old summary", pusher_api_key: @cutter.api_key)
       @spec = mock
+      @spec.stubs(:metadata).returns({})
       @cutter.stubs(:version).returns @rubygem.versions[0]
       @cutter.stubs(:spec).returns(@spec)
       @rubygem.stubs(:update_attributes_from_gem_specification!)
@@ -462,7 +463,9 @@ class PusherIntegrationTest < ActiveSupport::TestCase
 
       @cutter.stubs(:rubygem).returns @rubygem
       @cutter.stubs(:version).returns @version
-      @cutter.stubs(:spec).returns(mock)
+      spec = mock
+      spec.stubs(:metadata).returns({})
+      @cutter.stubs(:spec).returns(spec)
       @rubygem.stubs(:update_attributes_from_gem_specification!)
       GemCachePurger.stubs(:call)
       @cutter.stubs(:write_gem)
@@ -552,6 +555,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       create(:version, rubygem: @rubygem, summary: "old summary")
       @version = create(:version, rubygem: @rubygem, summary: "new summary", pusher_api_key: @cutter.api_key)
       @cutter.stubs(:version).returns @version
+      @cutter.stubs(:spec).returns(stub(metadata: {}))
       @rubygem.stubs(:update_attributes_from_gem_specification!)
       @cutter.stubs(:version).returns @version
       GemCachePurger.stubs(:call)
