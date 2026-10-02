@@ -147,6 +147,8 @@ de:
               already_invited: wurde bereits zu diesem Gem eingeladen
         user:
           attributes:
+            email:
+              current_email_unconfirmed:
             handle:
               invalid:
             password:

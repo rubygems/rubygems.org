@@ -304,6 +304,28 @@ class UserTest < ActiveSupport::TestCase
         assert_contains user.errors[:unconfirmed_email],
           I18n.t("activerecord.errors.messages.disposable_email_domain", domain: "mailinator.com")
       end
+
+      should "be invalid while the current email is unconfirmed" do
+        user = create(:user, email_confirmed: false)
+        user.unconfirmed_email = "new@rubygems-test.org"
+
+        refute_predicate user, :valid?
+        assert_contains user.errors[:email], "must be confirmed before it can be changed"
+      end
+
+      should "be valid once the current email is confirmed" do
+        user = create(:user)
+        user.unconfirmed_email = "new@rubygems-test.org"
+
+        assert_predicate user, :valid?
+      end
+
+      should "not block an unconfirmed user from clearing a stale pending email" do
+        user = create(:user, unconfirmed_email: "stale@rubygems-test.org")
+        user.update_columns(email_confirmed: false)
+
+        assert user.update(unconfirmed_email: nil)
+      end
     end
 
     context "twitter_username" do

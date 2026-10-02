@@ -133,6 +133,8 @@ zh-TW:
               already_invited: 已獲邀加入此 Gem
         user:
           attributes:
+            email:
+              current_email_unconfirmed:
             handle:
               invalid:
             password:

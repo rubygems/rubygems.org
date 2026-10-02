@@ -317,6 +317,26 @@ class ProfilesControllerTest < ActionController::TestCase
                          "It contains instructions for confirming your new email address.", flash[:notice]
           end
         end
+
+        context "while the current email is unconfirmed" do
+          setup do
+            @user = create(:user, email: "john@doe.com")
+            sign_in_as(@user)
+            # An admin email change leaves the user signed in with an unconfirmed address.
+            @user.update!(email: "admin-set@doe.com", email_confirmed: false)
+          end
+
+          should "reject the change instead of recording an address no token can confirm" do
+            assert_no_enqueued_emails do
+              put :update, params: { user: { unconfirmed_email: "another@change.com", password: @user.password } }
+            end
+
+            assert_response :success
+            assert page.has_content? "Email address must be confirmed before it can be changed"
+            assert_nil @user.reload.unconfirmed_email
+            assert_nil flash[:notice]
+          end
+        end
       end
     end
 

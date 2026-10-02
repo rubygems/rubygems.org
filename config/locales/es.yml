@@ -141,6 +141,8 @@ es:
               already_invited: ya ha sido invitado a esta gema
         user:
           attributes:
+            email:
+              current_email_unconfirmed:
             handle:
               invalid:
             password:

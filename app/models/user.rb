@@ -98,6 +98,7 @@ class User < ApplicationRecord
   validates :full_name, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_nil: true
 
   validate :unconfirmed_email_uniqueness
+  validate :unconfirmed_email_requires_confirmed_email, if: -> { unconfirmed_email.present? && unconfirmed_email_changed? }
   validate :toxic_email_domain, on: :create
   validate :password_byte_length
 
@@ -328,6 +329,13 @@ class User < ApplicationRecord
 
   def unconfirmed_email_exists?
     User.exists?(email: unconfirmed_email)
+  end
+
+  # Confirmation tokens are bound to a single pending address: the current
+  # email while it is unconfirmed, otherwise unconfirmed_email. An unconfirmed
+  # account therefore cannot start a change to another address.
+  def unconfirmed_email_requires_confirmed_email
+    errors.add(:email, :current_email_unconfirmed) unless email_confirmed?
   end
 
   def yank_gems

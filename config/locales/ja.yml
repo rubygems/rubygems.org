@@ -134,6 +134,8 @@ ja:
               already_invited: は既にこのgemに招待されています
         user:
           attributes:
+            email:
+              current_email_unconfirmed:
             handle:
               invalid: は英字から始まり、英字、数字、アンダーバー、ハイフンのみが含まれていなければなりません
             password:

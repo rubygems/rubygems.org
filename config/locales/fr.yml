@@ -138,6 +138,8 @@ fr:
               already_invited:
         user:
           attributes:
+            email:
+              current_email_unconfirmed:
             handle:
               invalid:
             password:

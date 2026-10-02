@@ -138,6 +138,8 @@ en:
               already_invited: "is already invited to this gem"
         user:
           attributes:
+            email:
+              current_email_unconfirmed: must be confirmed before it can be changed
             handle:
               invalid: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
             password:
