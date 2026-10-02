@@ -40,9 +40,13 @@ class EmailConfirmationsWebauthnControllerTest < ActionController::TestCase
     client = WebAuthn::FakeClient.new(origin, encoding: false)
     WebauthnHelpers.create_credential(webauthn_credential: credential, client:)
 
+    user_state = user.reload.attributes
+    credential_state = credential.reload.attributes
     post :webauthn_update, params: { confirmation: session[:email_confirmation_id] }
 
     assert_response :unauthorized
+    assert_equal user_state, user.reload.attributes
+    assert_equal credential_state, credential.reload.attributes
 
     post :webauthn_update, params: {
       confirmation: session[:email_confirmation_id],
@@ -50,7 +54,35 @@ class EmailConfirmationsWebauthnControllerTest < ActionController::TestCase
     }
 
     assert_response :unauthorized
-    refute_predicate user.reload, :email_confirmed?
+    assert_equal user_state, user.reload.attributes
+    assert_equal credential_state, credential.reload.attributes
+    assert user.valid_email_confirmation_token?(token)
+  end
+
+  test "an expired WebAuthn session denies valid credentials without changing confirmation authority" do
+    user = create(:user, :unconfirmed)
+    credential = create(:webauthn_credential, user:)
+    token = user.issue_email_confirmation!(user.email)
+
+    get :update, params: { token: }
+    post :confirm, params: { confirmation: session[:email_confirmation_id] }
+    challenge = session[:webauthn_authentication]["challenge"]
+    origin = WebAuthn.configuration.allowed_origins.first
+    client = WebAuthn::FakeClient.new(origin, encoding: false)
+    WebauthnHelpers.create_credential(webauthn_credential: credential, client:)
+    credentials = WebauthnHelpers.get_result(client:, challenge:)
+    user_state = user.reload.attributes
+    credential_state = credential.reload.attributes
+
+    travel 16.minutes do
+      post :webauthn_update, params: { confirmation: session[:email_confirmation_id], credentials: }
+    end
+
+    assert_redirected_to root_path
+    assert_equal I18n.t("multifactor_auths.session_expired"), flash[:alert]
+    assert_nil session[:mfa_expires_at]
+    assert_equal user_state, user.reload.attributes
+    assert_equal credential_state, credential.reload.attributes
     assert user.valid_email_confirmation_token?(token)
   end
 
