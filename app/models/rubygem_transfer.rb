@@ -114,7 +114,7 @@ class RubygemTransfer < ApplicationRecord
   def rubygems_owned_by_transferrer
     return if created_by.blank? || rubygems.blank?
 
-    ownerships = Ownership.where(user: created_by, rubygem: rubygems).index_by(&:rubygem_id)
+    ownerships = Ownership.confirmed.where(user: created_by, rubygem: rubygems).index_by(&:rubygem_id)
 
     selected_rubygems.reject { ownerships[it.id].present? && ownerships[it.id].owner? }.each do |rubygem|
       errors.add(:created_by, "must be an owner of the #{rubygem.name} gem")

@@ -70,6 +70,23 @@ class RubygemTransferTest < ActiveSupport::TestCase
     assert_includes @transfer.errors[:created_by], "does not have permission to transfer gems to this organization"
   end
 
+  test "not allowing an organization admin to transfer a gem they have an unconfirmed ownership of" do
+    admin = create(:user)
+    @organization.memberships.create!(user: admin, role: :admin, confirmed_at: Time.zone.now)
+    unconfirmed_gem = create(:rubygem)
+    unconfirmed_ownership = create(:ownership, :unconfirmed, rubygem: unconfirmed_gem, user: admin)
+    transfer = RubygemTransfer.new(created_by: admin, organization: @organization, rubygems: [unconfirmed_gem.id])
+
+    refute_predicate transfer, :valid?
+    assert_includes transfer.errors[:created_by], "must be an owner of the #{unconfirmed_gem.name} gem"
+
+    assert_raises(ActiveRecord::RecordInvalid) { transfer.transfer! }
+
+    assert_predicate transfer, :failed?
+    assert_nil unconfirmed_gem.reload.organization
+    assert Ownership.exists?(unconfirmed_ownership.id)
+  end
+
   test "sets the organization for each rubygem" do
     @transfer.transfer!
 
