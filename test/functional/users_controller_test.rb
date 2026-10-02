@@ -131,10 +131,11 @@ class UsersControllerTest < ActionController::TestCase
         post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD, handle: "foo" } }
       end
 
-      should "set email_confirmation_token" do
+      should "not persist a plaintext email confirmation token" do
         user = User.find_by_name("foo")
 
-        refute_nil user.confirmation_token
+        assert_nil user.confirmation_token
+        assert_nil user.email_confirmation_token_digest
       end
 
       should "deliver confirmation mail" do
@@ -148,9 +149,9 @@ class UsersControllerTest < ActionController::TestCase
         assert_equal "Please confirm your email address with RubyGems.org", email.subject
       end
 
-      should "not deliver confirmation mail when token is removed meanwhile" do
+      should "not deliver confirmation mail when the target email changes meanwhile" do
         user = User.find_by_name("foo")
-        user.update(confirmation_token: nil)
+        user.update!(email: "different@rubygems-test.org")
 
         perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 

@@ -36,12 +36,19 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       should "invalidate an existing reset token before the mail job runs" do
         @user = create(:user)
         token = @user.issue_password_reset!
+        @user.update!(unconfirmed_email: "pending@rubygems-test.org")
+        confirmation_token = @user.issue_email_confirmation!(@user.unconfirmed_email)
 
         post password_path, params: { password: { email: @user.email } }
 
         refute @user.reload.valid_password_reset_token?(token)
+        refute @user.valid_email_confirmation_token?(confirmation_token)
+        assert_nil @user.unconfirmed_email
         assert_nil @user.password_reset_token_digest
         assert_nil @user.password_reset_token_expires_at
+        assert_nil @user.email_confirmation_token_digest
+        assert_nil @user.email_confirmation_token_expires_at
+        assert_nil @user.email_confirmation_email
       end
 
       should "store only a digest of the password reset token" do

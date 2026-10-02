@@ -138,6 +138,8 @@ fr:
               already_invited:
         user:
           attributes:
+            email:
+              current_email_unconfirmed:
             handle:
               invalid:
             password:
@@ -275,6 +277,11 @@ fr:
         de confirmation pour l'activer.
     update:
       confirmed_email: Votre adresse email a été vérifiée.
+      email_label:
+      explanation:
+      new_email_label:
+      submit:
+      title:
       token_failure: Veuillez vérifier l'URL ou réessayer.
   home:
     index:
@@ -362,18 +369,21 @@ fr:
     confirm_your_email: Veuillez confirmer votre adresse email avec le lien qui vous
       a été envoyé par email.
     confirmation_subject: Veuillez confirmer votre adresse email pour RubyGems.org
-    link_expiration_explanation_html:
     email_confirmation:
       title:
       subtitle:
       confirmation_link: Confirmez l'adresse email
       welcome_message: Bienvenue sur RubyGems.org! Veuillez cliquer sur le lien ci-dessous
         pour vérifier votre adresse email.
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     email_reset:
       title:
       subtitle:
       visit_link_instructions: Vous avez changé d'adresse email sur RubyGems.org.
         Veuillez suivre l'URL suivant pour réactiver votre compte.
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     deletion_complete:
       title:
       subtitle:

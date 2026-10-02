@@ -40,6 +40,10 @@ class UsersHelperTest < ActionView::TestCase
       assert_equal "notanemail", obfuscate_email("notanemail")
     end
 
+    should "mask the domain when it has no dot" do
+      assert_equal "u***@l********", obfuscate_email("user@localhost")
+    end
+
     should "return original for invalid email without domain" do
       assert_equal "user@", obfuscate_email("user@")
     end

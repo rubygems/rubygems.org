@@ -134,6 +134,8 @@ ja:
               already_invited: は既にこのgemに招待されています
         user:
           attributes:
+            email:
+              current_email_unconfirmed:
             handle:
               invalid: は英字から始まり、英字、数字、アンダーバー、ハイフンのみが含まれていなければなりません
             password:
@@ -267,6 +269,11 @@ ja:
       will_email_notice: アカウントを有効化するための確認リンクをメールで送ります。
     update:
       confirmed_email: メールアドレスが確認されました。
+      email_label:
+      explanation:
+      new_email_label:
+      submit:
+      title:
       token_failure: URLを見返すか、再度送信してみてください。
   home:
     index:
@@ -354,16 +361,19 @@ ja:
   mailer:
     confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
     confirmation_subject: "%{host}に登録されたメールアドレスを確認してください"
-    link_expiration_explanation_html: このリンクは3時間のみ有効ですのでご留意ください。更新されたリンクの申請には<a href='https://rubygems.org/email_confirmations/new'>確認メールの再送</a>ページが使えます。
     email_confirmation:
       title: Eメールの確認
       subtitle: あともう少しです！
       confirmation_link: メールアドレスを確認する
       welcome_message: "%{host}にようこそ! 以下のリンクからEメールを確認してください。"
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     email_reset:
       title: Eメールのリセット
       subtitle: こんにちは、%{handle}！
       visit_link_instructions: "%{host}でのEメールアドレスが変更されました。アカウントを再度有効にするには以下のURLに進んでください。"
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     deletion_complete:
       title: 削除完了
       subtitle: さようなら！

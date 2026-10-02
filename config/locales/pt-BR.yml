@@ -139,6 +139,8 @@ pt-BR:
               already_invited:
         user:
           attributes:
+            email:
+              current_email_unconfirmed:
             handle:
               invalid:
             password:
@@ -274,6 +276,11 @@ pt-BR:
       will_email_notice:
     update:
       confirmed_email:
+      email_label:
+      explanation:
+      new_email_label:
+      submit:
+      title:
       token_failure: Por favor, confira a URL ou tente submetê-la novamente.
   home:
     index:
@@ -362,20 +369,21 @@ pt-BR:
       que enviamos para o seu endereço de email.
     confirmation_subject: Por favor, confirme seu endereço de email para se cadastrar
       no RubyGems.org
-    link_expiration_explanation_html: Lembre-se de que este link é válido apenas por
-      3 horas. Você pode gerar um novo link atualizado na página <a href='https://rubygems.org/email_confirmations/new'>reenviar
-      email de confirmação</a>.
     email_confirmation:
       title: EMAIL DE CONFIRMAÇÃO
       subtitle: Quase pronto!
       confirmation_link: Confirme o endereço de email
       welcome_message: Bem-vindo ao RubyGems.org! Visite o link abaixo para confirmar
         seu endereço de email.
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     email_reset:
       title: RESETAR ENDEREÇO DE EMAIL
       subtitle: Olá, %{handle}!
       visit_link_instructions: Você alterou seu endereço de email do RubyGems.org.
         Por favor acesse a seguinte url para reativar sua conta.
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     deletion_complete:
       title: EXCLUSÃO COMPLETA
       subtitle: Tchau!

@@ -6,6 +6,7 @@ class User < ApplicationRecord
   include Events::Recordable
   include Gravtastic
   include UserMultifactorMethods
+  include EmailConfirmable
   include PasswordResettable
 
   is_gravtastic default: "retro"
@@ -15,8 +16,7 @@ class User < ApplicationRecord
 
   default_scope { not_deleted }
 
-  before_save :_generate_confirmation_token_no_reset_unconfirmed_email, if: :will_save_change_to_unconfirmed_email?
-  before_create :_generate_confirmation_token_no_reset_unconfirmed_email, unless: :email_confirmed?
+  before_save :clear_pending_email_confirmation, if: -> { will_save_change_to_email? || will_save_change_to_unconfirmed_email? }
   after_create :record_create_event
   after_update :record_email_update_event, if: :email_was_updated?
   after_update :record_email_verified_event, if: -> { saved_change_to_email? && email_confirmed? }
@@ -98,6 +98,7 @@ class User < ApplicationRecord
   validates :full_name, length: { maximum: Gemcutter::MAX_FIELD_LENGTH }, allow_nil: true
 
   validate :unconfirmed_email_uniqueness
+  validate :unconfirmed_email_requires_confirmed_email, if: -> { unconfirmed_email.present? && unconfirmed_email_changed? }
   validate :toxic_email_domain, on: :create
   validate :password_byte_length
 
@@ -228,22 +229,8 @@ class User < ApplicationRecord
 
   def confirm_email!
     return false if unconfirmed_email && !update_email
-    update!(email_confirmed: true, confirmation_token: nil, token_expires_at: Time.zone.now)
-  end
-
-  # confirmation token expires after 3 hours
-  def valid_confirmation_token?
-    confirmation_token.present? && Time.zone.now.before?(token_expires_at)
-  end
-
-  def generate_confirmation_token(reset_unconfirmed_email: true)
-    self.unconfirmed_email = nil if reset_unconfirmed_email
-    self.confirmation_token = SecureRandom.hex(24)
-    self.token_expires_at = Time.zone.now + Gemcutter::EMAIL_TOKEN_EXPIRES_AFTER
-  end
-
-  def _generate_confirmation_token_no_reset_unconfirmed_email
-    generate_confirmation_token(reset_unconfirmed_email: false)
+    clear_email_confirmation
+    update!(email_confirmed: true)
   end
 
   def unconfirmed?
@@ -344,6 +331,13 @@ class User < ApplicationRecord
     User.exists?(email: unconfirmed_email)
   end
 
+  # Confirmation tokens are bound to a single pending address: the current
+  # email while it is unconfirmed, otherwise unconfirmed_email. An unconfirmed
+  # account therefore cannot start a change to another address.
+  def unconfirmed_email_requires_confirmed_email
+    errors.add(:email, :current_email_unconfirmed) unless email_confirmed?
+  end
+
   def yank_gems
     versions_to_yank = only_owner_gems.map(&:versions).flatten
     versions_to_yank.each do |v|
@@ -386,6 +380,7 @@ class User < ApplicationRecord
       handle: nil, email_confirmed: false,
       unconfirmed_email: nil, blocked_email: nil,
       api_key: nil, confirmation_token: nil, remember_token: nil,
+      email_confirmation_token_digest: nil, email_confirmation_token_expires_at: nil, email_confirmation_email: nil,
       twitter_username: nil, webauthn_id: nil, full_name: nil,
       totp_seed: nil, mfa_hashed_recovery_codes: nil,
       mfa_level: :disabled,
@@ -400,6 +395,14 @@ class User < ApplicationRecord
   def email_was_updated?
     (saved_change_to_unconfirmed_email? || saved_change_to_email?) &&
       email != attribute_before_last_save(:unconfirmed_email)
+  end
+
+  def clear_pending_email_confirmation
+    self.email_confirmation_token_digest = nil
+    self.email_confirmation_token_expires_at = nil
+    self.email_confirmation_email = nil
+    self.confirmation_token = nil
+    self.token_expires_at = nil
   end
 
   def record_email_update_event
