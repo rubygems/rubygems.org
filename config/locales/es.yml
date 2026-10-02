@@ -258,6 +258,7 @@ es:
       no_subscriptions_html: Aún no te suscribiste a ninguna gema. ¡Visita la %{gem_link}
         para suscribirte!
       organizations:
+      prior_ownerships:
       title: Dashboard
   dependencies:
     show:
@@ -285,6 +286,23 @@ es:
     update:
       confirmed_email: Tu dirección de correo se ha verificado.
       token_failure: Por favor verifica la URL o inténtalo nuevamente.
+  historical_ownerships:
+    index:
+      title:
+      info:
+      none:
+      gem:
+      start:
+      end:
+      current:
+      visibility:
+      action:
+      public:
+      private:
+      make_public:
+      make_private:
+    update:
+      success_notice:
   home:
     index:
       downloads_counting_html: descargas y contando
@@ -825,6 +843,9 @@ es:
       added_by: AÑADIDO POR
       action: ACCIÓN
       role:
+      prior_owners_title:
+      prior_owner_start:
+      prior_owner_end:
       role_field:
       email_field: Correo / Usuario
       submit_button: Añadir a propietarios
@@ -943,6 +964,7 @@ es:
       title: Perfil de %{username}
       gems:
       no_gems:
+      prior_rubygem_removed_at:
       edit_profile:
       email_me:
     security_events:
@@ -1003,6 +1025,7 @@ es:
       not_using_mfa_warning_hide: "* Los siguientes propietarios no están usando AMF.
         Haga click para ocultar."
       owners_header: Propietarios
+      prior_owner_removed_at:
       pushed_by: Subida por
       using_mfa_info: "* Todos los propietarios están usando AMF."
       yanked_by: Borrada por

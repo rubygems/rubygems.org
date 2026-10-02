@@ -1,0 +1,33 @@
+<%
+  th_class    = "py-2 pr-4 text-b4 font-semibold text-neutral-900 dark:text-white"
+  cell_class  = "block md:table-cell py-2 md:py-4 pr-4 align-top " \
+                "before:content-[attr(data-title)] before:block before:text-c4 before:font-semibold " \
+                "before:uppercase before:tracking-wide before:text-neutral-500 md:before:content-none"
+%>
+
+<div class="overflow-x-auto">
+  <table class="w-full text-left text-b3" data-testid="prior_owners_table">
+    <thead class="hidden md:table-header-group border-b-2 border-neutral-300 dark:border-neutral-700">
+      <tr>
+        <th scope="col" class="<%= th_class %>"><%= t("owners.index.name") %></th>
+        <th scope="col" class="<%= th_class %>"><%= t("owners.index.prior_owner_start") %></th>
+        <th scope="col" class="<%= th_class %>"><%= t("owners.index.prior_owner_end") %></th>
+      </tr>
+    </thead>
+    <tbody class="md:divide-y md:divide-neutral-200 md:dark:divide-neutral-800">
+      <% prior_ownerships.each do |prior_ownership| %>
+        <tr class="block md:table-row border-b border-neutral-200 py-4 dark:border-neutral-800 md:border-0 md:py-0">
+          <td data-title="Name" class="<%= cell_class %> font-medium">
+            <%= link_to(prior_ownership.user.display_handle, profile_path(prior_ownership.user.display_id), class: "text-orange-500 hover:underline dark:text-orange-400") %>
+          </td>
+          <td data-title="Start" class="<%= cell_class %> text-nowrap text-neutral-700 dark:text-neutral-300">
+            <%= nice_date_for(prior_ownership.first_owned_at) %>
+          </td>
+          <td data-title="End" class="<%= cell_class %> text-nowrap text-neutral-700 dark:text-neutral-300">
+            <%= nice_date_for(prior_ownership.removed_at) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

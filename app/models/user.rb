@@ -34,6 +34,7 @@ class User < ApplicationRecord
   scope :confirmed, -> { where(email_confirmed: true) }
 
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :user
+  has_many :historical_ownerships, dependent: :destroy, inverse_of: :user
 
   has_many :rubygems, through: :ownerships, source: :rubygem
   has_many :subscriptions, dependent: :destroy
@@ -218,12 +219,12 @@ class User < ApplicationRecord
     self.api_key = SecureRandom.hex(16)
   end
 
-  def total_downloads_count
-    rubygems.joins(:gem_download).sum(:count)
+  def total_downloads_count(viewer = nil)
+    Rubygem.joins(:gem_download).where(id: counted_rubygem_ids(viewer)).sum("gem_downloads.count")
   end
 
-  def total_rubygems_count
-    rubygems.with_versions.count
+  def total_rubygems_count(viewer = nil)
+    Rubygem.with_versions.where(id: counted_rubygem_ids(viewer)).count
   end
 
   def confirm_email!
@@ -330,6 +331,13 @@ class User < ApplicationRecord
 
   def keep_gems_published?
     @keep_gems_published == true
+  end
+
+  def counted_rubygem_ids(viewer)
+    current_ids = ownerships.pluck(:rubygem_id)
+    return current_ids unless FeatureFlag.enabled?(FeatureFlag::HISTORICAL_OWNERSHIPS, viewer)
+
+    (current_ids + historical_ownerships.not_private.pluck(:rubygem_id)).uniq
   end
 
   def update_email

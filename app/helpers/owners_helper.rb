@@ -36,4 +36,8 @@ module OwnersHelper
   def can_modify_or_remove_owners?(rubygem)
     can_modify_owners?(rubygem) || can_remove_owners?(rubygem)
   end
+
+  def prior_ownerships_of(rubygem)
+    rubygem.historical_ownerships.alumni.includes(:user).order(removed_at: :desc).select(&:user)
+  end
 end

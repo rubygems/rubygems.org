@@ -73,6 +73,48 @@ class DashboardsControllerTest < ActionController::TestCase
       end
     end
 
+    context "on GET to show with a historical ownership" do
+      setup do
+        create(:historical_ownership, user: @user, removed_at: Time.current)
+      end
+
+      should "link to prior ownerships when the historical ownerships feature is enabled" do
+        enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS)
+        get :show
+
+        assert page.has_selector?("a[href='#{profile_historical_ownerships_path}']")
+      end
+
+      should "not link to prior ownerships when the feature is disabled" do
+        get :show
+
+        refute page.has_selector?("a[href='#{profile_historical_ownerships_path}']")
+      end
+
+      should "not link to prior ownerships when the feature is enabled only for another user" do
+        enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS, actor: create(:user))
+        get :show
+
+        refute page.has_selector?("a[href='#{profile_historical_ownerships_path}']")
+      end
+
+      should "link to prior ownerships when the feature is enabled for the user" do
+        enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS, actor: @user)
+        get :show
+
+        assert page.has_selector?("a[href='#{profile_historical_ownerships_path}']")
+      end
+    end
+
+    context "on GET to show without any historical ownerships" do
+      should "not link to prior ownerships even when the feature is enabled" do
+        enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS)
+        get :show
+
+        refute page.has_selector?("a[href='#{profile_historical_ownerships_path}']")
+      end
+    end
+
     context "on GET to show with Datadog AppSec" do
       setup do
         @user = create(:user, handle: "appsec_dashboard")

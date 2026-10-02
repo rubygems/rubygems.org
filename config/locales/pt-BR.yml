@@ -250,6 +250,7 @@ pt-BR:
       no_subscriptions_html: Você ainda não está observando nenhuma gem. Visite uma
         %{gem_link} para poder observá-la!
       organizations:
+      prior_ownerships:
       title: Painel de Controle
   dependencies:
     show:
@@ -275,6 +276,23 @@ pt-BR:
     update:
       confirmed_email:
       token_failure: Por favor, confira a URL ou tente submetê-la novamente.
+  historical_ownerships:
+    index:
+      title:
+      info:
+      none:
+      gem:
+      start:
+      end:
+      current:
+      visibility:
+      action:
+      public:
+      private:
+      make_public:
+      make_private:
+    update:
+      success_notice:
   home:
     index:
       downloads_counting_html: downloads
@@ -760,6 +778,9 @@ pt-BR:
       added_by:
       action:
       role:
+      prior_owners_title:
+      prior_owner_start:
+      prior_owner_end:
       role_field:
       email_field:
       submit_button:
@@ -856,6 +877,7 @@ pt-BR:
       title: Perfil de %{username}
       gems:
       no_gems:
+      prior_rubygem_removed_at:
       edit_profile:
       email_me:
     security_events:
@@ -915,6 +937,7 @@ pt-BR:
       not_using_mfa_warning_hide: "* Os seguintes donos não estão usando MFA. Clique
         para esconder."
       owners_header: Donos
+      prior_owner_removed_at:
       pushed_by:
       using_mfa_info: "* Todos os donos estão usando MFA."
       yanked_by:
