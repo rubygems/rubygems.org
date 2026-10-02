@@ -84,6 +84,28 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     assert_predicate @user.reload, :email_confirmed?
   end
 
+  test "another user who signs in during the MFA challenge is signed out when confirmation completes" do
+    @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+    other = create(:user)
+
+    get update_email_confirmations_path(token: @token)
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
+
+    assert_response :success
+    post session_path(session: { who: other.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+    remember_token = other.reload.remember_token
+
+    post otp_update_email_confirmations_path, params: { confirmation: session[:email_confirmation_id], otp: ROTP::TOTP.new(@user.totp_seed).now }
+
+    assert_redirected_to sign_in_path
+    refute_equal remember_token, other.reload.remember_token
+    assert_predicate @user.reload, :email_confirmed?
+
+    get dashboard_path
+
+    assert_redirected_to sign_in_path
+  end
+
   test "a replacement token invalidates the previous link" do
     replacement = @user.issue_email_confirmation!(@user.email)
 

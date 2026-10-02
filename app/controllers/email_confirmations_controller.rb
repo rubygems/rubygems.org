@@ -12,7 +12,7 @@ class EmailConfirmationsController < ApplicationController
   prepend_before_action :protect_email_confirmation_response, only: %i[update confirm otp_update webauthn_update]
   before_action :begin_email_confirmation, only: :update
   before_action :load_email_confirmation, only: %i[confirm otp_update webauthn_update]
-  before_action :sign_out_other_user, only: :confirm
+  before_action :sign_out_other_user, only: %i[confirm otp_update webauthn_update]
   before_action :require_email_confirmation_mfa, only: :confirm
   before_action :validate_otp, only: :otp_update
   before_action :validate_webauthn, only: :webauthn_update
