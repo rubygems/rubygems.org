@@ -80,6 +80,26 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal version3_ruby, @rubygem.most_recent_version
     end
 
+    should "skip unchanged non-latest rows while repairing null ordering values" do
+      oldest = create(:version, rubygem: @rubygem, number: "1.0.0")
+      newest = create(:version, rubygem: @rubygem, number: "3.0.0")
+      yanked = create(:version, rubygem: @rubygem, number: "2.0.0", indexed: false)
+      yanked.update_columns(position: nil, latest: nil)
+      original_tuple = Version.connection.select_value("SELECT ctid::text FROM versions WHERE id = #{oldest.id}")
+
+      @rubygem.reorder_versions
+
+      # ctid changes on every UPDATE, even if the column values stay the same.
+      assert_equal original_tuple, Version.connection.select_value("SELECT ctid::text FROM versions WHERE id = #{oldest.id}")
+      assert_equal 2, oldest.reload.position
+      refute_predicate oldest, :latest?
+      assert_equal 1, yanked.reload.position
+      refute_nil yanked.latest
+      refute_predicate yanked, :latest?
+      assert_equal 0, newest.reload.position
+      assert_predicate newest, :latest?
+    end
+
     should "find versions by number, platform and Ruby ABI" do
       plain = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "x86_64-linux-musl", gem_platform: "x86_64-linux-musl",
                      required_ruby_version: ">= 3.2")
