@@ -77,7 +77,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       sign_in_as @user
       stay_under_email_limit_for("email_confirmations/email")
 
-      assert_enqueued_email_with Mailer, :email_reset, args: [@user] do
+      assert_enqueued_email_with Mailer, :email_reset, args: [@user, "new@rubygems-test.org"] do
         patch "/profile",
           params: { user: { unconfirmed_email: "new@rubygems-test.org", password: PasswordHelpers::SECURE_TEST_PASSWORD } },
           headers: { REMOTE_ADDR: @ip_address }

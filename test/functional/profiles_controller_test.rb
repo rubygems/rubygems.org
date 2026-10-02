@@ -306,7 +306,7 @@ class ProfilesControllerTest < ActionController::TestCase
           end
 
           should "send email reset mails when the unconfirmed email is changed" do
-            assert_enqueued_email_with Mailer, :email_reset, args: [@user] do
+            assert_enqueued_email_with Mailer, :email_reset, args: [@user, "another@change.com"] do
               assert_enqueued_email_with Mailer, :email_reset_update, args: [@user] do
                 put :update, params: { user: { unconfirmed_email: "another@change.com", password: @user.password } }
               end
