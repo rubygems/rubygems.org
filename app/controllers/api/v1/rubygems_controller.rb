@@ -81,6 +81,8 @@ class Api::V1::RubygemsController < Api::BaseController
   private
 
   # Datadog SIEM detection rules key on the log line, not the AppSec span.
+  # If changing these attributes, please keep the runbook queries in sync.
+  # https://github.com/rubygems/rubygems-terraform/blob/HEAD/docs/investigating-activity.md
   # The push has already been processed by the time we get here, so
   # telemetry failures are reported, never surfaced to the pusher.
   def track_gem_push(gemcutter)
