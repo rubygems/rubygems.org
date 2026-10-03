@@ -102,8 +102,8 @@ class ActiveSupport::TestCase
 
     if Toxiproxy.running?
       toxiproxy_port = 22_222 + worker
-      toxiproxy_listen_host = ENV.fetch("TOXIPROXY_LISTEN_HOST", "127.0.0.1")
-      toxiproxy_upstream = ENV.fetch("TOXIPROXY_UPSTREAM", "127.0.0.1:9200")
+      toxiproxy_listen_host = ENV.fetch("TOXIPROXY_LISTEN_HOST", "0.0.0.0")
+      toxiproxy_upstream = ENV.fetch("TOXIPROXY_UPSTREAM", "search:9200")
       Toxiproxy.populate(
         [
 

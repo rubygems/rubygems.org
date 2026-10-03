@@ -6,8 +6,8 @@ require 'opensearch-dsl'
 port = 9200
 if Rails.env.local? && Toxiproxy.running?
   port = 22_221
-  toxiproxy_listen_host = ENV.fetch("TOXIPROXY_LISTEN_HOST", "127.0.0.1")
-  toxiproxy_upstream = ENV.fetch("TOXIPROXY_UPSTREAM", "127.0.0.1:9200")
+  toxiproxy_listen_host = ENV.fetch("TOXIPROXY_LISTEN_HOST", "0.0.0.0")
+  toxiproxy_upstream = ENV.fetch("TOXIPROXY_UPSTREAM", "search:9200")
   Toxiproxy.populate(
     [
 
