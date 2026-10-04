@@ -3,6 +3,92 @@
 require "test_helper"
 
 class RubygemTest < ActiveSupport::TestCase
+  context "with a prefix reserved by an organization" do
+    setup do
+      @organization = create(:organization, handle: "acme-corp")
+      @member = create(:user)
+      create(:membership, user: @member, organization: @organization)
+    end
+
+    should "reject a new gem name covered by the prefix" do
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+
+      rubygem = build(:rubygem, name: "acme-widgets")
+
+      refute_predicate rubygem, :valid?
+      assert_includes rubygem.errors[:name],
+                      "'acme-widgets' starts with 'acme', a prefix reserved by the acme-corp organization."
+    end
+
+    should "reject a name that runs the prefix together with the rest of the name" do
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+
+      refute_predicate build(:rubygem, name: "acmewidgets"), :valid?
+    end
+
+    should "allow a name that only looks like the prefix" do
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+
+      assert_predicate build(:rubygem, name: "acm-widgets"), :valid?
+    end
+
+    should "not treat an underscore in the prefix as a wildcard" do
+      create(:prefix_reservation, organization: @organization, prefix: "acme_co")
+
+      assert_predicate build(:rubygem, name: "acme-corp-widgets"), :valid?
+    end
+
+    should "let a gem that predates the reservation keep pushing versions" do
+      rubygem = create(:rubygem, name: "acme-widgets", owners: [create(:user)])
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+
+      assert_predicate rubygem, :valid?
+      assert_predicate create(:version, rubygem: rubygem, number: "1.0.0"), :persisted?
+    end
+
+    should "reject renaming a gem into the prefix" do
+      rubygem = create(:rubygem, name: "widgets")
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+
+      rubygem.name = "acme-widgets"
+
+      refute_predicate rubygem, :valid?
+    end
+
+    should "allow a gem that belongs to the organization" do
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+
+      assert_predicate build(:rubygem, name: "acme-widgets", organization: @organization), :valid?
+    end
+
+    should "allow a gem pushed by a member of the organization" do
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+
+      rubygem = build(:rubygem, name: "acme-widgets")
+      rubygem.pushed_by = @member
+
+      assert_predicate rubygem, :valid?
+    end
+
+    should "allow a rename by a gem owner who is a member of the organization" do
+      rubygem = create(:rubygem, name: "widgets", owners: [@member])
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+
+      rubygem.name = "acme-widgets"
+
+      assert_predicate rubygem, :valid?
+    end
+
+    should "reject a gem pushed by someone outside the organization" do
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+
+      rubygem = build(:rubygem, name: "acme-widgets")
+      rubygem.pushed_by = create(:user)
+
+      refute_predicate rubygem, :valid?
+    end
+  end
+
   context "with a saved rubygem" do
     setup do
       @rubygem = Rubygem.new(name: "SomeGem")

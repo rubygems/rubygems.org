@@ -418,6 +418,44 @@ class PusherTest < ActiveSupport::TestCase
     end
   end
 
+  context "pushing a gem name covered by a prefix reservation" do
+    setup do
+      @organization = create(:organization, handle: "acme-corp")
+    end
+
+    should "reject a new gem name" do
+      create(:prefix_reservation, organization: @organization, prefix: "tes")
+
+      @cutter.pull_spec
+      @cutter.find
+
+      refute @cutter.validate
+      assert_equal 403, @cutter.code
+      assert_match(/'test' starts with 'tes', a prefix reserved by the acme-corp organization/, @cutter.message)
+    end
+
+    should "allow a member of the reserving organization to push a new gem" do
+      create(:membership, user: @user, organization: @organization)
+      create(:prefix_reservation, organization: @organization, prefix: "tes")
+
+      @cutter.pull_spec
+      @cutter.find
+
+      assert @cutter.validate
+    end
+
+    should "allow a gem that predates the reservation to push a new version" do
+      rubygem = create(:rubygem, name: "test", owners: [@user])
+      create(:version, rubygem: rubygem, number: "0.0.1")
+      create(:prefix_reservation, organization: @organization, prefix: "tes")
+
+      @cutter.pull_spec
+      @cutter.find
+
+      assert @cutter.validate
+    end
+  end
+
   context "checking if the rubygem can be pushed to" do
     should "be true if rubygem is new" do
       @cutter.stubs(:rubygem).returns Rubygem.new

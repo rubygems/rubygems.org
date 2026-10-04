@@ -153,6 +153,7 @@ ja:
             rubygem_name:
               unavailable: 既に使われています
               reserved:
+              reserved_prefix:
     models:
       user: ユーザー
       api_key:

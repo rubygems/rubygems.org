@@ -79,6 +79,7 @@ class Rubygem < ApplicationRecord
     presence: true,
     uniqueness: { case_sensitive: false },
     name_format: true,
+    reserved_prefix: true,
     if: :needs_name_validation?
   validate :reserved_names_exclusion, if: :needs_name_validation?
   validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
