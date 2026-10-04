@@ -50,6 +50,17 @@ class RubygemTransferTest < ActiveSupport::TestCase
     assert_includes @transfer.invites.map(&:user), maintainer
   end
 
+  test "invites a shared owner once when several selected gems list them" do
+    co_owner = create(:user)
+    first_gem = create(:rubygem, owners: [@owner, co_owner])
+    second_gem = create(:rubygem, owners: [@owner, co_owner])
+
+    @transfer.rubygems = [first_gem.id, second_gem.id]
+    @transfer.save!
+
+    assert_equal [co_owner], @transfer.invites.map(&:user)
+  end
+
   test "validates rubygem ownership before transfer" do
     non_owner = create(:user)
     @transfer.created_by = non_owner
