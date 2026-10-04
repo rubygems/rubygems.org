@@ -11,5 +11,7 @@ Rails.logger.silence(:error) do
     end
 
     config.logger = SemanticLogger[Honeybadger]
+
+    config.insights.enabled = false
   end
 end
