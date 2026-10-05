@@ -106,6 +106,78 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to sign_in_path
   end
 
+  test "starting the MFA challenge does not sign out another user" do
+    @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+    other = create(:user)
+    post session_path(session: { who: other.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+    remember_token = other.reload.remember_token
+
+    get update_email_confirmations_path(token: @token)
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
+
+    assert_response :success
+    assert_select "h1", text: /Multi-factor authentication/
+    refute_predicate @user.reload, :email_confirmed?
+    assert_other_user_still_signed_in(other, remember_token)
+  end
+
+  test "a wrong OTP does not sign out another user who signed in during the MFA challenge" do
+    @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+    other = create(:user)
+    get update_email_confirmations_path(token: @token)
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
+    post session_path(session: { who: other.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+    remember_token = other.reload.remember_token
+
+    post otp_update_email_confirmations_path, params: { confirmation: session[:email_confirmation_id], otp: "incorrect" }
+
+    assert_response :unauthorized
+    refute_predicate @user.reload, :email_confirmed?
+    assert @user.valid_email_confirmation_token?(@token)
+    assert_other_user_still_signed_in(other, remember_token)
+  end
+
+  test "an expired MFA session does not sign out another user who signed in during the MFA challenge" do
+    @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+    other = create(:user)
+    get update_email_confirmations_path(token: @token)
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
+    post session_path(session: { who: other.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+    remember_token = other.reload.remember_token
+
+    travel 16.minutes do
+      post otp_update_email_confirmations_path, params: { confirmation: session[:email_confirmation_id], otp: ROTP::TOTP.new(@user.totp_seed).now }
+
+      assert_redirected_to root_path
+      assert_equal I18n.t("multifactor_auths.session_expired"), flash[:alert]
+      refute_predicate @user.reload, :email_confirmed?
+      assert_other_user_still_signed_in(other, remember_token)
+    end
+  end
+
+  test "an invalid or expired token on the confirmation POST does not sign out another user" do
+    other = create(:user)
+    post session_path(session: { who: other.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+    remember_token = other.reload.remember_token
+
+    get update_email_confirmations_path(token: @token)
+    @user.update_column(:email_confirmation_token_expires_at, 1.second.ago)
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
+
+    assert_redirected_to root_path
+    refute_predicate @user.reload, :email_confirmed?
+    assert_other_user_still_signed_in(other, remember_token)
+
+    @token = @user.issue_email_confirmation!(@user.email)
+    get update_email_confirmations_path(token: @token)
+    @user.issue_email_confirmation!(@user.email)
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
+
+    assert_redirected_to root_path
+    refute_predicate @user.reload, :email_confirmed?
+    assert_other_user_still_signed_in(other, remember_token)
+  end
+
   test "a replacement token invalidates the previous link" do
     replacement = @user.issue_email_confirmation!(@user.email)
 
@@ -327,5 +399,14 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "private, no-store", response.headers["Cache-Control"]
     assert_includes %w[no-store max-age=0], response.headers["Surrogate-Control"]
     assert_equal "no-referrer", response.headers["Referrer-Policy"]
+  end
+
+  def assert_other_user_still_signed_in(other, remember_token)
+    assert_equal remember_token, other.reload.remember_token
+    assert_predicate cookies[:remember_token], :present?
+
+    get dashboard_path
+
+    assert_response :success
   end
 end

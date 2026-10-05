@@ -12,7 +12,6 @@ class EmailConfirmationsController < ApplicationController
   prepend_before_action :protect_email_confirmation_response, only: %i[update confirm otp_update webauthn_update]
   before_action :begin_email_confirmation, only: :update
   before_action :load_email_confirmation, only: %i[confirm otp_update webauthn_update]
-  before_action :sign_out_other_user, only: %i[confirm otp_update webauthn_update]
   before_action :require_email_confirmation_mfa, only: :confirm
   before_action :validate_otp, only: :otp_update
   before_action :validate_webauthn, only: :webauthn_update
@@ -98,6 +97,8 @@ class EmailConfirmationsController < ApplicationController
     expected.present? && ActiveSupport::SecurityUtils.secure_compare(submitted, expected)
   end
 
+  # Only a successful confirmation signs out a different user; a pending,
+  # failed, or expired challenge leaves their session untouched.
   def sign_out_other_user
     sign_out if signed_in? && @user != current_user
   end
@@ -115,6 +116,7 @@ class EmailConfirmationsController < ApplicationController
   def confirm_email
     case @user.confirm_email_with_token(session[:email_confirmation_token])
     when :confirmed
+      sign_out_other_user
       delete_email_confirmation_session
       redirect_to signed_in? ? dashboard_path : sign_in_path, notice: t("email_confirmations.update.confirmed_email")
     when :invalid_email
