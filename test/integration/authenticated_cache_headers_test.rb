@@ -42,6 +42,33 @@ class AuthenticatedCacheHeadersTest < ActionDispatch::IntegrationTest
     assert_equal "max-age=0", response.headers["Surrogate-Control"]
   end
 
+  # Public API actions call cache_expiry_headers (expires_in public: true) regardless of
+  # sign-in. expires_in writes response.cache_control, which Rails merges over the raw
+  # Cache-Control header at commit time, so the guard must win in that merge too.
+  test "anonymous public API response stays public" do
+    rubygem = create(:rubygem, name: "cachetest", number: "1.0.0")
+
+    get "/api/v1/gems/#{rubygem.name}.json"
+
+    assert_response :success
+    assert_equal "max-age=60, public", response.headers["Cache-Control"]
+    assert_includes response.headers["Surrogate-Control"], "max-age=3600"
+  end
+
+  test "signed-in public API response is private, no-store despite expires_in public" do
+    rubygem = create(:rubygem, name: "cachetest", number: "1.0.0")
+    user = create(:user, remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
+    post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    get "/api/v1/gems/#{rubygem.name}.json"
+
+    assert_response :success
+    assert_includes response.headers["Set-Cookie"].to_s, "remember_token"
+    assert_equal "private, no-store", response.headers["Cache-Control"]
+    assert_equal "max-age=0", response.headers["Surrogate-Control"]
+    assert_includes response.headers["Vary"].to_s, "Cookie"
+  end
+
   test "anonymous request to a login-gated page redirects to sign-in and is not edge-cacheable" do
     # redirect_to_signin fires for anonymous users, where the authenticated guard does NOT
     # run, so the redirect itself must carry an explicit edge directive: a generic sign-in
