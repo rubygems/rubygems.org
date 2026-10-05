@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AfterVersionWriteJob < ApplicationJob
+  extend StatsD::Instrument
+
   queue_as :default
 
   def perform(version:)
@@ -23,6 +25,9 @@ class AfterVersionWriteJob < ApplicationJob
       SetLinksetHomeJob.perform_later(version:)
     end
   end
+  # Pusher calls #perform inline while holding the per-gem lock, so ActiveJob
+  # instrumentation never sees it.
+  statsd_measure :perform, "after_version_write_job.perform"
 
   def owner
     arguments.dig(0, :version).pusher_api_key&.owner
