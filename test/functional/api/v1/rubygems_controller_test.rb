@@ -4,6 +4,7 @@ require "test_helper"
 
 class Api::V1::RubygemsControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
+  include StatsD::Instrument::Assertions
 
   should "route old paths to new controller" do
     get_route = { controller: "api/v1/rubygems", action: "show", id: "rails", format: "json" }
@@ -315,6 +316,14 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     end
 
     context "On POST to create" do
+      should "measure the per-gem lock wait and the inline after-write" do
+        datagrams = capture_statsd_datagrams { post :create, body: gem_file(&:read) }
+
+        assert_response :success
+        assert(datagrams.any? { |d| d.name == "advisory_xact_lock.wait" && d.tags.include?("lock:rubygem_version_reorder") })
+        assert_equal(1, datagrams.count { |d| d.name == "after_version_write_job.perform" })
+      end
+
       should "track a successful push with Datadog AppSec" do
         span = with_appsec_trace { post :create, body: gem_file(&:read) }
 

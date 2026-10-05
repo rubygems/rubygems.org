@@ -219,7 +219,9 @@ class Pusher
   def after_write
     GemCachePurger.call(rubygem.name)
     RackAttackReset.gem_push_backoff(@request.remote_ip, owner.to_gid) if @request&.remote_ip.present?
-    AfterVersionWriteJob.new(version:).perform(version:)
+    trace("gemcutter.pusher.after_version_write") do
+      AfterVersionWriteJob.new(version:).perform(version:)
+    end
     StatsD.increment "push.success"
     Rstuf::AddJob.perform_later(version:)
   end

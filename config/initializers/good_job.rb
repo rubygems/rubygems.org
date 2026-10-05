@@ -16,6 +16,12 @@ Rails.application.configure do # rubocop:disable Metrics/BlockLength
       set: { priority: 10 },
       description: "Sending GoodJob metrics to statsd every 15s"
     },
+    stuck_push_stats: {
+      cron: "every 5m",
+      class: "StuckPushStatsJob",
+      set: { priority: 10 },
+      description: "Sending the count of unfinished gem pushes to statsd every 5m"
+    },
     mfa_usage_stats: {
       cron: "every hour",
       class: "MfaUsageStatsJob",

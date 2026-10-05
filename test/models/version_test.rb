@@ -1600,8 +1600,8 @@ class VersionTest < ActiveSupport::TestCase
       @version.update!(indexed: false)
     end
 
-    should "not lock or reorder versions when unrelated attributes change" do
-      Rubygem.expects(:advisory_xact_lock!).never
+    should "lock but not reorder versions when unrelated attributes change" do
+      Rubygem.expects(:advisory_xact_lock!).with("rubygem_version_reorder", @version.rubygem.id).once
       @version.expects(:reorder_versions).never
 
       @version.update!(info_checksum_v2: "lala")
