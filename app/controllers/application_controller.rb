@@ -215,7 +215,7 @@ class ApplicationController < ActionController::Base
   def deny_shared_cache_when_authenticated
     return unless signed_in? || @api_key.present?
 
-    response.headers["Cache-Control"] = "private, no-store"
+    response.cache_control.replace(private: true, no_store: true)
     response.headers["Surrogate-Control"] = "max-age=0"
     vary = response.headers["Vary"].to_s.split(",").map(&:strip).compact_blank
     response.headers["Vary"] = (vary + %w[Cookie Authorization]).uniq.join(", ")
