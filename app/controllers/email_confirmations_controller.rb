@@ -155,7 +155,6 @@ class EmailConfirmationsController < ApplicationController
     disable_cache
     no_referrer
     response.headers["Cache-Control"] = "private, no-store"
-    response.headers["Surrogate-Control"] = "no-store"
   end
 
   def delete_email_confirmation_session

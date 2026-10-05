@@ -70,6 +70,7 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     get update_email_confirmations_path(token: @token)
 
     assert_response :success
+    assert_email_confirmation_response_headers
     assert_equal remember_token, other.reload.remember_token
     refute_predicate @user.reload, :email_confirmed?
 
@@ -397,7 +398,7 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
 
   def assert_email_confirmation_response_headers
     assert_equal "private, no-store", response.headers["Cache-Control"]
-    assert_includes %w[no-store max-age=0], response.headers["Surrogate-Control"]
+    assert_equal "max-age=0", response.headers["Surrogate-Control"]
     assert_equal "no-referrer", response.headers["Referrer-Policy"]
   end
 

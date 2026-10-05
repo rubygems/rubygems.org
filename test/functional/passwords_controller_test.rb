@@ -585,7 +585,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
   def assert_password_reset_response_headers
     assert_equal "private, no-store", response.headers["Cache-Control"]
-    assert_includes %w[no-store max-age=0], response.headers["Surrogate-Control"]
+    assert_equal "max-age=0", response.headers["Surrogate-Control"]
     assert_equal "no-referrer", response.headers["Referrer-Policy"]
   end
 
