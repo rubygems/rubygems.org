@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class AvatarsController < ApplicationController
+  # Avatars are the same for every viewer, so never load the viewer's session.
+  # Reading current_user makes Clearance refresh the remember_token cookie,
+  # which forces private, uncacheable responses and re-proxies Gravatar on every page view.
+  skip_before_action :set_error_context_user, :set_user_tag, :set_current_request
+  skip_after_action :deny_shared_cache_when_authenticated
+
   before_action :find_user
   before_action :set_size
   before_action :set_theme
