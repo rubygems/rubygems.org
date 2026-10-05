@@ -215,8 +215,6 @@ class ApplicationController < ActionController::Base
   def deny_shared_cache_when_authenticated
     return unless signed_in? || @api_key.present?
 
-    # Not response.headers["Cache-Control"]: expires_in writes response.cache_control, which
-    # Rails merges over the raw header at commit and would restore "public".
     response.cache_control.replace(private: true, no_store: true)
     response.headers["Surrogate-Control"] = "max-age=0"
     vary = response.headers["Vary"].to_s.split(",").map(&:strip).compact_blank

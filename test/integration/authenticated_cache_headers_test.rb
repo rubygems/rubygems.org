@@ -42,9 +42,6 @@ class AuthenticatedCacheHeadersTest < ActionDispatch::IntegrationTest
     assert_equal "max-age=0", response.headers["Surrogate-Control"]
   end
 
-  # Public API actions call cache_expiry_headers (expires_in public: true) regardless of
-  # sign-in. expires_in writes response.cache_control, which Rails merges over the raw
-  # Cache-Control header at commit time, so the guard must win in that merge too.
   test "anonymous public API response stays public" do
     rubygem = create(:rubygem, name: "cachetest", number: "1.0.0")
 
