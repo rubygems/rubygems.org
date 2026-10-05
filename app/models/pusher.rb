@@ -38,9 +38,9 @@ class Pusher
     return notify_reserved if rubygem.reserved_name?
 
     if rubygem.pushable? && (api_key.user? || pending_trusted_publisher)
-      return true if organization_handle_from_spec.blank?
+      return authorize_organization_new_gem_claim if rubygem.new_record? && organization_handle_from_spec.present?
 
-      return authorize_organization_claim
+      return true
     end
 
     return true if owner.owns_gem?(rubygem)
@@ -446,7 +446,7 @@ class Pusher
     spec.metadata["rubygems_organization"]
   end
 
-  def authorize_organization_claim
+  def authorize_organization_new_gem_claim
     return notify("Could not find organization '#{organization_handle_from_spec}'.", 404) unless claimed_organization
 
     actor = api_key.user? ? owner : pending_trusted_publisher&.user

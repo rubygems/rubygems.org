@@ -812,6 +812,54 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal @organization, rubygem.reload.organization
     end
 
+    should "ignore organization metadata when an organization admin takes over an unprotected yanked gem" do
+      admin = create(:user)
+      create(:membership, :admin, user: admin, organization: @organization)
+      api_key = create(:api_key, owner: admin)
+      rubygem = create(:rubygem, name: "abandoned-yanked-gem", owners: [@user])
+      create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+      rubygem.update_columns(created_at: 200.days.ago, updated_at: 101.days.ago)
+
+      cutter = push_gem_named(rubygem.name, version: "2.0.0", organization_handle: @organization.handle, api_key:)
+
+      assert cutter.process
+      rubygem.reload
+
+      assert_nil rubygem.organization
+      assert_predicate rubygem.ownerships.where(user: admin), :exists?
+      refute_predicate rubygem.ownerships.where(user: @user), :exists?
+    end
+
+    should "ignore organization metadata when the owner republishes a recently created fully yanked gem" do
+      rubygem = create(:rubygem, name: "recent-yanked-gem", owners: [@user])
+      create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+
+      cutter = push_gem_named(rubygem.name, version: "2.0.0", organization_handle: @organization.handle)
+
+      assert cutter.process
+      rubygem.reload
+
+      assert_nil rubygem.organization
+      assert_predicate rubygem.ownerships.where(user: @user), :exists?
+    end
+
+    should "ignore organization metadata when a non-member takes over an unprotected yanked gem" do
+      guest = create(:user)
+      api_key = create(:api_key, owner: guest)
+      rubygem = create(:rubygem, name: "guest-yanked-gem", owners: [@user])
+      create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+      rubygem.update_columns(created_at: 200.days.ago, updated_at: 101.days.ago)
+
+      cutter = push_gem_named(rubygem.name, version: "2.0.0", organization_handle: @organization.handle, api_key:)
+
+      assert cutter.process
+      rubygem.reload
+
+      assert_nil rubygem.organization
+      assert_predicate rubygem.ownerships.where(user: guest), :exists?
+      assert_empty @organization.rubygems
+    end
+
     should "assign the gem to the organization for a pending trusted publisher without creating ownership" do
       pending_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "trusted-org-gem", user: @user)
       api_key = create(:api_key, owner: pending_publisher.trusted_publisher, scopes: %i[push_rubygem])
