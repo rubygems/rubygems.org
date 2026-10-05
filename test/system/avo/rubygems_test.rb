@@ -232,6 +232,36 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     assert_equal "A nice long comment", audit.comment
   end
 
+  test "bulk yank rubygems from the index" do
+    admin_user = create(:admin_github_user, :is_admin)
+    avo_sign_in_as admin_user
+
+    create(:user, email: "security@rubygems.org")
+    rubygems = create_list(:rubygem, 2)
+    versions = rubygems.flat_map { |rubygem| create_list(:version, 2, rubygem:) }
+    untouched = create(:version)
+
+    visit avo.resources_rubygems_path
+
+    rubygems.each do |rubygem|
+      find("tr[data-resource-id='#{rubygem.to_param}'] input[type='checkbox']").check
+    end
+    click_button "Actions"
+    click_on "Yank Rubygem"
+
+    within("[role='dialog']") do
+      assert_text "yank all versions of 2 selected gems"
+      fill_in "Comment", with: "Yanking gems from a malicious campaign"
+      click_button "Yank Rubygem"
+    end
+
+    page.assert_text "Action ran successfully!"
+
+    versions.each { |version| refute_nil version.reload.yanked_at }
+    assert_nil untouched.reload.yanked_at
+    rubygems.each { |rubygem| assert_equal "Yank Rubygem", rubygem.audits.sole.action }
+  end
+
   test "add owner" do
     requires_avo_pro # for search
 

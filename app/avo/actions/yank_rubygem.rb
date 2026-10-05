@@ -4,8 +4,10 @@ class Avo::Actions::YankRubygem < Avo::Actions::ApplicationAction
   OPTION_ALL = "All"
 
   def fields
+    # On the index view with several gems selected there is no single record,
+    # so only "All" (every version of each selected gem) is offered.
     field :version, as: :select,
-      options: -> { [OPTION_ALL] + record.versions.indexed.pluck(:number, :id) },
+      options: -> { [OPTION_ALL] + (record ? record.versions.indexed.pluck(:number, :id) : []) },
       help: "Select Version which needs to be yanked."
     super
   end
@@ -13,12 +15,15 @@ class Avo::Actions::YankRubygem < Avo::Actions::ApplicationAction
   self.name = "Yank Rubygem"
   self.visible = lambda {
     current_user.team_member?("rubygems-org") &&
-      view == :show &&
-      resource.record.versions.indexed.present?
+      (view == :index || (view == :show && resource.record.versions.indexed.present?))
   }
 
   self.message = lambda {
-    "Are you sure you would like to yank gem #{record.name}?"
+    if record
+      "Are you sure you would like to yank gem #{record.name}?"
+    else
+      "Are you sure you would like to yank all versions of #{query ? "#{query.count} selected gems" : 'the selected gems'}?"
+    end
   }
 
   self.confirm_button_label = "Yank Rubygem"
