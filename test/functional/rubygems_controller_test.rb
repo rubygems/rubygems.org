@@ -465,6 +465,26 @@ class RubygemsControllerTest < ActionController::TestCase
       assert page.has_content?("vulnerable")
     end
 
+    should "show advisories only to the signed-in user the source is enabled for" do
+      create(:advisory, :with_rubygem, :unfixed, rubygem: @rubygem,
+             summary: "RCE in Action Pack",
+             identifier: "GHSA-test-show-0004")
+      enabled_user = create(:user)
+      other_user = create(:user)
+
+      with_feature FeatureFlag::OSV_ADVISORIES, actor: enabled_user do
+        sign_in_as(enabled_user)
+        get :show, params: { id: @rubygem.slug }
+
+        assert page.has_content?("RCE in Action Pack")
+
+        sign_in_as(other_user)
+        get :show, params: { id: @rubygem.slug }
+
+        refute page.has_content?("RCE in Action Pack")
+      end
+    end
+
     should "hide withdrawn advisories" do
       create(:advisory, :with_rubygem, :withdrawn, :unfixed, rubygem: @rubygem,
              summary: "Withdrawn advisory",

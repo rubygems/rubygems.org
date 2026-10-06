@@ -9,8 +9,8 @@ class Advisory < ApplicationRecord
   validates :identifier, uniqueness: { scope: %i[type rubygem_name] }
 
   scope :current, -> { where(withdrawn_at: nil) }
-  scope :visible, lambda {
-    types = enabled_sources.map(&:sti_name)
+  scope :visible, lambda { |actor = nil|
+    types = enabled_sources(actor).map(&:sti_name)
     types.empty? ? none : current.where(type: types)
   }
 
@@ -21,12 +21,12 @@ class Advisory < ApplicationRecord
       raise NotImplementedError, "#{name} must define .feature_flag"
     end
 
-    def enabled?
-      FeatureFlag.enabled?(feature_flag)
+    def enabled?(actor = nil)
+      FeatureFlag.enabled?(feature_flag, actor)
     end
 
-    def enabled_sources
-      SOURCES.select(&:enabled?)
+    def enabled_sources(actor = nil)
+      SOURCES.select { |source| source.enabled?(actor) }
     end
   end
 
