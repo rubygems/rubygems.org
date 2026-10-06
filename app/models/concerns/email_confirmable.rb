@@ -63,7 +63,11 @@ module EmailConfirmable
       self.email_confirmed = true
       self.unconfirmed_email = nil
       clear_email_confirmation
-      save ? :confirmed : :invalid_email
+      return :invalid_email unless save
+
+      # Email changes record this event in User's after_update callback.
+      record_event!(Events::UserEvent::EMAIL_VERIFIED, email:) unless changing_email
+      :confirmed
     end
   end
 
