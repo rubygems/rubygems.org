@@ -89,9 +89,12 @@ module Gemcutter
 
   DEFAULT_PAGE = 1
   DEFAULT_PAGINATION = 20
-  EMAIL_TOKEN_EXPIRES_AFTER = 3.hours
-  EMAIL_CONFIRMATION_TOKEN_EXPIRES_AFTER = 24.hours
-  EMAIL_CHANGE_TOKEN_EXPIRES_AFTER = 3.hours
+  # Password reset links.
+  PASSWORD_RESET_TOKEN_EXPIRES_AFTER = 3.hours
+  # Sign-up confirmation (and resends), plus Avo admin email changes, which leave the account unconfirmed.
+  SIGN_UP_CONFIRMATION_TOKEN_EXPIRES_AFTER = 24.hours
+  # Self-service email change by a user whose current email is already confirmed.
+  EMAIL_CHANGE_CONFIRMATION_TOKEN_EXPIRES_AFTER = 3.hours
   HOST = config["host"].freeze
   HOST_DISPLAY = Gemcutter.config[:host_display].freeze
   NEWS_DAYS_LIMIT = 7.days

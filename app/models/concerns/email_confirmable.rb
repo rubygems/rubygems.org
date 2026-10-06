@@ -20,7 +20,7 @@ module EmailConfirmable
       return unless target_email == email_confirmation_target
 
       token = SecureRandom.hex(24)
-      expires_after = email_confirmed? ? Gemcutter::EMAIL_CHANGE_TOKEN_EXPIRES_AFTER : Gemcutter::EMAIL_CONFIRMATION_TOKEN_EXPIRES_AFTER
+      expires_after = email_confirmed? ? Gemcutter::EMAIL_CHANGE_CONFIRMATION_TOKEN_EXPIRES_AFTER : Gemcutter::SIGN_UP_CONFIRMATION_TOKEN_EXPIRES_AFTER
       update_columns(
         email_confirmation_token_digest: self.class.email_confirmation_token_digest(token),
         email_confirmation_token_expires_at: expires_after.from_now,
