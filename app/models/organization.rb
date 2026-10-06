@@ -29,6 +29,18 @@ class Organization < ApplicationRecord
     record_event!(Events::OrganizationEvent::CREATED, actor_gid: memberships.first&.to_gid)
   end
 
+  def add_new_rubygem!(rubygem, actor:)
+    transaction do
+      rubygem.update!(organization: self)
+      rubygem.record_event!(Events::RubygemEvent::ORGANIZATION_ADDED,
+        organization: handle, organization_gid: to_gid,
+        added_by: actor.display_handle, actor_gid: actor.to_gid)
+      record_event!(Events::OrganizationEvent::RUBYGEM_ADDED,
+        rubygem: rubygem.name, rubygem_gid: rubygem.to_gid,
+        added_by: actor.display_handle, actor_gid: actor.to_gid)
+    end
+  end
+
   def user_is_member?(user)
     memberships.exists?(user: user)
   end

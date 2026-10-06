@@ -9,4 +9,12 @@ class Events::OrganizationEvent < ApplicationRecord
     attribute :name, :string
     attribute :actor_gid, :global_id
   end
+
+  RUBYGEM_ADDED = define_event "organization:rubygem:added" do
+    attribute :rubygem, :string
+    attribute :added_by, :string
+
+    attribute :rubygem_gid, :global_id
+    attribute :actor_gid, :global_id
+  end
 end

@@ -639,6 +639,7 @@ class PusherTest < ActiveSupport::TestCase
 
       assert_nil rubygem.organization
       assert_predicate rubygem.ownerships.where(user: @user), :exists?
+      assert_empty rubygem.events.where(tag: Events::RubygemEvent::ORGANIZATION_ADDED)
     end
 
     should "create personal ownership when the pusher is not an organization member and metadata is absent" do
@@ -676,6 +677,7 @@ class PusherTest < ActiveSupport::TestCase
       assert_equal @organization, rubygem.organization
       assert_empty rubygem.ownerships
       assert rubygem.owned_by?(admin)
+      assert_organization_added_events rubygem, actor: admin
     end
 
     should "look up the organization handle case-insensitively" do
@@ -692,7 +694,7 @@ class PusherTest < ActiveSupport::TestCase
       create(:membership, :maintainer, user: maintainer, organization: @organization)
       api_key = create(:api_key, owner: maintainer)
 
-      assert_no_difference %w[Rubygem.count Ownership.count Version.count] do
+      assert_no_difference %w[Rubygem.count Ownership.count Version.count Events::OrganizationEvent.count] do
         cutter = push_gem_named("org-maintainer-gem", organization_handle: @organization.handle, api_key: api_key)
 
         refute cutter.process
@@ -828,6 +830,8 @@ class PusherTest < ActiveSupport::TestCase
       assert_nil rubygem.organization
       assert_predicate rubygem.ownerships.where(user: admin), :exists?
       refute_predicate rubygem.ownerships.where(user: @user), :exists?
+      assert_empty rubygem.events.where(tag: Events::RubygemEvent::ORGANIZATION_ADDED)
+      assert_empty @organization.events.where(tag: Events::OrganizationEvent::RUBYGEM_ADDED)
     end
 
     should "ignore organization metadata when the owner republishes a recently created fully yanked gem" do
@@ -872,6 +876,7 @@ class PusherTest < ActiveSupport::TestCase
       assert_empty rubygem.ownerships
       assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: pending_publisher.trusted_publisher)
       assert rubygem.owned_by?(@user)
+      assert_organization_added_events rubygem, actor: @user
     end
 
     should "deny a pending trusted publisher whose user cannot add gems to the organization" do
@@ -880,7 +885,7 @@ class PusherTest < ActiveSupport::TestCase
       pending_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "trusted-maintainer-gem", user: maintainer)
       api_key = create(:api_key, owner: pending_publisher.trusted_publisher, scopes: %i[push_rubygem])
 
-      assert_no_difference %w[Rubygem.count Ownership.count Version.count] do
+      assert_no_difference %w[Rubygem.count Ownership.count Version.count Events::OrganizationEvent.count] do
         cutter = push_gem_named("trusted-maintainer-gem", organization_handle: @organization.handle, api_key: api_key)
 
         refute cutter.process
@@ -890,6 +895,18 @@ class PusherTest < ActiveSupport::TestCase
 
       assert_nil Rubygem.find_by(name: "trusted-maintainer-gem")
     end
+  end
+
+  def assert_organization_added_events(rubygem, actor:)
+    assert_event Events::RubygemEvent::ORGANIZATION_ADDED, {
+      organization: @organization.handle, organization_gid: @organization.to_gid.to_s,
+      added_by: actor.display_handle, actor_gid: actor.to_gid.to_s
+    }, rubygem.events.where(tag: Events::RubygemEvent::ORGANIZATION_ADDED).sole
+
+    assert_event Events::OrganizationEvent::RUBYGEM_ADDED, {
+      rubygem: rubygem.name, rubygem_gid: rubygem.to_gid.to_s,
+      added_by: actor.display_handle, actor_gid: actor.to_gid.to_s
+    }, @organization.events.where(tag: Events::OrganizationEvent::RUBYGEM_ADDED).sole
   end
 
   def push_gem_named(name, version: "1.0.0", organization_handle: nil, api_key: @api_key)

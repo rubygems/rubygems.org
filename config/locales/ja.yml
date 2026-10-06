@@ -1190,6 +1190,10 @@ ja:
         owner_removed_owner_html: 削除された所有者：%{owner}
         owner_removed_by_html: 削除者：%{remover}
         owner_confirmed: 所有者が確認されました
+      organization:
+        organization_added:
+        organization_added_organization_html:
+        organization_added_by_html:
     user_event:
       user:
         created: ユーザーが作成されました
