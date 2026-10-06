@@ -308,6 +308,25 @@ class SessionsControllerTest < ActionController::TestCase
       end
     end
 
+    context "when a blocked user's discarded pending email is used to log in" do
+      setup do
+        @user = create(:user, handle: "blockedpending")
+        @user.update!(unconfirmed_email: "attacker@evil-test.org")
+        @user.block!
+        @user.update_attribute(:password, PasswordHelpers::SECURE_TEST_PASSWORD)
+        @locked_email = @user.reload.email
+        post :create, params: { session: { who: "attacker@evil-test.org", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+      end
+
+      should respond_with :unauthorized
+
+      should "not sign in or change the blocked user" do
+        refute_predicate @controller.request.env[:clearance], :signed_in?
+        assert_equal @locked_email, @user.reload.email
+        assert_nil @user.unconfirmed_email
+      end
+    end
+
     context "when login and password are incorrect" do
       setup do
         post :create, params: { session: { who: "login", password: "incorrectpassword" } }

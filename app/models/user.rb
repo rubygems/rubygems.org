@@ -274,6 +274,8 @@ class User < ApplicationRecord
   def block!
     original_email = email
     transaction do
+      # Discard any pending email change so confirm_email! cannot promote it to the login email.
+      self.unconfirmed_email = nil
       update_attribute(:email, "security+locked-#{SecureRandom.hex(4)}-#{display_handle.downcase}@rubygems.org")
       confirm_email!
       disable_totp!

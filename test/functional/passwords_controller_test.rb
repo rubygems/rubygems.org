@@ -66,6 +66,26 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         assert_in_delta 3.hours.from_now, @user.password_reset_token_expires_at, 2.seconds
       end
     end
+
+    context "with the pending email of a user who was then blocked" do
+      should "not send a reset or change the blocked account" do
+        @user = create(:user)
+        @user.update!(unconfirmed_email: "attacker@evil-test.org")
+        @user.block!
+        locked_email = @user.reload.email
+
+        assert_no_enqueued_emails do
+          post password_path, params: { password: { email: "attacker@evil-test.org" } }
+        end
+
+        assert_response :accepted
+        @user.reload
+
+        assert_equal locked_email, @user.email
+        assert_nil @user.unconfirmed_email
+        assert_nil @user.password_reset_token_digest
+      end
+    end
   end
 
   context "on GET to edit" do
