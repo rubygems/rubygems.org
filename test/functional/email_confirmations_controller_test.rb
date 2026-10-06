@@ -312,6 +312,26 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     assert_nil @user.email_confirmation_token_digest
   end
 
+  test "the confirmation MFA challenge cannot be used to sign in" do
+    user = create(:user, email: "old@rubygems-test.org")
+    user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+    user.update!(unconfirmed_email: "new@rubygems-test.org")
+    token = user.issue_email_confirmation!(user.unconfirmed_email)
+    get update_email_confirmations_path(token:)
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
+
+    assert_response :success
+
+    assert_no_difference -> { user.events.where(tag: Events::UserEvent::LOGIN_SUCCESS).count } do
+      post otp_create_session_path, params: { otp: ROTP::TOTP.new(user.totp_seed).now }
+    end
+
+    assert_response :unauthorized
+    assert_predicate cookies[:remember_token], :blank?
+    assert_equal "old@rubygems-test.org", user.reload.email
+    assert user.valid_email_confirmation_token?(token)
+  end
+
   test "token replacement during MFA prevents confirmation" do
     @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
     recovery_code = @user.new_mfa_recovery_codes.first

@@ -292,6 +292,17 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         end
       end
 
+      should "not let the password reset MFA challenge sign in" do
+        begin_password_reset
+
+        assert_no_difference -> { @user.events.where(tag: Events::UserEvent::LOGIN_SUCCESS).count } do
+          post otp_create_session_path, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+        end
+
+        assert_response :unauthorized
+        refute_signed_in
+      end
+
       context "when OTP is incorrect" do
         should "display error message and prompt for MFA again" do
           begin_password_reset

@@ -15,6 +15,9 @@ module RequireMfa
     create_new_mfa_expiry
     session[:mfa_login_started_at] = Time.now.utc.to_s
     session[:mfa_user] = user.id
+    # Sign-in, password reset, and email confirmation share these keys; record
+    # which flow started the challenge so another flow cannot complete it.
+    session[:mfa_flow] = controller_path
   end
 
   def prompt_mfa(alert: nil, status: :ok)
@@ -69,5 +72,6 @@ module RequireMfa
     session.delete(:webauthn_authentication)
     session.delete(:mfa_login_started_at)
     session.delete(:mfa_user)
+    session.delete(:mfa_flow)
   end
 end
