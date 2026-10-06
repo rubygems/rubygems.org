@@ -5,16 +5,7 @@ class Mailer < ApplicationMailer
   # carry no target and are skipped rather than issuing a token for the
   # user's current (possibly changed) address.
   def email_reset(user, target_email = nil, token: nil)
-    @user = user
-    @token = token || (target_email && user.issue_email_confirmation!(target_email))
-    return log_skipped_confirmation unless @token
-
-    mail to: target_email,
-        subject: I18n.t("mailer.confirmation_subject", host: Gemcutter::HOST_DISPLAY,
-        default: "Please confirm your email address with #{Gemcutter::HOST_DISPLAY}") do |format|
-          format.html
-          format.text
-        end
+    confirmation_mail(user, target_email, token)
   end
 
   def email_reset_update(user)
@@ -24,16 +15,7 @@ class Mailer < ApplicationMailer
   end
 
   def email_confirmation(user, target_email = nil, token: nil)
-    @user = user
-    @token = token || (target_email && user.issue_email_confirmation!(target_email))
-    return log_skipped_confirmation unless @token
-
-    mail to: target_email,
-         subject: I18n.t("mailer.confirmation_subject", host: Gemcutter::HOST_DISPLAY,
-         default: "Please confirm your email address with #{Gemcutter::HOST_DISPLAY}") do |format|
-           format.html
-           format.text
-         end
+    confirmation_mail(user, target_email, token)
   end
 
   def admin_manual(user, subject, body)
@@ -154,6 +136,21 @@ class Mailer < ApplicationMailer
   end
 
   private
+
+  # Shared by email_reset and email_confirmation; each renders its own
+  # template via action_name.
+  def confirmation_mail(user, target_email, token)
+    @user = user
+    @token = token || (target_email && user.issue_email_confirmation!(target_email))
+    return log_skipped_confirmation unless @token
+
+    mail to: target_email,
+         subject: I18n.t("mailer.confirmation_subject", host: Gemcutter::HOST_DISPLAY,
+         default: "Please confirm your email address with #{Gemcutter::HOST_DISPLAY}") do |format|
+           format.html
+           format.text
+         end
+  end
 
   def log_skipped_confirmation
     Rails.logger.info("[mailer:#{action_name}] confirmation target missing or changed. skipping sending mail for #{@user.handle}")

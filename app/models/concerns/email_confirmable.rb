@@ -33,13 +33,7 @@ module EmailConfirmable
   end
 
   def invalidate_email_confirmation!
-    update_columns(
-      email_confirmation_token_digest: nil,
-      email_confirmation_token_expires_at: nil,
-      email_confirmation_email: nil,
-      confirmation_token: nil,
-      token_expires_at: nil
-    )
+    update_columns(cleared_email_confirmation_attributes)
   end
 
   def valid_email_confirmation_token?(token)
@@ -78,10 +72,16 @@ module EmailConfirmable
   end
 
   def clear_email_confirmation
-    self.email_confirmation_token_digest = nil
-    self.email_confirmation_token_expires_at = nil
-    self.email_confirmation_email = nil
-    self.confirmation_token = nil
-    self.token_expires_at = nil
+    assign_attributes(cleared_email_confirmation_attributes)
+  end
+
+  def cleared_email_confirmation_attributes
+    {
+      email_confirmation_token_digest: nil,
+      email_confirmation_token_expires_at: nil,
+      email_confirmation_email: nil,
+      confirmation_token: nil,
+      token_expires_at: nil
+    }
   end
 end

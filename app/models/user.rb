@@ -16,7 +16,7 @@ class User < ApplicationRecord
 
   default_scope { not_deleted }
 
-  before_save :clear_pending_email_confirmation, if: -> { will_save_change_to_email? || will_save_change_to_unconfirmed_email? }
+  before_save :clear_email_confirmation, if: -> { will_save_change_to_email? || will_save_change_to_unconfirmed_email? }
   after_create :record_create_event
   after_update :record_email_update_event, if: :email_was_updated?
   after_update :record_email_verified_event, if: -> { saved_change_to_email? && email_confirmed? }
@@ -395,14 +395,6 @@ class User < ApplicationRecord
   def email_was_updated?
     (saved_change_to_unconfirmed_email? || saved_change_to_email?) &&
       email != attribute_before_last_save(:unconfirmed_email)
-  end
-
-  def clear_pending_email_confirmation
-    self.email_confirmation_token_digest = nil
-    self.email_confirmation_token_expires_at = nil
-    self.email_confirmation_email = nil
-    self.confirmation_token = nil
-    self.token_expires_at = nil
   end
 
   def record_email_update_event
