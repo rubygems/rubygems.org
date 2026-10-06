@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class OrganizationsController < Organizations::BaseController
+  include GemSortable
+
   before_action :redirect_to_signin, only: :index, unless: :signed_in?
   before_action :redirect_to_new_mfa, only: :index, if: :mfa_required_not_yet_enabled?
   before_action :redirect_to_settings_strong_mfa_required, only: :index, if: :mfa_required_weak_level_enabled?
 
   before_action :find_organization, only: %i[show edit update]
+  before_action :set_gem_sort, only: :show
 
   layout "subject"
 
@@ -20,7 +23,7 @@ class OrganizationsController < Organizations::BaseController
     @gems = @organization
       .rubygems
       .with_versions
-      .by_downloads
+      .sorted_by(@gem_sort)
       .preload(:most_recent_version, :gem_download)
       .load_async
     @gems_count = @organization.rubygems.with_versions.count

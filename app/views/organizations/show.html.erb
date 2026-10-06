@@ -37,8 +37,9 @@
 <% end %>
 
 <%= render CardComponent.new do |c| %>
-  <%= c.head do %>
+  <%= c.head(class: "flex-wrap gap-3") do %>
     <%= c.title t(".gems"), icon: "gems", count: @gems_count %>
+    <%= render GemSortComponent.new(current: @gem_sort, options: @gem_sort_options) unless @gems.empty? %>
   <% end %>
   <% if @gems.empty? %>
     <%= prose do %>

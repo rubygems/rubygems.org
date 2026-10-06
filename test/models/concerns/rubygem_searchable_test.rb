@@ -190,6 +190,39 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
   end
 
+  context "sort" do
+    setup do
+      { "sortgem-b" => [30, 3.days.ago], "sortgem-a" => [10, 1.day.ago], "sortgem-c" => [20, 2.days.ago] }.each do |name, (downloads, updated_at)|
+        rubygem = create(:rubygem, name:, downloads:)
+        create(:version, rubygem:)
+        rubygem.update_column(:updated_at, updated_at)
+        rubygem.reindex(refresh: true)
+      end
+    end
+
+    should "order by downloads" do
+      _, response = ElasticSearcher.new("sortgem", sort: "downloads").search
+
+      assert_equal %w[sortgem-b sortgem-c sortgem-a], response.map(&:name)
+    end
+
+    should "order by name" do
+      _, response = ElasticSearcher.new("sortgem", sort: "name").search
+
+      assert_equal %w[sortgem-a sortgem-b sortgem-c], response.map(&:name)
+    end
+
+    should "order by most recently updated" do
+      _, response = ElasticSearcher.new("sortgem", sort: "recent").search
+
+      assert_equal %w[sortgem-a sortgem-c sortgem-b], response.map(&:name)
+    end
+
+    should "reject an unknown sort" do
+      assert_raises(KeyError) { ElasticSearcher.new("sortgem", sort: "bogus") }
+    end
+  end
+
   context "source" do
     setup do
       rubygem = create(:rubygem, name: "example_gem", downloads: 10)

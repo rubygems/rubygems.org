@@ -1071,6 +1071,45 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
+  context ".sorted_by" do
+    setup do
+      # Created out of name order so an unordered tie would not come back sorted by luck.
+      @charlie = create(:rubygem, name: "charlie", downloads: 10)
+      @bravo = create(:rubygem, name: "bravo", downloads: 30)
+      @alpha = create(:rubygem, name: "alpha", downloads: 10)
+      create(:version, rubygem: @alpha, created_at: 1.day.ago)
+      create(:version, rubygem: @charlie, created_at: 2.days.ago)
+      create(:version, rubygem: @bravo, created_at: 3.days.ago)
+      # A yanked release is not a publish, and touching the gem is not one either.
+      create(:version, rubygem: @bravo, created_at: 1.hour.ago, indexed: false)
+      @charlie.touch
+    end
+
+    should "order by name" do
+      assert_equal [@alpha, @bravo, @charlie], Rubygem.sorted_by("name").to_a
+    end
+
+    should "order by downloads, breaking ties by name" do
+      tied = %w[foxtrot delta hotel echo golf].map { |name| create(:rubygem, name:, downloads: 10) }
+
+      assert_equal [@bravo, @alpha, @charlie, *tied.sort_by(&:name)], Rubygem.sorted_by("downloads").to_a
+    end
+
+    should "order by the latest indexed version, newest first" do
+      assert_equal [@alpha, @charlie, @bravo], Rubygem.sorted_by("recent").to_a
+    end
+
+    should "put gems without indexed versions last when ordering by recent" do
+      unpublished = create(:rubygem, name: "aaa-unpublished")
+
+      assert_equal unpublished, Rubygem.sorted_by("recent").to_a.last
+    end
+
+    should "reject an unknown sort" do
+      assert_raises(ArgumentError) { Rubygem.sorted_by("downloads; DROP TABLE rubygems") }
+    end
+  end
+
   context "with downloaded gems and versions created at specific times" do
     setup do
       @rubygem1 = create(:rubygem, downloads: 10)

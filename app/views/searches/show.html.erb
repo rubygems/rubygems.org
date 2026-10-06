@@ -33,8 +33,9 @@
     <% if @gems %>
       <% @subtitle = t('.subtitle_html', :query => params[:query]) %>
 
-      <header class="flex items-center mb-6">
+      <header class="flex flex-wrap items-center justify-between gap-3 mb-6">
         <p class="text-xs text-neutral-500 uppercase tracking-wide"><%= page_entries_info(@gems, :entry_name => 'gem') %></p>
+        <%= render GemSortComponent.new(current: @gem_sort, options: @gem_sort_options) if @gems.present? %>
       </header>
 
       <%= render partial: 'aggregations', locals: { gems: @gems } %>

@@ -1254,6 +1254,14 @@ de:
       one:
   form:
     optional:
+  gem_sort_component:
+    label:
+    menu_label:
+    options:
+      relevance:
+      recent:
+      downloads:
+      name:
   events:
     table_component:
       event:
