@@ -49,6 +49,14 @@ class Events::RubygemEvent < ApplicationRecord
     attribute :version_gid, :global_id
   end
 
+  ORGANIZATION_ADDED = define_event "rubygem:organization:added" do
+    attribute :organization, :string
+    attribute :added_by, :string
+
+    attribute :organization_gid, :global_id
+    attribute :actor_gid, :global_id
+  end
+
   OWNER_ADDED = define_event "rubygem:owner:added" do
     attribute :owner, :string
     attribute :authorizer, :string

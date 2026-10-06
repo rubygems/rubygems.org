@@ -1200,6 +1200,10 @@ zh-TW:
         owner_removed_owner_html:
         owner_removed_by_html:
         owner_confirmed:
+      organization:
+        organization_added:
+        organization_added_organization_html:
+        organization_added_by_html:
     user_event:
       user:
         created:

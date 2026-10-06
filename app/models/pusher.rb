@@ -36,7 +36,13 @@ class Pusher
 
   def authorize
     return notify_reserved if rubygem.reserved_name?
-    return true if rubygem.pushable? && (api_key.user? || find_pending_trusted_publisher)
+
+    if rubygem.pushable? && (api_key.user? || pending_trusted_publisher)
+      return authorize_organization_new_gem_claim if rubygem.new_record? && organization_handle_from_spec.present?
+
+      return true
+    end
+
     return true if owner.owns_gem?(rubygem)
 
     notify_unauthorized
@@ -239,15 +245,16 @@ class Pusher
     persist_version
 
     if rubygem.unowned?
+      claimed_organization.add_new_rubygem!(rubygem, actor: @organization_claimed_by) if @organization_claimed_by
+
       if api_key.user?
         rubygem.create_ownership(owner)
       elsif api_key.trusted_publisher?
-        pending_publisher = find_pending_trusted_publisher
-        return notify("No pending publisher found", 404) if pending_publisher.blank?
+        return notify("No pending publisher found", 404) unless pending_trusted_publisher
 
         rubygem.transaction do
           logger.info { "Reifying pending publisher" }
-          rubygem.create_ownership(pending_publisher.user)
+          rubygem.create_ownership(pending_trusted_publisher.user)
           owner.rubygem_trusted_publishers.create!(rubygem: rubygem)
         end
       else
@@ -430,9 +437,28 @@ class Pusher
     true
   end
 
-  def find_pending_trusted_publisher
-    return unless api_key.trusted_publisher?
-    owner.pending_trusted_publishers.unexpired.rubygem_name_is(rubygem.name).first
+  def pending_trusted_publisher
+    return @pending_trusted_publisher if defined?(@pending_trusted_publisher)
+    return @pending_trusted_publisher = nil unless api_key.trusted_publisher?
+
+    @pending_trusted_publisher = owner.pending_trusted_publishers.unexpired.rubygem_name_is(rubygem.name).first
+  end
+
+  def organization_handle_from_spec
+    spec.metadata["rubygems_organization"]
+  end
+
+  def authorize_organization_new_gem_claim
+    return notify("Could not find organization '#{organization_handle_from_spec}'.", 404) unless claimed_organization
+
+    actor = api_key.user? ? owner : pending_trusted_publisher&.user
+    return @organization_claimed_by = actor if actor && OrganizationPolicy.new(actor, claimed_organization).add_gem?
+
+    notify("You do not have permission to add a gem to organization '#{claimed_organization.handle}'.", 403)
+  end
+
+  def claimed_organization
+    @claimed_organization ||= Organization.find_by_handle(organization_handle_from_spec)
   end
 
   def sigstore_verifier

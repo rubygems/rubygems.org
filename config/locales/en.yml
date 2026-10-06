@@ -1217,6 +1217,10 @@ en:
         owner_removed_owner_html: "Owner removed: %{owner}"
         owner_removed_by_html: "Removed by: %{remover}"
         owner_confirmed: "Owner Confirmed"
+      organization:
+        organization_added: "Added to Organization"
+        organization_added_organization_html: "Organization: %{organization}"
+        organization_added_by_html: "Added by: %{user}"
     user_event:
       user:
         created: "User Created"
