@@ -39,6 +39,7 @@ class Avo::Resources::Rubygem < Avo::BaseResource
 
       field :ownerships, as: :has_many
       field :ownerships_including_unconfirmed, as: :has_many
+      field :historical_ownerships, as: :has_many
       field :organization, as: :belongs_to
 
       field :subscriptions, as: :has_many

@@ -34,6 +34,60 @@ class OwnersControllerTest < ActionController::TestCase
         end
       end
 
+      context "when the gem has a prior owner" do
+        setup do
+          @former_owner = create(:user, handle: "former_owner")
+          create(:ownership, user: @former_owner, rubygem: @rubygem).destroy
+        end
+
+        context "with the historical ownerships feature enabled" do
+          setup do
+            enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS)
+            get :index, params: { rubygem_id: @rubygem.name }
+          end
+
+          should respond_with :success
+
+          should "render the prior owner in the prior owners table" do
+            assert page.has_selector?("[data-testid='prior_owners_table'] a[href='#{profile_path(@former_owner.display_id)}']")
+          end
+        end
+
+        context "with the historical ownerships feature disabled" do
+          setup do
+            get :index, params: { rubygem_id: @rubygem.name }
+          end
+
+          should respond_with :success
+
+          should "not render the prior owners table" do
+            refute page.has_selector?("[data-testid='prior_owners_table']")
+          end
+        end
+
+        context "with the feature enabled only for another user" do
+          setup do
+            enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS, actor: create(:user))
+            get :index, params: { rubygem_id: @rubygem.name }
+          end
+
+          should "not render the prior owners table" do
+            refute page.has_selector?("[data-testid='prior_owners_table']")
+          end
+        end
+
+        context "with the feature enabled for the viewing user" do
+          setup do
+            enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS, actor: @user)
+            get :index, params: { rubygem_id: @rubygem.name }
+          end
+
+          should "render the prior owners table" do
+            assert page.has_selector?("[data-testid='prior_owners_table']")
+          end
+        end
+      end
+
       context "when user is a maintainer of the gem" do
         setup do
           @maintainer = create(:user)

@@ -875,6 +875,7 @@ class UserTest < ActiveSupport::TestCase
 
   context "rubygems" do
     setup do
+      enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS)
       @user     = create(:user)
       @rubygems = [2000, 1000, 3000].map do |download|
         create(:rubygem, downloads: download).tap do |rubygem|
@@ -904,6 +905,85 @@ class UserTest < ActiveSupport::TestCase
       create(:ownership, rubygem: @rubygems.first)
 
       assert_equal 2, @user.only_owner_gems.count
+    end
+
+    should "include downloads and count from a gem the user no longer owns" do
+      former_rubygem = create(:rubygem, downloads: 500)
+      create(:version, rubygem: former_rubygem)
+      create(:ownership, user: @user, rubygem: former_rubygem).destroy
+
+      assert_equal 6500, @user.total_downloads_count
+      assert_equal 4, @user.total_rubygems_count
+    end
+
+    should "not double-count a gem with two closed stints" do
+      former_rubygem = create(:rubygem, downloads: 500)
+      create(:version, rubygem: former_rubygem)
+      create(:ownership, user: @user, rubygem: former_rubygem).destroy
+      create(:ownership, user: @user, rubygem: former_rubygem).destroy
+
+      assert_equal 6500, @user.total_downloads_count
+      assert_equal 4, @user.total_rubygems_count
+    end
+
+    should "not double-count a gem currently owned with an old closed stint" do
+      Ownership.find_by(user: @user, rubygem: @rubygems.first).destroy
+      create(:ownership, user: @user, rubygem: @rubygems.first)
+
+      assert_equal 6000, @user.total_downloads_count
+      assert_equal 3, @user.total_rubygems_count
+    end
+
+    should "exclude a formerly-owned gem whose stint is private" do
+      former_rubygem = create(:rubygem, downloads: 500)
+      create(:version, rubygem: former_rubygem)
+      create(:ownership, user: @user, rubygem: former_rubygem).destroy
+      HistoricalOwnership.find_by!(user: @user, rubygem: former_rubygem).make_private!
+
+      assert_equal 6000, @user.total_downloads_count
+      assert_equal 3, @user.total_rubygems_count
+    end
+
+    should "still count a currently-owned gem whose open stint is private" do
+      HistoricalOwnership.find_by!(user: @user, rubygem: @rubygems.first).make_private!
+
+      assert_equal 6000, @user.total_downloads_count
+      assert_equal 3, @user.total_rubygems_count
+    end
+
+    should "exclude a formerly-owned gem with no versions from the count" do
+      former_rubygem = create(:rubygem)
+      create(:ownership, user: @user, rubygem: former_rubygem).destroy
+
+      assert_equal 3, @user.total_rubygems_count
+    end
+
+    context "when the historical ownerships feature is disabled" do
+      setup do
+        @former_rubygem = create(:rubygem, downloads: 500)
+        create(:version, rubygem: @former_rubygem)
+        create(:ownership, user: @user, rubygem: @former_rubygem).destroy
+      end
+
+      should "only count currently-owned gems" do
+        with_feature(FeatureFlag::HISTORICAL_OWNERSHIPS, enabled: false) do
+          assert_equal 6000, @user.total_downloads_count
+          assert_equal 3, @user.total_rubygems_count
+        end
+      end
+
+      should "only include prior gems for viewers the feature is enabled for" do
+        viewer = create(:user)
+
+        with_feature(FeatureFlag::HISTORICAL_OWNERSHIPS, enabled: false) do
+          enable_feature(FeatureFlag::HISTORICAL_OWNERSHIPS, actor: viewer)
+
+          assert_equal 6500, @user.total_downloads_count(viewer)
+          assert_equal 4, @user.total_rubygems_count(viewer)
+          assert_equal 6000, @user.total_downloads_count(create(:user))
+          assert_equal 3, @user.total_rubygems_count
+        end
+      end
     end
   end
 

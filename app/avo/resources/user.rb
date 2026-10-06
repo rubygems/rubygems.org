@@ -103,6 +103,7 @@ class Avo::Resources::User < Avo::BaseResource
         field :token_expires_at, as: :date_time
       end
       field :ownerships, as: :has_many
+      field :historical_ownerships, as: :has_many
       field :rubygems, as: :has_many, through: :ownerships
       field :subscriptions, as: :has_many
       field :subscribed_gems, as: :has_many, through: :subscriptions

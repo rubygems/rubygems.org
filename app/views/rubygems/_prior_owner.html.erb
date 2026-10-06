@@ -1,0 +1,11 @@
+<% owner = prior_ownership.user %>
+<%= link_to profile_path(owner.display_id), title: owner.display_handle, alt: owner.display_handle,
+      class: "gem__prior-owner flex w-full max-w-full items-center justify-between gap-2 py-0.5 text-b3 text-neutral-500 dark:text-neutral-500 hover:text-orange-500 dark:hover:text-orange-400" do %>
+  <span class="flex min-w-0 items-center gap-2">
+    <%= avatar(24, "prior-owner-#{owner.id}", owner, alt: "", class: "shrink-0 rounded grayscale") %>
+    <span class="truncate"><%= owner.display_handle %></span>
+  </span>
+  <span class="shrink-0 text-b4 text-neutral-400 dark:text-neutral-600">
+    <%= t "rubygems.release_info.prior_owner_removed_at", date: nice_date_for(prior_ownership.removed_at) %>
+  </span>
+<% end %>

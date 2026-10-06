@@ -184,6 +184,22 @@ module RubygemsHelper
     rubygem.versions_count > 5 || rubygem.yanked_versions?
   end
 
+  def display_owners?(rubygem, include_prior: true)
+    rubygem.owned_by_organization? || rubygem.owners.present? || (include_prior && prior_owners_of(rubygem).any?)
+  end
+
+  def prior_owners_of(rubygem)
+    current_owner_ids = rubygem.ownerships.pluck(:user_id)
+
+    rubygem.historical_ownerships
+      .not_private
+      .where.not(user_id: current_owner_ids)
+      .includes(:user)
+      .order(removed_at: :desc)
+      .select(&:user)
+      .uniq(&:user_id)
+  end
+
   def latest_version_number(rubygem)
     return rubygem.version if rubygem.respond_to?(:version)
     (rubygem.latest_version || rubygem.versions.last)&.number
