@@ -24,11 +24,14 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   before_validation :content_addressify!
   before_validation :full_nameify!
   before_validation :gem_full_nameify!
+  # Metadata-only saves also write link verifications and touch the gem row.
+  before_save :serialize_indexed_writes_per_gem, prepend: true
   before_save :create_link_verifications, if: :metadata_changed?
   before_save :update_prerelease, if: :number_changed?
   # TODO: Remove this once we move to GemDownload only
   after_create :create_gem_download
   after_create :record_push_event
+  before_destroy :serialize_indexed_writes_per_gem, prepend: true
   after_save :reorder_versions, if: -> { saved_change_to_indexed? || saved_change_to_id? }
   after_save :enqueue_web_hook_jobs, if: -> { saved_change_to_indexed? && (!saved_change_to_id? || indexed?) }
   after_save :refresh_rubygem_indexed, if: -> { saved_change_to_indexed? || saved_change_to_id? }
@@ -541,6 +544,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     end
   rescue Gem::Requirement::BadRequirementError
     false
+  end
+
+  def serialize_indexed_writes_per_gem
+    rubygem&.lock_version_writes!
   end
 
   def update_prerelease

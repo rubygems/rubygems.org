@@ -98,5 +98,35 @@ class NotifiersControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "when user belongs to an organization" do
+      setup do
+        @organization = create(:organization, maintainers: [@user])
+        @membership = @user.memberships.sole
+      end
+
+      context "on GET to show" do
+        setup do
+          get :show
+        end
+
+        should "show organization push notification settings" do
+          assert_response :success
+          assert page.has_content? @organization.handle
+        end
+      end
+
+      context "on PUT to update" do
+        setup do
+          put :update, params: { memberships: { @membership.id => { push: "off" } } }
+        end
+
+        should redirect_to("the notifier page") { notifier_path }
+
+        should "disable push notifications for the membership" do
+          refute_predicate @membership.reload, :push_notifier?
+        end
+      end
+    end
   end
 end

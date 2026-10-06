@@ -26,6 +26,8 @@
 <div class="flex flex-col gap-8 pb-16 lg:pt-10 text-neutral-800 dark:text-neutral-200">
   <%= render "rubygems/tabs", rubygem: @rubygem, version: @latest_version, current: :gem_info %>
 
+  <%= render Rubygem::AdvisoriesComponent.new(advisories: @advisories, version: @latest_version) %>
+
   <% if @latest_version.indexed %>
     <div class="flex flex-col gap-3">
       <%= render CopyFieldComponent.new(value: @latest_version.to_bundler(locked_version: @on_version_page), name: "gemfile_text", label: t(".bundler_header")) %>

@@ -50,6 +50,7 @@ class Api::V1::ApiKeysController < Api::BaseController
     if user.unconfirmed?
       render_forbidden t(:email_not_confirmed)
     elsif user.mfa_gem_signin_authorized?(otp)
+      Current.user = user
       if user.mfa_required_not_yet_enabled?
         render_forbidden t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
       elsif user.mfa_required_weak_level_enabled?

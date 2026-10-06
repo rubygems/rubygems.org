@@ -90,4 +90,24 @@ class OrganizationPolicyTest < PolicyTestCase
       refute_authorized @guest, :list_memberships?
     end
   end
+
+  context "#list_gem_name_reservations?" do
+    should "only be authorized if the user is a member of the organization" do
+      assert_authorized @owner, :list_gem_name_reservations?
+      assert_authorized @admin, :list_gem_name_reservations?
+      assert_authorized @maintainer, :list_gem_name_reservations?
+
+      refute_authorized @guest, :list_gem_name_reservations?
+    end
+  end
+
+  context "#manage_gem_name_reservations?" do
+    should "only be authorized if the user is an admin or owner" do
+      assert_authorized @owner, :manage_gem_name_reservations?
+      assert_authorized @admin, :manage_gem_name_reservations?
+
+      refute_authorized @maintainer, :manage_gem_name_reservations?
+      refute_authorized @guest, :manage_gem_name_reservations?
+    end
+  end
 end

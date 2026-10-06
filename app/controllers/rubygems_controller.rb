@@ -30,6 +30,7 @@ class RubygemsController < ApplicationController
 
   def show
     @versions = @rubygem.public_versions_with_extra_version
+    @advisories = @rubygem.advisories.visible(current_user).to_a
     if @versions.to_a.any?
       @previous_version, @next_version = @latest_version.previous_and_next_in_display_order
       add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)

@@ -88,7 +88,8 @@ class OIDC::ApiKeyRolesController < ApplicationController
   end
 
   def destroy
-    if @api_key_role.update(deleted_at: Time.current)
+    # Roles must remain revocable when a persisted policy no longer passes current validations.
+    if @api_key_role.update_attribute(:deleted_at, Time.current)
       redirect_to profile_oidc_api_key_roles_path, flash: { notice: t(".success") }
     else
       redirect_to profile_oidc_api_key_role_path(@api_key_role.token),

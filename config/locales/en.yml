@@ -113,6 +113,10 @@ en:
           attributes:
             expires_at:
               inclusion: "must be in the future"
+        gem_name_reservation:
+          attributes:
+            base:
+              organization_limit_reached: "Your organization has reached its limit of %{count} reserved gem names."
         organization:
           attributes:
             handle:
@@ -134,6 +138,8 @@ en:
               already_invited: "is already invited to this gem"
         user:
           attributes:
+            email:
+              current_email_unconfirmed: must be confirmed before it can be changed
             handle:
               invalid: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
             password:
@@ -166,6 +172,10 @@ en:
         id_token_signing_alg_values_supported: ID Token signing algorithms supported
     errors:
       models:
+        oidc/access_policy:
+          attributes:
+            statements:
+              too_complex: "must contain at most %{max_statements} statements and %{max_conditions} conditions in total"
         oidc/api_key_permissions:
           attributes:
             valid_for:
@@ -263,6 +273,11 @@ en:
       will_email_notice: We will email you confirmation link to activate your account.
     update:
       confirmed_email: Your email address has been verified.
+      email_label: 'Email address to verify:'
+      explanation: Confirm that you want to verify this email address. Your account will not change until you continue.
+      new_email_label: 'New email address for your account:'
+      submit: Confirm email address
+      title: Confirm email address
       token_failure: Please double check the URL or try submitting it again.
   home:
     index:
@@ -291,6 +306,7 @@ en:
         about: About
         api: API
         blog: Blog
+        bluesky: Bluesky
         contribute: Contribute
         data: Data
         docs: Docs
@@ -310,6 +326,7 @@ en:
         statistics: Stats
         status: Status
         support_us: Support Us
+        x: X (formerly Twitter)
         supported_by: Supported by
         operated_by: Operated by
         supported_by_html: |
@@ -317,12 +334,17 @@ en:
           is supported by
         uptime: Uptime
         secured_by: Secured by
-        looking_for_maintainers: maintainers wanted
       header:
         profile: Profile
         dashboard: Dashboard
         settings: Settings
         edit_profile: Edit profile
+        account_menu: Account menu
+        close_account_menu: Close account menu
+        signed_in_as: Signed in as
+        main_navigation: Main navigation
+        open_menu: Open menu
+        close_menu: Close menu
         search_gem_html: Search Gems&hellip;
         members: Members
       mfa_banner_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. [Learn more](link to blog post)!
@@ -337,19 +359,24 @@ en:
     gems: Gems
     members: Members
     invite_member: Invite Member
+    reservations: Reserved Names
+    reserve_gem_name: Reserve a Name
   mailer:
     confirm_your_email: Please confirm your email address with the link sent to your email.
     confirmation_subject: Please confirm your email address with %{host}
-    link_expiration_explanation_html: Please keep in mind that this link is valid for only 3 hours. You can request the updated link using <a href='https://rubygems.org/email_confirmations/new'>resend confirmation mail</a> page.
     email_confirmation:
       title: EMAIL CONFIRMATION
       subtitle: Almost done!
       confirmation_link: Confirm email address
       welcome_message: Welcome to %{host}! Visit the link below to verify your email.
+      link_expiration_explanation: This link is valid for 24 hours. Requesting another confirmation email replaces this link.
+      link_expiration_explanation_html: This link is valid for 24 hours. Requesting another confirmation email replaces this link.
     email_reset:
       title: EMAIL RESET
       subtitle: Hi %{handle}!
-      visit_link_instructions: You changed your email address on %{host}. Please visit the following url to re-activate your account.
+      visit_link_instructions: You requested an email address change on %{host}. Visit the link below to confirm your new email address.
+      link_expiration_explanation: This link is valid for 3 hours. Requesting another confirmation email replaces this link.
+      link_expiration_explanation_html: This link is valid for 3 hours. Requesting another confirmation email replaces this link.
     deletion_complete:
       title: DELETION COMPLETE
       subtitle: Bye!
@@ -475,6 +502,7 @@ en:
       add_member: Invite Member
       invite: Invite
       transfer: Transfer
+      reservations: Reserved Names
     members:
       create:
         user_already_invited: User already invited to the organization.
@@ -491,20 +519,49 @@ en:
       index:
         invite: Invite
         pending: Pending
+        invitation_expires_html: Expires in %{time_html}
+        invitation_expired: Invitation expired
       edit:
         update: Update
         delete: Delete
         resend_invitation: Resend Invitation
+        invitation_expires_html: Invitation expires in %{time_html}
+        invitation_expired: This invitation has expired. Resend it to give them %{days} more days to accept.
       new:
         handle: Handle
         role: Role
         create: Create
         invite: Invite
+    gem_name_reservations:
+      create:
+        gem_name_reserved: Gem name reserved.
+      destroy:
+        gem_name_reservation_removed: Gem name reservation removed.
+      index:
+        description: Reserved names cannot be pushed by anyone. Reserve a name to hold it for your organization. Remove the reservation to be able to push a gem with this name.
+        no_reservations: No reserved names yet
+        reserve: Reserve a Name
+        remove: Remove
+        confirm_remove: Are you sure you want to remove the reservation for %{name}?
+      new:
+        title: Reserve a Name
+        name: Gem name
+        name_hint: Lowercase letters, numbers, dashes and underscores only. The name must not already be taken by an existing gem.
+        reserve: Reserve
+        limit_html: Your organization can reserve up to <b>%{limit}</b> gem names and has <b>%{remaining}</b> left. Email %{support_email} if you need more.
+        limit_reached_html: Your organization has used all <b>%{limit}</b> of its gem name reservations. Email %{support_email} if you need more.
+        unlimited: Your organization can reserve an unlimited number of gem names.
+        disclaimer: The RubyGems.org team reserves the right to deny any requested name reservation.
+    invitation_expiry_title: "%{time} UTC"
     invitations:
+      expired: This invitation has expired. Ask an organization admin to resend it.
+      destroy:
+        declined: You declined the invitation to join the %{organization} organization.
       show:
         accept: Accept
         decline: Decline
-        title_html: "invited you to join their organization<br>as an <span class=\"font-bold\">%{role}</span>."
+        expires_html: This invitation expires in %{time_html}.
+        title_html: "invited you to join their organization as an <span class=\"font-bold\">%{role}</span>."
   pages:
     index:
       title: Pages
@@ -669,6 +726,9 @@ en:
       update: Update
       owner_heading: Ownership Notifications
       push_heading: Push Notifications
+      gems_heading: Gems
+      organizations_heading: Organizations
+      organization_info: Push notifications for all gems owned by this organization.
   webauthn_verifications:
     expired_or_already_used: The token in the link you used has either expired or been used already.
     no_port: No port provided. Please try again.
@@ -872,6 +932,17 @@ en:
     index:
       downloads: Downloads
       title: Gems
+    advisories:
+      title:
+        one: "1 known security vulnerability"
+        other: "%{count} known security vulnerabilities"
+      malware: Malware
+      severity_count: "%{count} %{severity}"
+      show_fewer: Show fewer vulnerabilities
+      show_more:
+        one: Show 1 more vulnerability
+        other: Show %{count} more vulnerabilities
+      view_advisory: View advisory
     show:
       bundler_header: Gemfile
       install: install
@@ -991,8 +1062,10 @@ en:
       yanked: yanked
       ruby_abi: Ruby ABI
       content_address: content address
+      no_content_address: No content address
       multi_abi: multi-abi
       source_gem: source
+      vulnerable: vulnerable
   webauthn_credentials:
     callback:
       success: You have successfully registered a security device.

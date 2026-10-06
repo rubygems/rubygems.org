@@ -115,6 +115,33 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
       page.assert_no_text "audience:"
     end
 
+    should "update an access policy at the complexity limits from JSON" do
+      patch profile_oidc_api_key_role_url(@api_key_role.token),
+        params: access_policy_params(10).to_json,
+        headers: { "CONTENT_TYPE" => "application/json", "HTTP_ACCEPT" => "text/html" }
+
+      assert_response :redirect
+      assert_equal(10, @api_key_role.reload.access_policy.statements.sum { it.conditions.size })
+    end
+
+    should "reject an access policy over the complexity limits from JSON" do
+      original_policy = @api_key_role.access_policy.as_json
+      api_key_count = ApiKey.count
+      id_token_count = OIDC::IdToken.count
+
+      assert_no_enqueued_emails do
+        patch profile_oidc_api_key_role_url(@api_key_role.token),
+          params: access_policy_params(11).to_json,
+          headers: { "CONTENT_TYPE" => "application/json", "HTTP_ACCEPT" => "text/html" }
+      end
+
+      assert_response :success
+      assert_includes response.body, "must contain at most 5 statements and 10 conditions in total"
+      assert_equal original_policy, @api_key_role.reload.access_policy.as_json
+      assert_equal api_key_count, ApiKey.count
+      assert_equal id_token_count, OIDC::IdToken.count
+    end
+
     should "delete" do
       delete profile_oidc_api_key_role_url(@api_key_role.token)
 
@@ -148,6 +175,16 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
 
       page.assert_selector "#flash_error", text: "The role has been deleted."
     end
+
+    should "delete a role with a legacy access policy over the complexity limits" do
+      @api_key_role.update_column(:access_policy, persisted_access_policy(11))
+
+      delete profile_oidc_api_key_role_url(@api_key_role.token)
+
+      assert_response :redirect
+      assert_redirected_to profile_oidc_api_key_roles_path
+      assert_predicate @api_key_role.reload, :deleted_at?
+    end
   end
 
   context "without a verified session" do
@@ -171,5 +208,37 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
       assert_response :redirect
       assert_redirected_to verify_session_path
     end
+  end
+
+  private
+
+  def access_policy_params(condition_count)
+    conditions = condition_count.times.to_h do |index|
+      [index.to_s, operator: "string_equals", claim: "sub", value: "value"]
+    end
+
+    {
+      oidc_api_key_role: {
+        access_policy: {
+          statements_attributes: {
+            "0" => { effect: "allow", conditions_attributes: conditions }
+          }
+        }
+      }
+    }
+  end
+
+  def persisted_access_policy(condition_count)
+    {
+      statements: [
+
+        effect: "allow",
+        principal: { oidc: @api_key_role.provider.issuer },
+        conditions: Array.new(condition_count) do
+          { operator: "string_equals", claim: "sub", value: "value" }
+        end
+
+      ]
+    }
   end
 end

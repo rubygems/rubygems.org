@@ -116,6 +116,10 @@ es:
           attributes:
             expires_at:
               inclusion:
+        gem_name_reservation:
+          attributes:
+            base:
+              organization_limit_reached:
         organization:
           attributes:
             handle:
@@ -137,6 +141,8 @@ es:
               already_invited: ya ha sido invitado a esta gema
         user:
           attributes:
+            email:
+              current_email_unconfirmed:
             handle:
               invalid:
             password:
@@ -169,6 +175,10 @@ es:
         id_token_signing_alg_values_supported:
     errors:
       models:
+        oidc/access_policy:
+          attributes:
+            statements:
+              too_complex:
         oidc/api_key_permissions:
           attributes:
             valid_for:
@@ -276,6 +286,11 @@ es:
         activar tu cuenta.
     update:
       confirmed_email: Tu dirección de correo se ha verificado.
+      email_label:
+      explanation:
+      new_email_label:
+      submit:
+      title:
       token_failure: Por favor verifica la URL o inténtalo nuevamente.
   home:
     index:
@@ -304,6 +319,7 @@ es:
         about: Acerca de
         api: API
         blog: Blog
+        bluesky:
         contribute: Contribuye
         data: Datos
         docs: Documentación
@@ -323,6 +339,7 @@ es:
         statistics: Estadísticas
         status: Estado
         support_us:
+        x:
         supported_by: Con el apoyo de
         operated_by:
         supported_by_html: |
@@ -330,12 +347,17 @@ es:
           es respaldado por
         uptime: Uptime
         secured_by: Protegido por
-        looking_for_maintainers: Se buscan mantenedores/as
       header:
         profile: Perfil
         dashboard: Dashboard
         settings: Configuración
         edit_profile: Editar
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: Buscar gemas&hellip;
         members:
       mfa_banner_html:
@@ -350,24 +372,26 @@ es:
     gems:
     members:
     invite_member:
+    reservations:
+    reserve_gem_name:
   mailer:
     confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
     confirmation_subject: Por favor confirma tu dirección de correo con %{host}
-    link_expiration_explanation_html: Por favor ten en cuenta que este enlace es válido
-      solo durante 3 horas. Puedes solicitar un enlace actualizado usando la página
-      de <a href='https://rubygems.org/email_confirmations/new'>reenvío del correo
-      de confirmación</a>.
     email_confirmation:
       title: CONFIRMACIÓN DE EMAIL
       subtitle: "¡Último paso!"
       confirmation_link: Confirma la dirección de correo
       welcome_message: Bienvenidos a %{host}! Haz clic en el enlace de abajo para
         verificar tu dirección de correo.
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     email_reset:
       title: CAMBIO DE EMAIL
       subtitle: "¡Hola %{handle}!"
       visit_link_instructions: Cambiaste tu dirección de correo en %{host}. Por favor
         visita el siguiente enlace para reactivar tu cuenta.
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     deletion_complete:
       title: ELIMINACIÓN COMPLETADA
       subtitle: "¡Adiós!"
@@ -512,6 +536,7 @@ es:
       add_member:
       invite:
       transfer:
+      reservations:
     members:
       create:
         user_already_invited:
@@ -528,19 +553,48 @@ es:
       index:
         invite:
         pending:
+        invitation_expires_html:
+        invitation_expired:
       edit:
         update:
         delete:
         resend_invitation:
+        invitation_expires_html:
+        invitation_expired:
       new:
         handle:
         role:
         create:
         invite:
+    gem_name_reservations:
+      create:
+        gem_name_reserved:
+      destroy:
+        gem_name_reservation_removed:
+      index:
+        description:
+        no_reservations:
+        reserve:
+        remove:
+        confirm_remove:
+      new:
+        title:
+        name:
+        name_hint:
+        reserve:
+        limit_html:
+        limit_reached_html:
+        unlimited:
+        disclaimer:
+    invitation_expiry_title:
     invitations:
+      expired:
+      destroy:
+        declined:
       show:
         accept:
         decline:
+        expires_html:
         title_html:
   pages:
     index:
@@ -736,6 +790,9 @@ es:
       update: Actualizar
       owner_heading: Notificaciones de propietarios
       push_heading: Notificaciones Push
+      gems_heading:
+      organizations_heading:
+      organization_info:
   webauthn_verifications:
     expired_or_already_used: El token del enlace utilizado ha expirado o ya ha sido
       utilizado.
@@ -966,6 +1023,17 @@ es:
     index:
       downloads: Descargas
       title: Gemas
+    advisories:
+      title:
+        one:
+        other:
+      malware:
+      severity_count:
+      show_fewer:
+      show_more:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: instalar
@@ -1101,8 +1169,10 @@ es:
       yanked: borrada
       ruby_abi:
       content_address:
+      no_content_address:
       multi_abi:
       source_gem:
+      vulnerable:
   webauthn_credentials:
     callback:
       success: Has dado de alta con éxito un dispositivo de seguridad.

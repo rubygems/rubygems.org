@@ -108,6 +108,10 @@ zh-TW:
           attributes:
             expires_at:
               inclusion:
+        gem_name_reservation:
+          attributes:
+            base:
+              organization_limit_reached:
         organization:
           attributes:
             handle:
@@ -129,6 +133,8 @@ zh-TW:
               already_invited: 已獲邀加入此 Gem
         user:
           attributes:
+            email:
+              current_email_unconfirmed:
             handle:
               invalid:
             password:
@@ -161,6 +167,10 @@ zh-TW:
         id_token_signing_alg_values_supported: IP 權杖簽署演算法
     errors:
       models:
+        oidc/access_policy:
+          attributes:
+            statements:
+              too_complex:
         oidc/api_key_permissions:
           attributes:
             valid_for:
@@ -258,6 +268,11 @@ zh-TW:
       will_email_notice: 我們將會通過電子郵件傳送帳號認證信連結給您。
     update:
       confirmed_email: 電子郵件地址驗證成功。
+      email_label:
+      explanation:
+      new_email_label:
+      submit:
+      title:
       token_failure: 請確認 URL 或再次提交
   home:
     index:
@@ -286,6 +301,7 @@ zh-TW:
         about: 關於
         api: API
         blog: 部落格
+        bluesky:
         contribute: 貢獻
         data: 資料
         docs: 文件
@@ -305,6 +321,7 @@ zh-TW:
         statistics: 統計
         status: 狀態
         support_us:
+        x:
         supported_by: 支持
         operated_by:
         supported_by_html: |
@@ -312,12 +329,17 @@ zh-TW:
           <br class="hidden lg:block"> 由以下支持
         uptime: 上線時間
         secured_by:
-        looking_for_maintainers: 徵求維護者
       header:
         profile: 個人檔案
         dashboard: 儀表板
         settings: 設定
         edit_profile: 編輯個人檔案
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: 搜尋 Gems&hellip;
         members:
       mfa_banner_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。[了解詳情](部落格文章連結)！"
@@ -332,19 +354,24 @@ zh-TW:
     gems:
     members:
     invite_member:
+    reservations:
+    reserve_gem_name:
   mailer:
     confirm_your_email: 已寄送連結，請點擊連結來確認您的電子郵件地址。
     confirmation_subject: "%{host} 電子郵件地址確認"
-    link_expiration_explanation_html: 請注意，此連結將在 3 小時後過期。您可以前往<a href='https://rubygems.org/email_confirmations/new'>確認信</a>頁面要求傳送新連結。
     email_confirmation:
       title: 電子郵件地址確認
       subtitle: 就快完成了！
       confirmation_link: 確認電子郵件地址
       welcome_message: 歡迎來到 RubyGems.org！點擊下方的連結來驗證您的電子郵件地址。
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     email_reset:
       title: 電子郵件地址重設
       subtitle: 嗨 %{handle}！
       visit_link_instructions: 您已變更您在 %{host} 的電子郵件地址。請點擊下列網址來重新啟用您的帳號。
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     deletion_complete:
       title: 刪除完成
       subtitle: 掰掰！
@@ -472,6 +499,7 @@ zh-TW:
       add_member:
       invite:
       transfer:
+      reservations:
     members:
       create:
         user_already_invited:
@@ -488,19 +516,48 @@ zh-TW:
       index:
         invite:
         pending:
+        invitation_expires_html:
+        invitation_expired:
       edit:
         update:
         delete:
         resend_invitation:
+        invitation_expires_html:
+        invitation_expired:
       new:
         handle:
         role:
         create:
         invite:
+    gem_name_reservations:
+      create:
+        gem_name_reserved:
+      destroy:
+        gem_name_reservation_removed:
+      index:
+        description:
+        no_reservations:
+        reserve:
+        remove:
+        confirm_remove:
+      new:
+        title:
+        name:
+        name_hint:
+        reserve:
+        limit_html:
+        limit_reached_html:
+        unlimited:
+        disclaimer:
+    invitation_expiry_title:
     invitations:
+      expired:
+      destroy:
+        declined:
       show:
         accept:
         decline:
+        expires_html:
         title_html:
   pages:
     index:
@@ -661,6 +718,9 @@ zh-TW:
       update: 更新
       owner_heading: 所有權通知
       push_heading: 推送通知
+      gems_heading:
+      organizations_heading:
+      organization_info:
   webauthn_verifications:
     expired_or_already_used: 您所使用的連結中的權杖已過期或被使用。
     no_port: 未提供連接埠。請再試一次。
@@ -866,6 +926,17 @@ zh-TW:
     index:
       downloads: 下載
       title: Gems
+    advisories:
+      title:
+        one:
+        other:
+      malware:
+      severity_count:
+      show_fewer:
+      show_more:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: 安裝
@@ -986,8 +1057,10 @@ zh-TW:
       yanked: 已被移除
       ruby_abi:
       content_address:
+      no_content_address:
       multi_abi:
       source_gem:
+      vulnerable:
   webauthn_credentials:
     callback:
       success: 您已成功註冊安全裝置。

@@ -17,6 +17,7 @@ class Deletion < ApplicationRecord
   validate :metadata_matches_version
 
   before_validation :record_metadata
+  before_create :serialize_version_writes
   after_create :remove_from_index, :set_yanked_info_checksum
   after_create :record_yank_event
   after_destroy :record_unyank_event
@@ -62,6 +63,17 @@ class Deletion < ApplicationRecord
   end
 
   private
+
+  def serialize_version_writes
+    version.rubygem.lock_version_writes!
+    # A destroy or another yank may have committed while we waited. Validate
+    # the current version before inserting the deletion, not the cached one.
+    version.reload
+    throw :abort unless valid?
+  rescue ActiveRecord::RecordNotFound
+    errors.add(:version, :blank)
+    throw :abort
+  end
 
   def version_is_indexed
     errors.add(:base, "#{rubygem_name} #{version} has already been deleted") unless version.indexed?
@@ -151,7 +163,13 @@ class Deletion < ApplicationRecord
   end
 
   def send_gem_yanked_mail
-    version.rubygem.push_notifiable_owners.each do |notified_user|
+    rubygem = version.rubygem
+    notify_yanked(rubygem.push_notifiable_owners)
+    notify_yanked(rubygem.organization.push_notifiable_members) if rubygem.organization.present?
+  end
+
+  def notify_yanked(users)
+    users.each do |notified_user|
       Mailer.gem_yanked(user.id, version.id, notified_user.id).deliver_later
     end
   end

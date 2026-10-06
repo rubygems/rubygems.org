@@ -77,6 +77,36 @@ class AvatarsTest < ActionDispatch::IntegrationTest
     refute_includes response.headers["Cache-Control"].to_s, "public"
   end
 
+  test "signed-in avatar responses carry no session and stay publicly cacheable" do
+    stub_request(:get, Addressable::Template.new("https://secure.gravatar.com/avatar/{hash}.png?d=404&r=PG&s=64"))
+      .to_return(status: 200, body: "image", headers: { "Content-Type" => "image/jpeg" })
+
+    user = create(:user, remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
+    post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+    get avatar_user_path(user.id, size: 64)
+
+    assert_response :success
+    assert_equal "image", response.body
+    assert_nil response.headers["Set-Cookie"]
+    assert_equal "max-age=1800, public", response.headers["Cache-Control"]
+    assert_includes response.headers["Surrogate-Control"], "max-age=300"
+    refute_includes response.headers["Vary"].to_s, "Cookie"
+  end
+
+  test "signed-in avatar errors carry no session and are not cached" do
+    stub_request(:get, Addressable::Template.new("https://secure.gravatar.com/avatar/{hash}.png?d=404&r=PG&s=64"))
+      .to_return(status: 500)
+
+    user = create(:user, remember_token_expires_at: Gemcutter::REMEMBER_FOR.from_now)
+    post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+    get avatar_user_path(user.id, size: 64)
+
+    assert_response :found
+    assert_nil response.headers["Set-Cookie"]
+    refute_includes response.headers["Cache-Control"].to_s, "public"
+    assert_nil response.headers["Surrogate-Key"]
+  end
+
   test "serves default avatar with theme when user has no gravatar" do
     user = create(:user)
     get avatar_user_path(user.id, size: 64, theme: "dark")
@@ -94,6 +124,22 @@ class AvatarsTest < ActionDispatch::IntegrationTest
 
     assert_response :found
     assert_equal "http://localhost/images/avatar.svg", response.headers["Location"]
+  end
+
+  [Faraday::TimeoutError, Faraday::ConnectionFailed].each do |error|
+    test "falls back to uncached default avatar when gravatar raises #{error}" do
+      stub_request(:get, Addressable::Template.new("https://secure.gravatar.com/avatar/{hash}.png?d=404&r=PG&s=64"))
+        .to_raise(error)
+
+      user = create(:user)
+      get avatar_user_path(user.id, size: 64)
+
+      assert_response :found
+      assert_equal "http://localhost/images/avatar.svg", response.headers["Location"]
+      assert_nil response.headers["Surrogate-Key"]
+      assert_nil response.headers["Surrogate-Control"]
+      refute_includes response.headers["Cache-Control"].to_s, "public"
+    end
   end
 
   test "returns 400 when size is invalid" do

@@ -70,7 +70,7 @@ class UploadInfoFileJobTest < ActiveJob::TestCase
     end
 
     assert_nil RubygemFs.compact_index.get("info/#{version.rubygem.name}")
-    assert_not_nil RubygemFs.compact_index.get("v2/info/#{version.rubygem.name}")
+    refute_nil RubygemFs.compact_index.get("v2/info/#{version.rubygem.name}")
     assert_no_enqueued_jobs only: FastlyPurgeJob
   end
 
@@ -100,10 +100,12 @@ class UploadInfoFileJobTest < ActiveJob::TestCase
     assert_equal Digest::MD5.hexdigest(body), last_version.reload.yanked_info_checksum_v2
   end
 
-  test "backfill_only_version: 2 is a no-op for persistence when the rubygem no longer exists" do
-    assert_nothing_raised do
-      UploadInfoFileJob.perform_now(rubygem_name: "missing-gem", backfill_only_version: 2)
-    end
+  test "backfill_only_version: 2 still uploads, but persists no checksum, when the rubygem no longer exists" do
+    UploadInfoFileJob.perform_now(rubygem_name: "missing-gem", backfill_only_version: 2)
+
+    # persist_backfill_checksum returns early on the missing gem rather than
+    # raising, but the upload itself still happens.
+    assert_equal "---\n", RubygemFs.compact_index.get("v2/info/missing-gem")
   end
 
   test "backfill_only_version: 2 does not overwrite an already-populated info_checksum_v2" do

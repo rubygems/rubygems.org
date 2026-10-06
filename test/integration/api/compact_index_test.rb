@@ -307,7 +307,7 @@ class Api::CompactIndexTest < ActionDispatch::IntegrationTest
       get info_path(gem_name: "v2yank")
 
       assert_response :success
-      assert_not_includes @response.body, "1.0.0"
+      refute_includes @response.body, "1.0.0"
       assert_equal "#{current_info_prefix}/* gem/v2yank #{current_info_prefix}/v2yank", @response.headers["Surrogate-Key"]
     end
   end

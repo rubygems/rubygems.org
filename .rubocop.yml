@@ -24,7 +24,10 @@ Rails/LexicallyScopedActionFilter:
   Enabled: false
 
 Rails/RefuteMethods:
-  Enabled: false
+  EnforcedStyle: refute
+
+Minitest/AssertEmptyLiteral:
+  Enabled: true
 
 Rails/HelperInstanceVariable:
   Enabled: false
@@ -77,7 +80,7 @@ Metrics/BlockLength:
     - db/**/*.rb
 
 Metrics/ClassLength:
-  Max: 357 # TODO: Lower to 100
+  Max: 360 # TODO: Lower to 100
   Exclude:
     - test/**/*
     - db/**/*.rb

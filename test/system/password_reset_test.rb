@@ -210,7 +210,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     visit password_reset_link
 
     assert_text "Security Device"
-    assert_not_nil page.find(".js-webauthn-session--form")[:action]
+    refute_nil page.find(".js-webauthn-session--form")[:action]
 
     click_on "Authenticate with security device"
 
@@ -232,7 +232,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     assert_no_text "Sign out"
     assert_text "Security Device"
     assert_text "Recovery code"
-    assert_not_nil page.find(".js-webauthn-session--form")[:action]
+    refute_nil page.find(".js-webauthn-session--form")[:action]
 
     fill_in "otp", with: @mfa_recovery_codes.first
     click_button "Authenticate"
@@ -272,7 +272,7 @@ class PasswordResetTest < ApplicationSystemTestCase
     assert_equal new_email, @user.reload.unconfirmed_email
 
     find(:css, "[data-testid='header-popup-link']").click
-    click_link "Sign out"
+    click_button "Sign out"
 
     forgot_password_with email
 

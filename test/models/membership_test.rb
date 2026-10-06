@@ -52,10 +52,60 @@ class MembershipTest < ActiveSupport::TestCase
     should "set the confirmed_at timestamp to now" do
       freeze_time do
         membership = Membership.create!(organization: @organization, user: @user, invited_by: @owner)
-        membership.confirm!
 
+        assert membership.confirm!
         assert_equal Time.zone.now, membership.confirmed_at
       end
+    end
+
+    should "not confirm an expired invitation" do
+      membership = Membership.create!(organization: @organization, user: @user, invited_by: @owner)
+      membership.update!(invitation_expires_at: 1.day.ago)
+
+      refute membership.confirm!
+      assert_nil membership.reload.confirmed_at
+    end
+  end
+
+  context "#invitation_expired?" do
+    should "be false before invitation_expires_at" do
+      membership = Membership.create!(organization: @organization, user: @user, invited_by: @owner)
+
+      refute_predicate membership, :invitation_expired?
+    end
+
+    should "be true after invitation_expires_at" do
+      membership = Membership.create!(organization: @organization, user: @user, invited_by: @owner)
+      membership.update!(invitation_expires_at: 1.second.ago)
+
+      assert_predicate membership, :invitation_expired?
+    end
+
+    should "be true when invitation_expires_at is nil" do
+      membership = Membership.create!(organization: @organization, user: @user, invited_by: @owner)
+      membership.update!(invitation_expires_at: nil)
+
+      assert_predicate membership, :invitation_expired?
+    end
+
+    should "be false for a confirmed membership past its invitation window" do
+      membership = Membership.create!(organization: @organization, user: @user, invited_by: @owner)
+
+      assert membership.confirm!
+
+      membership.update!(invitation_expires_at: 1.day.ago)
+
+      refute_predicate membership, :invitation_expired?
+    end
+
+    should "be false for a confirmed membership with no invitation expiry" do
+      membership = Membership.create!(organization: @organization, user: @user, invited_by: @owner)
+
+      assert membership.confirm!
+
+      membership.update!(invitation_expires_at: nil)
+
+      refute_predicate membership, :invitation_expired?
     end
   end
 
@@ -67,6 +117,20 @@ class MembershipTest < ActiveSupport::TestCase
 
         assert_equal Gemcutter::MEMBERSHIP_INVITE_EXPIRES_AFTER.from_now, membership.invitation_expires_at
       end
+    end
+  end
+
+  context ".update_push_notifier" do
+    should "enable and disable push_notifier for memberships" do
+      membership = Membership.create!(organization: @organization, user: @user, invited_by: @owner, confirmed_at: Time.zone.now)
+
+      Membership.update_push_notifier([membership.id], [])
+
+      assert_predicate membership.reload, :push_notifier?
+
+      Membership.update_push_notifier([], [membership.id])
+
+      refute_predicate membership.reload, :push_notifier?
     end
   end
 end

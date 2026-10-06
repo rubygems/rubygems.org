@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_24_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -27,6 +27,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
     t.string "oauth_token"
     t.datetime "updated_at", null: false
     t.index ["github_id"], name: "index_admin_github_users_on_github_id", unique: true
+  end
+
+  create_table "advisories", force: :cascade do |t|
+    t.string "aliases", default: [], null: false, array: true
+    t.datetime "created_at", null: false
+    t.string "identifier", null: false
+    t.datetime "modified_at", null: false
+    t.datetime "published_at"
+    t.jsonb "ranges", default: [], null: false
+    t.string "rubygem_name", null: false
+    t.string "severity"
+    t.text "summary", null: false
+    t.string "type", null: false
+    t.datetime "updated_at", null: false
+    t.string "url", null: false
+    t.datetime "withdrawn_at"
+    t.index ["rubygem_name"], name: "index_advisories_on_rubygem_name"
+    t.index ["type", "identifier", "rubygem_name"], name: "index_advisories_on_type_and_identifier_and_rubygem_name", unique: true
   end
 
   create_table "api_key_rubygem_scopes", force: :cascade do |t|
@@ -253,8 +271,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
   create_table "gem_name_reservations", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
+    t.bigint "organization_id"
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_gem_name_reservations_on_name", unique: true
+    t.index ["organization_id"], name: "index_gem_name_reservations_on_organization_id"
   end
 
   create_table "gem_typo_exceptions", force: :cascade do |t|
@@ -440,6 +460,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
     t.datetime "invitation_expires_at"
     t.bigint "invited_by_id"
     t.bigint "organization_id", null: false
+    t.boolean "push_notifier", default: true, null: false
     t.integer "role", default: 50, null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
@@ -661,6 +682,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
     t.datetime "created_at", precision: nil
     t.datetime "deleted_at"
     t.string "email"
+    t.string "email_confirmation_email"
+    t.string "email_confirmation_token_digest"
+    t.datetime "email_confirmation_token_expires_at"
     t.boolean "email_confirmed", default: false, null: false
     t.boolean "email_reset"
     t.string "encrypted_password", limit: 128
@@ -689,6 +713,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
     t.index ["blocked_email"], name: "index_users_on_blocked_email_trigram", opclass: :gin_trgm_ops, where: "(blocked_email IS NOT NULL)", using: :gin
     t.index ["email"], name: "index_users_on_email"
     t.index ["email"], name: "index_users_on_email_trigram", opclass: :gin_trgm_ops, using: :gin
+    t.index ["email_confirmation_token_digest"], name: "index_users_on_email_confirmation_token_digest", unique: true
     t.index ["handle"], name: "index_users_on_handle"
     t.index ["handle"], name: "index_users_on_handle_trigram", opclass: :gin_trgm_ops, using: :gin
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token"

@@ -51,6 +51,7 @@ class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
       raise UnsupportedIssuer, "Unsuported issuer for trusted publishing"
     end
     @trusted_publisher = trusted_publisher_class.for_claims(@jwt)
+    Current.api_key_owner = @trusted_publisher
   end
 
   def validate_claims

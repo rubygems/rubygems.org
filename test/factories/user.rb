@@ -22,7 +22,6 @@ FactoryBot.define do
 
     trait :unconfirmed do
       email_confirmed { false }
-      unconfirmed_email { "#{SecureRandom.hex(8)}#{email}" }
     end
 
     trait :without_webauthn_id do

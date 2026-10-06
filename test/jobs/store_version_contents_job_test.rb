@@ -17,8 +17,8 @@ class StoreVersionContentsJobTest < ActiveJob::TestCase
     @gem_package = Gem::Package.new(@gem)
     @version = Version.last
 
-    @destination_dir = Rails.root.join("tmp", "gems", @gem_package.spec.full_name)
-    @gem_package.extract_files(@destination_dir.to_s) unless @destination_dir.exist?
+    @destination_dir = Pathname.new(Dir.mktmpdir(@gem_package.spec.full_name))
+    @gem_package.extract_files(@destination_dir.to_s)
   end
 
   def each_file_in_gem
@@ -31,6 +31,7 @@ class StoreVersionContentsJobTest < ActiveJob::TestCase
 
   teardown do
     @gem&.close
+    FileUtils.remove_entry(@destination_dir) if @destination_dir&.exist?
     RubygemFs.mock!
   end
 

@@ -11,7 +11,37 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
     @role = build(:oidc_api_key_role)
   end
 
+  test "validates policy complexity limits" do
+    assert_predicate access_policy_with_conditions([2, 2, 2, 2, 2]), :valid?
+
+    too_many_statements = access_policy_with_conditions([1, 1, 1, 1, 1, 1])
+    too_many_conditions = access_policy_with_conditions([11])
+
+    refute_predicate too_many_statements, :valid?
+    refute_predicate too_many_conditions, :valid?
+    expected_error = ["must contain at most 5 statements and 10 conditions in total"]
+
+    assert_equal expected_error, too_many_statements.errors.messages[:statements]
+    assert_equal expected_error, too_many_conditions.errors.messages[:statements]
+  end
+
   context "#verify_access!" do
+    should "allow a policy at the complexity limits" do
+      policy = access_policy_with_conditions([2, 2, 2, 2, 2])
+
+      assert_nil policy.verify_access!(JSON::JWT.new(iss: "iss", c: "value"))
+    end
+
+    should "reject a legacy policy over the complexity limits" do
+      policy = access_policy_with_conditions([11])
+
+      error = assert_raises(OIDC::AccessPolicy::AccessError) do
+        policy.verify_access!(JSON::JWT.new(iss: "iss", c: "value"))
+      end
+
+      assert_equal "denying due to policy exceeding complexity limits", error.message
+    end
+
     context "with an unknown effect on matching statement" do
       setup do
         @access_policy = OIDC::AccessPolicy.new(statements: [
@@ -158,5 +188,21 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
         assert_equal ["must be String"], @access_policy.errors.messages[:"statements[0].conditions[0].value"]
       end
     end
+  end
+
+  private
+
+  def access_policy_with_conditions(condition_counts)
+    OIDC::AccessPolicy.new(
+      statements: condition_counts.map do |condition_count|
+        {
+          effect: "allow",
+          principal: { oidc: "iss" },
+          conditions: Array.new(condition_count) do
+            { operator: "string_equals", claim: "c", value: "value" }
+          end
+        }
+      end
+    )
   end
 end

@@ -48,6 +48,83 @@ class Organizations::MembersControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  test "GET /organizations/:organization_handle/members shows when pending invitations expire" do
+    freeze_time do
+      pending = create(:membership, :pending, organization: @organization)
+      pending.update!(invitation_expires_at: 3.days.from_now)
+      expired = create(:membership, :pending, organization: @organization)
+      expired.update!(invitation_expires_at: 1.minute.ago)
+      legacy = create(:membership, :pending, organization: @organization)
+      legacy.update_column(:invitation_expires_at, nil)
+
+      get organization_memberships_path(@organization)
+
+      assert_response :success
+      assert_select "li", text: /#{pending.user.handle}.*Pending.*Expires in 3 days/m
+      assert_select "time[datetime=?][title=?]", 3.days.from_now.utc.iso8601, "#{3.days.from_now.utc.strftime('%B %d, %Y %H:%M')} UTC"
+      assert_select "li", text: /#{expired.user.handle}.*Pending.*Invitation expired/m
+      assert_select "li", text: /#{legacy.user.handle}.*Pending.*Invitation expired/m
+      assert_select "li", text: /#{@user.handle}/ do |items|
+        refute_match(/Expires|expired/, items.text)
+      end
+    end
+  end
+
+  test "GET /organizations/:organization_handle/members as a guest does not show pending invitations" do
+    pending = create(:membership, :pending, organization: @organization)
+    guest = create(:user)
+    post session_path(session: { who: guest.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    get organization_memberships_path(@organization)
+
+    assert_response :success
+    assert_select "li", text: /#{pending.user.handle}/, count: 0
+    assert_select "time", count: 0
+    refute_match(/Expires in|Invitation expired/, response.body)
+  end
+
+  test "GET /organizations/:organization_handle/members/:id/edit for a pending invitation shows when it expires" do
+    freeze_time do
+      pending = create(:membership, :pending, organization: @organization)
+      pending.update!(invitation_expires_at: 3.days.from_now)
+
+      get edit_organization_membership_path(@organization, pending)
+
+      assert_response :success
+      assert_select "time[datetime=?][title=?]", 3.days.from_now.utc.iso8601, "#{3.days.from_now.utc.strftime('%B %d, %Y %H:%M')} UTC", text: "3 days"
+      assert_select "p", text: "Invitation expires in 3 days"
+    end
+  end
+
+  test "GET /organizations/:organization_handle/members/:id/edit for an expired invitation" do
+    pending = create(:membership, :pending, organization: @organization)
+    pending.update!(invitation_expires_at: 1.day.ago)
+
+    get edit_organization_membership_path(@organization, pending)
+
+    assert_response :success
+    assert_select "p", text: "This invitation has expired. Resend it to give them 7 more days to accept."
+    assert_select "a", text: "Resend Invitation"
+  end
+
+  test "GET /organizations/:organization_handle/members/:id/edit for an invitation with no expiry" do
+    pending = create(:membership, :pending, organization: @organization)
+    pending.update_column(:invitation_expires_at, nil)
+
+    get edit_organization_membership_path(@organization, pending)
+
+    assert_response :success
+    assert_select "p", text: /This invitation has expired/
+    assert_select "time", count: 0
+  end
+
+  test "GET /organizations/:organization_handle/members/:id/edit for a confirmed member hides invitation expiry" do
+    get edit_organization_membership_path(@organization, @membership)
+
+    assert_response :success
+    refute_match(/Invitation expires|invitation has expired/, response.body)
+  end
+
   test "GET /organizations/:organization_handle/members/new" do
     get new_organization_membership_path(@organization)
 

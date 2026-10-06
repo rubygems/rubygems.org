@@ -257,11 +257,12 @@ class ProfilesControllerTest < ActionController::TestCase
             @new_email = "change@tothis.com"
           end
 
-          should "set unconfirmed email and confirmation token" do
+          should "set unconfirmed email without persisting a plaintext token" do
             put :update, params: { user: { unconfirmed_email: @new_email, password: @user.password } }
 
             assert_equal @new_email, @user.unconfirmed_email
-            assert @user.confirmation_token
+            assert_nil @user.confirmation_token
+            assert_nil @user.email_confirmation_token_digest
           end
 
           should "not update the current email" do
@@ -271,11 +272,69 @@ class ProfilesControllerTest < ActionController::TestCase
           end
 
           should "send email reset mails to new and current email addresses" do
-            assert_enqueued_email_with Mailer, :email_reset, args: [@user] do
+            assert_enqueued_email_with Mailer, :email_reset, args: [@user, @new_email] do
               assert_enqueued_email_with Mailer, :email_reset_update, args: [@user] do
                 put :update, params: { user: { unconfirmed_email: @new_email, password: @user.password } }
               end
             end
+          end
+        end
+
+        context "with an unconfirmed email already pending" do
+          setup do
+            @user = create(:user, email: "john@doe.com", unconfirmed_email: "change@tothis.com")
+            sign_in_as(@user)
+          end
+
+          should "not resend email reset mails when the same unconfirmed email is submitted again" do
+            assert_no_enqueued_emails do
+              put :update, params: { user: { unconfirmed_email: "change@tothis.com", password: @user.password } }
+            end
+
+            assert_redirected_to edit_profile_path
+            assert_equal "Your profile was updated.", flash[:notice]
+          end
+
+          should "not resend email reset mails when updating other profile fields" do
+            assert_no_enqueued_emails do
+              put :update, params: { user: { handle: "john_m_doe", password: @user.password } }
+            end
+
+            assert_redirected_to edit_profile_path
+            assert_equal "Your profile was updated.", flash[:notice]
+            assert_equal "john_m_doe", @user.reload.handle
+          end
+
+          should "send email reset mails when the unconfirmed email is changed" do
+            assert_enqueued_email_with Mailer, :email_reset, args: [@user, "another@change.com"] do
+              assert_enqueued_email_with Mailer, :email_reset_update, args: [@user] do
+                put :update, params: { user: { unconfirmed_email: "another@change.com", password: @user.password } }
+              end
+            end
+
+            assert_equal "another@change.com", @user.reload.unconfirmed_email
+            assert_equal "You will receive an email within the next few minutes. " \
+                         "It contains instructions for confirming your new email address.", flash[:notice]
+          end
+        end
+
+        context "while the current email is unconfirmed" do
+          setup do
+            @user = create(:user, email: "john@doe.com")
+            sign_in_as(@user)
+            # An admin email change leaves the user signed in with an unconfirmed address.
+            @user.update!(email: "admin-set@doe.com", email_confirmed: false)
+          end
+
+          should "reject the change instead of recording an address no token can confirm" do
+            assert_no_enqueued_emails do
+              put :update, params: { user: { unconfirmed_email: "another@change.com", password: @user.password } }
+            end
+
+            assert_response :success
+            assert page.has_content? "Email address must be confirmed before it can be changed"
+            assert_nil @user.reload.unconfirmed_email
+            assert_nil flash[:notice]
           end
         end
       end

@@ -1,0 +1,23 @@
+<% @title = t(".title") %>
+<% add_breadcrumb @title %>
+
+<div class="flex items-center justify-center">
+  <div class="max-w-lg w-full bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-md p-10">
+    <h1 class="text-xl font-semibold text-neutral-900 dark:text-white mb-3"><%= @title %></h1>
+    <p class="text-neutral-700 dark:text-neutral-300 mb-6"><%= t(".explanation") %></p>
+
+    <div class="bg-neutral-100 dark:bg-neutral-900 rounded-lg p-5 mb-6">
+      <p class="text-neutral-700 dark:text-neutral-300 text-sm mb-2">
+        <%= @user.email_confirmed? ? t(".new_email_label") : t(".email_label") %>
+      </p>
+      <p class="text-orange-600 dark:text-orange-400 font-semibold break-all" data-testid="email-confirmation-target">
+        <%= obfuscate_email(@user.email_confirmation_email) %>
+      </p>
+    </div>
+
+    <%= form_with url: confirm_email_confirmations_path, data: { turbo: false } do %>
+      <%= hidden_field_tag :confirmation, session[:email_confirmation_id], id: nil %>
+      <%= render ButtonComponent.new(t(".submit"), type: :submit, color: :primary) %>
+    <% end %>
+  </div>
+</div>

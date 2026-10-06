@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Rails.application.configure do
+Rails.application.configure do # rubocop:disable Metrics/BlockLength
   config.good_job.preserve_job_records = true
   config.good_job.retry_on_unhandled_error = false
   config.good_job.on_thread_error = ->(exception) { Rails.error.report(exception, handled: false) }
@@ -15,6 +15,12 @@ Rails.application.configure do
       class: "GoodJobStatsDJob",
       set: { priority: 10 },
       description: "Sending GoodJob metrics to statsd every 15s"
+    },
+    stuck_push_stats: {
+      cron: "every 5m",
+      class: "StuckPushStatsJob",
+      set: { priority: 10 },
+      description: "Sending the count of unfinished gem pushes to statsd every 5m"
     },
     mfa_usage_stats: {
       cron: "every hour",
@@ -33,6 +39,12 @@ Rails.application.configure do
       class: "SyncDisposableEmailDomainsJob",
       set: { priority: 10 },
       description: "Syncing disposable email domain blocklist daily at 04:00 UTC"
+    },
+    sync_advisories: {
+      cron: "every hour",
+      class: "SyncAdvisoriesJob",
+      set: { priority: 10 },
+      description: "Syncing security advisories every hour"
     }
   }
 

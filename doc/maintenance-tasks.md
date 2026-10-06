@@ -2,16 +2,24 @@
 
 ## Shape
 
-Keep `collection` narrow, make each `process` call handle one record, and align `count` with the selected collection.
+Limit `collection` to records the task needs. Make `process` handle one record per call. Do not define `count` when it would only call `collection.count`; the framework already does that.
 
 ## Safety
 
-The application may update a record before the task processes it. If that could affect the intended change, use an atomic conditional update that checks whether the change still applies, or reload the record under a database lock in a transaction and check before writing. Preserve newer writes, skip legitimately deleted records (including soft deletions), and make reruns harmless.
+The application may change a record after the task loads it. When that matters, make the database update conditional on the task's change still being needed, or lock and reload the record in a transaction and check before updating. Preserve newer application writes and make reruns safe.
+
+Decide whether to include deleted and soft-deleted records. Use the same rule in `collection` and `process`. If excluding them, also skip records deleted after loading.
 
 ## Behavior and rollout
 
-When new application behavior requires backfilled data, verify that the required data is present before enabling that behavior. Keep the running application working throughout the backfill, including while it is only partly complete.
+Keep the application working throughout the backfill, even when it is partly complete. Before enabling behavior that needs backfilled data, verify that all required data is present.
 
 ## Testing
 
-Test which records the task selects and what it changes, including failures, reruns, intervening application writes, and records deleted after collection. Check what was saved to the database and any other effects the task is responsible for.
+Write the fewest tests needed to catch distinct, realistic mistakes. Combine overlapping cases when one test catches the same mistakes as separate tests.
+
+Check which records `collection` returns and what `process` saves to the database. Test reruns, application changes, and deletion when relevant to the task.
+
+To test an application write between loading and processing, load a record from `collection`, then update it through a separate model instance or direct database update. Pass the original object to `process` without changing or reloading it. Check that the database still holds the newer value.
+
+Test failure behavior only when the task adds to or changes the framework default.

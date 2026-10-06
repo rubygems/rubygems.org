@@ -266,7 +266,7 @@ class SignInTest < ApplicationSystemTestCase
 
     assert_text "Dashboard"
     find(:css, "[data-testid='header-popup-link']").click
-    click_link "Sign out"
+    click_button "Sign out"
 
     assert_text "Sign in"
   end

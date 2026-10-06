@@ -829,7 +829,7 @@ class VersionTest < ActiveSupport::TestCase
 
         assert_equal(expected_identity, version.full_name)
         assert_equal(expected_identity, version.gem_full_name)
-        assert_not_equal(existing_version.full_name, version.full_name)
+        refute_equal(existing_version.full_name, version.full_name)
         assert_includes version.reload.to_title, "1.18.9-#{version.sha256_hex.first(9)}"
       end
 
@@ -1129,9 +1129,9 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
-  context "with a very long authors string." do
+  context "with a very long authors string" do
     should "create without error" do
-      assert_nothing_raised do
+      version =
         create(:version,
           authors: [
             "Fbdoorman: David Pelaez",
@@ -1155,7 +1155,8 @@ class VersionTest < ActiveSupport::TestCase
             "Jon Yurek",
             "Chad Pytel"
           ])
-      end
+
+      assert_predicate version, :persisted?
     end
   end
 
@@ -1600,25 +1601,32 @@ class VersionTest < ActiveSupport::TestCase
     end
   end
 
-  context "after_save" do
-    context "reorder versions" do
-      setup do
-        @version = create(:version)
-      end
+  context "version reordering" do
+    setup do
+      @version = create(:version)
+    end
 
-      context "indexed is updated" do
-        should "reorder versions" do
-          @version.expects(:reorder_versions).times(1)
-          @version.update(indexed: false)
-        end
-      end
+    should "take the per-gem advisory lock before creating a version" do
+      version = build(:version, rubygem: @version.rubygem)
 
-      context "info checksum v2 is updated" do
-        should "not reorder versions" do
-          @version.expects(:reorder_versions).times(0)
-          @version.update(info_checksum_v2: "lala")
-        end
-      end
+      Rubygem.expects(:advisory_xact_lock!).with("rubygem_version_reorder", @version.rubygem.id).once
+      version.expects(:reorder_versions).once
+
+      version.save!
+    end
+
+    should "take the per-gem advisory lock and reorder versions when indexed changes" do
+      Rubygem.expects(:advisory_xact_lock!).with("rubygem_version_reorder", @version.rubygem.id).once
+      @version.expects(:reorder_versions).once
+
+      @version.update!(indexed: false)
+    end
+
+    should "lock but not reorder versions when unrelated attributes change" do
+      Rubygem.expects(:advisory_xact_lock!).with("rubygem_version_reorder", @version.rubygem.id).once
+      @version.expects(:reorder_versions).never
+
+      @version.update!(info_checksum_v2: "lala")
     end
   end
 

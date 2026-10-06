@@ -114,6 +114,10 @@ pt-BR:
           attributes:
             expires_at:
               inclusion:
+        gem_name_reservation:
+          attributes:
+            base:
+              organization_limit_reached:
         organization:
           attributes:
             handle:
@@ -135,6 +139,8 @@ pt-BR:
               already_invited:
         user:
           attributes:
+            email:
+              current_email_unconfirmed:
             handle:
               invalid:
             password:
@@ -167,6 +173,10 @@ pt-BR:
         id_token_signing_alg_values_supported:
     errors:
       models:
+        oidc/access_policy:
+          attributes:
+            statements:
+              too_complex:
         oidc/api_key_permissions:
           attributes:
             valid_for:
@@ -266,6 +276,11 @@ pt-BR:
       will_email_notice:
     update:
       confirmed_email:
+      email_label:
+      explanation:
+      new_email_label:
+      submit:
+      title:
       token_failure: Por favor, confira a URL ou tente submetê-la novamente.
   home:
     index:
@@ -294,6 +309,7 @@ pt-BR:
         about: Sobre
         api: API
         blog: Blog
+        bluesky:
         contribute: Como Contribuir
         data: Dump de Dados
         docs: Documentação
@@ -313,6 +329,7 @@ pt-BR:
         statistics: Estatísticas
         status: Status
         support_us:
+        x:
         supported_by: Patrocínio
         operated_by:
         supported_by_html: |
@@ -320,12 +337,17 @@ pt-BR:
           <br class="hidden lg:block"> é apoiado por
         uptime: Uptime
         secured_by:
-        looking_for_maintainers:
       header:
         profile: Perfil
         dashboard: Painel de Controle
         settings: Configurações da Conta
         edit_profile: Editar Perfil
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: Buscar Gems&hellip;
         members:
       mfa_banner_html:
@@ -340,25 +362,28 @@ pt-BR:
     gems:
     members:
     invite_member:
+    reservations:
+    reserve_gem_name:
   mailer:
     confirm_your_email: Por favor, confirme seu endereço de email através do link
       que enviamos para o seu endereço de email.
     confirmation_subject: Por favor, confirme seu endereço de email para se cadastrar
       no RubyGems.org
-    link_expiration_explanation_html: Lembre-se de que este link é válido apenas por
-      3 horas. Você pode gerar um novo link atualizado na página <a href='https://rubygems.org/email_confirmations/new'>reenviar
-      email de confirmação</a>.
     email_confirmation:
       title: EMAIL DE CONFIRMAÇÃO
       subtitle: Quase pronto!
       confirmation_link: Confirme o endereço de email
       welcome_message: Bem-vindo ao RubyGems.org! Visite o link abaixo para confirmar
         seu endereço de email.
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     email_reset:
       title: RESETAR ENDEREÇO DE EMAIL
       subtitle: Olá, %{handle}!
       visit_link_instructions: Você alterou seu endereço de email do RubyGems.org.
         Por favor acesse a seguinte url para reativar sua conta.
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     deletion_complete:
       title: EXCLUSÃO COMPLETA
       subtitle: Tchau!
@@ -479,6 +504,7 @@ pt-BR:
       add_member:
       invite:
       transfer:
+      reservations:
     members:
       create:
         user_already_invited:
@@ -495,19 +521,48 @@ pt-BR:
       index:
         invite:
         pending:
+        invitation_expires_html:
+        invitation_expired:
       edit:
         update:
         delete:
         resend_invitation:
+        invitation_expires_html:
+        invitation_expired:
       new:
         handle:
         role:
         create:
         invite:
+    gem_name_reservations:
+      create:
+        gem_name_reserved:
+      destroy:
+        gem_name_reservation_removed:
+      index:
+        description:
+        no_reservations:
+        reserve:
+        remove:
+        confirm_remove:
+      new:
+        title:
+        name:
+        name_hint:
+        reserve:
+        limit_html:
+        limit_reached_html:
+        unlimited:
+        disclaimer:
+    invitation_expiry_title:
     invitations:
+      expired:
+      destroy:
+        declined:
       show:
         accept:
         decline:
+        expires_html:
         title_html:
   pages:
     index:
@@ -673,6 +728,9 @@ pt-BR:
       update:
       owner_heading:
       push_heading:
+      gems_heading:
+      organizations_heading:
+      organization_info:
   webauthn_verifications:
     expired_or_already_used:
     no_port:
@@ -878,6 +936,17 @@ pt-BR:
     index:
       downloads: Downloads
       title: Gems
+    advisories:
+      title:
+        one:
+        other:
+      malware:
+      severity_count:
+      show_fewer:
+      show_more:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: instalar
@@ -1007,8 +1076,10 @@ pt-BR:
       yanked: removida
       ruby_abi:
       content_address:
+      no_content_address:
       multi_abi:
       source_gem:
+      vulnerable:
   webauthn_credentials:
     callback:
       success:

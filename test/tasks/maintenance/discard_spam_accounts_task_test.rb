@@ -28,7 +28,7 @@ class Maintenance::DiscardSpamAccountsTaskTest < ActiveSupport::TestCase
 
     Maintenance::DiscardSpamAccountsTask.process(user)
 
-    assert_not WebHook.exists?(webhook.id)
+    refute WebHook.exists?(webhook.id)
   end
 
   test "#process does not send a deletion complete email" do
@@ -59,7 +59,7 @@ class Maintenance::DiscardSpamAccountsTaskTest < ActiveSupport::TestCase
       Maintenance::DiscardSpamAccountsTask.process(user)
     end
 
-    assert_not user.reload.discarded?
+    refute_predicate user.reload, :discarded?
   end
 
   test "#process skips already discarded users" do
@@ -88,11 +88,11 @@ class Maintenance::DiscardSpamAccountsTaskTest < ActiveSupport::TestCase
     collection = task.collection
 
     assert_includes collection, matching
-    assert_not_includes collection, too_recent
-    assert_not_includes collection, old_example
-    assert_not_includes collection, other_domain
-    assert_not_includes collection, confirmed
-    assert_not_includes collection, with_gems
+    refute_includes collection, too_recent
+    refute_includes collection, old_example
+    refute_includes collection, other_domain
+    refute_includes collection, confirmed
+    refute_includes collection, with_gems
   end
 
   test "#collection defaults created_before to now" do
@@ -108,7 +108,7 @@ class Maintenance::DiscardSpamAccountsTaskTest < ActiveSupport::TestCase
   test "validates presence of created_after and domain_suffix" do
     task = Maintenance::DiscardSpamAccountsTask.new
 
-    assert_not task.valid?
+    refute_predicate task, :valid?
     assert_includes task.errors[:created_after], "can't be blank"
     assert_includes task.errors[:domain_suffix], "can't be blank"
   end

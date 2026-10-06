@@ -5,6 +5,7 @@ require "helpers/rate_limit_helpers"
 
 class RackAttackTest < ActionDispatch::IntegrationTest
   include RateLimitHelpers
+  include ActionMailer::TestHelper
 
   setup do
     Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
@@ -70,6 +71,21 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       follow_redirect!
 
       assert_response :success
+    end
+
+    should "allow profile email change under the email confirmation limit" do
+      sign_in_as @user
+      stay_under_email_limit_for("email_confirmations/email")
+
+      assert_enqueued_email_with Mailer, :email_reset, args: [@user, "new@rubygems-test.org"] do
+        patch "/profile",
+          params: { user: { unconfirmed_email: "new@rubygems-test.org", password: PasswordHelpers::SECURE_TEST_PASSWORD } },
+          headers: { REMOTE_ADDR: @ip_address }
+      end
+      follow_redirect!
+
+      assert_response :success
+      assert_equal "new@rubygems-test.org", @user.reload.unconfirmed_email
     end
 
     context "owners requests" do
@@ -409,6 +425,33 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         post "/email_confirmations", params: { email_confirmation: { email: @user.email } }
 
         assert_response :too_many_requests
+      end
+
+      should "throttle profile email change by email" do
+        sign_in_as @user
+        exceed_email_limit_for("email_confirmations/email")
+
+        assert_no_enqueued_emails do
+          # the profile form submits as POST with _method=patch, which is what https://hackerone.com/reports/3277048 used
+          post "/profile",
+            params: { _method: "patch", user: { unconfirmed_email: "new@rubygems-test.org", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        end
+
+        assert_response :too_many_requests
+        assert_nil @user.reload.unconfirmed_email
+      end
+
+      should "not throttle profile update that resubmits the current email by email" do
+        sign_in_as @user
+        exceed_email_limit_for("email_confirmations/email")
+
+        assert_no_enqueued_emails do
+          patch "/profile",
+            params: { user: { handle: "newhandle", unconfirmed_email: @user.email, password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        end
+
+        assert_redirected_to edit_profile_path
+        assert_equal "newhandle", @user.reload.handle
       end
     end
 

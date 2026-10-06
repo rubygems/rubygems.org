@@ -435,8 +435,8 @@ class RubygemsControllerTest < ActionController::TestCase
 
       assert_response :success
       assert_equal %w[0.2.0 0.1.0], version_group_text
-      assert_select "[data-testid='gem-versions'] h4", text: "arm64-darwin"
-      assert_select "[data-testid='gem-versions'] h4", text: "x86_64-linux"
+      assert_select "[data-testid='gem-versions'] p", text: "arm64-darwin"
+      assert_select "[data-testid='gem-versions'] p", text: "x86_64-linux"
       [@newest, @arm64, @x86].each do |version|
         assert_select "[data-testid='gem-versions'] a[href=?]",
                       rubygem_version_path(@rubygem.slug, version.slug), text: /Ruby ABI #{version.ruby_abi}/
@@ -446,6 +446,82 @@ class RubygemsControllerTest < ActionController::TestCase
       assert_select "[data-testid='gem-versions'] a[href=?]", rubygem_version_path(@rubygem.slug, @fat.slug), text: /multi-abi/
       assert_select "[data-testid='gem-versions']", text: /Ruby ABI 4.0/
       assert_select "[data-testid='gem-versions']", text: /single-abi/, count: 0
+    end
+  end
+
+  context "On GET to show with advisories" do
+    setup do
+      @rubygem = create(:rubygem, name: "actionpack")
+      create(:version, rubygem: @rubygem, number: "1.0.0")
+      create(:version, rubygem: @rubygem, number: "2.0.0")
+      create(:advisory, :with_rubygem, rubygem: @rubygem,
+             ranges: ["introduced" => "1.0.0", "fixed" => "2.0.0"],
+             summary: "XSS in Action Pack",
+             identifier: "GHSA-test-show-0001")
+    end
+
+    should "not show advisories when the source flag is off" do
+      get :show, params: { id: @rubygem.slug }
+
+      refute page.has_css?("[data-testid='gem-advisories']")
+      refute page.has_content?("vulnerable")
+    end
+
+    should "show advisories affecting the latest version when the source is enabled" do
+      create(:advisory, :with_rubygem, :unfixed, rubygem: @rubygem,
+             summary: "RCE in Action Pack",
+             identifier: "GHSA-test-show-0002",
+             severity: :high)
+
+      with_feature FeatureFlag::OSV_ADVISORIES do
+        get :show, params: { id: @rubygem.slug }
+      end
+
+      assert page.has_css?("[data-testid='gem-advisories']")
+      assert page.has_content?("RCE in Action Pack")
+      assert page.has_link?("View advisory")
+      assert page.has_content?("vulnerable")
+    end
+
+    should "not show a patched latest version as vulnerable for older ranges" do
+      with_feature FeatureFlag::OSV_ADVISORIES do
+        get :show, params: { id: @rubygem.slug }
+      end
+
+      refute page.has_css?("[data-testid='gem-advisories']")
+      assert page.has_content?("vulnerable")
+    end
+
+    should "show advisories only to the signed-in user the source is enabled for" do
+      create(:advisory, :with_rubygem, :unfixed, rubygem: @rubygem,
+             summary: "RCE in Action Pack",
+             identifier: "GHSA-test-show-0004")
+      enabled_user = create(:user)
+      other_user = create(:user)
+
+      with_feature FeatureFlag::OSV_ADVISORIES, actor: enabled_user do
+        sign_in_as(enabled_user)
+        get :show, params: { id: @rubygem.slug }
+
+        assert page.has_content?("RCE in Action Pack")
+
+        sign_in_as(other_user)
+        get :show, params: { id: @rubygem.slug }
+
+        refute page.has_content?("RCE in Action Pack")
+      end
+    end
+
+    should "hide withdrawn advisories" do
+      create(:advisory, :with_rubygem, :withdrawn, :unfixed, rubygem: @rubygem,
+             summary: "Withdrawn advisory",
+             identifier: "GHSA-test-show-0003")
+
+      with_feature FeatureFlag::OSV_ADVISORIES do
+        get :show, params: { id: @rubygem.slug }
+      end
+
+      refute page.has_content?("Withdrawn advisory")
     end
   end
 

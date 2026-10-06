@@ -11,6 +11,7 @@ class VersionsController < ApplicationController
     @versioned_links     = @rubygem.links(@latest_version) if @latest_version
     @oldest_version_date = @rubygem.versions.oldest_authored_at
     @versions = @rubygem.versions.by_display_order.page(@page).per(Gemcutter::VERSIONS_PER_PAGE)
+    @advisories = @rubygem.advisories.visible(current_user).to_a
     if @latest_version
       add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
       add_breadcrumb t("breadcrumbs.versions")
@@ -24,6 +25,7 @@ class VersionsController < ApplicationController
     @versions        = @rubygem.public_versions_with_extra_version(@latest_version)
     @versioned_links = @rubygem.links(@latest_version)
     @previous_version, @next_version = @latest_version.previous_and_next_in_display_order
+    @advisories = @rubygem.advisories.visible(current_user).to_a
     @on_version_page = true
     add_breadcrumb @rubygem.name, rubygem_path(@rubygem.slug)
     if @latest_version == @rubygem.most_recent_version

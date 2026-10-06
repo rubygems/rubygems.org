@@ -29,13 +29,15 @@ de:
   locale_name: Deutsch
   none: None
   not_found: Nicht gefunden
-  or:
-  forbidden:
-  api_gem_not_found:
-  api_key_forbidden:
-  api_key_soft_deleted:
+  or: oder
+  forbidden: Nicht erlaubt
+  api_gem_not_found: Dieses Gem wurde nicht gefunden
+  api_key_forbidden: Dieser API-Key hat kein Zugang
+  api_key_soft_deleted: Ein ungültiger API-Key kann nicht verwendet werden. Bitte
+    diesen löschen und einen neuen erstellen.
   api_key_insufficient_scope:
-  email_not_confirmed:
+  email_not_confirmed: Bitte bestätigen Sie ihre E-Mail-Adresse um die API zu nutzen.
+    Prüfen Sie ihr Postfach nach einem Bestätigungs-Link.
   please_sign_up: Zugriff verweigert. Bitte melden Sie sich unter https://rubygems.org
     mit einem Konto an
   please_sign_in: Bitte melden Sie sich an, um fortzufahren.
@@ -120,6 +122,10 @@ de:
           attributes:
             expires_at:
               inclusion:
+        gem_name_reservation:
+          attributes:
+            base:
+              organization_limit_reached:
         organization:
           attributes:
             handle:
@@ -141,6 +147,8 @@ de:
               already_invited: wurde bereits zu diesem Gem eingeladen
         user:
           attributes:
+            email:
+              current_email_unconfirmed:
             handle:
               invalid:
             password:
@@ -173,6 +181,10 @@ de:
         id_token_signing_alg_values_supported: Unterstützte ID-Token-Signaturalgorithmen
     errors:
       models:
+        oidc/access_policy:
+          attributes:
+            statements:
+              too_complex:
         oidc/api_key_permissions:
           attributes:
             valid_for:
@@ -279,6 +291,11 @@ de:
         Konto zu aktivieren.
     update:
       confirmed_email: Ihre E-Mail-Adresse wurde verifiziert.
+      email_label:
+      explanation:
+      new_email_label:
+      submit:
+      title:
       token_failure: Bitte überprüfen Sie die URL oder versuchen Sie es erneut.
   home:
     index:
@@ -307,6 +324,7 @@ de:
         about: Über uns
         api: API
         blog: Blog
+        bluesky:
         contribute: Beitragen
         data: Daten
         docs: Dokumentation
@@ -326,6 +344,7 @@ de:
         statistics: Statistiken
         status: Status
         support_us:
+        x:
         supported_by: Unterstützt von
         operated_by:
         supported_by_html: |
@@ -333,12 +352,17 @@ de:
           wird unterstützt von
         uptime: Betriebszeit
         secured_by:
-        looking_for_maintainers:
       header:
         profile: Profil
         dashboard: Dashboard
         settings: Einstellungen
         edit_profile: Profil bearbeiten
+        account_menu:
+        close_account_menu:
+        signed_in_as:
+        main_navigation:
+        open_menu:
+        close_menu:
         search_gem_html: Suche Gems&hellip;
         members:
       mfa_banner_html:
@@ -353,24 +377,27 @@ de:
     gems:
     members:
     invite_member:
+    reservations:
+    reserve_gem_name:
   mailer:
     confirm_your_email: Bitte bestätigen Sie Ihre E-Mail-Adresse mit dem Link, der
       an Ihre E-Mail gesendet wurde.
     confirmation_subject: Bitte bestätigen Sie Ihre E-Mail-Adresse mit %{host}
-    link_expiration_explanation_html: Bitte beachten Sie, dass dieser Link nur 3 Stunden
-      gültig ist. Sie können den aktualisierten Link über die Seite <a href='https://rubygems.org/email_confirmations/new'>Bestätigungsmail
-      erneut senden</a> anfordern.
     email_confirmation:
       title: E-MAIL-BESTÄTIGUNG
       subtitle: Fast geschafft!
       confirmation_link: E-Mail-Adresse bestätigen
       welcome_message: Willkommen bei %{host}! Besuchen Sie den unten stehenden Link,
         um Ihre E-Mail zu verifizieren.
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     email_reset:
       title: E-MAIL-ZURÜCKSETZEN
       subtitle: Hallo %{handle}!
       visit_link_instructions: Sie haben Ihre E-Mail-Adresse auf %{host} geändert.
         Bitte besuchen Sie die folgende URL, um Ihr Konto erneut zu aktivieren.
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     deletion_complete:
       title: LÖSCHUNG ABGESCHLOSSEN
       subtitle: Tschüss!
@@ -519,6 +546,7 @@ de:
       add_member:
       invite:
       transfer:
+      reservations:
     members:
       create:
         user_already_invited:
@@ -535,19 +563,48 @@ de:
       index:
         invite:
         pending:
+        invitation_expires_html:
+        invitation_expired:
       edit:
         update:
         delete:
         resend_invitation:
+        invitation_expires_html:
+        invitation_expired:
       new:
         handle:
         role:
         create:
         invite:
+    gem_name_reservations:
+      create:
+        gem_name_reserved:
+      destroy:
+        gem_name_reservation_removed:
+      index:
+        description:
+        no_reservations:
+        reserve:
+        remove:
+        confirm_remove:
+      new:
+        title:
+        name:
+        name_hint:
+        reserve:
+        limit_html:
+        limit_reached_html:
+        unlimited:
+        disclaimer:
+    invitation_expiry_title:
     invitations:
+      expired:
+      destroy:
+        declined:
       show:
         accept:
         decline:
+        expires_html:
         title_html:
   pages:
     index:
@@ -750,6 +807,9 @@ de:
       update:
       owner_heading:
       push_heading:
+      gems_heading:
+      organizations_heading:
+      organization_info:
   webauthn_verifications:
     expired_or_already_used:
     no_port:
@@ -953,6 +1013,17 @@ de:
     index:
       downloads: Downloads
       title: Gems
+    advisories:
+      title:
+        one:
+        other:
+      malware:
+      severity_count:
+      show_fewer:
+      show_more:
+        one:
+        other:
+      view_advisory:
     show:
       bundler_header: Gemfile
       install: installieren
@@ -1072,8 +1143,10 @@ de:
       yanked:
       ruby_abi:
       content_address:
+      no_content_address:
       multi_abi:
       source_gem:
+      vulnerable:
   webauthn_credentials:
     callback:
       success:

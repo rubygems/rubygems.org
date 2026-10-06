@@ -36,12 +36,19 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       should "invalidate an existing reset token before the mail job runs" do
         @user = create(:user)
         token = @user.issue_password_reset!
+        @user.update!(unconfirmed_email: "pending@rubygems-test.org")
+        confirmation_token = @user.issue_email_confirmation!(@user.unconfirmed_email)
 
         post password_path, params: { password: { email: @user.email } }
 
         refute @user.reload.valid_password_reset_token?(token)
+        refute @user.valid_email_confirmation_token?(confirmation_token)
+        assert_nil @user.unconfirmed_email
         assert_nil @user.password_reset_token_digest
         assert_nil @user.password_reset_token_expires_at
+        assert_nil @user.email_confirmation_token_digest
+        assert_nil @user.email_confirmation_token_expires_at
+        assert_nil @user.email_confirmation_email
       end
 
       should "store only a digest of the password reset token" do
@@ -54,7 +61,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         end
 
         assert_select "p", "You will receive an email within the next few minutes. It contains instructions for changing your password."
-        assert_not_nil @user.reload.password_reset_token_digest
+        refute_nil @user.reload.password_reset_token_digest
         assert_nil @user.confirmation_token
         assert_in_delta 3.hours.from_now, @user.password_reset_token_expires_at, 2.seconds
       end
@@ -141,7 +148,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         begin_password_reset(reason: "compromised")
 
         assert_response :success
-        assert_not page.has_content?(I18n.t("passwords.edit.compromised_heading"))
+        refute page.has_content?(I18n.t("passwords.edit.compromised_heading"))
       end
 
       should "not bypass enabled MFA" do
@@ -158,7 +165,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         begin_password_reset
 
         assert_response :success
-        assert_not page.has_content?(I18n.t("passwords.edit.compromised_heading"))
+        refute page.has_content?(I18n.t("passwords.edit.compromised_heading"))
       end
     end
 
@@ -578,7 +585,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
   def assert_password_reset_response_headers
     assert_equal "private, no-store", response.headers["Cache-Control"]
-    assert_includes %w[no-store max-age=0], response.headers["Surrogate-Control"]
+    assert_equal "max-age=0", response.headers["Surrogate-Control"]
     assert_equal "no-referrer", response.headers["Referrer-Policy"]
   end
 

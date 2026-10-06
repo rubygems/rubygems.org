@@ -200,7 +200,7 @@ class RepairAttestationTest < ActiveSupport::TestCase
 
     audit = Audit.last
 
-    assert_not_nil audit
+    refute_nil audit
     assert_equal "Attestation", audit.auditable_type
     assert_equal attestation.id, audit.auditable_id
     assert_equal @admin.id, audit.admin_github_user_id

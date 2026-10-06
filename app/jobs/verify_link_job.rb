@@ -72,6 +72,9 @@ class VerifyLinkJob < ApplicationJob
 
   def get(url)
     Faraday.new(nil, request: { timeout: TIMEOUT_SEC }) do |f|
+      # Hosts here are arbitrary user-supplied URLs, so don't let Datadog split each one into its own service.
+      f.use :datadog_tracing, split_by_domain: false, peer_service: "linkback-verification" if Datadog.configuration.tracing.enabled
+
       # prevent SSRF attacks
       f.request :restrict_ip_addresses, deny_rfc6890: true
 

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class OIDC::AccessPolicy < ApplicationModel
+  MAX_STATEMENTS = 5
+  MAX_TOTAL_CONDITIONS = 10
+
   class Statement < ApplicationModel
     def match_jwt?(jwt)
       return false unless principal.oidc == jwt[:iss]
@@ -73,6 +76,7 @@ class OIDC::AccessPolicy < ApplicationModel
   attribute :statements, Types::ArrayOf.new(Types::JsonDeserializable.new(Statement))
 
   validates :statements, presence: true, nested: true
+  validate :validate_complexity
 
   def statements_attributes=(attributes)
     self.statements = attributes.map { Statement.new(_2) }
@@ -82,6 +86,8 @@ class OIDC::AccessPolicy < ApplicationModel
   end
 
   def verify_access!(jwt)
+    raise AccessError, "denying due to policy exceeding complexity limits" unless complexity_within_limits?
+
     matching_statements = statements.select { it.match_jwt?(jwt) }
     raise AccessError, "denying due to no matching statements" if matching_statements.empty?
 
@@ -94,5 +100,19 @@ class OIDC::AccessPolicy < ApplicationModel
     else
       raise "Unhandled effect #{effect}"
     end
+  end
+
+  private
+
+  def validate_complexity
+    return if complexity_within_limits?
+
+    errors.add(:statements, :too_complex, max_statements: MAX_STATEMENTS, max_conditions: MAX_TOTAL_CONDITIONS)
+  end
+
+  def complexity_within_limits?
+    policy_statements = Array(statements)
+    policy_statements.size <= MAX_STATEMENTS &&
+      policy_statements.sum { Array(it.conditions).size } <= MAX_TOTAL_CONDITIONS
   end
 end

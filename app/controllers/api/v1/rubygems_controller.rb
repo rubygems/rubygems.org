@@ -80,14 +80,22 @@ class Api::V1::RubygemsController < Api::BaseController
 
   private
 
+  # Datadog SIEM detection rules key on the log line, not the AppSec span.
+  # The push has already been processed by the time we get here, so
+  # telemetry failures are reported, never surfaced to the pusher.
   def track_gem_push(gemcutter)
     event = gemcutter.code == 200 ? "gem.push.success" : "gem.push.failure"
+    actor = @api_key.owner.log_actor_attributes
     metadata = {
       "usr.id": (@api_key.owner_id.to_s if @api_key.user?),
       "gem.name": gemcutter.rubygem&.name,
       "gem.version": gemcutter.version&.number
     }.compact
-    Datadog::Kit::AppSec::Events.track(event, **metadata)
+
+    logger.info(event, **metadata, actor:, edge_bypassed: request.edge_bypassed?, request_id: request.uuid)
+    Datadog::Kit::AppSec::Events.track(event, **metadata, **actor.transform_keys { |key| :"actor.#{key}" })
+  rescue StandardError => e
+    Rails.error.report(e, handled: true)
   end
 
   def cors_set_access_control_headers

@@ -9,6 +9,8 @@ export default class extends Controller {
   connect() {
     this.indexNumber = -1;
     this.suggestLength = 0;
+    this.requestNumber = 0;
+    this.blurFrame = null;
   }
 
   disconnect() {
@@ -16,15 +18,37 @@ export default class extends Controller {
   }
 
   clear() {
+    if (this.blurFrame) {
+      cancelAnimationFrame(this.blurFrame);
+      this.blurFrame = null;
+    }
+    this.requestNumber++;
+    this.resetSuggestions();
+  }
+
+  resetSuggestions() {
     this.suggestionsTarget.classList.add("hidden");
     this.suggestionsTarget.innerHTML = "";
-    this.suggestionsTarget.removeAttribute("tabindex");
-    this.suggestionsTarget.removeAttribute("aria-activedescendant");
+    this.queryTarget.classList.remove("autocomplete-loading");
+    this.queryTarget.setAttribute("aria-expanded", "false");
+    this.queryTarget.removeAttribute("aria-activedescendant");
+    this.indexNumber = -1;
+    this.suggestLength = 0;
   }
 
   hide(e) {
-    // Allows adjusting the cursor in the input without hiding the suggestions.
-    if (!this.queryTarget.contains(e.target)) this.clear();
+    if (e.type === "blur") {
+      this.blurFrame = requestAnimationFrame(() => {
+        this.blurFrame = null;
+        if (!this.queryTarget.matches(":focus")) this.clear();
+      });
+    } else if (e.type === "keydown" || !this.queryTarget.contains(e.target)) {
+      this.clear();
+    }
+  }
+
+  keepFocus(e) {
+    e.preventDefault();
   }
 
   next() {
@@ -57,6 +81,8 @@ export default class extends Controller {
   async suggest(e) {
     const el = e.currentTarget;
     const term = el.value.trim();
+    // Responses can arrive out of order, so only the most recent request is applied.
+    const requestNumber = ++this.requestNumber;
 
     if (term.length >= 2) {
       el.classList.remove("autocomplete-done");
@@ -68,8 +94,10 @@ export default class extends Controller {
           method: "GET",
         });
         const data = await response.json();
+        if (requestNumber !== this.requestNumber) return;
         this.showSuggestions(data.slice(0, 10));
       } catch (error) {}
+      if (requestNumber !== this.requestNumber) return;
       el.classList.remove("autocomplete-loading");
       el.classList.add("autocomplete-done");
     } else {
@@ -78,14 +106,13 @@ export default class extends Controller {
   }
 
   showSuggestions(items) {
-    this.clear();
+    this.resetSuggestions();
     if (items.length === 0) {
       return;
     }
     items.forEach((item, idx) => this.appendItem(item, idx));
-    this.suggestionsTarget.setAttribute("tabindex", 0);
-    this.suggestionsTarget.setAttribute("role", "listbox");
     this.suggestionsTarget.classList.remove("hidden");
+    this.queryTarget.setAttribute("aria-expanded", "true");
 
     this.suggestLength = items.length;
     this.indexNumber = -1;
@@ -103,11 +130,13 @@ export default class extends Controller {
     if (!el) {
       return;
     }
-    this.itemTargets.forEach((el) =>
-      el.classList.remove(...this.selectedClasses),
-    );
+    this.itemTargets.forEach((el) => {
+      el.classList.remove(...this.selectedClasses);
+      el.setAttribute("aria-selected", "false");
+    });
     el.classList.add(...this.selectedClasses);
-    this.suggestionsTarget.setAttribute("aria-activedescendant", el.id);
+    el.setAttribute("aria-selected", "true");
+    this.queryTarget.setAttribute("aria-activedescendant", el.id);
     if (change) {
       this.queryTarget.value = el.textContent;
       this.queryTarget.focus();

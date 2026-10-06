@@ -426,7 +426,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             @emails.each do |email|
               post :create, params: { rubygem_id: @rubygem.slug, email: email }
 
-              assert_equal 403, @response.status
+              assert_response :forbidden
               mfa_error = I18n.t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
 
               assert_includes @response.body, mfa_error
@@ -443,7 +443,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             @emails.each do |email|
               post :create, params: { rubygem_id: @rubygem.slug, email: email }
 
-              assert_equal 403, @response.status
+              assert_response :forbidden
               mfa_error = I18n.t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
 
               assert_includes @response.body, mfa_error
@@ -549,7 +549,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         should "set a default role" do
           post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.display_id }
 
-          assert_equal 200, @response.status
+          assert_response :ok
           assert_predicate Ownership.find_by(user: @second_user, rubygem: @rubygem), :owner?
         end
       end
@@ -558,7 +558,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         should "set the role for the given user" do
           post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.display_id, role: :maintainer }
 
-          assert_equal 200, @response.status
+          assert_response :ok
           assert_predicate Ownership.find_by(user: @second_user, rubygem: @rubygem), :maintainer?
         end
       end
@@ -567,7 +567,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
         should "raise an error" do
           post :create, params: { rubygem_id: @rubygem.slug, email: @second_user.display_id, role: :invalid }
 
-          assert_equal 422, @response.status
+          assert_response :unprocessable_content
           assert_equal "Role is not included in the list", @response.body
         end
 
@@ -823,7 +823,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             @emails.each do |email|
               delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
 
-              assert_equal 403, response.status
+              assert_response :forbidden
               mfa_error = I18n.t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
 
               assert_includes @response.body, mfa_error
@@ -840,7 +840,7 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
             @emails.each do |email|
               delete :destroy, params: { rubygem_id: @rubygem.slug, email: email }
 
-              assert_equal 403, @response.status
+              assert_response :forbidden
               mfa_error = I18n.t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
 
               assert_includes @response.body, mfa_error

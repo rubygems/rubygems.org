@@ -19,6 +19,9 @@
   <%= nav.link t("organizations.show.history"), organization_path(@organization), name: :subscriptions, icon: "notifications" %>
   <%= nav.link t("organizations.show.gems"), organization_gems_path(@organization), name: :gems, icon: "gems" %>
   <%= nav.link t("organizations.show.members"), organization_memberships_path(@organization), name: :members, icon: "organizations" %>
+  <% if policy(@organization).list_gem_name_reservations? %>
+    <%= nav.link t("organizations.show.reservations"), organization_gem_name_reservations_path(@organization), name: :gem_name_reservations, icon: "description" %>
+  <% end %>
   <% if policy(@organization).edit? %>
     <%= nav.link t("layouts.application.header.settings"), edit_organization_path(@organization), name: :settings, icon: "settings" %>
   <% end %>

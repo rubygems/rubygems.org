@@ -31,7 +31,7 @@ class OnboardOrganizationTest < ActiveSupport::TestCase
   should "ask for confirmation" do
     action_mock = Data.define(:record).new(record: @onboarding)
 
-    assert_not_nil action_mock.instance_exec(&Avo::Actions::OnboardOrganization.message)
+    refute_nil action_mock.instance_exec(&Avo::Actions::OnboardOrganization.message)
   end
 
   should "be visible" do

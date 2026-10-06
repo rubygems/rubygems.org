@@ -46,8 +46,8 @@ class PasswordMailerTest < ActionMailer::TestCase
     assert_match "data breach", email.text_part.body.to_s
     assert_match "reason=", email.html_part.body.to_s
     assert_match "reason=", email.text_part.body.to_s
-    assert_no_match "Someone", email.html_part.body.to_s
-    assert_no_match "Someone", email.text_part.body.to_s
+    refute_match "Someone", email.html_part.body.to_s
+    refute_match "Someone", email.text_part.body.to_s
   end
 
   test "compromised password reset without handle should show email" do

@@ -90,6 +90,8 @@ module Gemcutter
   DEFAULT_PAGE = 1
   DEFAULT_PAGINATION = 20
   EMAIL_TOKEN_EXPIRES_AFTER = 3.hours
+  EMAIL_CONFIRMATION_TOKEN_EXPIRES_AFTER = 24.hours
+  EMAIL_CHANGE_TOKEN_EXPIRES_AFTER = 3.hours
   HOST = config["host"].freeze
   HOST_DISPLAY = Gemcutter.config[:host_display].freeze
   NEWS_DAYS_LIMIT = 7.days
@@ -109,7 +111,6 @@ module Gemcutter
   MAX_FIELD_LENGTH = 255
   PASSWORD_VERIFICATION_EXPIRY = 10.minutes
   MAX_TEXT_FIELD_LENGTH = 64_000
-  OWNERSHIP_CALLS_PER_PAGE = 10
   GEM_REQUEST_LIMIT = 400
   VERSIONS_PER_PAGE = 100
   SEPARATE_ADMIN_HOST = config["separate_admin_host"]

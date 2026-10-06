@@ -140,7 +140,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     user.reload
 
     assert_equal "disabled", user.mfa_level
-    assert_not_equal user_attributes[:encrypted_password], user.encrypted_password
+    refute_equal user_attributes[:encrypted_password], user.encrypted_password
     assert_nil user.totp_seed
     assert_empty user.mfa_hashed_recovery_codes
     assert_empty user.webauthn_credentials
@@ -225,7 +225,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     user.reload
 
     assert_equal "disabled", user.mfa_level
-    assert_not_equal user_attributes[:encrypted_password], user.encrypted_password
+    refute_equal user_attributes[:encrypted_password], user.encrypted_password
     assert_nil user.totp_seed
     assert_empty user.mfa_hashed_recovery_codes
 
@@ -245,7 +245,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
             "changes" => {
               "email" => [user_attributes[:email], user.email],
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
-              "token_expires_at" => [user_attributes[:token_expires_at].as_json, user.token_expires_at.as_json],
               "mfa_level" => %w[ui_and_api disabled],
               "totp_seed" => [user_attributes[:totp_seed], nil],
               "mfa_hashed_recovery_codes" => [user_attributes[:mfa_hashed_recovery_codes], []],
@@ -262,7 +261,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "encrypted_password",
                 "mfa_level",
                 "mfa_hashed_recovery_codes",
-                "token_expires_at",
                 "totp_seed",
                 "remember_token",
                 "updated_at"
@@ -508,7 +506,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "mfa_hashed_recovery_codes" => [user_attributes[:mfa_hashed_recovery_codes], []],
               "mfa_level" => %w[ui_and_api disabled],
               "remember_token" => [user_attributes[:remember_token], nil],
-              "token_expires_at" => [user_attributes[:token_expires_at].as_json, user.token_expires_at.as_json],
               "totp_seed" => [user_attributes[:totp_seed], nil],
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json]
             },
@@ -520,7 +517,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "encrypted_password",
                 "mfa_level",
                 "mfa_hashed_recovery_codes",
-                "token_expires_at",
                 "totp_seed",
                 "remember_token",
                 "updated_at"
@@ -556,6 +552,8 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       avo_sign_in_as admin_user
 
       user = create(:user)
+      user.update!(unconfirmed_email: "stale-pending@rubygems-test.org")
+      setup_event_ids = user.events.ids
       user_attributes = user.attributes.with_indifferent_access
 
       visit avo.resources_user_path(user)
@@ -583,7 +581,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       user.reload
 
       audit = user.audits.sole
-      email_added_event = user.events.where(tag: Events::UserEvent::EMAIL_ADDED).sole
+      email_added_event = user.events.where.not(id: setup_event_ids).where(tag: Events::UserEvent::EMAIL_ADDED).sole
       email_sent_event = user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole
 
       page.assert_text audit.id
@@ -598,16 +596,18 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
                 "email" => [user_attributes[:email], user.email],
                 "email_confirmed" => [true, false],
-                "confirmation_token" => [user_attributes[:confirmation_token], user.confirmation_token],
-                "token_expires_at" => [user_attributes[:token_expires_at].as_json, user.token_expires_at.as_json]
+                "unconfirmed_email" => ["stale-pending@rubygems-test.org", nil]
               },
               "unchanged" => user.attributes
                 .except(
                   "email",
-                  "token_expires_at",
                   "email_confirmed",
-                  "confirmation_token",
+                  "unconfirmed_email",
                   "updated_at"
+                ).merge(
+                  "email_confirmation_email" => user_attributes[:email_confirmation_email],
+                  "email_confirmation_token_digest" => user_attributes[:email_confirmation_token_digest],
+                  "email_confirmation_token_expires_at" => user_attributes[:email_confirmation_token_expires_at]
                 ).transform_values(&:as_json)
             },
             email_added_event.to_gid.as_json => {

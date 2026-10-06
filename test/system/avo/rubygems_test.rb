@@ -100,8 +100,8 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     rubygem.reload
     version.reload
 
-    assert_not_nil version.yanked_at
-    assert_not_nil version.yanked_info_checksum_v2
+    refute_nil version.yanked_at
+    refute_nil version.yanked_info_checksum_v2
 
     audit = rubygem.audits.sole
     deletion = security_user.deletions.first
@@ -178,10 +178,10 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     version1.reload
     version2.reload
 
-    assert_not_nil version1.yanked_at
-    assert_not_nil version1.yanked_info_checksum_v2
-    assert_not_nil version2.yanked_at
-    assert_not_nil version2.yanked_info_checksum_v2
+    refute_nil version1.yanked_at
+    refute_nil version1.yanked_info_checksum_v2
+    refute_nil version2.yanked_at
+    refute_nil version2.yanked_info_checksum_v2
 
     audit = rubygem.audits.sole
     deletion1 = security_user.deletions.first
@@ -230,6 +230,36 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
     )
     assert_equal admin_user, audit.admin_github_user
     assert_equal "A nice long comment", audit.comment
+  end
+
+  test "bulk yank rubygems from the index" do
+    admin_user = create(:admin_github_user, :is_admin)
+    avo_sign_in_as admin_user
+
+    create(:user, email: "security@rubygems.org")
+    rubygems = create_list(:rubygem, 2)
+    versions = rubygems.flat_map { |rubygem| create_list(:version, 2, rubygem:) }
+    untouched = create(:version)
+
+    visit avo.resources_rubygems_path
+
+    rubygems.each do |rubygem|
+      find("tr[data-resource-id='#{rubygem.to_param}'] input[type='checkbox']").check
+    end
+    click_button "Actions"
+    click_on "Yank Rubygem"
+
+    within("[role='dialog']") do
+      assert_text "yank all versions of 2 selected gems"
+      fill_in "Comment", with: "Yanking gems from a malicious campaign"
+      click_button "Yank Rubygem"
+    end
+
+    page.assert_text "Action ran successfully!"
+
+    versions.each { |version| refute_nil version.reload.yanked_at }
+    assert_nil untouched.reload.yanked_at
+    rubygems.each { |rubygem| assert_equal "Yank Rubygem", rubygem.audits.sole.action }
   end
 
   test "add owner" do
@@ -334,7 +364,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
       page.assert_text "Upload job scheduled"
     end
 
-    assert_not_nil Audit.last
+    refute_nil Audit.last
   end
 
   test "update versions list" do
@@ -374,7 +404,7 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
       page.assert_text "Upload job scheduled"
     end
 
-    assert_not_nil Audit.last
+    refute_nil Audit.last
   end
 
   test "upload info file" do
@@ -394,6 +424,6 @@ class Avo::RubygemsSystemTest < ApplicationSystemTestCase
       page.assert_text "Upload job scheduled"
     end
 
-    assert_not_nil Audit.last
+    refute_nil Audit.last
   end
 end

@@ -253,6 +253,7 @@ Rails.application.routes.draw do
 
     resource :email_confirmations, only: %i[new create] do
       get 'confirm', to: 'email_confirmations#update', as: :update
+      post 'confirm', to: 'email_confirmations#confirm', as: :confirm
       post 'otp_update', to: 'email_confirmations#otp_update', as: :otp_update
       post 'webauthn_update', to: 'email_confirmations#webauthn_update', as: :webauthn_update
       patch 'unconfirmed'
@@ -308,8 +309,10 @@ Rails.application.routes.draw do
           patch :resend_invitation
         end
       end
-      resource :invitation, only: %i[show update], constraints: { id: Patterns::ROUTE_PATTERN }, controller: "organizations/invitations"
+      resource :invitation, only: %i[show update destroy], constraints: { id: Patterns::ROUTE_PATTERN }, controller: "organizations/invitations"
       resources :gems, only: :index, controller: 'organizations/gems'
+      resources :gem_name_reservations, only: %i[index new create destroy], path: 'reservations',
+        controller: 'organizations/gem_name_reservations'
     end
   end
 
