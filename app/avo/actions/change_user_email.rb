@@ -17,11 +17,11 @@ class Avo::Actions::ChangeUserEmail < Avo::Actions::ApplicationAction
     def handle_record(user)
       user.email = fields["from_email"]
       user.email_confirmed = false
-      user.generate_confirmation_token
+      user.unconfirmed_email = nil
 
       return unless user.save!
 
-      Mailer.email_confirmation(user).deliver_later
+      Mailer.email_confirmation(user, user.email).deliver_later
     end
   end
 end

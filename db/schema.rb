@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_24_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -682,6 +682,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
     t.datetime "created_at", precision: nil
     t.datetime "deleted_at"
     t.string "email"
+    t.string "email_confirmation_email"
+    t.string "email_confirmation_token_digest"
+    t.datetime "email_confirmation_token_expires_at"
     t.boolean "email_confirmed", default: false, null: false
     t.boolean "email_reset"
     t.string "encrypted_password", limit: 128
@@ -710,6 +713,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_04_073906) do
     t.index ["blocked_email"], name: "index_users_on_blocked_email_trigram", opclass: :gin_trgm_ops, where: "(blocked_email IS NOT NULL)", using: :gin
     t.index ["email"], name: "index_users_on_email"
     t.index ["email"], name: "index_users_on_email_trigram", opclass: :gin_trgm_ops, using: :gin
+    t.index ["email_confirmation_token_digest"], name: "index_users_on_email_confirmation_token_digest", unique: true
     t.index ["handle"], name: "index_users_on_handle"
     t.index ["handle"], name: "index_users_on_handle_trigram", opclass: :gin_trgm_ops, using: :gin
     t.index ["id", "confirmation_token"], name: "index_users_on_id_and_confirmation_token"

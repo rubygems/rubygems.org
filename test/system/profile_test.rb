@@ -78,6 +78,10 @@ class ProfileTest < ApplicationSystemTestCase
     assert_changes -> { @user.reload.mail_fails }, from: 1, to: 0 do
       visit link
 
+      assert_text("Confirm email address")
+      assert_equal "nick@rubygems-test.org", @user.reload.email
+      click_button "Confirm email address"
+
       assert_text("Your email address has been verified")
       visit edit_profile_path
 

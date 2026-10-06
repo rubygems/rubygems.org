@@ -84,7 +84,13 @@ class SignUpTest < ApplicationSystemTestCase
     link = last_email_link
 
     refute_nil link
-    visit link
+    visit_from_cross_site link
+
+    assert_current_path update_email_confirmations_path, ignore_query: true
+    assert_text "Confirm email address"
+    refute_predicate User.find_by!(handle: "nick"), :email_confirmed?
+
+    click_button "Confirm email address"
 
     assert_text "Sign in"
     assert page.has_selector? "#flash_notice", text: "Your email address has been verified"
@@ -105,5 +111,21 @@ class SignUpTest < ApplicationSystemTestCase
   teardown do
     Clearance.configure { |config| config.allow_sign_up = true }
     Rails.application.reload_routes!
+  end
+
+  private
+
+  def visit_from_cross_site(url)
+    server = Capybara.current_session.server
+    target = URI(url)
+    target_url = "http://localhost:#{server.port}#{target.request_uri}"
+
+    page.driver.with_playwright_page do |pw_page|
+      pw_page.goto("http://127.0.0.1:#{server.port}")
+      pw_page.set_content <<~HTML
+        <a href="#{ERB::Util.html_escape(target_url)}">Open email confirmation</a>
+      HTML
+      pw_page.get_by_role("link", name: "Open email confirmation").click
+    end
   end
 end
