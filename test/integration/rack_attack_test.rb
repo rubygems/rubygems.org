@@ -235,6 +235,19 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           assert_redirected_to "/password/reset"
         end
 
+        should "allow mfa email confirmation" do
+          begin_email_change_confirmation
+          post "/email_confirmations/confirm", params: { confirmation: session[:email_confirmation_id] } # prompts for mfa
+
+          assert_response :success
+          post "/email_confirmations/otp_update",
+            params: { confirmation: session[:email_confirmation_id], otp: ROTP::TOTP.new(@user.totp_seed).now },
+            headers: { REMOTE_ADDR: @ip_address }
+
+          assert_redirected_to "/sign_in"
+          assert_equal "new@rubygems-test.org", @user.reload.email
+        end
+
         should "allow reverse_dependencies index" do
           rubygem = create(:rubygem, name: "test", number: "0.0.1")
           get "/gems/#{rubygem.name}/reverse_dependencies",
@@ -518,6 +531,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         create(:api_key, key: @api_key, owner: @user)
       end
 
+      email_confirmation_mfa_actions = %w[confirm otp_update webauthn_update]
+
       Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
         should "throttle for mfa sign in at level #{level}" do
           freeze_time do
@@ -666,6 +681,40 @@ class RackAttackTest < ActionDispatch::IntegrationTest
           end
         end
 
+        should "throttle mfa email confirmation by ip at level #{level}" do
+          freeze_time do
+            begin_email_change_confirmation
+            exceed_exponential_limit_for("clearance/ip/#{level}", level)
+
+            email_confirmation_mfa_actions.each do |action|
+              post "/email_confirmations/#{action}",
+                params: { confirmation: session[:email_confirmation_id], otp: ROTP::TOTP.new(@user.totp_seed).now },
+                headers: { REMOTE_ADDR: @ip_address }
+
+              assert_throttle_at(level)
+            end
+            assert_equal "nick@rubygems-test.org", @user.reload.email
+            assert_equal "new@rubygems-test.org", @user.unconfirmed_email
+            assert @user.valid_email_confirmation_token?(@email_confirmation_token)
+          end
+        end
+
+        should "throttle mfa email confirmation per user at level #{level}" do
+          freeze_time do
+            begin_email_change_confirmation
+            post "/email_confirmations/confirm", params: { confirmation: session[:email_confirmation_id] }
+            exceed_exponential_user_limit_for("clearance/user/#{level}", @user.id, level)
+
+            post "/email_confirmations/otp_update",
+              params: { confirmation: session[:email_confirmation_id], otp: ROTP::TOTP.new(@user.totp_seed).now }
+
+            assert_throttle_at(level)
+            assert_equal "nick@rubygems-test.org", @user.reload.email
+            assert_equal "new@rubygems-test.org", @user.unconfirmed_email
+            assert @user.valid_email_confirmation_token?(@email_confirmation_token)
+          end
+        end
+
         should "throttle gem yank by ip #{level}" do
           freeze_time do
             exceed_exponential_limit_for("api/ip/#{level}", level)
@@ -786,6 +835,12 @@ class RackAttackTest < ActionDispatch::IntegrationTest
   def sign_in_as(user)
     post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
     post "/session/otp_create", params: { otp: ROTP::TOTP.new(@user.totp_seed).now } if user.mfa_enabled?
+  end
+
+  def begin_email_change_confirmation
+    @user.update!(unconfirmed_email: "new@rubygems-test.org")
+    @email_confirmation_token = @user.issue_email_confirmation!(@user.unconfirmed_email)
+    get "/email_confirmations/confirm", params: { token: @email_confirmation_token }
   end
 
   def set_owners_session(_rubygem, user)
