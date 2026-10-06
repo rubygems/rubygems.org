@@ -32,6 +32,14 @@ class Api::V1::DownloadsControllerTest < ActionController::TestCase
     end
 
     index_action_should_respond_to(:text, &:to_i)
+
+    should "be cached by Fastly for 10 seconds but not by browsers" do
+      get :index, format: :json
+
+      assert_equal "max-age=0, public", @response.headers["Cache-Control"]
+      assert_equal "max-age=10, stale-while-revalidate=5, stale-if-error=5", @response.headers["Surrogate-Control"]
+      assert_nil @response.headers["Set-Cookie"]
+    end
   end
 
   def self.show_action_should_respond_to(format, to_meth = :to_s)

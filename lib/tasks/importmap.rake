@@ -10,7 +10,7 @@ namespace :importmap do
     importmap_path = "config/importmap.rb"
     vendor_pathname = Rails.root.join("vendor/javascript")
     all_files = vendor_pathname.glob("*.js").map { |p| p.relative_path_from(Rails.root) }
-    manually_vendored_files = ["github-buttons.js", "webauthn-json.js"]
+    manually_vendored_files = ["github-buttons.js", "number-flow.js", "webauthn-json.js"]
 
     manually_vendored_files.each do |filename|
       path = vendor_pathname.join(filename).relative_path_from(Rails.root)
