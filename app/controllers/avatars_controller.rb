@@ -38,6 +38,10 @@ class AvatarsController < ApplicationController
       logger.warn(message: "Failed to fetch gravatar", status: resp.status, url: gravatar_url, user_id: @user.id)
       redirect_to default_avatar_url
     end
+  rescue Faraday::Error => e
+    # timeouts and connection failures: same as any other error, don't cache so we retry
+    logger.warn(message: "Failed to fetch gravatar", error: e.class.name, url: gravatar_url, user_id: @user.id)
+    redirect_to default_avatar_url
   end
 
   private
