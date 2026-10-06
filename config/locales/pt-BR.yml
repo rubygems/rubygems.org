@@ -434,6 +434,7 @@ pt-BR:
     email_reset_update:
       subject:
       title:
+      pending_change:
     ownership_confirmation:
       subject:
       title:

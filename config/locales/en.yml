@@ -426,6 +426,7 @@ en:
     email_reset_update:
       subject: You have requested email address update on %{host}
       title: EMAIL UPDATE REQUESTED
+      pending_change: You have requested an email address change on %{host}. Your account will stay associated with %{email} until the change is confirmed. To confirm it, open the link sent to your new email address, then select “Confirm email address” and complete multi-factor authentication if it is enabled.
     ownership_confirmation:
       subject: Please confirm the ownership of the %{gem} gem on %{host}
       title: OWNERSHIP CONFIRMATION

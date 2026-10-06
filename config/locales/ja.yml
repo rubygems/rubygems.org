@@ -423,6 +423,7 @@ ja:
     email_reset_update:
       subject: "%{host}にEメールアドレスの更新を申請しました"
       title: Eメールの更新を申請しました
+      pending_change:
     ownership_confirmation:
       subject: "%{host}上で%{gem} gemの所有権を確定してください"
       title: 所有権の確定

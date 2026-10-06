@@ -422,6 +422,7 @@ zh-TW:
     email_reset_update:
       subject: 您已在 %{host} 請求電子郵件地址更新
       title: 已請求電子郵件地址更新
+      pending_change:
     ownership_confirmation:
       subject: 請確認 RubyGems.org 上 %{gem} Gem 的所有權
       title: 所有權確認

@@ -444,6 +444,7 @@ es:
     email_reset_update:
       subject: Has solicitado actualizar la dirección de correo en %{host}
       title: SOLICITUD DE ACTUALIZACIÓN DE CORREO
+      pending_change:
     ownership_confirmation:
       subject: Por favor confirma la propiedad de la gema %{gem} en %{host}
       title: CONFIMACIÓN DE PROPIEDAD
