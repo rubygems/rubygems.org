@@ -40,7 +40,8 @@
 
             <!-- Desktop Navigation Links -->
             <nav class="hidden lg:flex flex-row ml-7 items-center justify-end text-b2 text-neutral-800 dark:text-white leading-7">
-              <%= link_to t("layouts.application.footer.blog"), "https://blog.rubygems.org", class: "lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
+              <%= link_to t("layouts.application.header.gems"), rubygems_path, class: "lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
+              <%= link_to t("layouts.application.footer.blog"), "https://blog.rubygems.org", class: "ml-7 lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
               <%= link_to t("layouts.application.footer.statistics"), stats_path, class: "ml-7 lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
               <%= link_to t("layouts.application.footer.docs"), "https://guides.rubygems.org/command-reference/#gem-install", class: "ml-7 lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
               <!-- About links -->
@@ -78,6 +79,7 @@
 
                 <!-- Mobile nav links -->
                 <nav class="flex flex-col py-3 text-left text-[18px] leading-6 text-neutral-900 dark:text-white">
+                  <%= link_to t("layouts.application.header.gems"), rubygems_path, class: "px-6 py-2 font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
                   <%= link_to t("layouts.application.footer.blog"), "https://blog.rubygems.org", class: "px-6 py-2 font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
                   <%= link_to t("layouts.application.footer.statistics"), stats_path, class: "px-6 py-2 font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
                   <%= link_to t("layouts.application.footer.docs"), "https://guides.rubygems.org/command-reference/#gem-install", class: "px-6 py-2 font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
