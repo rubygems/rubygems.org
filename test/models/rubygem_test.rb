@@ -827,6 +827,26 @@ class RubygemTest < ActiveSupport::TestCase
       refute_predicate @thin, :pushable?
     end
 
+    context "gem has only unindexed versions" do
+      should "be pushable if the versions were yanked" do
+        create(:version, :yanked, rubygem: @haml, yanked_at: 1.minute.ago)
+
+        assert_predicate @haml, :pushable?
+      end
+
+      should "not be pushable while a push is unfinished" do
+        create(:version, rubygem: @haml, indexed: false, created_at: (Version::PUSH_GRACE_PERIOD - 1.minute).ago)
+
+        refute_predicate @haml, :pushable?
+      end
+
+      should "be pushable once an unfinished push is past the grace period" do
+        create(:version, rubygem: @haml, indexed: false, created_at: (Version::PUSH_GRACE_PERIOD + 1.minute).ago)
+
+        assert_predicate @haml, :pushable?
+      end
+    end
+
     should "only return the latest gems with versions" do
       assert_equal [@rack, @thor, @dust, @json, @rake],        Rubygem.latest
       assert_equal [@rack, @thor, @dust, @json, @rake, @thin], Rubygem.latest(6)
