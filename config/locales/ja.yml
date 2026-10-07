@@ -1072,6 +1072,10 @@ ja:
     version:
       yanked: ヤンク済み
       ruby_abi:
+      content_address:
+      no_content_address:
+      multi_abi:
+      source_gem:
       vulnerable:
   webauthn_credentials:
     callback:

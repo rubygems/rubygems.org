@@ -1,0 +1,78 @@
+<% platform_versions_class = "ml-4 flex flex-col gap-1 sm:grid sm:grid-cols-[max-content_10rem_4rem_minmax(0,1fr)_max-content] sm:items-center" %>
+<% row_class = "flex flex-wrap items-center gap-x-2 gap-y-1 rounded-sm px-2 py-1 -mx-2 sm:col-span-full sm:grid sm:grid-cols-subgrid" %>
+<% badge_class = "inline-flex w-fit items-center rounded-full px-2 py-0.5 text-c4 font-semibold bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300" %>
+<% version_link_class = "#{badge_class} no-underline hover:bg-neutral-300 dark:hover:bg-neutral-700" %>
+<% row_text_class = "text-b4 text-neutral-700 dark:text-neutral-400" %>
+
+<% versions.to_a.group_by(&:number).each_value do |version_group| %>
+  <% representative = version_group.first %>
+  <li class="flex flex-col gap-2">
+    <div>
+      <span class="font-mono text-c4 px-2 py-0.5 rounded-sm bg-green-200 dark:bg-green-800 text-neutral-900 dark:text-white"><%= representative.number %></span>
+    </div>
+
+    <ol class="ml-4 flex flex-col gap-2 border-l border-neutral-300 pl-3 dark:border-neutral-700">
+      <% version_group.group_by(&:platform).each do |platform, platform_versions| %>
+        <li class="flex flex-col gap-1">
+          <p class="text-b4 font-semibold text-neutral-900 dark:text-white">
+            <%= platform == "ruby" ? t("versions.version.source_gem") : platform %>
+          </p>
+
+          <ol class="<%= platform_versions_class %>">
+            <% platform_versions.each do |version| %>
+              <% version_vulnerable = version_advisory?(@advisories, version) %>
+              <li class="<%= row_class %>">
+                <% if version.ruby_abi.present? %>
+                  <%= link_to rubygem_version_path(version.rubygem.slug, version.slug), class: version_link_class do %>
+                    <span class="sr-only"><%= version.display_id %></span>
+                    <%= t "versions.version.ruby_abi" %> <%= version.ruby_abi %>
+                  <% end %>
+                  <span class="<%= row_text_class %>"><%= version_date_tag(version) %></span>
+                  <span class="<%= row_text_class %>">(<%= number_to_human_size(version.size) %>)</span>
+                  <% if version.content_address.present? %>
+                    <span class="<%= row_text_class %>"><%= t "versions.version.content_address" %>: <%= version.content_address %></span>
+                  <% else %>
+                    <span class="<%= row_text_class %>"><%= t "versions.version.no_content_address" %></span>
+                  <% end %>
+                <% elsif version.platformed? %>
+                  <%= link_to rubygem_version_path(version.rubygem.slug, version.slug), class: version_link_class do %>
+                    <span class="sr-only"><%= version.display_id %></span>
+                    <%= t "versions.version.multi_abi" %>
+                  <% end %>
+                  <span class="<%= row_text_class %>"><%= version_date_tag(version) %></span>
+                  <span class="<%= row_text_class %>">(<%= number_to_human_size(version.size) %>)</span>
+                <% else %>
+                  <%= link_to rubygem_version_path(version.rubygem.slug, version.slug), class: version_link_class do %>
+                    <span class="sr-only"><%= version.display_id %></span>
+                    <%= t "versions.version.source_gem" %>
+                  <% end %>
+                  <span class="<%= row_text_class %>"><%= version_date_tag(version) %></span>
+                  <span class="<%= row_text_class %>">(<%= number_to_human_size(version.size) %>)</span>
+                <% end %>
+                <% if version.yanked? || version_vulnerable %>
+                  <span class="inline-flex items-center gap-2">
+                    <% if version.yanked? %>
+                      <span class="text-b4 font-semibold text-red-600 dark:text-red-400"><%= t "versions.version.yanked" %></span>
+                    <% end %>
+                    <% if version_vulnerable %>
+                      <span data-testid="version-vulnerability">
+                        <%= render TooltipComponent.new(
+                          text: t("versions.version.vulnerable"),
+                          placement: :right,
+                          trigger_class: "text-red-600 dark:text-red-400 align-middle",
+                          trigger_label: t("versions.version.vulnerable")
+                        ) do %>
+                          <%= icon_tag "warning", size: 5, aria: { hidden: "true" } %>
+                        <% end %>
+                      </span>
+                    <% end %>
+                  </span>
+                <% end %>
+              </li>
+            <% end %>
+          </ol>
+        </li>
+      <% end %>
+    </ol>
+  </li>
+<% end %>

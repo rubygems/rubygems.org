@@ -1061,6 +1061,10 @@ en:
     version:
       yanked: yanked
       ruby_abi: Ruby ABI
+      content_address: content address
+      no_content_address: No content address
+      multi_abi: multi-abi
+      source_gem: source
       vulnerable: vulnerable
   webauthn_credentials:
     callback:

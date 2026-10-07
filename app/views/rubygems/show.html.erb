@@ -1,6 +1,6 @@
 <% @title = @rubygem.name %>
 <% @title_url = rubygem_path(@rubygem.slug) %>
-<% @subtitle = @latest_version&.slug %>
+<% @subtitle = @latest_version&.display_id %>
 
 <% content_for :head do %>
   <%= auto_discovery_link_tag(:atom, rubygem_versions_path(@rubygem.slug, format: "atom"), {title: "#{@rubygem.name} Version Feed"}) %>
@@ -66,8 +66,8 @@
   <% if @versions.present? %>
     <div class="versions">
       <h3 class="<%= section_heading_class %> mb-2"><%= t ".versions_header" %></h3>
-      <ol data-testid="gem-versions" class="flex flex-col gap-1.5">
-        <%= render @versions %>
+      <ol data-testid="gem-versions" class="flex flex-col gap-3">
+        <%= render partial: "versions/grouped_versions", locals: { versions: @versions } %>
       </ol>
       <% if show_all_versions_link?(@rubygem) %>
         <%= link_to t(".show_all_versions", count: @rubygem.versions.count), rubygem_versions_url(@rubygem.slug),
@@ -88,5 +88,5 @@
   <% end %>
 
   <%= render partial: "rubygems/release_info", locals: { latest_version: @latest_version, rubygem: @rubygem } %>
-  <%= render partial: "rubygems/version_navigation", locals: { rubygem: @rubygem, latest_version: @latest_version } %>
+  <%= render partial: "rubygems/version_navigation", locals: { rubygem: @rubygem, previous_version: @previous_version, next_version: @next_version } %>
 </div>

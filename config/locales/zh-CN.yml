@@ -1068,6 +1068,10 @@ zh-CN:
     version:
       yanked: 已撤回
       ruby_abi:
+      content_address:
+      no_content_address:
+      multi_abi:
+      source_gem:
       vulnerable:
   webauthn_credentials:
     callback:
