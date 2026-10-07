@@ -20,7 +20,7 @@ module EmailConfirmable
       return unless target_email == email_confirmation_target
 
       token = SecureRandom.hex(24)
-      expires_after = email_confirmed? ? Gemcutter::EMAIL_CHANGE_TOKEN_EXPIRES_AFTER : Gemcutter::EMAIL_CONFIRMATION_TOKEN_EXPIRES_AFTER
+      expires_after = email_confirmed? ? Gemcutter::EMAIL_CHANGE_CONFIRMATION_TOKEN_EXPIRES_AFTER : Gemcutter::SIGN_UP_CONFIRMATION_TOKEN_EXPIRES_AFTER
       update_columns(
         email_confirmation_token_digest: self.class.email_confirmation_token_digest(token),
         email_confirmation_token_expires_at: expires_after.from_now,
@@ -33,13 +33,7 @@ module EmailConfirmable
   end
 
   def invalidate_email_confirmation!
-    update_columns(
-      email_confirmation_token_digest: nil,
-      email_confirmation_token_expires_at: nil,
-      email_confirmation_email: nil,
-      confirmation_token: nil,
-      token_expires_at: nil
-    )
+    update_columns(cleared_email_confirmation_attributes)
   end
 
   def valid_email_confirmation_token?(token)
@@ -63,7 +57,11 @@ module EmailConfirmable
       self.email_confirmed = true
       self.unconfirmed_email = nil
       clear_email_confirmation
-      save ? :confirmed : :invalid_email
+      return :invalid_email unless save
+
+      # Email changes record this event in User's after_update callback.
+      record_event!(Events::UserEvent::EMAIL_VERIFIED, email:) unless changing_email
+      :confirmed
     end
   end
 
@@ -74,10 +72,16 @@ module EmailConfirmable
   end
 
   def clear_email_confirmation
-    self.email_confirmation_token_digest = nil
-    self.email_confirmation_token_expires_at = nil
-    self.email_confirmation_email = nil
-    self.confirmation_token = nil
-    self.token_expires_at = nil
+    assign_attributes(cleared_email_confirmation_attributes)
+  end
+
+  def cleared_email_confirmation_attributes
+    {
+      email_confirmation_token_digest: nil,
+      email_confirmation_token_expires_at: nil,
+      email_confirmation_email: nil,
+      confirmation_token: nil,
+      token_expires_at: nil
+    }
   end
 end

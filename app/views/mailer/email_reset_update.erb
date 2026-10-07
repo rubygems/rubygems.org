@@ -10,8 +10,7 @@
 
       <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px;">
         <p>
-          You have requested email update on RubyGems.org. Once you click on confirmation link sent to your new email address, your account will be disassociated from
-          <%= @user.email %>.
+          <%= t(".pending_change", host: Gemcutter::HOST_DISPLAY, email: @user.email) %>
         </p>
         <p>
           New email address: <strong><%= @user.unconfirmed_email %></strong>

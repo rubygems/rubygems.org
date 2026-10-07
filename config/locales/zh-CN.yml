@@ -423,6 +423,7 @@ zh-CN:
     email_reset_update:
       subject: 您已请求在 RubyGems.org 上进行邮箱地址变更
       title: 邮箱更新请求已发送
+      pending_change:
     ownership_confirmation:
       subject: 请确认在 RubyGems.org 上对 Gem %{gem} 的所有权
       title: 所有权确认

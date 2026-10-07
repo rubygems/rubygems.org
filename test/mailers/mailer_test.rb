@@ -17,6 +17,16 @@ class MailerTest < ActionMailer::TestCase
 
       assert_includes email.subject, Gemcutter::HOST_DISPLAY
     end
+
+    should "explain that the change needs the confirmation form to be submitted" do
+      @user.update!(unconfirmed_email: "new@mailinator.com")
+      email = Mailer.email_reset_update(@user).deliver_now
+      body = email.body.to_s
+
+      assert_includes body, I18n.t("mailer.email_reset_update.pending_change", host: Gemcutter::HOST_DISPLAY, email: @user.email)
+      assert_includes body, "“Confirm email address”"
+      refute_includes body, "Once you click on confirmation link"
+    end
   end
 
   context "#email_confirmation" do

@@ -489,6 +489,28 @@ class UserTest < ActiveSupport::TestCase
         travel_to(expiry, with_usec: true) { refute user.reload.valid_email_confirmation_token?(token) }
       end
 
+      should "record an email verified event when confirming the sign-up email" do
+        user = create(:user, :unconfirmed)
+        token = user.issue_email_confirmation!(user.email)
+
+        assert_equal :confirmed, user.confirm_email_with_token(token)
+
+        event = user.events.where(tag: Events::UserEvent::EMAIL_VERIFIED).sole
+
+        assert_equal user.email, event.additional.email
+      end
+
+      should "record an email verified event when confirming an email change" do
+        @user.update!(unconfirmed_email: "changed@rubygems-test.org")
+        token = @user.issue_email_confirmation!(@user.unconfirmed_email)
+
+        assert_equal :confirmed, @user.confirm_email_with_token(token)
+
+        event = @user.events.where(tag: Events::UserEvent::EMAIL_VERIFIED).sole
+
+        assert_equal "changed@rubygems-test.org", event.additional.email
+      end
+
       should "reject a token issued for a different target" do
         @user.update!(unconfirmed_email: "first@rubygems-test.org")
         token = @user.issue_email_confirmation!(@user.unconfirmed_email)

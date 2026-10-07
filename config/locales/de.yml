@@ -450,6 +450,7 @@ de:
     email_reset_update:
       subject: Sie haben eine Aktualisierung der E-Mail-Adresse auf %{host} angefordert
       title: E-MAIL-AKTUALISIERUNG ANGEFORDERT
+      pending_change:
     ownership_confirmation:
       subject: Bitte bestätigen Sie die Eigentümerschaft des Gems %{gem} auf %{host}
       title: EIGENTÜMERBESTÄTIGUNG
