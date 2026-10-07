@@ -1077,6 +1077,7 @@ ja:
       multi_abi:
       source_gem:
       vulnerable:
+      critically_vulnerable:
   webauthn_credentials:
     callback:
       success: セキュリティ機器が正常に登録されました。

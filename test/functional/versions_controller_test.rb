@@ -332,6 +332,31 @@ class VersionsControllerTest < ActionController::TestCase
       assert_select "##{warning['aria-describedby']}[role='tooltip'].left-full", text: "vulnerable", count: 1
     end
 
+    should "use a yellow warning when no affecting advisory is critical" do
+      with_feature FeatureFlag::OSV_ADVISORIES do
+        get :index, params: { rubygem_id: @rubygem.name }
+      end
+
+      assert_select "[data-testid='version-vulnerability'] button.text-yellow-700[aria-label='vulnerable']", count: 1
+      assert_select "[data-testid='version-vulnerability'] use[href$='#warning']", count: 1
+      assert_select "[data-testid='version-vulnerability'] button.text-red-600", count: 0
+    end
+
+    should "use a red warning when an affecting advisory is critical" do
+      create(:advisory, :with_rubygem, rubygem: @rubygem, severity: :critical,
+             ranges: ["introduced" => "1.0.0", "fixed" => "2.0.0"],
+             identifier: "GHSA-test-idx-0002")
+
+      with_feature FeatureFlag::OSV_ADVISORIES do
+        get :index, params: { rubygem_id: @rubygem.name }
+      end
+
+      assert_select "[data-testid='version-vulnerability'] button.text-red-600[aria-label='critically vulnerable']", count: 1
+      assert_select "[data-testid='version-vulnerability'] use[href$='#error']", count: 1
+      assert_select "[role='tooltip']", text: "critically vulnerable", count: 1
+      assert_select "[data-testid='version-vulnerability'] button.text-yellow-700", count: 0
+    end
+
     should "not mark affected versions when the source flag is off" do
       get :index, params: { rubygem_id: @rubygem.name }
 

@@ -1173,6 +1173,7 @@ es:
       multi_abi:
       source_gem:
       vulnerable:
+      critically_vulnerable:
   webauthn_credentials:
     callback:
       success: Has dado de alta con éxito un dispositivo de seguridad.

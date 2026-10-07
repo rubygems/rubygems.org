@@ -1066,6 +1066,7 @@ en:
       multi_abi: multi-abi
       source_gem: source
       vulnerable: vulnerable
+      critically_vulnerable: critically vulnerable
   webauthn_credentials:
     callback:
       success: You have successfully registered a security device.

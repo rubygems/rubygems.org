@@ -20,7 +20,7 @@
 
           <ol class="<%= platform_versions_class %>">
             <% platform_versions.each do |version| %>
-              <% version_vulnerable = version_advisory?(@advisories, version) %>
+              <% advisory_warning = version_advisory_warning(@advisories, version) %>
               <li class="<%= row_class %>">
                 <% if version.ruby_abi.present? %>
                   <%= link_to rubygem_version_path(version.rubygem.slug, version.slug), class: version_link_class do %>
@@ -49,20 +49,20 @@
                   <span class="<%= row_text_class %>"><%= version_date_tag(version) %></span>
                   <span class="<%= row_text_class %>">(<%= number_to_human_size(version.size) %>)</span>
                 <% end %>
-                <% if version.yanked? || version_vulnerable %>
+                <% if version.yanked? || advisory_warning %>
                   <span class="inline-flex items-center gap-2">
                     <% if version.yanked? %>
                       <span class="text-b4 font-semibold text-red-600 dark:text-red-400"><%= t "versions.version.yanked" %></span>
                     <% end %>
-                    <% if version_vulnerable %>
+                    <% if advisory_warning %>
                       <span data-testid="version-vulnerability">
                         <%= render TooltipComponent.new(
-                          text: t("versions.version.vulnerable"),
+                          text: advisory_warning[:label],
                           placement: :right,
-                          trigger_class: "text-red-600 dark:text-red-400 align-middle",
-                          trigger_label: t("versions.version.vulnerable")
+                          trigger_class: "#{advisory_warning[:class]} align-middle",
+                          trigger_label: advisory_warning[:label]
                         ) do %>
-                          <%= icon_tag "warning", size: 5, aria: { hidden: "true" } %>
+                          <%= icon_tag advisory_warning[:icon], size: 5, aria: { hidden: "true" } %>
                         <% end %>
                       </span>
                     <% end %>
