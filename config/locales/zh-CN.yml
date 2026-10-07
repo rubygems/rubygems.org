@@ -155,6 +155,7 @@ zh-CN:
             rubygem_name:
               unavailable:
               reserved:
+              reserved_prefix:
     models:
       user: 用户
       api_key:
