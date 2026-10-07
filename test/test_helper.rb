@@ -360,6 +360,21 @@ class ActionDispatch::IntegrationTest
 
     assert_nil request.env[:clearance].current_user
   end
+
+  # Asserts that the block's sign-in attempt is denied before any factor is verified,
+  # so no recovery code is consumed and no WebAuthn sign count advances.
+  def assert_mfa_sign_in_denied(user, credential: nil, &)
+    user_state = user.reload.attributes
+    credential_state = credential&.reload&.attributes
+
+    assert_no_difference(-> { user.events.where(tag: Events::UserEvent::LOGIN_SUCCESS).count }, &)
+
+    assert_response :unauthorized
+    refute_signed_in
+    assert_predicate cookies[:remember_token], :blank?
+    assert_equal user_state, user.reload.attributes
+    assert_equal credential_state, credential.reload.attributes if credential
+  end
 end
 
 # Force loading of ActionDispatch::SystemTesting::* helpers
