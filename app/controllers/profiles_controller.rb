@@ -2,8 +2,10 @@
 
 class ProfilesController < ApplicationController
   include EmailResettable
+  include GemSortable
 
   before_action :redirect_to_signin, unless: :signed_in?, except: :show
+  before_action :set_gem_sort, only: :show
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?, except: :show
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?, except: :show
   before_action :verify_password, only: %i[update destroy]
@@ -14,7 +16,7 @@ class ProfilesController < ApplicationController
   def show
     @user = User.confirmed.find_by_slug!(params[:id])
     return render_not_found unless @user
-    @rubygems = @user.rubygems_downloaded.preload(:most_recent_version, :gem_download).strict_loading
+    @rubygems = @user.rubygems.with_versions.sorted_by(@gem_sort).preload(:most_recent_version, :gem_download).strict_loading
     add_breadcrumb @user.display_handle
   end
 

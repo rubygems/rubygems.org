@@ -1210,6 +1210,14 @@ ja:
       one: 1秒
   form:
     optional: 省略できます
+  gem_sort_component:
+    label:
+    menu_label:
+    options:
+      relevance:
+      recent:
+      downloads:
+      name:
   events:
     table_component:
       event: 事象

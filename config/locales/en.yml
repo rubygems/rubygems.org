@@ -1197,6 +1197,14 @@ en:
       one: "1 second"
   form:
     optional: optional
+  gem_sort_component:
+    label: "Sort: %{sort}"
+    menu_label: Sort gems by
+    options:
+      relevance: Best match
+      recent: Most recently published
+      downloads: Number of downloads
+      name: Alphabetical
   events:
     table_component:
       event: Event
