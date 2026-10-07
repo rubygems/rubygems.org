@@ -234,12 +234,12 @@ class Pusher
     false
   end
 
-  def update
+  def update # rubocop:disable Metrics/AbcSize
     rubygem.transaction do
       rubygem.lock_version_writes!
       raise ActiveRecord::Rollback unless authorize
 
-      rubygem.disown if rubygem.versions.indexed.none?
+      rubygem.disown if rubygem.versions.indexed.none? && !owner.owns_gem?(rubygem)
       persist_version
 
       if rubygem.unowned?
