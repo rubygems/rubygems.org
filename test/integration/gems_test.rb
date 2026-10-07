@@ -81,6 +81,27 @@ class GemsTest < ActionDispatch::IntegrationTest
     assert_equal "gems/index", response.headers["Surrogate-Key"]
   end
 
+  test "anonymous explore request sets public cache headers" do
+    get rubygems_path
+
+    assert_response :success
+    assert page.has_selector?("#just-released")
+    assert_nil response.headers["Set-Cookie"]
+    assert_includes response.headers["Cache-Control"], "public"
+    assert_includes response.headers["Surrogate-Control"], "max-age=60"
+    assert_equal "gems/index", response.headers["Surrogate-Key"]
+  end
+
+  test "header navigation links to the gems explore page first" do
+    get root_path
+
+    desktop_links = page.all("header nav.lg\\:flex a")
+    mobile_links = page.all("header dialog nav a", visible: :all)
+
+    assert_equal [I18n.t("layouts.application.header.gems"), rubygems_path], [desktop_links.first.text, desktop_links.first[:href]]
+    assert_equal rubygems_path, mobile_links.first[:href]
+  end
+
   test "anonymous gem show request does not set a session cookie" do
     get rubygem_path(@rubygem.slug)
 

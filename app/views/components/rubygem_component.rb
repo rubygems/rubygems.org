@@ -8,8 +8,11 @@ class RubygemComponent < ApplicationComponent
   register_output_helper :download_count_component
   register_output_helper :short_info
   register_value_helper :latest_version_number
+  register_value_helper :number_with_delimiter
 
   prop :rubygem
+  # Shown instead of the download count when a list is ranked by dependents.
+  prop :reverse_dependencies_count
 
   def view_template(&)
     link_to rubygem_path(@rubygem.name), class: LINK_CLASSES do
@@ -28,7 +31,7 @@ class RubygemComponent < ApplicationComponent
         p(class: "text-b3 text-neutral-600 dark:text-neutral-400 truncate flex-1 mr-4") do
           short_info(@rubygem)
         end
-        download_count_component(@rubygem)
+        @reverse_dependencies_count ? reverse_dependencies_count : download_count_component(@rubygem)
       end
     end
   end
@@ -37,4 +40,14 @@ class RubygemComponent < ApplicationComponent
                  "hover:bg-orange-50 dark:hover:bg-orange-950 " \
                  "border-b border-neutral-200 dark:border-neutral-800 " \
                  "group no-underline"
+
+  private
+
+  def reverse_dependencies_count
+    count = @reverse_dependencies_count
+    span(class: "flex text-neutral-600 dark:text-neutral-400 text-nowrap text-b3 space-x-1 items-center") do
+      icon_tag("account-tree", size: 5)
+      span { t(".reverse_dependencies", count:, formatted_count: number_with_delimiter(count)) }
+    end
+  end
 end

@@ -97,21 +97,117 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to index with no parameters" do
     setup do
-      @gems = (1..3).map do |n|
-        gem = create(:rubygem, name: "agem#{n}")
-        create(:version, rubygem: gem)
-        gem
-      end
-      create(:rubygem, name: "zeta")
+      Rails.cache.delete(RubygemsController::MOST_DEPENDED_ON_CACHE_KEY)
+
+      @old_release = create(:rubygem, name: "old-release", created_at: 30.days.ago)
+      create(:version, rubygem: @old_release, created_at: 20.days.ago)
+
+      @brand_new = create(:rubygem, name: "brand-new", created_at: 2.days.ago)
+      create(:version, rubygem: @brand_new, created_at: 2.days.ago)
+
+      @new_with_update = create(:rubygem, name: "new-with-update", created_at: 3.days.ago)
+      create(:version, rubygem: @new_with_update, number: "0.1.0", created_at: 3.days.ago)
+      create(:version, rubygem: @new_with_update, number: "0.2.0", created_at: 1.day.ago)
+
+      @new_last_month = create(:rubygem, name: "new-last-month", created_at: 30.days.ago)
+      create(:version, rubygem: @new_last_month, created_at: 30.days.ago)
+
+      @attested = create(:rubygem, name: "attested")
+      create(:attestation, version: create(:version, rubygem: @attested, created_at: 1.hour.ago))
+
+      @depended_on = create(:rubygem, name: "depended-on", number: "1.0.0")
+      2.times { create(:dependency, :runtime, rubygem: @depended_on, version: create(:version)) }
+
       get :index
     end
 
     should respond_with :success
-    should "render links" do
-      @gems.each do |g|
-        assert page.has_content?(g.name)
-        page.assert_selector("a[href='#{rubygem_path(g.slug)}']")
+
+    should "list recent releases under Just released, linking to the full list" do
+      section = page.find_by_id("just-released")
+
+      assert section.has_link?(@attested.name, href: rubygem_path(@attested.slug))
+      refute section.has_content?(@old_release.name)
+      assert section.has_link?(href: news_path)
+    end
+
+    should "list gems first published this week with a single version under New gems" do
+      section = page.find_by_id("new-gems")
+
+      assert section.has_link?(@brand_new.name, href: rubygem_path(@brand_new.slug))
+      refute section.has_content?(@new_with_update.name)
+      refute section.has_content?(@new_last_month.name)
+      refute section.has_link?(href: news_path)
+    end
+
+    should "link Popular to the full popular list" do
+      assert page.find_by_id("popular").has_link?(href: popular_news_path)
+    end
+
+    should "rank gems by runtime dependents and show the count instead of downloads" do
+      section = page.find_by_id("most-depended-on")
+
+      assert section.has_link?(@depended_on.name, href: rubygem_path(@depended_on.slug))
+      assert section.has_content?("2 dependents")
+      refute section.has_selector?("[title^='#{I18n.t('total_downloads')}']")
+    end
+
+    should "list releases with provenance" do
+      section = page.find_by_id("provenance")
+
+      assert section.has_link?(@attested.name, href: rubygem_path(@attested.slug))
+      refute section.has_content?(@brand_new.name)
+    end
+
+    should "link to the A listing instead of an A-Z list" do
+      assert page.has_link?(I18n.t("rubygems.explore.browse_by_letter"), href: rubygems_path(letter: "A"))
+      refute page.has_selector?("a[href='#{rubygems_path(letter: 'B')}']")
+    end
+  end
+
+  context "On GET to index with no recent gems" do
+    setup do
+      Rails.cache.delete(RubygemsController::MOST_DEPENDED_ON_CACHE_KEY)
+      get :index
+    end
+
+    should respond_with :success
+    should "show an empty state in each section" do
+      %w[just-released new-gems popular most-depended-on provenance].each do |id|
+        assert page.find("##{id}").has_content?("Nothing here yet.")
       end
+    end
+  end
+
+  context "On repeated GETs to index" do
+    setup do
+      # Other workers' setups flush the shared memcached (Rack::Attack.cache.store.clear),
+      # so give this test a private store.
+      Rails.stubs(:cache).returns(ActiveSupport::Cache::MemoryStore.new)
+      @rubygem = create(:rubygem, name: "cached-dependency", number: "1.0.0")
+    end
+
+    should "compute the most depended on counts once and serve them from the cache" do
+      Rubygem.expects(:most_depended_on_counts).once.returns({ @rubygem.id => 42 })
+
+      2.times do
+        get :index
+
+        assert page.find_by_id("most-depended-on").has_content?("42 dependents")
+      end
+    end
+  end
+
+  context "On GET to index with only a page" do
+    setup do
+      @gem = create(:rubygem, name: "apage", number: "1.0.0")
+      get :index, params: { page: 1 }
+    end
+
+    should respond_with :success
+    should "render the A listing rather than the explore hub" do
+      assert page.has_link?(@gem.name, href: rubygem_path(@gem.slug))
+      refute page.has_selector?("#just-released")
     end
   end
 

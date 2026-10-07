@@ -1,0 +1,21 @@
+<%# locals: (id:, title:, description:, icon:, rubygems:, see_all_url: nil, reverse_dependencies_counts: {}) -%>
+<section id="<%= id %>">
+  <%= render CardComponent.new do |c| %>
+    <%= c.head class: "!pb-2" do %>
+      <%= c.section_title title, icon: %>
+      <% if see_all_url %>
+        <%= link_to t(".see_all"), see_all_url, class: "shrink-0 ml-4 text-sm text-orange-500 hover:underline" %>
+      <% end %>
+    <% end %>
+
+    <p class="mb-4 text-b3 text-neutral-600 dark:text-neutral-400"><%= description %></p>
+
+    <% if rubygems.any? %>
+      <% rubygems.each do |rubygem| %>
+        <%= render RubygemComponent.new(rubygem:, reverse_dependencies_count: reverse_dependencies_counts[rubygem.id]) %>
+      <% end %>
+    <% else %>
+      <p class="py-4 text-b3 text-neutral-600 dark:text-neutral-400"><%= t(".empty") %></p>
+    <% end %>
+  <% end %>
+</section>

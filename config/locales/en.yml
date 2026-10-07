@@ -335,6 +335,7 @@ en:
         uptime: Uptime
         secured_by: Secured by
       header:
+        gems: Gems
         profile: Profile
         dashboard: Dashboard
         settings: Settings
@@ -868,6 +869,10 @@ en:
     security_events:
       title: Security Events
       description_html: "This page shows the security events that have occurred on your account. If you see any suspicious activity, please <a href='mailto:support@rubygems.org'>contact support</a>."
+  rubygem_component:
+    reverse_dependencies:
+      one: "1 dependent"
+      other: "%{formatted_count} dependents"
   rubygems:
     aside:
       downloads_for_this_version: For this version
@@ -933,6 +938,27 @@ en:
     index:
       downloads: Downloads
       title: Gems
+    explore:
+      title: Explore gems
+      browse_by_letter: Browse all gems A–Z
+      just_released:
+        title: Just released
+        description: The newest releases from the past week.
+      new_gems:
+        title: New gems this week
+        description: Gems published for the first time in the past week.
+      popular:
+        title: Popular & recently updated
+        description: The most downloaded gems with a release in the past 10 weeks.
+      most_depended_on:
+        title: Most depended on
+        description: Gems that the most other gems need at runtime.
+      provenance:
+        title: Released with provenance
+        description: Recent releases built with Trusted Publishing and a verifiable Sigstore attestation.
+    explore_section:
+      see_all: See all →
+      empty: Nothing here yet.
     advisories:
       title:
         one: "1 known security vulnerability"
