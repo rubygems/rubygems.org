@@ -127,6 +127,24 @@ class Api::V1::SearchesControllerTest < ActionController::TestCase
       end
     end
 
+    context "with details=true" do
+      setup do
+        get :autocomplete, params: { query: "ma", details: "true" }
+        @body = JSON.parse(response.body)
+      end
+
+      should respond_with :success
+      should "return name, version, downloads and summary per gem" do
+        version = @match1.most_recent_version
+
+        assert_equal %w[match1 match2], @body.pluck("name")
+        assert_equal(
+          { "name" => "match1", "version" => version.number, "downloads" => @match1.downloads, "summary" => version.summary },
+          @body[0]
+        )
+      end
+    end
+
     context "with elasticsearch down" do
       should "fallback to legacy search" do
         requires_toxiproxy

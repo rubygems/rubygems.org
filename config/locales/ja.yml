@@ -1003,6 +1003,9 @@ ja:
     search:
       search_reverse_dependencies_html: 被依存関係のgemから検索...
   searches:
+    autocomplete_templates:
+      downloads_html:
+      see_all_html:
     advanced:
       name: 名前
       summary: 概要

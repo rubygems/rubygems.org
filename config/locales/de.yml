@@ -1073,6 +1073,9 @@ de:
     search:
       search_reverse_dependencies_html:
   searches:
+    autocomplete_templates:
+      downloads_html:
+      see_all_html:
     advanced:
       name:
       summary:

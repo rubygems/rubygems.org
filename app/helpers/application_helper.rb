@@ -94,7 +94,7 @@ module ApplicationHelper
         keydown.down->autocomplete#next
         keydown.up->autocomplete#prev
         keydown.esc->autocomplete#hide
-        keydown.enter->autocomplete#clear
+        keydown.enter->autocomplete#submit
         click@window->autocomplete#hide
         focus->autocomplete#suggest
         blur->autocomplete#hide
