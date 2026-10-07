@@ -257,7 +257,7 @@ class RubygemsControllerTest < ActionController::TestCase
 
   context "On GET to show for a yanked gem with no versions" do
     setup do
-      version = create(:version, created_at: 1.minute.ago, indexed: false)
+      version = create(:version, :yanked, created_at: 1.minute.ago)
       @rubygem = version.rubygem
     end
     context "when signed out" do

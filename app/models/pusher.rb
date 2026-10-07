@@ -235,27 +235,34 @@ class Pusher
   end
 
   def update
-    rubygem.disown if rubygem.versions.indexed.none?
-    persist_version
+    rubygem.transaction do
+      rubygem.lock_version_writes!
+      raise ActiveRecord::Rollback unless authorize
 
-    if rubygem.unowned?
-      if api_key.user?
-        rubygem.create_ownership(owner)
-      elsif api_key.trusted_publisher?
-        pending_publisher = find_pending_trusted_publisher
-        return notify("No pending publisher found", 404) if pending_publisher.blank?
+      rubygem.disown if rubygem.versions.indexed.none?
+      persist_version
 
-        rubygem.transaction do
+      if rubygem.unowned?
+        if api_key.user?
+          rubygem.create_ownership(owner)
+        elsif api_key.trusted_publisher?
+          pending_publisher = find_pending_trusted_publisher
+          if pending_publisher.blank?
+            notify("No pending publisher found", 404)
+            raise ActiveRecord::Rollback
+          end
+
           logger.info { "Reifying pending publisher" }
           rubygem.create_ownership(pending_publisher.user)
           owner.rubygem_trusted_publishers.create!(rubygem: rubygem)
+        else
+          notify_unauthorized
+          raise ActiveRecord::Rollback
         end
-      else
-        return notify_unauthorized
       end
-    end
 
-    true
+      true
+    end
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback, ActiveRecord::RecordNotUnique => e
     logger.info { { message: "Error updating rubygem", exception: e } }
     false
@@ -264,7 +271,9 @@ class Pusher
   def persist_version
     retries = 0
     begin
-      rubygem.update_attributes_from_gem_specification!(version, spec)
+      rubygem.transaction(requires_new: true) do
+        rubygem.update_attributes_from_gem_specification!(version, spec)
+      end
     rescue ActiveRecord::RecordNotUnique => e
       raise e unless e.message.include?("index_versions_number_content_address")
 
