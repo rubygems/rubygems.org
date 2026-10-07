@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# If changing these attributes, please keep the runbook queries in sync.
+# https://github.com/rubygems/rubygems-terraform/blob/HEAD/docs/investigating-activity.md
 module Gemcutter::RequestLogPayload
   def append_info_to_payload(payload)
     payload.merge!(

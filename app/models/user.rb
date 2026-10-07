@@ -182,6 +182,8 @@ class User < ApplicationRecord
 
   # The `actor` block on request and gem.push.* log lines: GlobalIDs, not
   # PII, and the same GlobalID Rack::Attack.api_key_owner_id throttles on.
+  # If changing these attributes, please keep the runbook queries in sync.
+  # https://github.com/rubygems/rubygems-terraform/blob/HEAD/docs/investigating-activity.md
   def log_actor_attributes
     { gid: to_gid.to_s, type: "user", account_age_seconds: (Time.current - created_at).to_i }
   end
