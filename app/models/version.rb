@@ -7,6 +7,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   DEFAULT_CONTENT_ADDRESS_LENGTH = 8
   CONTENT_ADDRESS_FORMAT = /\A[0-9a-f]{#{DEFAULT_CONTENT_ADDRESS_LENGTH},64}\z/
   CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION = ">= 4.1.0.a"
+  PUSH_GRACE_PERIOD = 10.minutes
 
   belongs_to :rubygem, touch: true
   has_many :dependencies, lambda {
@@ -140,6 +141,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def self.yanked
     where(indexed: false)
+  end
+
+  def self.pushing
+    where(indexed: false, yanked_at: nil, created_at: PUSH_GRACE_PERIOD.ago..)
   end
 
   def self.by_position

@@ -140,6 +140,61 @@ class PushTest < ActionDispatch::IntegrationTest
     assert page.has_content?("2.0.0")
   end
 
+  test "pushing a fully yanked gem invalidates keys scoped through its previous ownerships" do
+    invited_user = create(:user)
+    yanked_gem = create(:rubygem, name: "fully-yanked", owners: [@user])
+    create(:version, :yanked, rubygem: yanked_gem, number: "0.1.0")
+    target_gem = create(:rubygem, name: "target", owners: [@user], number: "0.1.0")
+    triggering_ownership = yanked_gem.ownerships.sole
+    unconfirmed_ownership = create(:ownership, :unconfirmed, rubygem: yanked_gem, user: invited_user)
+
+    @key = "scoped-key"
+    triggering_key = build(:api_key, key: @key, ownership: triggering_ownership, scopes: %i[push_rubygem])
+    triggering_key.owner = @user
+    triggering_key.save!
+    invited_key = "invited-scoped-key"
+    other_key = build(:api_key, ownership: unconfirmed_ownership, scopes: %i[push_rubygem])
+    other_key.owner = invited_user
+    other_key.hashed_key = Digest::SHA256.hexdigest(invited_key)
+    other_key.save!
+
+    assert_no_difference -> { target_gem.versions.count }, -> { target_gem.events.count } do
+      assert_no_enqueued_jobs do
+        push_gem build_gem(new_gemspec(target_gem.name, "1.0.0", "Gemcutter", "ruby"))
+      end
+    end
+
+    assert_response :forbidden
+    assert_nil Version.find_by(full_name: "target-1.0.0")
+    assert_nil RubygemFs.instance.get("gems/target-1.0.0.gem")
+    assert_nil RubygemFs.instance.get("quick/Marshal.4.8/target-1.0.0.gemspec.rz")
+
+    push_gem build_gem(new_gemspec(yanked_gem.name, "1.0.0", "Gemcutter", "ruby"))
+
+    assert_response :success
+
+    [triggering_key, other_key].each do |api_key|
+      assert_predicate api_key.reload, :soft_deleted?
+      assert_nil api_key.api_key_rubygem_scope
+    end
+
+    [@key, invited_key].each do |revoked_key|
+      @key = revoked_key
+
+      assert_no_difference -> { target_gem.versions.count }, -> { target_gem.events.count } do
+        assert_no_enqueued_jobs do
+          push_gem build_gem(new_gemspec(target_gem.name, "1.0.0", "Gemcutter", "ruby"))
+        end
+      end
+
+      assert_response :forbidden
+      assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", response.body
+      assert_nil Version.find_by(full_name: "target-1.0.0")
+      assert_nil RubygemFs.instance.get("gems/target-1.0.0.gem")
+      assert_nil RubygemFs.instance.get("quick/Marshal.4.8/target-1.0.0.gemspec.rz")
+    end
+  end
+
   test "pushing a new version of a gem with a trusted publisher" do
     rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
     create(:ownership, rubygem: rubygem, user: @user)
