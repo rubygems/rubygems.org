@@ -1061,6 +1061,7 @@ zh-TW:
       multi_abi:
       source_gem:
       vulnerable:
+      critically_vulnerable:
   webauthn_credentials:
     callback:
       success: 您已成功註冊安全裝置。

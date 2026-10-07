@@ -1059,6 +1059,7 @@ nl:
       multi_abi:
       source_gem:
       vulnerable:
+      critically_vulnerable:
   webauthn_credentials:
     callback:
       success:
