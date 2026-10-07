@@ -1180,6 +1180,34 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "block with a pending email change" do
+    setup do
+      @user = create(:user)
+      @original_email = @user.email
+      @pending_email = "attacker@evil-test.org"
+      @user.update!(unconfirmed_email: @pending_email)
+      @confirmation_token = @user.issue_email_confirmation!(@pending_email)
+    end
+
+    should "discard the pending email instead of promoting it" do
+      @user.block!
+      @user.reload
+
+      assert @user.email.start_with?("security+locked-")
+      assert_nil @user.unconfirmed_email
+      assert_equal @original_email, @user.blocked_email
+      refute @user.valid_email_confirmation_token?(@confirmation_token)
+      assert_nil User.find_by_normalized_email(@pending_email)
+    end
+
+    should "still promote the pending email when an unblocked user confirms it" do
+      @user.confirm_email!
+
+      assert_equal @pending_email, @user.reload.email
+      assert_nil @user.unconfirmed_email
+    end
+  end
+
   context "block invalid legacy user" do
     setup do
       @user = create(:user, handle: "MikeJudge")

@@ -312,6 +312,54 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     assert_nil @user.email_confirmation_token_digest
   end
 
+  test "the confirmation MFA challenge cannot be used to sign in" do
+    user = create(:user, email: "old@rubygems-test.org")
+    user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+    user.update!(unconfirmed_email: "new@rubygems-test.org")
+    token = user.issue_email_confirmation!(user.unconfirmed_email)
+    get update_email_confirmations_path(token:)
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
+
+    assert_response :success
+
+    assert_no_difference -> { user.events.where(tag: Events::UserEvent::LOGIN_SUCCESS).count } do
+      post otp_create_session_path, params: { otp: ROTP::TOTP.new(user.totp_seed).now }
+    end
+
+    assert_response :unauthorized
+    assert_predicate cookies[:remember_token], :blank?
+    assert_equal "old@rubygems-test.org", user.reload.email
+    assert user.valid_email_confirmation_token?(token)
+  end
+
+  test "the confirmation MFA challenge cannot be used to sign in with a recovery code" do
+    user = create(:user, email: "old@rubygems-test.org")
+    user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+    recovery_code = user.new_mfa_recovery_codes.first
+    token = begin_email_change_mfa_challenge(user)
+
+    assert_mfa_sign_in_denied(user) do
+      post otp_create_session_path, params: { otp: recovery_code }
+    end
+    assert_equal "old@rubygems-test.org", user.email
+    assert user.valid_email_confirmation_token?(token)
+  end
+
+  test "the confirmation MFA challenge cannot be used to sign in with WebAuthn" do
+    user = create(:user, email: "old@rubygems-test.org")
+    credential = create(:webauthn_credential, user:)
+    token = begin_email_change_mfa_challenge(user)
+    client = WebAuthn::FakeClient.new(WebAuthn.configuration.allowed_origins.first, encoding: false)
+    WebauthnHelpers.create_credential(webauthn_credential: credential, client:)
+    credentials = WebauthnHelpers.get_result(client:, challenge: session[:webauthn_authentication]["challenge"])
+
+    assert_mfa_sign_in_denied(user, credential:) do
+      post webauthn_create_session_path, params: { credentials: }
+    end
+    assert_equal "old@rubygems-test.org", user.email
+    assert user.valid_email_confirmation_token?(token)
+  end
+
   test "token replacement during MFA prevents confirmation" do
     @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
     recovery_code = @user.new_mfa_recovery_codes.first
@@ -394,6 +442,16 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     get update_email_confirmations_path(token: @token)
 
     assert_response :success
+  end
+
+  def begin_email_change_mfa_challenge(user)
+    user.update!(unconfirmed_email: "new@rubygems-test.org")
+    token = user.issue_email_confirmation!(user.unconfirmed_email)
+    get update_email_confirmations_path(token:)
+    post confirm_email_confirmations_path, params: { confirmation: session[:email_confirmation_id] }
+
+    assert_response :success
+    token
   end
 
   def assert_email_confirmation_response_headers

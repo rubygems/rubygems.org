@@ -66,6 +66,26 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         assert_in_delta 3.hours.from_now, @user.password_reset_token_expires_at, 2.seconds
       end
     end
+
+    context "with the pending email of a user who was then blocked" do
+      should "not send a reset or change the blocked account" do
+        @user = create(:user)
+        @user.update!(unconfirmed_email: "attacker@evil-test.org")
+        @user.block!
+        locked_email = @user.reload.email
+
+        assert_no_enqueued_emails do
+          post password_path, params: { password: { email: "attacker@evil-test.org" } }
+        end
+
+        assert_response :accepted
+        @user.reload
+
+        assert_equal locked_email, @user.email
+        assert_nil @user.unconfirmed_email
+        assert_nil @user.password_reset_token_digest
+      end
+    end
   end
 
   context "on GET to edit" do
@@ -272,6 +292,27 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         end
       end
 
+      should "not let the password reset MFA challenge sign in" do
+        begin_password_reset
+
+        assert_no_difference -> { @user.events.where(tag: Events::UserEvent::LOGIN_SUCCESS).count } do
+          post otp_create_session_path, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+        end
+
+        assert_response :unauthorized
+        refute_signed_in
+      end
+
+      should "not let the password reset MFA challenge sign in with a recovery code" do
+        recovery_code = @user.new_mfa_recovery_codes.first
+        begin_password_reset
+
+        assert_mfa_sign_in_denied(@user) do
+          post otp_create_session_path, params: { otp: recovery_code }
+        end
+        assert @user.valid_password_reset_token?(@token)
+      end
+
       context "when OTP is incorrect" do
         should "display error message and prompt for MFA again" do
           begin_password_reset
@@ -328,6 +369,16 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         assert @user.reload.valid_password_reset_token?(@token)
         assert_nil session[:mfa_expires_at]
       end
+    end
+
+    should "not let the password reset MFA challenge sign in with WebAuthn" do
+      begin_password_reset
+      credentials = webauthn_result
+
+      assert_mfa_sign_in_denied(@user, credential: @webauthn_credential) do
+        post webauthn_create_session_path, params: { credentials: }
+      end
+      assert @user.valid_password_reset_token?(@token)
     end
 
     context "when the password reset token has been invalidated" do

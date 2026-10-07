@@ -518,6 +518,56 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         create(:api_key, key: @api_key, owner: @user)
       end
 
+      email_confirmation_limiters = %i[ip user]
+      {
+        "confirm without MFA" => :none,
+        "otp_update with TOTP" => :totp,
+        "otp_update with a recovery code" => :recovery_code,
+        "webauthn_update with WebAuthn" => :webauthn
+      }.each do |name, factor|
+        should "allow email confirmation #{name} just under the limits" do
+          freeze_time do
+            path, params = prepare_email_confirmation_submission(factor)
+            Rack::Attack.cache.store.clear
+            Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
+              limit = (Rack::Attack::EXP_BASE_REQUEST_LIMIT * level) - 1
+              update_limit_for("clearance/ip/#{level}:#{@ip_address}", limit, exp_base_limit_period**level)
+              update_limit_for("clearance/user/#{level}:#{@user.id}", limit, exp_base_limit_period**level)
+            end
+
+            post path, params:, headers: { REMOTE_ADDR: @ip_address }
+
+            assert_redirected_to "/sign_in"
+            assert_equal "new@rubygems-test.org", @user.reload.email
+          end
+        end
+
+        Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
+          email_confirmation_limiters.each do |limiter|
+            should "throttle email confirmation #{name} by #{limiter} at level #{level}" do
+              freeze_time do
+                path, params = prepare_email_confirmation_submission(factor)
+                user_state = @user.reload.attributes
+                credential_state = @webauthn_credential&.reload&.attributes
+                if limiter == :ip
+                  exceed_exponential_limit_for("clearance/ip/#{level}", level)
+                else
+                  exceed_exponential_user_limit_for("clearance/user/#{level}", @user.id, level)
+                end
+
+                post path, params:, headers: { REMOTE_ADDR: @ip_address }
+
+                assert_throttle_at(level)
+                assert_equal user_state, @user.reload.attributes
+                assert_equal credential_state, @webauthn_credential.reload.attributes if @webauthn_credential
+
+                assert @user.valid_email_confirmation_token?(@email_confirmation_token)
+              end
+            end
+          end
+        end
+      end
+
       Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
         should "throttle for mfa sign in at level #{level}" do
           freeze_time do
@@ -786,6 +836,38 @@ class RackAttackTest < ActionDispatch::IntegrationTest
   def sign_in_as(user)
     post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
     post "/session/otp_create", params: { otp: ROTP::TOTP.new(@user.totp_seed).now } if user.mfa_enabled?
+  end
+
+  def begin_email_change_confirmation
+    @user.update!(unconfirmed_email: "new@rubygems-test.org")
+    @email_confirmation_token = @user.issue_email_confirmation!(@user.unconfirmed_email)
+    get "/email_confirmations/confirm", params: { token: @email_confirmation_token }
+  end
+
+  # Builds an email confirmation request that would succeed if not throttled.
+  # MFA challenges are started first, since starting one also counts against the limits.
+  def prepare_email_confirmation_submission(factor)
+    recovery_code = @user.new_mfa_recovery_codes&.first
+    @user.disable_totp! if factor == :none
+    @webauthn_credential = create(:webauthn_credential, user: @user) if factor == :webauthn
+    begin_email_change_confirmation
+    confirmation = session[:email_confirmation_id]
+    return ["/email_confirmations/confirm", confirmation:] if factor == :none
+
+    post "/email_confirmations/confirm", params: { confirmation: }
+
+    assert_response :success
+    case factor
+    when :totp
+      ["/email_confirmations/otp_update", confirmation:, otp: ROTP::TOTP.new(@user.totp_seed).now]
+    when :recovery_code
+      ["/email_confirmations/otp_update", confirmation:, otp: recovery_code]
+    when :webauthn
+      client = WebAuthn::FakeClient.new(WebAuthn.configuration.allowed_origins.first, encoding: false)
+      WebauthnHelpers.create_credential(webauthn_credential: @webauthn_credential, client:)
+      credentials = WebauthnHelpers.get_result(client:, challenge: session[:webauthn_authentication]["challenge"])
+      ["/email_confirmations/webauthn_update", confirmation:, credentials:]
+    end
   end
 
   def set_owners_session(_rubygem, user)
