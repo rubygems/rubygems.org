@@ -169,16 +169,21 @@ class PushTest < ActionDispatch::IntegrationTest
     assert_nil RubygemFs.instance.get("gems/target-1.0.0.gem")
     assert_nil RubygemFs.instance.get("quick/Marshal.4.8/target-1.0.0.gemspec.rz")
 
+    claimant = create(:user)
+    @key = "claimant-key"
+    create(:api_key, owner: claimant, key: @key, scopes: %i[push_rubygem])
+
     push_gem build_gem(new_gemspec(yanked_gem.name, "1.0.0", "Gemcutter", "ruby"))
 
     assert_response :success
+    assert_equal [claimant], yanked_gem.reload.owners
 
     [triggering_key, other_key].each do |api_key|
       assert_predicate api_key.reload, :soft_deleted?
       assert_nil api_key.api_key_rubygem_scope
     end
 
-    [@key, invited_key].each do |revoked_key|
+    ["scoped-key", invited_key].each do |revoked_key|
       @key = revoked_key
 
       assert_no_difference -> { target_gem.versions.count }, -> { target_gem.events.count } do
@@ -192,6 +197,37 @@ class PushTest < ActionDispatch::IntegrationTest
       assert_nil Version.find_by(full_name: "target-1.0.0")
       assert_nil RubygemFs.instance.get("gems/target-1.0.0.gem")
       assert_nil RubygemFs.instance.get("quick/Marshal.4.8/target-1.0.0.gemspec.rz")
+    end
+  end
+
+  test "an owner pushing to their own fully yanked gem keeps its ownerships and scoped keys" do
+    co_owner = create(:user)
+    invited_user = create(:user)
+    yanked_gem = create(:rubygem, name: "fully-yanked", owners: [@user], maintainers: [co_owner])
+    create(:version, :yanked, rubygem: yanked_gem, number: "0.1.0")
+    create(:ownership, :unconfirmed, rubygem: yanked_gem, user: invited_user)
+    trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: yanked_gem)
+    ownerships = yanked_gem.ownerships_including_unconfirmed.order(:id).pluck(:id, :user_id, :role, :confirmed_at)
+
+    @key = "scoped-key"
+    owner_key = build(:api_key, key: @key, ownership: yanked_gem.ownerships.find_by!(user: @user), scopes: %i[push_rubygem])
+    owner_key.owner = @user
+    owner_key.save!
+    co_owner_key = build(:api_key, ownership: yanked_gem.ownerships.find_by!(user: co_owner), scopes: %i[push_rubygem])
+    co_owner_key.owner = co_owner
+    co_owner_key.save!
+
+    push_gem build_gem(new_gemspec(yanked_gem.name, "1.0.0", "Gemcutter", "ruby"))
+
+    assert_response :success
+    assert_equal ownerships, yanked_gem.ownerships_including_unconfirmed.order(:id).pluck(:id, :user_id, :role, :confirmed_at)
+    assert_equal [trusted_publisher], yanked_gem.oidc_rubygem_trusted_publishers.reload
+    assert_empty yanked_gem.events.where(tag: Events::RubygemEvent::OWNER_REMOVED)
+    assert_predicate yanked_gem.versions.find_by!(number: "1.0.0"), :indexed?
+
+    [owner_key, co_owner_key].each do |api_key|
+      refute_predicate api_key.reload, :soft_deleted?
+      assert_equal yanked_gem, api_key.rubygem
     end
   end
 
