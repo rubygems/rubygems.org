@@ -997,6 +997,9 @@ zh-CN:
     search:
       search_reverse_dependencies_html: 搜索反向依赖 Gem&hellip;
   searches:
+    autocomplete_templates:
+      downloads_html:
+      see_all_html:
     advanced:
       name: 名称
       summary: 概要

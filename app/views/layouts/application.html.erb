@@ -126,9 +126,7 @@
 
                 <ul id="query_suggestions" role="listbox" data-autocomplete-target="suggestions" class="hidden absolute z-40 start-0 mt-2 w-full bg-white dark:bg-black text-b2 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-800 rounded shadow-md divide-y divide-neutral-200 dark:divide-neutral-800"></ul>
 
-                <template id="suggestion" data-autocomplete-target="template">
-                  <li class="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" role="option" aria-selected="false" data-autocomplete-target="item" data-action="mousedown->autocomplete#keepFocus click->autocomplete#choose mouseover->autocomplete#highlight"></li>
-                </template>
+                <%= render "searches/autocomplete_templates" %>
 
                 <%= label_tag :query, id: "querylabel" do %>
                   <span class="sr-only"><%= t('layouts.application.header.search_gem_html') %></span>

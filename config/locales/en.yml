@@ -991,6 +991,9 @@ en:
     search:
       search_reverse_dependencies_html: "Search reverse dependencies Gems&hellip;"
   searches:
+    autocomplete_templates:
+      downloads_html: "%{downloads} downloads"
+      see_all_html: See all results for “%{query}”
     advanced:
       name: Name
       summary: Summary

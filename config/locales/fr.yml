@@ -1027,6 +1027,9 @@ fr:
     search:
       search_reverse_dependencies_html: Chercher des dépendances inversées Gems&hellip;
   searches:
+    autocomplete_templates:
+      downloads_html:
+      see_all_html:
     advanced:
       name: Nom
       summary: Sommaire

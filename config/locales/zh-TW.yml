@@ -985,6 +985,9 @@ zh-TW:
     search:
       search_reverse_dependencies_html: 搜尋反向依賴 Gems&hellip;
   searches:
+    autocomplete_templates:
+      downloads_html:
+      see_all_html:
     advanced:
       name: 名稱
       summary: 摘要

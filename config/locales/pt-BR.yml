@@ -1005,6 +1005,9 @@ pt-BR:
     search:
       search_reverse_dependencies_html: Buscar Gems com dependências&hellip;
   searches:
+    autocomplete_templates:
+      downloads_html:
+      see_all_html:
     advanced:
       name:
       summary:
