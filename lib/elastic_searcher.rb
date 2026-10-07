@@ -15,14 +15,15 @@ class ElasticSearcher
   class InvalidQueryError < StandardError
   end
 
-  def initialize(query, page: 1)
+  def initialize(query, page: 1, filters: SearchFilters.new)
     @query = SearchQuerySanitizer.sanitize(query)
     @page = page
+    @filters = filters
   end
 
   def search
     result = Rubygem.searchkick_search(
-      body: search_definition.to_hash.merge(timeout: "2s"),
+      body: filtered_search_definition.merge(timeout: "2s"),
       page: @page,
       per_page: Kaminari.config.default_per_page,
       load: false
@@ -60,7 +61,17 @@ class ElasticSearcher
 
   private
 
-  def search_definition(for_api: false) # rubocop:disable Metrics/MethodLength
+  def filtered_search_definition
+    body = search_definition.to_hash
+    # OpenSearch stops counting at 10,000 hits by default; the page shows the exact total.
+    body[:track_total_hits] = true
+    body[:aggregations] = @filters.aggregations
+    body[:post_filter] = @filters.post_filter if @filters.active?
+    body[:sort] = @filters.sort_clause if @filters.sort_clause
+    body
+  end
+
+  def search_definition(for_api: false)
     query_str = @query
     source_array = for_api ? api_source : ui_source
 
@@ -93,21 +104,6 @@ class ElasticSearcher
 
           # Boost the score based on number of downloads
           functions << { field_value_factor: { field: :downloads, modifier: :log1p } }
-        end
-      end
-
-      aggregation :matched_field do
-        filters do
-          filters name: { terms: { name: [query_str] } },
-                  summary: { terms: { "summary.raw" => [query_str] } },
-                  description: { terms: { "description.raw" => [query_str] } }
-        end
-      end
-
-      aggregation :date_range do
-        date_range do
-          field  "updated"
-          ranges [{ from: "now-7d/d", to: "now" }, { from: "now-30d/d", to: "now" }]
         end
       end
 
@@ -164,6 +160,9 @@ class ElasticSearcher
        summary
        description
        downloads
-       version]
+       version
+       updated
+       licenses
+       source_code_uri]
   end
 end

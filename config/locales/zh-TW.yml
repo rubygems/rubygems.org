@@ -985,6 +985,12 @@ zh-TW:
       version_header:
     search:
       search_reverse_dependencies_html: 搜尋反向依賴 Gems&hellip;
+  search:
+    result_component:
+      source:
+      more_licenses:
+        one:
+        other:
   searches:
     advanced:
       name: 名稱
@@ -996,11 +1002,33 @@ zh-TW:
     show:
       title:
       subtitle_html: "<em>%{query}</em>"
-      month_update: 於最近一個月更新 (%{count})
-      week_update: 於最近一週更新 (%{count})
-      filter:
       yanked: 遭移除 (%{count})
       suggestion: 您是不是在找
+      gems_count:
+        one:
+        other:
+      sort:
+        label:
+        relevance:
+        downloads:
+        updated:
+        name:
+      filters:
+        title:
+        updated:
+        updated_any:
+        updated_within:
+          week:
+          month:
+          year:
+        license:
+        apply:
+        remove:
+        clear_all:
+      no_results:
+        title:
+        with_filters:
+        without_filters:
   sessions:
     new:
       forgot_password: 忘記密碼？

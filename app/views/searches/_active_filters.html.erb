@@ -1,0 +1,26 @@
+<% if filters.active? %>
+  <%
+    chip_class = "inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold no-underline " \
+                 "bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300 " \
+                 "hover:bg-orange-200 dark:hover:bg-orange-800"
+    chips = []
+    if filters.updated
+      chips << [t("searches.show.filters.updated_within.#{filters.updated}"), filters.with(updated: nil)]
+    end
+    filters.licenses.each do |license|
+      chips << [license, filters.with(licenses: filters.licenses - [license])]
+    end
+  %>
+  <div class="flex flex-wrap items-center gap-2 mb-4" data-testid="active-filters">
+    <% chips.each do |label, remaining| %>
+      <%= link_to search_path(query: params[:query], **remaining.to_params), class: chip_class,
+            aria: { label: t("searches.show.filters.remove", filter: label) } do %>
+        <span><%= label %></span>
+        <span aria-hidden="true">×</span>
+      <% end %>
+    <% end %>
+    <%= link_to t("searches.show.filters.clear_all"),
+      search_path(query: params[:query], **filters.with(updated: nil, licenses: []).to_params),
+      class: "text-xs text-orange-500 hover:underline" %>
+  </div>
+<% end %>
