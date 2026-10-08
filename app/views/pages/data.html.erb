@@ -6,7 +6,7 @@
     <%= prose do |user| %>
       <p>We provide weekly dumps of the RubyGems.org PostgreSQL data. This dump is sanitized, removing all user information.</p>
       <p>The <a href="https://github.com/rubygems/rubygems.org/tree/master/script/load-pg-dump" class="text-orange">load-pg-dump</a> script is
-        available as an example of how to to download and load the most recent weekly dump.</p>
+        available as an example of how to download and load the most recent weekly dump.</p>
     <% end %>
     <%= c.list(data: { controller: "dump" }) do %>
       <template data-dump-target="template">
