@@ -117,6 +117,7 @@ psql -q $pg_host -U $pg_user -d $pg_database -c "DROP TABLE IF EXISTS attestatio
 echo "Loading the data from $public_tar"
 tar xOf "$public_tar" public_postgresql/databases/PostgreSQL.sql.gz | \
   gunzip -c | \
+  sed '/^ALTER .* OWNER TO /d' | \
   psql $pg_host --username $pg_user --dbname $pg_database
 
 echo "Done."
