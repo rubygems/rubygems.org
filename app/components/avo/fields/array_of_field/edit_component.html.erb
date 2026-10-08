@@ -1,22 +1,27 @@
 <%= field_wrapper **field_wrapper_args, stacked: true, data: {} do %>
+  <%# A readonly or disabled array keeps its members, but none can be added or removed. %>
   <%= content_tag :div, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do %>
-    <template data-nested-form-target="template">
-      <div class="nested-form-wrapper" data-new-record="true">
-        <%= a_link 'javascript:void(0);', icon: 'trash', color: :red, style: :text, data: {action: "click->nested-form#remove"} do %>
-          Remove <%= @field.name.singularize %>
-        <% end %>
-        <%= render field.template_member.component_for_view(view).new(field: field.template_member, form:, view:) %>
-      </div>
-    </template>
+    <% unless disabled? %>
+      <template data-nested-form-target="template">
+        <div class="nested-form-wrapper" data-new-record="true">
+          <%= a_link 'javascript:void(0);', icon: 'trash', color: :red, style: :text, data: {action: "click->nested-form#remove"} do %>
+            Remove <%= @field.name.singularize %>
+          <% end %>
+          <%= render field.template_member.component_for_view(view).new(field: field.template_member, form:, view:) %>
+        </div>
+      </template>
+    <% end %>
 
     <% field.members.each do |f| %>
       <div class="nested-form-wrapper" data-new-record="true">
-        <%= a_link 'javascript:void(0);', icon: 'trash', color: :red, style: :text, data: {action: "click->nested-form#remove"} do %>
-          Remove <%= @field.name.singularize %>
+        <% unless disabled? %>
+          <%= a_link 'javascript:void(0);', icon: 'trash', color: :red, style: :text, data: {action: "click->nested-form#remove"} do %>
+            Remove <%= @field.name.singularize %>
+          <% end %>
         <% end %>
         <%= render f.component_for_view(view).new(field: f, form:, view:) %>
-        <% if field.model && field.model.errors.include?(f.id) %>
-          <div class="text-red-600 mt-2 text-sm"><%= field.model.errors.messages_for(f.id).to_sentence %></div>
+        <% if field.record && field.record.errors.include?(f.id) %>
+          <div class="text-red-600 mt-2 text-sm"><%= field.record.errors.messages_for(f.id).to_sentence %></div>
         <% end %>
       </div>
     <% end %>
@@ -24,8 +29,10 @@
     <div data-nested-form-target="target"></div>
     <!-- Inserted elements will be injected before that target. -->
 
-    <%= a_link 'javascript:void(0);', icon: 'plus', color: :primary, style: :outline, data: {action: "click->nested-form#add"} do %>
-      Add another <%= @field.name.singularize %>
+    <% unless disabled? %>
+      <%= a_link 'javascript:void(0);', icon: 'plus', color: :primary, style: :outline, data: {action: "click->nested-form#add"} do %>
+        Add another <%= @field.name.singularize %>
+      <% end %>
     <% end %>
   <% end %>
 <% end %>
