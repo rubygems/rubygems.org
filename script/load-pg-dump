@@ -118,6 +118,6 @@ echo "Loading the data from $public_tar"
 tar xOf "$public_tar" public_postgresql/databases/PostgreSQL.sql.gz | \
   gunzip -c | \
   sed '/^ALTER .* OWNER TO /d' | \
-  psql $pg_host --username $pg_user --dbname $pg_database
+  psql -q $pg_host --username $pg_user --dbname $pg_database
 
 echo "Done."
