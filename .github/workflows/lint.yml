@@ -14,7 +14,7 @@ permissions: {}
 jobs:
   rubocop:
     name: Rubocop
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 30
     permissions:
       contents: read
@@ -29,7 +29,7 @@ jobs:
         run: bundle exec rubocop
   herb:
     name: Herb 🌿
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 30
     permissions:
       contents: read
@@ -44,7 +44,7 @@ jobs:
         run: bundle exec herb analyze
   brakeman:
     name: Brakeman
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 30
     permissions:
       contents: read
@@ -59,7 +59,7 @@ jobs:
         run: bundle exec brakeman
   importmap:
     name: Importmap Verify
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 30
     permissions:
       contents: read
@@ -74,7 +74,7 @@ jobs:
         run: bundle exec rake importmap:verify
   prettier:
     name: Prettier
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 30
     permissions:
       contents: read
@@ -89,7 +89,7 @@ jobs:
         run: bin/prettier
   kubeconform:
     name: Kubeconform
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 30
     permissions:
       contents: read
@@ -127,7 +127,7 @@ jobs:
           args: "-strict -summary -output json --kubernetes-version ${{ matrix.kubernetes_version }} config/deploy/${{ matrix.environment }}.rendered.yaml"
   frizbee:
     name: Frizbee
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     permissions:
       contents: read
@@ -148,7 +148,7 @@ jobs:
 
   zizmor:
     name: zizmor
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 15
     permissions:
       security-events: write # Needed to upload zizmor results to code scanning
