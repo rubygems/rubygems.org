@@ -1165,6 +1165,72 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
+  context ".news_with_provenance" do
+    setup do
+      @attested = create(:rubygem)
+      create(:attestation, version: create(:version, rubygem: @attested, created_at: 3.days.ago))
+
+      @attested_newer = create(:rubygem)
+      create(:attestation, version: create(:version, rubygem: @attested_newer, created_at: 1.day.ago))
+
+      @only_old_version_attested = create(:rubygem)
+      create(:attestation, version: create(:version, rubygem: @only_old_version_attested, number: "1.0.0", created_at: 3.days.ago))
+      create(:version, rubygem: @only_old_version_attested, number: "1.1.0", created_at: 2.days.ago)
+
+      @attested_long_ago = create(:rubygem)
+      create(:attestation, version: create(:version, rubygem: @attested_long_ago, created_at: (Gemcutter::NEWS_DAYS_LIMIT + 1.day).ago))
+
+      @not_attested = create(:rubygem)
+      create(:version, rubygem: @not_attested, created_at: 1.day.ago)
+    end
+
+    should "include only gems whose recent latest release has an attestation, newest first" do
+      assert_equal [@attested_newer, @attested], Rubygem.news_with_provenance(Gemcutter::NEWS_DAYS_LIMIT).to_a
+    end
+  end
+
+  context ".most_depended_on_counts" do
+    setup do
+      @json = create(:rubygem)
+      @rack = create(:rubygem)
+      rspec = create(:rubygem)
+
+      # json: three distinct dependents, one of which depends from two platform
+      # builds of its latest release (must count once).
+      multi_platform = create(:rubygem)
+      %w[ruby java].each do |platform|
+        create(:dependency, :runtime, rubygem: @json, version: create(:version, rubygem: multi_platform, number: "1.0.0", platform:))
+      end
+      2.times { create(:dependency, :runtime, rubygem: @json, version: create(:version)) }
+
+      # rack: two dependents through latest releases...
+      2.times { create(:dependency, :runtime, rubygem: @rack, version: create(:version)) }
+      # ...plus ones that must not count: an older release and a yanked release.
+      moved_on = create(:rubygem)
+      create(:dependency, :runtime, rubygem: @rack, version: create(:version, rubygem: moved_on, number: "1.0.0"))
+      create(:version, rubygem: moved_on, number: "2.0.0")
+      create(:dependency, :runtime, rubygem: @rack, version: create(:version, :yanked))
+
+      # rspec: the most dependents, but only as a development dependency.
+      4.times { create(:dependency, :development, rubygem: rspec, version: create(:version)) }
+    end
+
+    should "count distinct gems whose latest release depends on each gem at runtime, highest first" do
+      assert_equal [[@json.id, 3], [@rack.id, 2]], Rubygem.most_depended_on_counts.to_a
+    end
+
+    should "agree with the per-gem reverse runtime dependency count" do
+      counts = Rubygem.most_depended_on_counts
+
+      assert_equal @json.unique_reverse_runtime_dependencies.count, counts[@json.id]
+      assert_equal @rack.unique_reverse_runtime_dependencies.count, counts[@rack.id]
+    end
+
+    should "respect the limit" do
+      assert_equal({ @json.id => 3 }, Rubygem.most_depended_on_counts(1))
+    end
+  end
+
   context "unconfirmed ownership" do
     setup do
       @rubygem               = create(:rubygem)

@@ -330,6 +330,7 @@ zh-TW:
         uptime: 上線時間
         secured_by:
       header:
+        gems:
         profile: 個人檔案
         dashboard: 儀表板
         settings: 設定
@@ -862,6 +863,10 @@ zh-TW:
     security_events:
       title:
       description_html:
+  rubygem_component:
+    reverse_dependencies:
+      one:
+      other:
   rubygems:
     aside:
       downloads_for_this_version: 這個版本
@@ -927,6 +932,27 @@ zh-TW:
     index:
       downloads: 下載
       title: Gems
+    explore:
+      title:
+      browse_by_letter:
+      just_released:
+        title:
+        description:
+      new_gems:
+        title:
+        description:
+      popular:
+        title:
+        description:
+      most_depended_on:
+        title:
+        description:
+      provenance:
+        title:
+        description:
+    explore_section:
+      see_all:
+      empty:
     advisories:
       title:
         one:

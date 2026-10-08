@@ -331,6 +331,7 @@ zh-CN:
         uptime: 服务运行时间
         secured_by: 安全保护
       header:
+        gems:
         profile: 个人信息
         dashboard: 仪表盘
         settings: 设置
@@ -870,6 +871,10 @@ zh-CN:
     security_events:
       title:
       description_html:
+  rubygem_component:
+    reverse_dependencies:
+      one:
+      other:
   rubygems:
     aside:
       downloads_for_this_version: 这个版本
@@ -935,6 +940,27 @@ zh-CN:
     index:
       downloads: 下载
       title: Gem
+    explore:
+      title:
+      browse_by_letter:
+      just_released:
+        title:
+        description:
+      new_gems:
+        title:
+        description:
+      popular:
+        title:
+        description:
+      most_depended_on:
+        title:
+        description:
+      provenance:
+        title:
+        description:
+    explore_section:
+      see_all:
+      empty:
     advisories:
       title:
         one:

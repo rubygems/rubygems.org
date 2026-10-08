@@ -1,0 +1,50 @@
+<% @title = t(".title") %>
+
+<h1 class="text-h2 mb-10"><%= t(".title") %></h1>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-x-10">
+  <%= render "explore_section",
+    id: "just-released",
+    title: t(".just_released.title"),
+    description: t(".just_released.description"),
+    icon: "history",
+    rubygems: @just_released,
+    see_all_url: news_path %>
+
+  <%= render "explore_section",
+    id: "new-gems",
+    title: t(".new_gems.title"),
+    description: t(".new_gems.description"),
+    icon: "auto-awesome",
+    rubygems: @new_gems %>
+
+  <%= render "explore_section",
+    id: "popular",
+    title: t(".popular.title"),
+    description: t(".popular.description"),
+    icon: "arrow-circle-down",
+    rubygems: @popular,
+    see_all_url: popular_news_path %>
+
+  <%= render "explore_section",
+    id: "most-depended-on",
+    title: t(".most_depended_on.title"),
+    description: t(".most_depended_on.description"),
+    icon: "account-tree",
+    rubygems: @most_depended_on,
+    reverse_dependencies_counts: @most_depended_on_counts %>
+
+  <%= render "explore_section",
+    id: "provenance",
+    title: t(".provenance.title"),
+    description: t(".provenance.description"),
+    icon: "check-circle",
+    rubygems: @with_provenance %>
+</div>
+
+<div class="flex justify-center">
+  <%= render ButtonComponent.new(rubygems_path(letter: "A"), type: :link, style: :outline, class: "gap-2") do %>
+    <span><%= t(".browse_by_letter") %></span>
+    <%= icon_tag "arrow-forward", size: 6 %>
+  <% end %>
+</div>

@@ -60,4 +60,18 @@ class RubygemComponentTest < ComponentTest
 
     refute_selector "code"
   end
+
+  should "display the reverse dependencies count instead of downloads when given" do
+    render RubygemComponent.new(rubygem: @rubygem, reverse_dependencies_count: 12_345)
+
+    assert_text "12,345 dependents"
+    refute_text "42,000"
+  end
+
+  should "use the singular for one reverse dependency" do
+    render RubygemComponent.new(rubygem: @rubygem, reverse_dependencies_count: 1)
+
+    assert_text "1 dependent"
+    refute_text "1 dependents"
+  end
 end
