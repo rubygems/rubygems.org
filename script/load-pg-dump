@@ -110,7 +110,7 @@ echo "Running migrations"
 rake db:migrate
 
 echo "Dropping tables in $pg_database that we're going to load in"
-psql -q $pg_host -U $pg_user -d $pg_database -c "DROP TABLE IF EXISTS dependencies, gem_downloads, linksets, rubygems, versions CASCADE;"
+psql -q $pg_host -U $pg_user -d $pg_database -c "DROP TABLE IF EXISTS attestations, deletions, dependencies, gem_downloads, linksets, rubygems, versions CASCADE;"
 
 # Extract the single PostgresSQL.sql.gz file from the tar file, pass it through gunzip
 # and load it as quietly as possible into the database
