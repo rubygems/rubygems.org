@@ -33,10 +33,6 @@ jobs:
       contents: read
     env:
       RUBYGEMS_VERSION: "4.0.16"
-      # Fail hard when Toxiproxy is not running to ensure all tests (even Toxiproxy optional ones) are passing
-      REQUIRE_TOXIPROXY: true
-      TOXIPROXY_LISTEN_HOST: "0.0.0.0"
-      TOXIPROXY_UPSTREAM: "search:9200"
       RUBYGEMS_ORG_SECRETS_AVAILABLE: ${{ github.repository == 'rubygems/rubygems.org' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'rubygems/rubygems.org') }}
       REQUIRE_AVO_PRO: ${{ github.repository == 'rubygems/rubygems.org' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'rubygems/rubygems.org') && matrix.tests.id != 'avo-without-pro' }}
       AVO_LICENSE_KEY: ${{ secrets.AVO_LICENSE_KEY }}

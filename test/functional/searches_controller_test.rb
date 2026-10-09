@@ -191,8 +191,7 @@ class SearchesControllerTest < ActionController::TestCase
       create(:version, rubygem: @sinatra_redux)
     end
     should "error with friendly error message" do
-      requires_toxiproxy
-      toxiproxy_elasticsearch.down do
+      elasticsearch_down do
         get :show, params: { query: "sinatra" }
 
         assert_response :success

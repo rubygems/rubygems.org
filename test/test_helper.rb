@@ -99,24 +99,6 @@ class ActiveSupport::TestCase
     port = 31_337 + worker
     Capybara.server_port = port
     WebAuthn.configuration.allowed_origins = ["http://localhost:#{port}"]
-
-    if Toxiproxy.running?
-      toxiproxy_port = 22_222 + worker
-      toxiproxy_listen_host = ENV.fetch("TOXIPROXY_LISTEN_HOST", "127.0.0.1")
-      toxiproxy_upstream = ENV.fetch("TOXIPROXY_UPSTREAM", "127.0.0.1:9200")
-      Toxiproxy.populate(
-        [
-
-          name: "elasticsearch_#{worker}",
-          listen: "#{toxiproxy_listen_host}:#{toxiproxy_port}",
-          upstream: toxiproxy_upstream
-
-        ]
-      )
-      Searchkick.client = OpenSearch::Client.new(
-        url: "http://localhost:#{toxiproxy_port}"
-      )
-    end
   end
 
   parallelize_teardown do |_worker|
@@ -138,15 +120,12 @@ class ActiveSupport::TestCase
     Capybara::Node::Simple.new(@response.body)
   end
 
-  def requires_toxiproxy
-    return if Toxiproxy.running?
-    raise "Toxiproxy not running, but REQUIRE_TOXIPROXY was set." if ENV["REQUIRE_TOXIPROXY"]
-    skip("Toxiproxy is not running, but was required for this test.")
-  end
-
-  def toxiproxy_elasticsearch
-    worker = self.class.parallel_worker_number
-    Toxiproxy[worker ? :"elasticsearch_#{worker}" : :elasticsearch]
+  def elasticsearch_down
+    urls_including_dead_connections = Searchkick.client.transport.transport.connections.all.map { |connection| connection.full_url("") }
+    stub = stub_request(:any, /\A#{Regexp.union(urls_including_dead_connections)}/).to_raise(Errno::ECONNRESET)
+    yield
+  ensure
+    remove_request_stub(stub) if stub
   end
 
   def requires_avo_pro
