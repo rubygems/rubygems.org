@@ -1,0 +1,22 @@
+[settings]
+# Use the Ruby version from .ruby-version
+idiomatic_version_file_enable_tools = ["ruby"]
+
+[tasks.services]
+description = "Start Docker Compose services and wait until they are healthy"
+run = "docker compose up --detach --wait db cache search"
+
+[tasks.setup]
+description = "Install dependencies and prepare the app"
+depends = ["services"]
+run = "bin/setup"
+
+[tasks.test]
+description = "Run Rails tests, excluding system tests (pass a file or test to run just that)"
+depends = ["services"]
+run = "bin/rails test"
+
+[tasks."test:all"]
+description = "Run all Rails tests, including system tests"
+depends = ["services"]
+run = "bin/rails test:all"
