@@ -12,15 +12,11 @@ depends = ["services"]
 run = "bin/setup"
 
 [tasks.test]
-description = "Run the Rails test suite, including system tests (pass a file or test to run just that)"
+description = "Run Rails tests, excluding system tests (pass a file or test to run just that)"
 depends = ["services"]
-usage = 'arg "[args]" var=#true help="Files or other bin/rails test arguments"'
-# bin/rails test:all runs every test even when given files, so use bin/rails test for arguments
-run = '''
-if [ -z "${usage_args:-}" ]; then
-  bin/rails test:all
-else
-  eval "set -- $usage_args"
-  bin/rails test "$@"
-fi
-'''
+run = "bin/rails test"
+
+[tasks."test:all"]
+description = "Run all Rails tests, including system tests"
+depends = ["services"]
+run = "bin/rails test:all"
