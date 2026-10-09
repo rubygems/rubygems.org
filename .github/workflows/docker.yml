@@ -46,8 +46,8 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.arch }}-rubygems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.arch }}-rubygems-org
-      - name: Install and start services (needed for image test)
-        run: docker compose up -d
+      - name: Start database (needed for image test)
+        run: docker compose up -d db
       - name: Configure AWS credentials from Production account
         uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
         if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true'
