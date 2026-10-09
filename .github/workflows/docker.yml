@@ -13,9 +13,12 @@ concurrency:
 
 permissions: {}
 
+env:
+  RUBYGEMS_ORG_SECRETS_AVAILABLE: ${{ github.repository == 'rubygems/rubygems.org' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'rubygems/rubygems.org') }}
+
 jobs:
   build:
-    name: Docker build ${{ matrix.arch }} (and optional push)
+    name: Docker build ${{ matrix.arch }}
     strategy:
       matrix:
         include:
@@ -28,7 +31,6 @@ jobs:
     env:
       RUBYGEMS_VERSION: "4.0.16"
       RUBY_VERSION: .ruby-version
-      RUBYGEMS_ORG_SECRETS_AVAILABLE: ${{ github.repository == 'rubygems/rubygems.org' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'rubygems/rubygems.org') }}
     permissions:
       contents: read
       id-token: write # Needed to authenticate to AWS through OIDC
@@ -71,9 +73,11 @@ jobs:
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
   manifest:
-    name: Docker multi-arch manifest push
+    # Required status check. Runs even when a build fails so a failure is
+    # reported as failed rather than skipped (which counts as passing).
+    name: Docker build (and optional push)
     needs: build
-    if: github.repository == 'rubygems/rubygems.org' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'rubygems/rubygems.org')
+    if: always()
     runs-on: ubuntu-26.04
     timeout-minutes: 10
     permissions:
@@ -81,16 +85,27 @@ jobs:
     env:
       IMAGE: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org
     steps:
+      - name: Check all architecture builds succeeded
+        if: needs.build.result != 'success'
+        run: |
+          echo "Docker build result: ${NEEDS_BUILD_RESULT}"
+          exit 1
+        env:
+          NEEDS_BUILD_RESULT: ${{ needs.build.result }}
       - name: Set up Docker Buildx
+        if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true'
         uses: docker/setup-buildx-action@594f3bf4285d9ea8dc53c9a0c9c4092420091003 # v4.4.0
       - name: Configure AWS credentials from Production account
+        if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true'
         uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
         with:
           role-to-assume: arn:aws:iam::048268392960:role/rubygems-ecr-pusher
           aws-region: us-west-2
       - name: Login to Amazon ECR
+        if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true'
         uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
       - name: Push multi-arch manifest
+        if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true'
         run: |
           docker buildx imagetools create --tag "$IMAGE:$GITHUB_SHA" "$IMAGE:$GITHUB_SHA-amd64" "$IMAGE:$GITHUB_SHA-arm64"
           docker buildx imagetools inspect "$IMAGE:$GITHUB_SHA"
