@@ -83,7 +83,7 @@ mise installs the Ruby version from `.ruby-version`.
     mise install                 # install Ruby
     mise run services            # start db, cache and search with Docker Compose and wait until healthy
     mise run setup               # start services, then run bin/setup (safe to rerun)
-    mise run test                # run the Rails test suite
+    mise run test                # run the Rails test suite, including system tests
     mise run test test/unit/erb_safety_test.rb   # run a single test file
 
 #### Environment (DevContainer)
