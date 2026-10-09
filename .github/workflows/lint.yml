@@ -95,7 +95,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        kubernetes_version: ["1.29.1"]
+        kubernetes_version: ["1.34.12"]
         environment:
           - staging
           - production
