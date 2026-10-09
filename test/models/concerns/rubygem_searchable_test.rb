@@ -338,15 +338,24 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
       context "OpenSearch::Transport::Transport::Errors" do
         should "fails with friendly error message and increments search.failure metric" do
-          requires_toxiproxy
-
-          toxiproxy_elasticsearch.down do
+          elasticsearch_down do
             assert_statsd_increment("search.failure") do
               error_msg, result = ElasticSearcher.new("something").search
               expected_msg = "Search is currently unavailable. Please try again later."
 
               assert_nil result
               assert_equal expected_msg, error_msg
+            end
+          end
+        end
+
+        should "fail with friendly error message on consecutive outages" do
+          2.times do
+            elasticsearch_down do
+              error_msg, result = ElasticSearcher.new("something").search
+
+              assert_nil result
+              assert_equal "Search is currently unavailable. Please try again later.", error_msg
             end
           end
         end
@@ -389,9 +398,7 @@ class RubygemSearchableTest < ActiveSupport::TestCase
   # changes since ES can be down and indexing is done in async way
   context "automated indexing" do
     should "be disabled" do
-      requires_toxiproxy
-
-      toxiproxy_elasticsearch.down do
+      elasticsearch_down do
         rubygem = create(:rubygem, name: "common-gem", number: "0.0.1", downloads: 10)
 
         assert rubygem.update(name: "renamed-gem")

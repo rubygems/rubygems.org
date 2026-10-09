@@ -9,8 +9,7 @@
   "runServices": [
     "db",
     "cache",
-    "search",
-    "toxiproxy"
+    "search"
   ],
   "forwardPorts": [
     3000, // Rails
