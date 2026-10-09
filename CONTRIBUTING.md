@@ -75,6 +75,17 @@ Note: Docker compose does not run the rubygems.org application itself.
 
 Follow the instructions below on how to install Bundler and setup the database.
 
+#### Environment (mise + Docker)
+
+If you use [mise](https://mise.jdx.dev) and Docker, these tasks cover the common steps.
+mise installs the Ruby version from `.ruby-version`.
+
+    mise install                 # install Ruby
+    mise run services            # start db, cache and search with Docker Compose and wait until healthy
+    mise run setup               # start services, then run bin/setup (safe to rerun)
+    mise run test                # run the Rails test suite
+    mise run test test/unit/erb_safety_test.rb   # run a single test file
+
 #### Environment (DevContainer)
 
 If you want to run Ruby, Rails, and the test suite inside Docker instead of your host machine,
