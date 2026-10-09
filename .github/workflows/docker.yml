@@ -20,6 +20,7 @@ jobs:
   build:
     name: Docker build ${{ matrix.arch }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - arch: amd64
@@ -47,7 +48,7 @@ jobs:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-${{ matrix.arch }}-rubygems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.arch }}-rubygems-org
+            ${{ runner.os }}-${{ matrix.arch }}-rubygems-
       - name: Start database (needed for image test)
         run: docker compose up -d db
       - name: Configure AWS credentials from Production account
