@@ -12,5 +12,7 @@ class Admin::OIDC::ApiKeyRolePolicy < Admin::ApplicationPolicy
 
   def avo_index? = rubygems_org_admin?
   def avo_show? = rubygems_org_admin?
+  # Only the conditions of the access policy can be changed; see Avo::Resources::OIDCApiKeyRole.
+  def avo_update? = rubygems_org_admin?
   def act_on? = rubygems_org_admin?
 end
