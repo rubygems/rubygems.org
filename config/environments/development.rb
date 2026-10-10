@@ -102,10 +102,25 @@ Rails.application.configure do
   config.rails_semantic_logger.started    = !enable_semantic_log_format
   config.rails_semantic_logger.processing = !enable_semantic_log_format
   config.rails_semantic_logger.rendered   = !enable_semantic_log_format
-  unless enable_semantic_log_format
-    require 'rails_development_log_formatter'
-    config.semantic_logger.add_appender(io: $stdout, formatter: RailsDevelopmentLogFormatter.new)
-    config.rails_semantic_logger.format = RailsDevelopmentLogFormatter.new
+
+  require 'rails_development_log_formatter' unless enable_semantic_log_format
+  log_formatter =
+    if ENV['PROFILE']
+      :json
+    elsif enable_semantic_log_format
+      :color
+    else
+      RailsDevelopmentLogFormatter.new
+    end
+  config.rails_semantic_logger.appenders do |appenders|
+    if enable_semantic_log_format
+      # Only log to the terminal when running a server or console
+      appenders.add_server(formatter: :color)
+      appenders.add_console(formatter: :color)
+    else
+      appenders.add(io: $stdout, formatter: log_formatter)
+    end
+    appenders.add(file_name: config.paths["log"].first, formatter: log_formatter)
   end
 
   # Rubygems.org checks for the presence of an env variable called PROFILE that
@@ -117,7 +132,6 @@ Rails.application.configure do
     config.eager_load = true
 
     config.log_level = :info
-    config.rails_semantic_logger.format     = :json
     config.rails_semantic_logger.semantic   = true
     config.rails_semantic_logger.started    = false
     config.rails_semantic_logger.processing = false
