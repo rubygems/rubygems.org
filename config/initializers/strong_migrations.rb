@@ -14,7 +14,7 @@ StrongMigrations.auto_analyze = true
 
 # Set the version of the production database
 # so the right checks are run in development
-StrongMigrations.target_version = "13"
+StrongMigrations.target_version = "18"
 
 # Add custom checks
 # StrongMigrations.add_check do |method, args|
