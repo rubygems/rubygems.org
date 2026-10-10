@@ -22,6 +22,6 @@ class Avo::Resources::LogTicket < Avo::BaseResource
     field :directory, as: :text
     field :backend, as: :select, enum: LogTicket.backends
     field :status, as: :select, enum: LogTicket.statuses
-    field :processed_count, as: :number, sortable: true
+    field :processed_count, as: :number
   end
 end
