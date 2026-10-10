@@ -34,6 +34,9 @@ Datadog.configure do |c|
 
   # Configuring the datadog library
   c.logger.instance = SemanticLogger[Datadog]
+  # Setting the instance copies its level, which is debug in development, so
+  # Datadog's boot-time debug logs would print on every command.
+  c.logger.level = Logger::INFO unless enabled
 
   # Configuring tracing (when enabled)
   if enabled
