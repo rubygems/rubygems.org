@@ -4,16 +4,8 @@
   <% end %>
 <% end %>
 
-<%= render CardComponent.new do |c| %>
-  <%= c.head(divide: true) do %>
-    <h1 class="text-h2 mb-10">
-      <%= t(".title") %>; <span class="text-orange-500 italic"> "<%= params[:query] %>"</span>
-    </h1>
-  <% end %>
-
-  <div class="mb-6">
-    <%= link_to t("advanced_search"), advanced_search_path, class: "text-sm text-orange-500 hover:underline" %>
-  </div>
+<%= render CardComponent.new do %>
+  <h1 class="sr-only"><%= t(".title") %>: <%= params[:query] %></h1>
 
   <% if @yanked_filter %>
     <% @subtitle = t('.subtitle_html', query: params[:query]) %>
@@ -29,34 +21,86 @@
         <p class="text-b3 text-neutral-600 dark:text-neutral-400 mt-1"><%= t('rubygems.show_yanked.not_hosted_notice') %></p>
       <% end %>
     <% end %>
-  <% else %>
-    <% if @gems %>
-      <% @subtitle = t('.subtitle_html', :query => params[:query]) %>
+  <% elsif @gems %>
+    <% @subtitle = t('.subtitle_html', :query => params[:query]) %>
+    <% aggregations = @gems.response['aggregations'] %>
+    <% show_filters = @gems.present? || @filters.active? %>
 
-      <header class="flex items-center mb-6">
-        <p class="text-xs text-neutral-500 uppercase tracking-wide"><%= page_entries_info(@gems, :entry_name => 'gem') %></p>
-      </header>
-
-      <%= render partial: 'aggregations', locals: { gems: @gems } %>
-
-      <% suggestions = es_suggestions(@gems) %>
-      <% if suggestions %>
-        <div data-testid="search-suggestions" class="p-4 mb-6 rounded-md border border-yellow-400 bg-yellow-50 dark:bg-yellow-950 text-yellow-800 dark:text-yellow-200 text-b3">
-          <%= t(".suggestion") %>
-          <%= to_sentence(suggestions.map { |term|
-            link_to term, search_path(params: { query: term }), only_path: true,
-                    class: "font-bold underline text-yellow-900 dark:text-yellow-100"
-          }, last_word_connector: " or ") %>?
+    <%= form_tag search_path, method: :get, role: "search", data: { controller: "auto-submit" } do %>
+      <div class="<%= class_names("grid grid-cols-1", "lg:grid-cols-[13rem_minmax(0,1fr)] lg:grid-rows-[auto_1fr] lg:gap-x-10": show_filters) %>">
+        <div class="<%= class_names("lg:col-start-2 lg:row-start-1": show_filters) %> flex flex-col sm:flex-row sm:items-center gap-3 pb-4">
+          <div class="flex flex-1 gap-2 min-w-0">
+            <%= label_tag :search_page_query, t("layouts.application.header.search_gem_html"), class: "sr-only" %>
+            <%= search_field_tag :query, params[:query], id: "search_page_query",
+              class: "flex-1 min-w-0 text-b2 rounded-lg dark:bg-neutral-950 focus:ring-inset focus:ring-1 focus:ring-orange-500" %>
+            <%= button_tag type: :submit, name: nil, aria: { label: t(".title") },
+              class: "inline-flex items-center px-3 rounded-lg bg-orange-500 text-white hover:bg-orange-600 active:bg-orange-700 transition-colors cursor-pointer" do %>
+              <%= icon_tag "search", class: "h-6 w-6" %>
+            <% end %>
+          </div>
+          <div class="flex items-center justify-between sm:justify-end gap-4">
+            <p class="text-b3 font-semibold text-neutral-700 dark:text-neutral-300 whitespace-nowrap" data-testid="search-count">
+              <%= t(".gems_count", count: @gems.total_count, formatted_count: number_with_delimiter(@gems.total_count)) %>
+            </p>
+            <div class="flex items-center gap-2">
+              <%= label_tag :sort, t(".sort.label"), class: "text-b3 text-neutral-600 dark:text-neutral-400" %>
+              <%= select_tag :sort,
+                options_for_select(SearchFilters::SORTS.map { |sort| [t(".sort.#{sort}"), sort] }, @filters.sort),
+                class: "text-b3 py-1.5 pl-3 pr-8 rounded-lg border-neutral-300 dark:border-neutral-700 dark:bg-neutral-950 focus:ring-orange-500 focus:border-orange-500",
+                data: { action: "auto-submit#submit" } %>
+            </div>
+          </div>
         </div>
-      <% end %>
 
-      <% if @gems.present? %>
-        <% @gems.each do |rubygem| %>
-          <%= render RubygemComponent.new(rubygem:) %>
+        <% if show_filters %>
+          <aside class="lg:col-start-1 lg:row-start-1 lg:row-span-2 pb-4 lg:pr-6 lg:border-r border-neutral-200 dark:border-neutral-800"
+                   data-controller="reveal" data-reveal-toggle-class="rotate-180" aria-label="<%= t('.filters.title') %>">
+            <%= render partial: "filters", locals: { filters: @filters, aggregations: } %>
+          </aside>
         <% end %>
-        <%= paginate @gems, theme: "hammy" %>
-      <% end %>
 
+        <div class="<%= class_names("lg:col-start-2 lg:row-start-2": show_filters) %> min-w-0">
+          <%= render partial: "active_filters", locals: { filters: @filters } %>
+
+          <% if @yanked_gem %>
+            <div class="mb-4"><%= aggregation_yanked @yanked_gem %></div>
+          <% end %>
+
+          <div class="border-t border-neutral-200 dark:border-neutral-800">
+            <% if @gems.present? %>
+              <% @gems.each do |rubygem| %>
+                <%= render Search::ResultComponent.new(rubygem:) %>
+              <% end %>
+              <%= paginate @gems, theme: "hammy" %>
+            <% else %>
+              <div class="py-12 text-center" data-testid="search-empty">
+                <p class="text-b1 font-semibold mb-2"><%= t(".no_results.title") %></p>
+                <p class="text-b3 text-neutral-600 dark:text-neutral-400">
+                  <% if @filters.active? %>
+                    <%= t(".no_results.with_filters") %>
+                    <%= link_to t(".filters.clear_all"),
+                      search_path(query: params[:query], **@filters.with(updated: nil, licenses: []).to_params),
+                      class: "text-orange-500 hover:underline" %>
+                  <% else %>
+                    <%= t(".no_results.without_filters") %>
+                  <% end %>
+                </p>
+
+                <% suggestions = es_suggestions(@gems) %>
+                <% if suggestions %>
+                  <div data-testid="search-suggestions" class="inline-block mt-6 p-4 rounded-md border border-yellow-400 bg-yellow-50 dark:bg-yellow-950 text-yellow-800 dark:text-yellow-200 text-b3">
+                    <%= t(".suggestion") %>
+                    <%= to_sentence(suggestions.map { |term|
+                      link_to term, search_path(params: { query: term }), only_path: true,
+                              class: "font-bold underline text-yellow-900 dark:text-yellow-100"
+                    }, last_word_connector: " or ") %>?
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
     <% end %>
   <% end %>
 <% end %>

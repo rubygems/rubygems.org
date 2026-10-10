@@ -991,6 +991,12 @@ en:
       version_header: Version
     search:
       search_reverse_dependencies_html: "Search reverse dependencies Gems&hellip;"
+  search:
+    result_component:
+      source: Source
+      more_licenses:
+        one: "%{licenses} +1 more"
+        other: "%{licenses} +%{count} more"
   searches:
     advanced:
       name: Name
@@ -1002,11 +1008,33 @@ en:
     show:
       title: Search
       subtitle_html: for <em>%{query}</em>
-      month_update: Updated last month (%{count})
-      week_update: Updated last week (%{count})
-      filter: "Filter:"
       yanked: Yanked (%{count})
       suggestion: Did you mean
+      gems_count:
+        one: 1 gem
+        other: "%{formatted_count} gems"
+      sort:
+        label: Sort
+        relevance: Relevance
+        downloads: Most downloaded
+        updated: Recently updated
+        name: Name A–Z
+      filters:
+        title: Filters
+        updated: Last updated
+        updated_any: Any time
+        updated_within:
+          week: Past week
+          month: Past month
+          year: Past year
+        license: License
+        apply: Apply filters
+        remove: Remove filter %{filter}
+        clear_all: Clear all filters
+      no_results:
+        title: No gems found
+        with_filters: No gems match this search with the current filters.
+        without_filters: Try a different search term.
   sessions:
     new:
       forgot_password: Forgot password?
