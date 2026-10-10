@@ -13,7 +13,7 @@ class OwnerTest < ApplicationSystemTestCase
     @rubygem = create(:rubygem, number: "1.0.0")
     @ownership = create(:ownership, user: @user, rubygem: @rubygem)
 
-    sign_in(@user)
+    sign_in_as(@user)
   end
 
   test "adding owner via UI with email" do
@@ -95,7 +95,7 @@ class OwnerTest < ApplicationSystemTestCase
       end
     end
 
-    refute page.has_selector? "a[href='#{profile_path(@other_user)}']"
+    assert_no_selector "a[href='#{profile_path(@other_user.display_id)}']"
 
     perform_enqueued_jobs only: ActionMailer::MailDeliveryJob
 
@@ -172,7 +172,7 @@ class OwnerTest < ApplicationSystemTestCase
       end
     end
 
-    refute page.has_selector? "[data-testid='owners_table'] a[href='#{profile_path(@user.display_id)}']"
+    assert_no_selector "[data-testid='owners_table'] a[href='#{profile_path(@user.display_id)}']"
   end
 
   test "cancelling self-removal dialog keeps owner in place" do
@@ -303,7 +303,7 @@ class OwnerTest < ApplicationSystemTestCase
     create(:ownership, user: maintainer, rubygem: @rubygem, role: :maintainer)
 
     sign_out
-    sign_in(maintainer)
+    sign_in_as(maintainer)
 
     visit_ownerships_page
 
@@ -325,7 +325,7 @@ class OwnerTest < ApplicationSystemTestCase
     create(:ownership, user: maintainer, rubygem: @rubygem, role: :maintainer)
 
     sign_out
-    sign_in(maintainer)
+    sign_in_as(maintainer)
 
     visit rubygem_path(@rubygem.slug)
 
@@ -354,26 +354,26 @@ class OwnerTest < ApplicationSystemTestCase
 
   test "hides ownership link when not owner" do
     sign_out
-    sign_in(@other_user)
+    sign_in_as(@other_user)
     visit rubygem_path(@rubygem.slug)
 
-    refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
+    assert_no_selector "a[href='#{rubygem_owners_path(@rubygem.slug)}']"
   end
 
   test "hides ownership link when not signed in" do
     sign_out
     visit rubygem_path(@rubygem.slug)
 
-    refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
+    assert_no_selector "a[href='#{rubygem_owners_path(@rubygem.slug)}']"
   end
 
   test "shows resend confirmation link when unconfirmed" do
     sign_out
     create(:ownership, :unconfirmed, user: @other_user, rubygem: @rubygem)
-    sign_in(@other_user)
+    sign_in_as(@other_user)
     visit rubygem_path(@rubygem.slug)
 
-    refute page.has_selector?("a[href='#{rubygem_owners_path(@rubygem.slug)}']")
+    assert_no_selector "a[href='#{rubygem_owners_path(@rubygem.slug)}']"
     assert page.has_selector?("a[href='#{resend_confirmation_rubygem_owners_path(@rubygem.slug)}']")
   end
 
@@ -428,6 +428,14 @@ class OwnerTest < ApplicationSystemTestCase
   end
 
   private
+
+  # Signs in through ClearanceBackdoor. The sign-in form is covered by sign_in_test.rb;
+  # these tests only need a signed-in session to start from.
+  def sign_in_as(user)
+    visit dashboard_path(as: user.id)
+
+    assert_text "Dashboard"
+  end
 
   def owner_row(owner)
     page.find('[data-testid="owners_table"]')

@@ -175,7 +175,7 @@ class SettingsTest < ApplicationSystemTestCase
 
     assert_text "Edit settings"
 
-    refute page.has_selector?("#level > option:nth-child(3)")
+    assert_no_selector "#level > option:nth-child(3)"
     assert_no_text "UI Only"
   end
 end

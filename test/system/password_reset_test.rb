@@ -203,7 +203,7 @@ class PasswordResetTest < ApplicationSystemTestCase
   end
 
   test "resetting password when webauthn is enabled" do
-    create_webauthn_credential
+    add_webauthn_credential_to_virtual_authenticator(@user)
 
     forgot_password_with @user.email
 
@@ -223,7 +223,8 @@ class PasswordResetTest < ApplicationSystemTestCase
   end
 
   test "resetting password when webauthn is enabled using recovery codes" do
-    create_webauthn_credential
+    add_webauthn_credential_to_virtual_authenticator(@user)
+    @mfa_recovery_codes = @user.new_mfa_recovery_codes
 
     forgot_password_with @user.email
 
@@ -369,12 +370,17 @@ class PasswordResetTest < ApplicationSystemTestCase
     server = Capybara.current_session.server
     target = URI(url)
     target_url = "http://localhost:#{server.port}#{target.request_uri}"
+    # 127.0.0.1 is a different site from localhost. Playwright serves this page
+    # itself so the app doesn't render a page the test never uses.
+    referrer_url = "http://127.0.0.1:#{server.port}/cross-site-referrer"
 
     page.driver.with_playwright_page do |pw_page|
-      pw_page.goto("http://127.0.0.1:#{server.port}")
-      pw_page.set_content <<~HTML
-        <a href="#{ERB::Util.html_escape(target_url)}">Open password reset</a>
-      HTML
+      pw_page.route(referrer_url, lambda { |route, _request|
+        route.fulfill(contentType: "text/html", body: <<~HTML)
+          <a href="#{ERB::Util.html_escape(target_url)}">Open password reset</a>
+        HTML
+      }, times: 1)
+      pw_page.goto(referrer_url)
       pw_page.get_by_role("link", name: "Open password reset").click
     end
   end

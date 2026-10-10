@@ -7,10 +7,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     @user = create(:user)
     @ownership = create(:ownership, user: @user, rubygem: create(:rubygem))
 
-    visit sign_in_path
-    fill_in "Email or Username", with: @user.email
-    fill_in "Password", with: @user.password
-    click_button "Sign in"
+    visit dashboard_path(as: @user.id)
 
     assert_text("Dashboard")
   end
@@ -379,7 +376,8 @@ class ApiKeysTest < ApplicationSystemTestCase
     api_key = create(:api_key, scopes: %i[push_rubygem], owner: @user, ownership: @ownership)
     visit_profile_api_keys_path
 
-    refute page.has_css? "[data-testid='api-key-invalid-row']"
+    assert_button "Edit"
+    assert_no_selector "[data-testid='api-key-invalid-row']"
 
     @ownership.destroy!
 
@@ -388,7 +386,7 @@ class ApiKeysTest < ApplicationSystemTestCase
     assert page.has_css? "[data-testid='api-key-invalid-row']"
     assert_predicate api_key.reload, :soft_deleted?
 
-    refute page.has_button? "Edit"
+    assert_no_button "Edit"
     assert_equal "#{@ownership.rubygem.name} [?]", page.find('td[data-title="Gem"]').text
     visit_edit_profile_api_key_path(api_key)
 
@@ -406,8 +404,10 @@ class ApiKeysTest < ApplicationSystemTestCase
     verify_password
   end
 
+  # Only called right after `visit`, which returns once the final page has loaded,
+  # so the prompt is either already on the page or not coming.
   def verify_password
-    return unless page.has_css? "#verify_password_password"
+    return unless page.has_css? "#verify_password_password", wait: 0
 
     fill_in "Password", with: PasswordHelpers::SECURE_TEST_PASSWORD
     click_button "Confirm"
