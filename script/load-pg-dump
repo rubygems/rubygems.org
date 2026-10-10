@@ -6,10 +6,7 @@
 #
 # Assumptions:
 #
-# 1) a 'postgres' user exists your postgresql instance
-#    The dump script explicitly assigns ownership to the 'postgres' user, and
-#    so the 'postgres' user should exist
-# 2) the user you pass with the -u option is a postgres super user
+# 1) the user you pass with the -u option is a postgres super user
 #
 # Notes:
 #
@@ -109,15 +106,35 @@ psql -q $pg_host -U $pg_user -d $pg_database -c "CREATE EXTENSION IF NOT EXISTS 
 echo "Running migrations"
 rake db:migrate
 
-echo "Dropping tables in $pg_database that we're going to load in"
-psql -q $pg_host -U $pg_user -d $pg_database -c "DROP TABLE IF EXISTS attestations, deletions, dependencies, gem_downloads, linksets, rubygems, versions CASCADE;"
-
 # Extract the single PostgresSQL.sql.gz file from the tar file, pass it through gunzip
-# and load it as quietly as possible into the database
+# and load only its data, as quietly as possible, into the tables the migrations
+# created. The dump's own DDL is skipped: it clashes with the migrated tables,
+# assigns ownership to production roles, and adds foreign keys to tables that
+# aren't in the public dump.
+#
+# Foreign key checks are disabled while loading (this needs a superuser), since
+# the dump's COPY blocks aren't in dependency order.
 echo "Loading the data from $public_tar"
 tar xOf "$public_tar" public_postgresql/databases/PostgreSQL.sql.gz | \
   gunzip -c | \
-  sed '/^ALTER .* OWNER TO /d' | \
-  psql -q $pg_host --username $pg_user --dbname $pg_database
+  awk '
+    copying { print; if ($0 == "\\.") copying = 0; next }
+    /^COPY / { print; copying = 1; next }
+    /^(SET (statement_timeout|client_encoding|standard_conforming_strings) |SELECT pg_catalog\.(set_config|setval)\(|\\(un)?restrict )/ { print }
+  ' | \
+  PGOPTIONS="-c session_replication_role=replica" \
+  psql -q -o /dev/null -v ON_ERROR_STOP=1 $pg_host --username $pg_user --dbname $pg_database || exit 1
+
+# The public dump doesn't include organizations or API keys, so clear references
+# to them to keep the foreign keys valid.
+echo "Clearing references to data that isn't in the public dump"
+psql -q -v ON_ERROR_STOP=1 $pg_host -U $pg_user -d $pg_database <<SQL || exit 1
+UPDATE rubygems SET organization_id = NULL
+  WHERE organization_id IS NOT NULL
+  AND NOT EXISTS (SELECT 1 FROM organizations WHERE organizations.id = rubygems.organization_id);
+UPDATE versions SET pusher_api_key_id = NULL
+  WHERE pusher_api_key_id IS NOT NULL
+  AND NOT EXISTS (SELECT 1 FROM api_keys WHERE api_keys.id = versions.pusher_api_key_id);
+SQL
 
 echo "Done."
