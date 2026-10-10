@@ -13,15 +13,25 @@ concurrency:
 
 permissions: {}
 
+env:
+  RUBYGEMS_ORG_SECRETS_AVAILABLE: ${{ github.repository == 'rubygems/rubygems.org' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'rubygems/rubygems.org') }}
+
 jobs:
   build:
-    name: Docker build (and optional push)
-    runs-on: ubuntu-26.04
+    name: Docker build ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-26.04
+          - arch: arm64
+            runner: ubuntu-26.04-arm
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 60
     env:
       RUBYGEMS_VERSION: "4.0.16"
       RUBY_VERSION: .ruby-version
-      RUBYGEMS_ORG_SECRETS_AVAILABLE: ${{ github.repository == 'rubygems/rubygems.org' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'rubygems/rubygems.org') }}
     permissions:
       contents: read
       id-token: write # Needed to authenticate to AWS through OIDC
@@ -36,11 +46,11 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-rubygems-${{ hashFiles('**/Gemfile.lock') }}
+          key: ${{ runner.os }}-${{ matrix.arch }}-rubygems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-rubygems-org
-      - name: Install and start services (needed for image test)
-        run: docker compose up -d
+            ${{ runner.os }}-${{ matrix.arch }}-rubygems-
+      - name: Start database (needed for image test)
+        run: docker compose up -d db
       - name: Configure AWS credentials from Production account
         uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
         if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true'
@@ -54,6 +64,7 @@ jobs:
         run: ./script/build_docker.sh
         env:
           BUNDLE_PACKAGER__DEV: ${{ secrets.BUNDLE_PACKAGER__DEV }}
+          DOCKER_TAG_SUFFIX: -${{ matrix.arch }}
       # Temp fix
       # https://github.com/docker/build-push-action/issues/252
       # https://github.com/moby/buildkit/issues/1896
@@ -61,3 +72,42 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+  manifest:
+    # Required status check. Runs even when a build fails so a failure is
+    # reported as failed rather than skipped (which counts as passing).
+    name: Docker build (and optional push)
+    needs: build
+    if: always()
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    permissions:
+      id-token: write # Needed to authenticate to AWS through OIDC
+    env:
+      IMAGE: 048268392960.dkr.ecr.us-west-2.amazonaws.com/rubygems/rubygems.org
+    steps:
+      - name: Check all architecture builds succeeded
+        if: needs.build.result != 'success'
+        run: |
+          echo "Docker build result: ${NEEDS_BUILD_RESULT}"
+          exit 1
+        env:
+          NEEDS_BUILD_RESULT: ${{ needs.build.result }}
+      - name: Set up Docker Buildx
+        if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true'
+        uses: docker/setup-buildx-action@594f3bf4285d9ea8dc53c9a0c9c4092420091003 # v4.4.0
+      - name: Configure AWS credentials from Production account
+        if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true'
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: arn:aws:iam::048268392960:role/rubygems-ecr-pusher
+          aws-region: us-west-2
+      - name: Login to Amazon ECR
+        if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true'
+        uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
+      - name: Push multi-arch manifest
+        if: env.RUBYGEMS_ORG_SECRETS_AVAILABLE == 'true'
+        run: |
+          docker buildx imagetools create --tag "$IMAGE:$GITHUB_SHA" "$IMAGE:$GITHUB_SHA-amd64" "$IMAGE:$GITHUB_SHA-arm64"
+          docker buildx imagetools inspect "$IMAGE:$GITHUB_SHA"
+          echo "Pushed multi-arch image \`$IMAGE:$GITHUB_SHA\`" >> "$GITHUB_STEP_SUMMARY"
