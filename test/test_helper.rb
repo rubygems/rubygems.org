@@ -250,6 +250,40 @@ class ActiveSupport::TestCase
     end
   end
 
+  # Gives user a discoverable credential without driving the registration UI:
+  # the WebauthnCredential row holds the public key, and the virtual
+  # authenticator holds the matching private key. Use this when a test is about
+  # authenticating, not registering.
+  def add_webauthn_credential_to_virtual_authenticator(user)
+    key = OpenSSL::PKey::EC.generate("prime256v1")
+    cose_public_key = COSE::Key::EC2.from_pkey(key)
+    cose_public_key.alg = -7 # ES256
+    credential_id = SecureRandom.random_bytes(16)
+
+    credential = create(:webauthn_credential, user:, nickname: "new cred",
+                        external_id: Base64.urlsafe_encode64(credential_id, padding: false),
+                        public_key: WebAuthn.configuration.encoder.encode(cose_public_key.serialize),
+                        sign_count: 0)
+
+    enable_virtual_authenticator(resident_key: true, user_verification: true, user_verified: true)
+    page.driver.with_playwright_page do
+      # CDP binary fields are standard (not URL-safe) base64.
+      @cdp_session.send_message("WebAuthn.addCredential", params: {
+                                  authenticatorId: @authenticator_id,
+                                  credential: {
+                                    credentialId: Base64.strict_encode64(credential_id),
+                                    isResidentCredential: true,
+                                    rpId: URI(Capybara.app_host).host,
+                                    privateKey: Base64.strict_encode64(key.private_to_der),
+                                    userHandle: Base64.strict_encode64(Base64.urlsafe_decode64(user.webauthn_id)),
+                                    signCount: 0
+                                  }
+                                })
+    end
+
+    credential
+  end
+
   def disable_virtual_authenticator
     return unless @cdp_session && @authenticator_id
 

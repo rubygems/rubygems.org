@@ -10,7 +10,9 @@ class SignInWebauthnTest < ApplicationSystemTestCase
                   mfa_level: :ui_only, totp_seed: "thisisonetotpseed",
                   mfa_recovery_codes: @mfa_recovery_codes)
 
-    create_webauthn_credential
+    add_webauthn_credential_to_virtual_authenticator(@user)
+    # Adding the first MFA device generates recovery codes, as registering through the UI does.
+    @mfa_recovery_codes = @user.new_mfa_recovery_codes
   end
 
   teardown do
