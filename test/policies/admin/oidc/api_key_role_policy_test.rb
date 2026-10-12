@@ -36,7 +36,7 @@ class Admin::OIDC::ApiKeyRolePolicyTest < AdminPolicyTestCase
   end
 
   def test_avo_update
-    refute_authorizes @admin, @api_key_role, :avo_update?
+    assert_authorizes @admin, @api_key_role, :avo_update?
 
     refute_authorizes @non_admin, @api_key_role, :avo_update?
   end

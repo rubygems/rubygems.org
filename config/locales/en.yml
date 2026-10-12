@@ -1247,6 +1247,11 @@ en:
         api_key_gem_html: "Gem: %{gem}"
         api_key_mfa: "MFA: %{mfa}"
         not_required: "Not required"
+      oidc_api_key_role:
+        oidc_api_key_role_access_policy_changed: "OIDC Role Access Policy Changed"
+        role_name: "Role: %{name}"
+        changed_by_admin: "Changed by RubyGems.org staff, not by you"
+        conditions: "Conditions are now: %{conditions}"
       password:
         password_compromised: "Password Compromised"
         mfa_status: "MFA Status: %{status}"

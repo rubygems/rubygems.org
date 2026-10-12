@@ -35,7 +35,10 @@ class Avo::AuditedChangesRecordDiff::ShowComponent < ViewComponent::Base
   attr_reader :gid, :changes, :unchanged, :user, :resource, :old_resource, :new_resource, :view
 
   def sorted_fields
-    @resource.only_fields
+    # `get_field_definitions` rather than `only_fields`, which returns the fields
+    # without hydrating them: `each_field` asks each one whether it is visible,
+    # and a field that holds other fields cannot answer that without a view.
+    @resource.get_field_definitions
       .grep_v(Avo::Fields::HasManyBaseField)
       .sort_by.with_index { |f, i| [changes.key?(f.id.to_s) ? -1 : 1, i] }
   end

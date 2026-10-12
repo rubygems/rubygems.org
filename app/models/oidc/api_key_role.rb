@@ -40,6 +40,23 @@ class OIDC::ApiKeyRole < ApplicationRecord
     end
   end
 
+  # The owner is told that their trust policy changed. The admin panel records an
+  # Audit, which they cannot see, and a key being minted for a repository the
+  # policy now trusts is only mailed once that has already happened.
+  after_update_commit :record_access_policy_change, if: :saved_change_to_access_policy?
+
+  def record_access_policy_change
+    user.record_event!(
+      Events::UserEvent::OIDC_API_KEY_ROLE_ACCESS_POLICY_CHANGED,
+      name:,
+      api_key_role_gid: to_global_id,
+      by_owner: Current.user == user,
+      conditions: Array.wrap(access_policy&.statements).flat_map do |statement|
+        Array.wrap(statement.conditions).map { "#{it.claim} #{it.operator} #{it.value}" }
+      end
+    )
+  end
+
   before_validation :set_statement_principals
   attribute :access_policy, Types::JsonDeserializable.new(OIDC::AccessPolicy)
   validates :access_policy, presence: true, nested: true

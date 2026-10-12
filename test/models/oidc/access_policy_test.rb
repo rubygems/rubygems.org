@@ -139,6 +139,137 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
       end
     end
 
+    context "with a string_matches condition matched against a longer claim" do
+      setup do
+        @access_policy = OIDC::AccessPolicy.new(statements: [
+                                                  effect: "allow",
+          principal: { oidc: "iss" },
+          conditions: [
+            operator: "string_matches",
+            claim: "c",
+            value: "one/two.*"
+          ]
+                                                ])
+      end
+
+      should "return nil when the pattern describes the whole claim" do
+        assert_nil @access_policy.verify_access!(JSON::JWT.new({ iss: "iss", c: "one/two/three" }))
+      end
+
+      # The pattern has to describe the claim in full, so a claim that merely
+      # contains it does not match.
+      should "raise AccessError when the claim only contains the pattern" do
+        assert_raise(OIDC::AccessPolicy::AccessError) do
+          @access_policy.verify_access!(JSON::JWT.new({ iss: "iss", c: "zero/one/two/three" }))
+        end
+      end
+    end
+
+    context "with a string_matches condition that alternates" do
+      setup do
+        @access_policy = OIDC::AccessPolicy.new(statements: [
+                                                  effect: "allow",
+          principal: { oidc: "iss" },
+          conditions: [
+            operator: "string_matches",
+            claim: "c",
+            value: "one|two"
+          ]
+                                                ])
+      end
+
+      should "return nil for either alternative in full" do
+        assert_nil @access_policy.verify_access!(JSON::JWT.new({ iss: "iss", c: "one" }))
+        assert_nil @access_policy.verify_access!(JSON::JWT.new({ iss: "iss", c: "two" }))
+      end
+
+      should "raise AccessError when an alternative is only a prefix or a suffix" do
+        assert_raise(OIDC::AccessPolicy::AccessError) { @access_policy.verify_access!(JSON::JWT.new({ iss: "iss", c: "one!" })) }
+        assert_raise(OIDC::AccessPolicy::AccessError) { @access_policy.verify_access!(JSON::JWT.new({ iss: "iss", c: "!two" })) }
+      end
+    end
+
+    context "with a string_matches condition that does not compile" do
+      setup do
+        @access_policy = OIDC::AccessPolicy.new(statements: [
+                                                  effect: "allow",
+          principal: { oidc: "iss" },
+          conditions: [
+            operator: "string_matches",
+            claim: "sub",
+            value: "repo:fakeuser/["
+          ]
+                                                ])
+      end
+
+      should "fail to validate rather than save and raise when a token is exchanged" do
+        @access_policy.validate
+
+        assert_equal ["is not a valid regular expression: premature end of char-class: /\\A(?:repo:fakeuser\\/[)\\z/"],
+          @access_policy.errors.messages[:"statements[0].conditions[0].value"]
+      end
+    end
+
+    context "with a string_matches condition against a claim that is not a string" do
+      setup do
+        @access_policy = OIDC::AccessPolicy.new(statements: [
+                                                  effect: "allow",
+          principal: { oidc: "iss" },
+          conditions: [
+            operator: "string_matches",
+            claim: "iat",
+            value: ".*"
+          ]
+                                                ])
+      end
+
+      should "validate, since the claim is only known once a token is exchanged" do
+        assert_predicate @access_policy, :valid?
+      end
+
+      # Regexp#match? raises TypeError on anything but a string, which would be
+      # a 500 on the exchange rather than a denial.
+      should "raise AccessError for a numeric claim" do
+        jwt = JSON::JWT.new({ iss: "iss", iat: 1_760_000_000 })
+
+        assert_raise(OIDC::AccessPolicy::AccessError) { @access_policy.verify_access!(jwt) }
+      end
+
+      should "raise AccessError for an array claim" do
+        @access_policy.statements.sole.conditions.sole.claim = "repository_owners"
+        jwt = JSON::JWT.new({ iss: "iss", repository_owners: %w[fakeuser] })
+
+        assert_raise(OIDC::AccessPolicy::AccessError) { @access_policy.verify_access!(jwt) }
+      end
+    end
+
+    context "with a string_matches condition that backtracks without bound" do
+      setup do
+        # Ruby memoizes most catastrophic patterns, but not one using a
+        # backreference, so this one runs until it is stopped.
+        @access_policy = OIDC::AccessPolicy.new(statements: [
+                                                  effect: "allow",
+          principal: { oidc: "iss" },
+          conditions: [
+            operator: "string_matches",
+            claim: "sub",
+            value: "(a+)+\\1b"
+          ]
+                                                ])
+      end
+
+      should "deny within the match timeout instead of running on" do
+        jwt = JSON::JWT.new({ iss: "iss", sub: "a" * 40 })
+        started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+        assert_raise(OIDC::AccessPolicy::AccessError) { @access_policy.verify_access!(jwt) }
+
+        elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
+
+        assert_operator elapsed, :<, OIDC::AccessPolicy::Statement::Condition::MATCH_TIMEOUT * 4
+      end
+    end
+
     context "with condition with unknown operator" do
       setup do
         @access_policy = OIDC::AccessPolicy.new(statements: [
