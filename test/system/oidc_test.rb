@@ -17,8 +17,7 @@ class OIDCTest < ApplicationSystemTestCase
   end
 
   test "viewing providers" do
-    sign_in
-    visit profile_oidc_providers_path
+    visit profile_oidc_providers_path(as: @user.id)
     verify_session
 
     page.assert_selector "h3", text: "OIDC Providers"
@@ -34,8 +33,7 @@ class OIDCTest < ApplicationSystemTestCase
   end
 
   test "viewing api key roles" do
-    sign_in
-    visit profile_oidc_api_key_roles_path
+    visit profile_oidc_api_key_roles_path(as: @user.id)
     verify_session
 
     page.assert_selector "h3", text: "OIDC API Key Roles"
@@ -58,8 +56,7 @@ class OIDCTest < ApplicationSystemTestCase
   end
 
   test "viewing id tokens" do
-    sign_in
-    visit profile_oidc_id_tokens_path
+    visit profile_oidc_id_tokens_path(as: @user.id)
     verify_session
 
     page.assert_selector "h3", text: "OIDC ID Tokens"
@@ -83,8 +80,7 @@ class OIDCTest < ApplicationSystemTestCase
     rubygem = create(:rubygem, owners: [@user])
     create(:version, rubygem: rubygem, metadata: { "source_code_uri" => "https://github.com/example/repo" })
 
-    sign_in
-    visit rubygem_path(rubygem.slug)
+    visit rubygem_path(rubygem.slug, as: @user.id)
     click_link "OIDC: Create"
     verify_session
 
@@ -228,9 +224,7 @@ class OIDCTest < ApplicationSystemTestCase
     # We intentionally use a gem that hosts source on GitHub, but a different CI/CD provider for pushing
     create(:version, rubygem: rubygem, metadata: { "source_code_uri" => "https://github.com/example/repo" })
 
-    sign_in
-
-    visit rubygem_path(rubygem.slug)
+    visit rubygem_path(rubygem.slug, as: @user.id)
     click_link "OIDC: Create"
     verify_session
 
@@ -329,8 +323,7 @@ class OIDCTest < ApplicationSystemTestCase
 
     assert_text "Please sign in to continue."
 
-    sign_in
-    visit new_rubygem_trusted_publisher_path(rubygem.slug)
+    visit new_rubygem_trusted_publisher_path(rubygem.slug, as: @user.id)
     verify_session
 
     assert_text "Forbidden"
@@ -412,8 +405,7 @@ class OIDCTest < ApplicationSystemTestCase
     create(:oidc_rubygem_trusted_publisher, rubygem:)
     create(:version, rubygem:)
 
-    sign_in
-    visit rubygem_trusted_publishers_path(rubygem.slug)
+    visit rubygem_trusted_publishers_path(rubygem.slug, as: @user.id)
     verify_session
 
     click_button "Delete"
@@ -430,8 +422,7 @@ class OIDCTest < ApplicationSystemTestCase
 
     assert_text "Please sign in to continue."
 
-    sign_in
-    visit profile_oidc_pending_trusted_publishers_path
+    visit profile_oidc_pending_trusted_publishers_path(as: @user.id)
     verify_session
     click_button "Create"
 
@@ -483,8 +474,7 @@ class OIDCTest < ApplicationSystemTestCase
   test "deleting pending trusted publishers" do
     create(:oidc_pending_trusted_publisher, user: @user)
 
-    sign_in
-    visit profile_oidc_pending_trusted_publishers_path
+    visit profile_oidc_pending_trusted_publishers_path(as: @user.id)
     verify_session
 
     click_button "Delete"

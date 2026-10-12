@@ -14,7 +14,9 @@ fi
 # and must be lowercase
 GITHUB_REPOSITORY=$(echo "${GITHUB_REPOSITORY:-rubygems/rubygems.org}" | tr '[:upper:]' '[:lower:]')
 
-DOCKER_TAG="048268392960.dkr.ecr.us-west-2.amazonaws.com/$GITHUB_REPOSITORY:$GITHUB_SHA"
+# DOCKER_TAG_SUFFIX (e.g. "-arm64") gives each architecture its own tag; the
+# workflow then combines them into a multi-arch manifest tagged with the bare SHA.
+DOCKER_TAG="048268392960.dkr.ecr.us-west-2.amazonaws.com/$GITHUB_REPOSITORY:$GITHUB_SHA${DOCKER_TAG_SUFFIX:-}"
 
 docker buildx build --cache-from=type=local,src=/tmp/.buildx-cache \
   --cache-to=mode=max,type=local,dest=/tmp/.buildx-cache-new \

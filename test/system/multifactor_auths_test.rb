@@ -12,12 +12,11 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
   teardown do
     @user.disable_totp!
     disable_virtual_authenticator
-    Capybara.reset_sessions!
   end
 
   context "cache-control" do
     should "setup mfa does not cache OTP setup" do
-      sign_in
+      visit edit_settings_path(as: @user.id)
 
       register_otp_device
 
@@ -31,7 +30,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     end
 
     should "setup mfa does not cache recovery codes" do
-      sign_in
+      visit edit_settings_path(as: @user.id)
 
       register_otp_device
 
@@ -137,10 +136,9 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
 
   context "updating mfa level" do
     should "user with otp can change mfa level" do
-      sign_in
       @user.enable_totp!(@seed, :ui_and_gem_signin)
 
-      visit edit_settings_path
+      visit edit_settings_path(as: @user.id)
 
       assert_text "UI and gem signin"
 
@@ -155,8 +153,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     should "user with webauthn can change mfa level" do
       fullscreen_playwright_driver
 
-      sign_in
-      visit edit_settings_path
+      visit edit_settings_path(as: @user.id)
 
       create_webauthn_credential_while_signed_in
 
@@ -174,8 +171,7 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
   end
 
   def redirect_test_mfa_disabled(path)
-    sign_in(wait_for: "For protection of your account and your gems, you are required to set up multi-factor authentication.")
-    visit path
+    visit "#{path}?as=#{@user.id}"
 
     assert_text "you are required to set up multi-factor authentication"
     assert_current_path(edit_settings_path)
@@ -192,9 +188,8 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
   end
 
   def redirect_test_mfa_weak_level(path)
-    sign_in(wait_for: "For protection of your account and your gems, you are required to set up multi-factor authentication.")
     @user.enable_totp!(@seed, :ui_only)
-    visit path
+    visit "#{path}?as=#{@user.id}"
 
     assert_text "Edit settings"
 
@@ -210,22 +205,12 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
     assert_current_path path
   end
 
-  def sign_in(wait_for: "Dashboard")
-    visit sign_in_path
-    fill_in "Email or Username", with: @user.reload.email
-    fill_in "Password", with: @user.password
-    click_button "Sign in"
-
-    assert_text(wait_for)
-  end
-
   def otp_key
     key_regex = /( (\w{4})){8}/
     page.find_by_id("otp-key").text.match(key_regex)[0].delete("\s")
   end
 
   def register_otp_device
-    visit edit_settings_path
     click_button "Register a new device"
     @otp_key = otp_key
     totp = ROTP::TOTP.new(@otp_key)

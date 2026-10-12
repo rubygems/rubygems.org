@@ -10,9 +10,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
   test "bulk delete users" do
     admin_user = create(:admin_github_user, :is_admin)
     users = create_list(:user, 2)
-    avo_sign_in_as admin_user
-
-    visit avo.resources_users_path
+    avo_sign_in_as admin_user, at: avo.resources_users_path
 
     users.each do |user|
       find("tr[data-resource-id='#{user.id}'] input[type='checkbox']").check
@@ -32,13 +30,13 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
   test "bulk delete confirmation counts all matching users across pages" do
     admin_user = create(:admin_github_user, :is_admin)
-    # Cross-page behavior requires more than Avo's 24-row page size.
-    users = create_list(:user, 25) # rubocop:disable FactoryBot/ExcessiveCreateList
+    # Cross-page behavior requires more matching users than fit on one page,
+    # so use Avo's smallest page size option (12) to keep setup small.
+    users = create_list(:user, 13) # rubocop:disable FactoryBot/ExcessiveCreateList
     users.each { |user| create(:api_key, owner: user, name: "cross-page-campaign-key") }
     unrelated_user = create(:user)
-    avo_sign_in_as admin_user
+    avo_sign_in_as admin_user, at: avo.resources_users_path(per_page: 12)
 
-    visit avo.resources_users_path
     click_on "Filters"
     fill_in id: "avo_filters_api_key_name", with: "cross-page-campaign"
     click_on "Filter by API key name"
@@ -49,12 +47,12 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     assert_text "Select all matching"
     click_on "Select all matching"
 
-    assert_text "25 records selected from all pages"
+    assert_text "13 records selected from all pages"
     click_button "Actions"
     click_on "Delete User"
 
     within("[role='dialog']") do
-      assert_text "delete 25 selected users"
+      assert_text "delete 13 selected users"
     end
   end
 
@@ -71,9 +69,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     unrelated_user = create(:user, created_at: matching_created_at)
     create(:api_key, owner: unrelated_user, name: "unrelated-key")
-    avo_sign_in_as admin_user
-
-    visit avo.resources_users_path
+    avo_sign_in_as admin_user, at: avo.resources_users_path
 
     click_on "Filters"
 
@@ -638,9 +634,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
   test "create user" do
     admin_user = create(:admin_github_user, :is_admin)
-    avo_sign_in_as admin_user
-
-    visit avo.resources_users_path
+    avo_sign_in_as admin_user, at: avo.resources_users_path
 
     click_button "Actions"
     click_on "Create User"
