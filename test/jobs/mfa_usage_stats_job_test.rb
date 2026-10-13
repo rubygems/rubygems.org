@@ -8,7 +8,7 @@ class MfaUsageStatsJobTest < ActiveJob::TestCase
   setup do
     create(:user) # non-mfa user
     2.times { create(:user).enable_totp!(ROTP::Base32.random_base32, :ui_and_api) } # otp-only users
-    3.times { create(:webauthn_credential, user: create(:user)) } # webauthn-only users
+    create_list(:webauthn_credential, 3) # webauthn-only users
     # webauthn-and-otp users
     4.times do
       user = create(:user)
