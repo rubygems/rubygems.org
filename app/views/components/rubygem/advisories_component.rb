@@ -24,6 +24,7 @@ class Rubygem::AdvisoriesComponent < ApplicationComponent
     color, icon_color, icon = AlertComponent::STYLES.fetch(style_for(list))
 
     div(
+      id: "advisories",
       class: "rounded border p-4 text-b2 #{color}",
       data: { testid: "gem-advisories" }
     ) do
