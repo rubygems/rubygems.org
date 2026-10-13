@@ -68,7 +68,7 @@ class DropdownComponent < ApplicationComponent
            "bg-white dark:bg-black text-b3 text-neutral-800 dark:text-white text-nowrap " \
            "hover:bg-neutral-100 dark:hover:bg-neutral-800 aria-expanded:bg-neutral-100 dark:aria-expanded:bg-neutral-800 " \
            "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange"
-  MENU = "dropdown-menu absolute inset-auto m-0 w-max p-2 rounded-lg " \
+  MENU = "dropdown-menu absolute inset-auto m-0 w-max space-y-1 p-2 rounded-lg " \
          "bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-xl shadow-black/10 " \
          "text-b2 text-left text-neutral-900 dark:text-white"
   ITEM = "flex items-center justify-between gap-4 px-3 py-3 rounded text-nowrap " \
