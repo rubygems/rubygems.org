@@ -226,6 +226,38 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to explore with mixed-platform provenance" do
+    should "require provenance on the displayed preferred release and order qualifying releases newest first" do
+      mismatched = create(:rubygem, name: "unattested-ruby")
+      create(:attestation, version: create(:version, rubygem: mismatched, number: "1.0.0", platform: "java", created_at: 3.days.ago))
+      create(:version, rubygem: mismatched, number: "2.0.0", created_at: 2.days.ago)
+
+      preferred = create(:rubygem, name: "attested-ruby")
+      create(:attestation, version: create(:version, rubygem: preferred, number: "1.0.0", created_at: 3.days.ago))
+      create(:version, rubygem: preferred, number: "2.0.0", platform: "java", created_at: 2.days.ago)
+
+      platform_only = create(:rubygem, name: "attested-java")
+      java_release = create(:version, rubygem: platform_only, number: "3.0.0", platform: "java", created_at: 1.day.ago)
+      java_release.gem_download.update!(count: 321)
+      create_list(:attestation, 2, version: java_release)
+
+      superseded = create(:rubygem, name: "superseded-attestation")
+      create(:attestation, version: create(:version, rubygem: superseded, number: "1.0.0", created_at: 3.days.ago))
+      create(:version, rubygem: superseded, number: "2.0.0", created_at: 2.days.ago)
+
+      old = create(:rubygem, name: "old-attestation")
+      create(:attestation, version: create(:version, rubygem: old, created_at: (Gemcutter::NEWS_DAYS_LIMIT + 1.day).ago))
+      create_list(:version, 5)
+
+      get :explore
+
+      assert_response :success
+      assert_equal [rubygem_path(platform_only.name), rubygem_path(preferred.name)], page.all("#provenance a[href^='/gems/']").pluck(:href)
+      assert_equal %w[3.0.0 1.0.0], page.all("#provenance code").map(&:text)
+      assert page.find_by_id("provenance").has_selector?("span[title='Downloads for attested-java-3.0.0-java: 321']")
+    end
+  end
+
   context "On GET to explore with no recent gems" do
     setup do
       Rails.cache.delete(RubygemsController::MOST_DEPENDED_ON_CACHE_KEY)

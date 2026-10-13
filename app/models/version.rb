@@ -127,6 +127,10 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     where(latest: true)
   end
 
+  def self.with_provenance
+    where(id: Attestation.select(:version_id))
+  end
+
   def self.prerelease
     where(prerelease: true)
   end

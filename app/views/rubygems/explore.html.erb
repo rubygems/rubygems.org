@@ -41,7 +41,8 @@
     title: t(".provenance.title"),
     description: t(".provenance.description"),
     icon: "check-circle",
-    rubygems: @with_provenance %>
+    rubygems: @with_provenance.map(&:rubygem),
+    versions: @with_provenance.index_by(&:rubygem_id) %>
 </div>
 
 <div class="flex justify-center">

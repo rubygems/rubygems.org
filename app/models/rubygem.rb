@@ -160,12 +160,6 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
     joins(:gem_download).order("MAX(gem_downloads.count) DESC").news(days)
   }
 
-  # Gems whose latest release in the last `days` was pushed with a Sigstore
-  # provenance attestation (which requires Trusted Publishing).
-  scope :news_with_provenance, lambda { |days|
-    news(days).where(versions: { id: Attestation.select(:version_id) })
-  }
-
   # { rubygem_id => number of gems whose latest indexed release has a runtime
   # dependency on it }, highest first. The global version of
   # #unique_reverse_runtime_dependencies; it aggregates every latest release,
@@ -174,7 +168,7 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
     Dependency.runtime
       .joins(:version)
       .where(versions: { indexed: true, position: 0 })
-      .where.not(rubygem_id: nil)
+      .where(rubygem_id: with_versions.select(:id))
       .group(:rubygem_id)
       .order(Arel.sql("COUNT(DISTINCT versions.rubygem_id) DESC"), :rubygem_id)
       .limit(limit)

@@ -68,7 +68,7 @@ class RubygemsController < ApplicationController
     @new_gems = downloaded_versions.where(rubygem_id: Rubygem.with_versions.with_one_version
       .where(created_at: Gemcutter::NEWS_DAYS_LIMIT.ago..).reselect(:id))
     @popular = explore_gems.popular(Gemcutter::POPULAR_DAYS_LIMIT).limit(EXPLORE_SECTION_SIZE)
-    @with_provenance = explore_gems.news_with_provenance(Gemcutter::NEWS_DAYS_LIMIT).limit(EXPLORE_SECTION_SIZE)
+    @with_provenance = @just_released.with_provenance.reorder(created_at: :desc)
     @most_depended_on_counts = most_depended_on_counts
     most_depended_on = explore_gems.with_versions.where(id: @most_depended_on_counts.keys).index_by(&:id)
     @most_depended_on = @most_depended_on_counts.keys.filter_map { |id| most_depended_on[id] }
