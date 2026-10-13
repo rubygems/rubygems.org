@@ -11,7 +11,7 @@ class TooltipComponent < ApplicationComponent
 
   # NOTE: When using an icon instead of text, add a trigger_label for the aria-describedby
   # Pass href to render the trigger as a link instead of a button.
-  def initialize(text:, placement: :top, id: nil, trigger_class: nil, trigger_label: nil, href: nil)
+  def initialize(text:, placement: :top, id: nil, trigger_class: nil, trigger_label: nil, href: nil) # rubocop:disable Metrics/ParameterLists
     super()
     @text = text
     @placement = placement.to_sym
