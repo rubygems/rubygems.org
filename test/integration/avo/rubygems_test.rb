@@ -6,6 +6,97 @@ class Avo::RubygemsTest < ActionDispatch::IntegrationTest
   include AdminHelpers
   include ActiveJob::TestHelper
 
+  test "scheduling a full search rebuild as a rubygems.org operator" do
+    admin = create(:admin_github_user, :is_admin)
+    admin_sign_in_as admin
+
+    assert_enqueued_with(job: RebuildRubygemSearchJob, queue: "maintenance") do
+      post_search_rebuild
+    end
+
+    assert_response :success
+    audit = Audit.where(action: "Rebuild Rubygem Search").sole
+
+    assert_equal admin, audit.admin_github_user
+    assert_equal admin, audit.auditable
+    assert_equal "Rebuilding search in a controlled maintenance window", audit.comment
+    assert_match(/queued/, flash[:success][:body])
+    assert_not_requested :any, %r{http://(?:localhost|127\.0\.0\.1):9200}
+  end
+
+  test "rejecting search rebuilds without a maintenance confirmation or detailed comment" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+
+    [nil, "0"].each do |maintenance_window|
+      assert_no_enqueued_jobs { post_search_rebuild(maintenance_window:) }
+
+      assert_response :success
+      assert_match(/Confirm that search-data writers are paused/, flash[:error][:body])
+    end
+
+    assert_no_enqueued_jobs { post_search_rebuild(comment: "short") }
+
+    assert_response :success
+    assert_match(/sufficiently detailed comment/, flash[:error][:body])
+    assert_empty Audit.all
+  end
+
+  test "denying search rebuilds to an operator outside the rubygems.org team" do
+    admin = create(:admin_github_user, :is_admin)
+    info_data = admin.info_data.deep_dup
+    info_data[:viewer][:organization][:teams][:edges].reject! { |edge| edge.dig(:node, :slug) == "rubygems-org" }
+    admin.update!(info_data:)
+    admin_sign_in_as admin
+    rubygem = create(:rubygem)
+    attributes = rubygem.reload.attributes
+
+    assert_no_enqueued_jobs { post_search_rebuild }
+
+    assert_redirected_to avo.root_path
+    assert_empty Audit.all
+    assert_equal attributes, rubygem.reload.attributes
+    assert_not_requested :any, %r{http://(?:localhost|127\.0\.0\.1):9200}
+  end
+
+  test "denying unauthenticated search rebuild requests" do
+    assert_no_enqueued_jobs { post_search_rebuild }
+
+    assert_response :success
+    assert page.has_content?("Log in with GitHub")
+    assert_empty Audit.all
+    assert_not_requested :any, %r{http://(?:localhost|127\.0\.0\.1):9200}
+  end
+
+  test "reporting an already queued rebuild using the real GoodJob adapter" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+    original_adapter = RebuildRubygemSearchJob.queue_adapter
+    RebuildRubygemSearchJob.disable_test_adapter
+    RebuildRubygemSearchJob.queue_adapter = ActiveJob::QueueAdapters::GoodJobAdapter.new(execution_mode: :external)
+
+    post_search_rebuild
+
+    assert_response :success
+    assert_equal 1, GoodJob::Job.where(job_class: "RebuildRubygemSearchJob").unfinished.count
+
+    post_search_rebuild
+
+    assert_response :success
+    assert_match(/already be queued or running/, flash[:error][:body])
+    assert_equal 1, GoodJob::Job.where(job_class: "RebuildRubygemSearchJob").unfinished.count
+  ensure
+    RebuildRubygemSearchJob.queue_adapter = original_adapter
+  end
+
+  def post_search_rebuild(maintenance_window: "1", comment: "Rebuilding search in a controlled maintenance window")
+    post "/admin/resources/rubygems/actions",
+      params: {
+        action_id: "Avo::Actions::RebuildRubygemSearch",
+        resource_view: "index",
+        fields: { comment:, maintenance_window: }
+      },
+      as: :turbo_stream
+  end
+
   def post_bulk_yank(rubygems)
     post "/admin/resources/rubygems/actions",
       params: {
