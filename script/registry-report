@@ -1,0 +1,104 @@
+#!/bin/sh
+
+##############################################################################
+# Print the registry data report for the Sustaining Package Registries
+# Working Group (rubygems/maintainers#167) from a database loaded with
+# script/load-pg-dump. The queries live in script/registry-report.sql.
+#
+# The public dump only has all-time download totals. Pass an earlier dump
+# with -P to also report downloads between the two dumps and which gems
+# were downloaded in that window. Its gem_downloads table is loaded into
+# previous_gem_downloads in the same database, replacing any earlier copy.
+#
+# To run it on the latest dump, compared with the dump from 4 weeks earlier:
+#
+#   ./script/load-pg-dump -c -d rubygems_development /tmp/public_postgresql.tar
+#   curl -o /tmp/previous.tar https://s3-us-west-2.amazonaws.com/rubygems-dumps/production/public_postgresql/YYYY.MM.DD.HH.MM.SS/public_postgresql.tar
+#   ./script/registry-report -d rubygems_development -P /tmp/previous.tar > report.txt
+#
+# Dumps are listed at
+# https://s3-us-west-2.amazonaws.com/rubygems-dumps/?prefix=production/public_postgresql
+# (dumps in GLACIER storage can't be downloaded).
+##############################################################################
+
+set -e
+
+pg_database=rubygems
+pg_user=postgres
+host=
+port=
+previous_tar=
+previous_at=
+member="public_postgresql/databases/PostgreSQL.sql.gz"
+
+show_help() {
+  cat << EOF
+Usage: ${0##*/} [-h] [-d DATABASE] [-u USER] [-H HOSTNAME] [-p PORT] [-P FILE]
+
+Print the registry data report from a database loaded with script/load-pg-dump.
+
+    -h          display this help and exit
+    -d DATABASE read from this database (default: rubygems)
+    -u USER     connect to postgresql using this username (default: postgres)
+    -H HOSTNAME connect to postgresql using this hostname (default: Unix-domain socket)
+    -p PORT     connect to postgresql using this port (default: 5432)
+    -P FILE     an earlier public_postgresql.tar to compare download counts against
+
+Examples:
+Report from the loaded dump only: ./registry-report -d rubygems_development
+Also compare downloads with an earlier dump: ./registry-report -d rubygems_development -P ~/Downloads/previous.tar
+EOF
+}
+
+OPTIND=1
+while getopts "hd:u:H:p:P:" opt; do
+    case "$opt" in
+        h)
+            show_help
+            exit 0
+            ;;
+        d)  pg_database=$OPTARG
+            ;;
+        u)  pg_user=$OPTARG
+            ;;
+        H)  host=$OPTARG
+            ;;
+        p)  port=$OPTARG
+            ;;
+        P)  previous_tar=$OPTARG
+            ;;
+        '?')
+            show_help >&2
+            exit 1
+            ;;
+    esac
+done
+
+pg_host=
+if [ -n "$host" ]; then
+  pg_host="-h $host"
+fi
+if [ -n "$port" ]; then
+  pg_host="${pg_host} -p $port"
+fi
+
+psql="psql -X -q -v ON_ERROR_STOP=1 $pg_host -U $pg_user -d $pg_database"
+
+if [ -n "$previous_tar" ]; then
+  # The dump file's modification time is when the earlier snapshot was taken.
+  previous_at=$(tar --utc --full-time -tvf "$previous_tar" "$member" | awk '{ print $4 "T" $5 }')
+  echo "Loading gem_downloads from $previous_tar (dumped $previous_at UTC) into previous_gem_downloads" >&2
+  {
+    echo "SET client_min_messages = warning;"
+    echo "DROP TABLE IF EXISTS previous_gem_downloads;"
+    echo "CREATE TABLE previous_gem_downloads (LIKE gem_downloads);"
+    tar xOf "$previous_tar" "$member" | \
+      gunzip -c | \
+      awk '/^COPY public\.gem_downloads /{ copying = 1; sub(/public\.gem_downloads/, "previous_gem_downloads") }
+           copying { print }
+           copying && /^\\\.$/ { copying = 0 }'
+    echo "CREATE UNIQUE INDEX ON previous_gem_downloads (rubygem_id, version_id);"
+  } | $psql
+fi
+
+$psql ${previous_at:+-v previous_at=$previous_at} -f "$(dirname "$0")/registry-report.sql"
