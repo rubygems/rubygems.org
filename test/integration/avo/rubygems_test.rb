@@ -88,6 +88,8 @@ class Avo::RubygemsTest < ActionDispatch::IntegrationTest
   end
 
   def post_search_rebuild(maintenance_window: "1", comment: "Rebuilding search in a controlled maintenance window")
+    # Only count this action's requests, not earlier index setup or cleanup.
+    WebMock.reset_executed_requests!
     post "/admin/resources/rubygems/actions",
       params: {
         action_id: "Avo::Actions::RebuildRubygemSearch",

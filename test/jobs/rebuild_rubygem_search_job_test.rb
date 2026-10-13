@@ -50,6 +50,34 @@ class RebuildRubygemSearchJobTest < ActiveJob::TestCase
     end
   end
 
+  test "failing an interrupted GoodJob rebuild without repeating search writes" do
+    original_adapter = RebuildRubygemSearchJob.queue_adapter
+    RebuildRubygemSearchJob.disable_test_adapter
+    RebuildRubygemSearchJob.queue_adapter = ActiveJob::QueueAdapters::GoodJobAdapter.new(execution_mode: :external)
+    create(:version)
+    active_job = RebuildRubygemSearchJob.perform_later
+    GoodJob.perform_inline("maintenance")
+    index_after_rebuild = Searchkick.client.indices.get_alias(name: @index.name).keys.sole
+
+    # Model worker death after promotion but before recording completion.
+    job = GoodJob::Job.find_by!(active_job_id: active_job.job_id)
+    job.update!(finished_at: nil)
+    job.discrete_executions.sole.update!(finished_at: nil)
+    WebMock.reset_executed_requests!
+
+    assert_raises(GoodJob::InterruptError) { GoodJob.perform_inline("maintenance") }
+
+    assert_predicate job.reload, :finished?
+    assert_match(/GoodJob::InterruptError/, job.error)
+    refute GoodJob::Job.unfinished.exists?(active_job_id: active_job.job_id)
+    GoodJob.perform_inline("maintenance")
+
+    assert_not_requested :any, /./
+    assert_equal [index_after_rebuild], Searchkick.client.indices.get_alias(name: @index.name).keys
+  ensure
+    RebuildRubygemSearchJob.queue_adapter = original_adapter
+  end
+
   test "surfacing import failure without automatically retrying or promoting" do
     create(:version)
     stub_request(:post, %r{/_bulk}).to_return(

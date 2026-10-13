@@ -6,6 +6,7 @@ class RebuildRubygemSearchJob < ApplicationJob
   # Failure can happen after alias promotion. Inspect the index before retrying.
   retry_on StandardError, attempts: 1
 
+  include GoodJob::ActiveJobExtensions::InterruptErrors
   include GoodJob::ActiveJobExtensions::Concurrency
 
   good_job_control_concurrency_with total_limit: 1, key: name
