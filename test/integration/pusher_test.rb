@@ -349,6 +349,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       end
 
       should "create rubygem index" do
+        @rubygem.versions.first.update_column(:created_at, Time.utc(2016, 7, 1))
         @rubygem.update_column("updated_at", Date.new(2016, 0o7, 0o4))
         perform_enqueued_jobs only: ReindexRubygemJob
         response = Searchkick.client.get index: Rubygem.searchkick_index.name, id: @rubygem.id
@@ -377,6 +378,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
           "summary"           => "old summary",
           "description"       => "Some awesome gem",
           "updated"           => "2016-07-04T00:00:00.000Z",
+          "published_at"      => "2016-07-01T00:00:00.000Z",
           "dependencies"      => { "development" => [], "runtime" => [] },
           "suggest"           => { "input" => "gemsgemsgems", "weight" => 0, "contexts" => { "yanked" => false } }
         }

@@ -5,6 +5,7 @@ require "test_helper"
 class RubygemSearchableTest < ActiveSupport::TestCase
   include SearchKickHelper
   include StatsD::Instrument::Assertions
+  include ActiveJob::TestHelper
 
   context "#search_data" do
     setup do
@@ -192,10 +193,10 @@ class RubygemSearchableTest < ActiveSupport::TestCase
 
   context "sort" do
     setup do
-      { "sortgem-b" => [30, 3.days.ago], "sortgem-a" => [10, 1.day.ago], "sortgem-c" => [20, 2.days.ago] }.each do |name, (downloads, updated_at)|
+      { "sortgem-b" => [30, 20.days.ago], "sortgem-a" => [10, 5.days.ago], "sortgem-c" => [20, 10.days.ago] }.each do |name, (downloads, published)|
         rubygem = create(:rubygem, name:, downloads:)
-        create(:version, rubygem:)
-        rubygem.update_column(:updated_at, updated_at)
+        create(:version, rubygem:, number: "2.0.0", created_at: published)
+        rubygem.update_column(:updated_at, published)
         rubygem.reindex(refresh: true)
       end
     end
@@ -212,9 +213,31 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       assert_equal %w[sortgem-a sortgem-b sortgem-c], response.map(&:name)
     end
 
-    should "order by most recently updated" do
-      _, response = ElasticSearcher.new("sortgem", sort: "recent").search
+    should "order by indexed publication dates after publishing and yanking" do
+      error, response = ElasticSearcher.new("sortgem", sort: "recent").search
 
+      assert_nil error
+      assert_equal %w[sortgem-a sortgem-c sortgem-b], response.map(&:name)
+
+      older = Rubygem.find_by!(name: "sortgem-b")
+      # A backport is newer by publication date, not by version number.
+      published = create(:version, rubygem: older, number: "1.0.1", created_at: 2.days.ago, indexed: false)
+      AfterVersionWriteJob.perform_now(version: published)
+      perform_enqueued_jobs only: ReindexRubygemJob
+      Rubygem.searchkick_index.refresh
+
+      error, response = ElasticSearcher.new("sortgem", sort: "recent").search
+
+      assert_nil error
+      assert_equal %w[sortgem-b sortgem-a sortgem-c], response.map(&:name)
+
+      create(:deletion, version: published)
+      perform_enqueued_jobs only: ReindexRubygemJob
+      Rubygem.searchkick_index.refresh
+
+      error, response = ElasticSearcher.new("sortgem", sort: "recent").search
+
+      assert_nil error
       assert_equal %w[sortgem-a sortgem-c sortgem-b], response.map(&:name)
     end
 

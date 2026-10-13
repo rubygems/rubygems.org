@@ -16,11 +16,10 @@ class ElasticSearcher
   end
 
   # Result orders offered on the search page. "relevance" keeps the scored
-  # order; the rest mirror Rubygem::SORTS using indexed fields ("updated" is the
-  # gem's last version change).
+  # order; the rest mirror Rubygem::SORTS using indexed fields.
   SORTS = {
     "relevance" => nil,
-    "recent" => [{ updated: "desc" }, { "name.unanalyzed" => "asc" }],
+    "recent" => [{ published_at: "desc" }, { "name.unanalyzed" => "asc" }],
     "downloads" => [{ downloads: "desc" }, { "name.unanalyzed" => "asc" }],
     "name" => ["name.unanalyzed" => "asc"]
   }.freeze
