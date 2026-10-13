@@ -18,10 +18,6 @@ class OIDC::AccessPolicy < ApplicationModel
     end
 
     class Condition < ApplicationModel
-      # Ruby memoizes most catastrophic patterns, but one using a backreference
-      # or a lookahead still backtracks without bound.
-      MATCH_TIMEOUT = 0.5
-
       def match?(jwt)
         claim_value = jwt[claim]
         case operator
@@ -48,7 +44,7 @@ class OIDC::AccessPolicy < ApplicationModel
       # wrapping decides what compiles, so validating the bare value could
       # disagree with what is matched.
       def matcher
-        Regexp.new("\\A(?:#{value})\\z", timeout: MATCH_TIMEOUT)
+        Regexp.new("\\A(?:#{value})\\z")
       end
 
       attribute :operator, :string

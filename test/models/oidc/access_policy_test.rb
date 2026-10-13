@@ -254,7 +254,7 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
                                                 ])
       end
 
-      should "deny within the match timeout instead of running on" do
+      should "deny within Regexp.timeout instead of running on" do
         jwt = JSON::JWT.new({ iss: "iss", sub: "a" * 40 })
         started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 
@@ -262,7 +262,7 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
 
         elapsed = Process.clock_gettime(Process::CLOCK_MONOTONIC) - started
 
-        assert_operator elapsed, :<, OIDC::AccessPolicy::Statement::Condition::MATCH_TIMEOUT * 4
+        assert_operator elapsed, :<, Regexp.timeout * 4
       end
     end
 
