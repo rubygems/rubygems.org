@@ -141,6 +141,8 @@ es:
               already_invited: ya ha sido invitado a esta gema
         user:
           attributes:
+            email:
+              current_email_unconfirmed:
             handle:
               invalid:
             password:
@@ -284,6 +286,11 @@ es:
         activar tu cuenta.
     update:
       confirmed_email: Tu dirección de correo se ha verificado.
+      email_label:
+      explanation:
+      new_email_label:
+      submit:
+      title:
       token_failure: Por favor verifica la URL o inténtalo nuevamente.
   home:
     index:
@@ -370,21 +377,21 @@ es:
   mailer:
     confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
     confirmation_subject: Por favor confirma tu dirección de correo con %{host}
-    link_expiration_explanation_html: Por favor ten en cuenta que este enlace es válido
-      solo durante 3 horas. Puedes solicitar un enlace actualizado usando la página
-      de <a href='https://rubygems.org/email_confirmations/new'>reenvío del correo
-      de confirmación</a>.
     email_confirmation:
       title: CONFIRMACIÓN DE EMAIL
       subtitle: "¡Último paso!"
       confirmation_link: Confirma la dirección de correo
       welcome_message: Bienvenidos a %{host}! Haz clic en el enlace de abajo para
         verificar tu dirección de correo.
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     email_reset:
       title: CAMBIO DE EMAIL
       subtitle: "¡Hola %{handle}!"
       visit_link_instructions: Cambiaste tu dirección de correo en %{host}. Por favor
         visita el siguiente enlace para reactivar tu cuenta.
+      link_expiration_explanation:
+      link_expiration_explanation_html:
     deletion_complete:
       title: ELIMINACIÓN COMPLETADA
       subtitle: "¡Adiós!"
@@ -437,6 +444,7 @@ es:
     email_reset_update:
       subject: Has solicitado actualizar la dirección de correo en %{host}
       title: SOLICITUD DE ACTUALIZACIÓN DE CORREO
+      pending_change:
     ownership_confirmation:
       subject: Por favor confirma la propiedad de la gema %{gem} en %{host}
       title: CONFIMACIÓN DE PROPIEDAD
@@ -1161,7 +1169,12 @@ es:
     version:
       yanked: borrada
       ruby_abi:
+      content_address:
+      no_content_address:
+      multi_abi:
+      source_gem:
       vulnerable:
+      critically_vulnerable:
   webauthn_credentials:
     callback:
       success: Has dado de alta con éxito un dispositivo de seguridad.

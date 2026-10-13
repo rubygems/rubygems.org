@@ -99,24 +99,6 @@ class ActiveSupport::TestCase
     port = 31_337 + worker
     Capybara.server_port = port
     WebAuthn.configuration.allowed_origins = ["http://localhost:#{port}"]
-
-    if Toxiproxy.running?
-      toxiproxy_port = 22_222 + worker
-      toxiproxy_listen_host = ENV.fetch("TOXIPROXY_LISTEN_HOST", "127.0.0.1")
-      toxiproxy_upstream = ENV.fetch("TOXIPROXY_UPSTREAM", "127.0.0.1:9200")
-      Toxiproxy.populate(
-        [
-
-          name: "elasticsearch_#{worker}",
-          listen: "#{toxiproxy_listen_host}:#{toxiproxy_port}",
-          upstream: toxiproxy_upstream
-
-        ]
-      )
-      Searchkick.client = OpenSearch::Client.new(
-        url: "http://localhost:#{toxiproxy_port}"
-      )
-    end
   end
 
   parallelize_teardown do |_worker|
@@ -138,15 +120,12 @@ class ActiveSupport::TestCase
     Capybara::Node::Simple.new(@response.body)
   end
 
-  def requires_toxiproxy
-    return if Toxiproxy.running?
-    raise "Toxiproxy not running, but REQUIRE_TOXIPROXY was set." if ENV["REQUIRE_TOXIPROXY"]
-    skip("Toxiproxy is not running, but was required for this test.")
-  end
-
-  def toxiproxy_elasticsearch
-    worker = self.class.parallel_worker_number
-    Toxiproxy[worker ? :"elasticsearch_#{worker}" : :elasticsearch]
+  def elasticsearch_down
+    urls_including_dead_connections = Searchkick.client.transport.transport.connections.all.map { |connection| connection.full_url("") }
+    stub = stub_request(:any, /\A#{Regexp.union(urls_including_dead_connections)}/).to_raise(Errno::ECONNRESET)
+    yield
+  ensure
+    remove_request_stub(stub) if stub
   end
 
   def requires_avo_pro
@@ -271,6 +250,40 @@ class ActiveSupport::TestCase
     end
   end
 
+  # Gives user a discoverable credential without driving the registration UI:
+  # the WebauthnCredential row holds the public key, and the virtual
+  # authenticator holds the matching private key. Use this when a test is about
+  # authenticating, not registering.
+  def add_webauthn_credential_to_virtual_authenticator(user)
+    key = OpenSSL::PKey::EC.generate("prime256v1")
+    cose_public_key = COSE::Key::EC2.from_pkey(key)
+    cose_public_key.alg = -7 # ES256
+    credential_id = SecureRandom.random_bytes(16)
+
+    credential = create(:webauthn_credential, user:, nickname: "new cred",
+                        external_id: Base64.urlsafe_encode64(credential_id, padding: false),
+                        public_key: WebAuthn.configuration.encoder.encode(cose_public_key.serialize),
+                        sign_count: 0)
+
+    enable_virtual_authenticator(resident_key: true, user_verification: true, user_verified: true)
+    page.driver.with_playwright_page do
+      # CDP binary fields are standard (not URL-safe) base64.
+      @cdp_session.send_message("WebAuthn.addCredential", params: {
+                                  authenticatorId: @authenticator_id,
+                                  credential: {
+                                    credentialId: Base64.strict_encode64(credential_id),
+                                    isResidentCredential: true,
+                                    rpId: URI(Capybara.app_host).host,
+                                    privateKey: Base64.strict_encode64(key.private_to_der),
+                                    userHandle: Base64.strict_encode64(Base64.urlsafe_decode64(user.webauthn_id)),
+                                    signCount: 0
+                                  }
+                                })
+    end
+
+    credential
+  end
+
   def disable_virtual_authenticator
     return unless @cdp_session && @authenticator_id
 
@@ -359,6 +372,21 @@ class ActionDispatch::IntegrationTest
     end
 
     assert_nil request.env[:clearance].current_user
+  end
+
+  # Asserts that the block's sign-in attempt is denied before any factor is verified,
+  # so no recovery code is consumed and no WebAuthn sign count advances.
+  def assert_mfa_sign_in_denied(user, credential: nil, &)
+    user_state = user.reload.attributes
+    credential_state = credential&.reload&.attributes
+
+    assert_no_difference(-> { user.events.where(tag: Events::UserEvent::LOGIN_SUCCESS).count }, &)
+
+    assert_response :unauthorized
+    refute_signed_in
+    assert_predicate cookies[:remember_token], :blank?
+    assert_equal user_state, user.reload.attributes
+    assert_equal credential_state, credential.reload.attributes if credential
   end
 end
 

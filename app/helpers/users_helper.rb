@@ -17,10 +17,10 @@ module UsersHelper
     return email if email.blank?
 
     local, domain = email.split("@", 2)
-    return email unless domain
+    return email if domain.blank?
 
     domain_name, tld = domain.split(".", 2)
-    return email unless tld
+    return "#{obfuscate_part(local, 1)}@#{obfuscate_part(domain, 1)}" unless tld
 
     obfuscated_local = obfuscate_part(local, 1)
     obfuscated_domain = obfuscate_part(domain_name, 1)

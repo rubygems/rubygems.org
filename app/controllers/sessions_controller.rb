@@ -148,7 +148,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def find_mfa_user
-    @user = User.find_by(id: session[:mfa_user]) if mfa_session_active? && session[:mfa_user]
+    @user = User.find_by(id: session[:mfa_user]) if mfa_session_active? && session[:mfa_user] && session[:mfa_flow] == controller_path
     return if @user
     delete_mfa_session
     login_failure t("multifactor_auths.session_expired")

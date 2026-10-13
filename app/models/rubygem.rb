@@ -198,10 +198,10 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
     order(:rubygem_id).by_position.published.select(:rubygem_id, :full_name, :number, :platform)
   }, class_name: "Version", inverse_of: :rubygem
 
-  def public_versions_with_extra_version(extra_version)
-    versions = public_versions.limit(5).to_a
-    versions << extra_version
-    versions.uniq.sort_by(&:position)
+  def public_versions_with_extra_version(extra_version = nil)
+    positions = versions.published.reorder(:position).distinct.limit(5).pluck(:position) | [extra_version&.position].compact
+    version_ids = versions.published.where(position: positions).pluck(:id) | [extra_version&.id].compact
+    versions.where(id: version_ids).by_display_order.to_a
   end
 
   # NB: this intentionally does not default the platform to ruby.
@@ -319,7 +319,7 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def pushable?
-    new_record? || (versions.indexed.none? && not_protected? && !reserved_name?)
+    new_record? || (versions.indexed.none? && versions.pushing.none? && not_protected? && !reserved_name?)
   end
 
   def reserved_name?
@@ -370,8 +370,7 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def disown
-    ownerships_including_unconfirmed.find_each(&:delete)
-    ownerships_including_unconfirmed.clear
+    ownerships_including_unconfirmed.includes(:user, api_key_rubygem_scopes: :api_key).destroy_all
 
     oidc_rubygem_trusted_publishers.find_each(&:delete)
     oidc_rubygem_trusted_publishers.clear

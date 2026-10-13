@@ -489,13 +489,13 @@ class PusherTest < ActiveSupport::TestCase
       end
 
       should "be true if not owned by user but no indexed versions exist" do
-        create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
+        create(:version, :yanked, rubygem: @rubygem, number: "0.1.1")
 
         assert @cutter.authorize
       end
 
       should "be false if gem is pushable but is reserved" do
-        create(:version, rubygem: @rubygem, number: "0.1.1", indexed: false)
+        create(:version, :yanked, rubygem: @rubygem, number: "0.1.1")
         create(:gem_name_reservation, name: @rubygem.name.downcase)
 
         refute @cutter.authorize
@@ -571,6 +571,78 @@ class PusherTest < ActiveSupport::TestCase
     end
   end
 
+  test "rolls back disowning a fully yanked gem when creating the replacement owner fails" do
+    previous_owner = create(:user)
+    rubygem = create(:rubygem, name: "test", owners: [previous_owner])
+    create(:version, :yanked, rubygem: rubygem, number: "0.1.0")
+    ownership = rubygem.ownerships.sole
+    scoped_key = create(:api_key, owner: previous_owner, ownership: ownership, scopes: %i[push_rubygem])
+    original_event_ids = rubygem.events.ids
+
+    invalid_ownership = Ownership.new
+    invalid_ownership.errors.add(:base, "forced replacement failure")
+    Ownership.stubs(:create_confirmed).raises(ActiveRecord::RecordInvalid.new(invalid_ownership))
+
+    refute @cutter.process
+
+    assert_equal [ownership.id], rubygem.ownerships_including_unconfirmed.ids
+    refute_predicate scoped_key.reload, :soft_deleted?
+    assert_equal ownership, scoped_key.ownership
+    assert_equal original_event_ids, rubygem.events.ids
+    assert_equal [["0.1.0", false]], rubygem.versions.pluck(:number, :indexed)
+    refute_predicate rubygem.reload, :indexed?
+  end
+
+  context "when a fully yanked gem changes after a push is authorized" do
+    setup do
+      @previous_owner = create(:user)
+      @rubygem = create(:rubygem, name: "revivable", owners: [@previous_owner])
+      create(:version, :yanked, rubygem: @rubygem, number: "0.1.0")
+    end
+
+    should "reject a non-owner push once the owner has indexed a version" do
+      cutter = authorized_pusher(@user, "9.9.9")
+      create(:version, rubygem: @rubygem, number: "1.0.0")
+
+      assert_push_rejected(cutter)
+      assert_equal "You do not have permission to push to this gem. " \
+                   "Ask an owner to add you with: gem owner revivable --add #{@user.email}", cutter.message
+      assert_equal [@previous_owner], @rubygem.reload.owners
+      assert_equal %w[1.0.0], @rubygem.versions.indexed.pluck(:number)
+    end
+
+    should "accept an owner push once another owner push has indexed a version" do
+      cutter = authorized_pusher(@previous_owner, "2.0.0")
+      create(:version, rubygem: @rubygem, number: "1.0.0")
+
+      assert cutter.verify_gem_scope && cutter.verify_mfa_requirement && cutter.validate
+      assert cutter.save
+
+      assert_equal 200, cutter.code
+      assert_equal [@previous_owner], @rubygem.reload.owners
+      assert_equal %w[1.0.0 2.0.0], @rubygem.versions.indexed.pluck(:number).sort
+    end
+
+    should "reject a second non-owner push while the first push is still writing its gem" do
+      second_user = create(:user)
+      first = authorized_pusher(@user, "2.0.0")
+      second = authorized_pusher(second_user, "3.0.0")
+
+      assert first.verify_gem_scope && first.verify_mfa_requirement && first.validate
+      assert first.send(:update)
+
+      assert_push_rejected(second)
+      assert_equal "You do not have permission to push to this gem. " \
+                   "Ask an owner to add you with: gem owner revivable --add #{second_user.email}", second.message
+
+      first.send(:write_gem, first.body, first.spec_contents)
+      first.send(:after_write)
+
+      assert_equal [@user], @rubygem.reload.owners
+      assert_equal %w[2.0.0], @rubygem.versions.indexed.pluck(:number)
+    end
+  end
+
   context "with attestations" do
     should "not push gem if api key owner is not a trusted publisher" do
       @cutter.stubs(:attestations).returns([{}])
@@ -620,5 +692,36 @@ class PusherTest < ActiveSupport::TestCase
       refute @cutter.verify_sigstore
       assert_equal "Attestation verification failed:\nAttestation failed to validate", @cutter.message
     end
+  end
+
+  private
+
+  def authorized_pusher(user, number)
+    cutter = Pusher.new(create(:api_key, owner: user), build_gem(new_gemspec(@rubygem.name, number, "Gemcutter", "ruby")))
+
+    assert cutter.pull_spec && cutter.find
+    assert cutter.authorize, "expected #{user.handle} to be allowed to push #{@rubygem.name}"
+    cutter
+  end
+
+  def gem_state(rubygem)
+    {
+      versions: rubygem.versions.order(:id).pluck(:id, :indexed),
+      ownerships: rubygem.ownerships_including_unconfirmed.order(:id).pluck(:id, :user_id),
+      trusted_publishers: rubygem.oidc_rubygem_trusted_publishers.ids,
+      events: rubygem.events.ids
+    }
+  end
+
+  def assert_push_rejected(cutter)
+    assert cutter.verify_gem_scope && cutter.verify_mfa_requirement && cutter.validate
+
+    assert_no_changes -> { gem_state(cutter.rubygem) } do
+      assert_no_enqueued_jobs { refute cutter.save }
+    end
+    assert_equal 403, cutter.code
+    refute Version.exists?(full_name: cutter.version.full_name)
+    assert_nil RubygemFs.instance.get("gems/#{cutter.version.gem_file_name}")
+    assert_nil RubygemFs.instance.get("quick/Marshal.4.8/#{cutter.version.full_name}.gemspec.rz")
   end
 end

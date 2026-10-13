@@ -18,7 +18,7 @@ class UsersController < ApplicationController
         Digest::SHA256.hexdigest(@user.handle || @user.email),
         @user.id.to_s
       )
-      Mailer.email_confirmation(@user).deliver_later
+      Mailer.email_confirmation(@user, @user.email).deliver_later
       flash[:notice] = t(".email_sent")
       redirect_back_or_to root_path
     else

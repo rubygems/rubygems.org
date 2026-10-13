@@ -79,7 +79,6 @@ class PasswordsController < ApplicationController
     disable_cache
     no_referrer
     response.headers["Cache-Control"] = "private, no-store"
-    response.headers["Surrogate-Control"] = "no-store"
   end
 
   def set_compromised_flag

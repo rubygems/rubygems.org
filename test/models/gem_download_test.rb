@@ -82,8 +82,7 @@ class GemDownloadTest < ActiveSupport::TestCase
       end
 
       should "update total_count when elasticsearch is down" do
-        requires_toxiproxy
-        toxiproxy_elasticsearch.down do
+        elasticsearch_down do
           GemDownload.bulk_update(@data)
           total_count = @counts.sum
 

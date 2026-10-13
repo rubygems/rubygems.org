@@ -5,12 +5,11 @@
 class StuckPushStatsJob < ApplicationJob
   queue_as "stats"
 
-  GRACE_PERIOD = 10.minutes
   LOOKBACK = 1.day
 
   def perform
     stuck = Version.where(indexed: false, yanked_at: nil)
-      .where(created_at: LOOKBACK.ago..GRACE_PERIOD.ago)
+      .where(created_at: LOOKBACK.ago..Version::PUSH_GRACE_PERIOD.ago)
       .count
 
     StatsD.gauge("push.stuck_versions", stuck)

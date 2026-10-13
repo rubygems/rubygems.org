@@ -19,9 +19,8 @@ module PasswordResettable
     token = SecureRandom.hex(24)
     update_columns(
       password_reset_token_digest: self.class.password_reset_token_digest(token),
-      password_reset_token_expires_at: Gemcutter::EMAIL_TOKEN_EXPIRES_AFTER.from_now,
-      confirmation_token: nil,
-      token_expires_at: nil,
+      password_reset_token_expires_at: Gemcutter::PASSWORD_RESET_TOKEN_EXPIRES_AFTER.from_now,
+      **cleared_email_confirmation_attributes,
       unconfirmed_email: nil
     )
     token
@@ -31,8 +30,7 @@ module PasswordResettable
     update_columns(
       password_reset_token_digest: nil,
       password_reset_token_expires_at: nil,
-      confirmation_token: nil,
-      token_expires_at: nil,
+      **cleared_email_confirmation_attributes,
       unconfirmed_email: nil
     )
   end
@@ -53,7 +51,7 @@ module PasswordResettable
       else
         self.password = new_password
         if valid?
-          self.confirmation_token = nil
+          clear_email_confirmation
           self.password_reset_token_digest = nil
           self.password_reset_token_expires_at = nil
           generate_remember_token

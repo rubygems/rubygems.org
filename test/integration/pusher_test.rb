@@ -316,7 +316,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
 
   context "successfully saving a gemcutter" do
     setup do
-      @rubygem = create(:rubygem, name: "gemsgemsgems")
+      @rubygem = create(:rubygem, name: "gemsgemsgems", owners: [@user])
       @cutter.stubs(:rubygem).returns @rubygem
       create(:version, rubygem: @rubygem, number: "0.1.1", summary: "old summary", pusher_api_key: @cutter.api_key)
       @spec = mock
@@ -447,7 +447,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
 
   context "successfully saving a gemcutter scoped to one Ruby ABI" do
     setup do
-      @rubygem = create(:rubygem, name: "sandworm")
+      @rubygem = create(:rubygem, name: "sandworm", owners: [@user])
       @version = create(
         :version,
         rubygem: @rubygem,
@@ -547,7 +547,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
 
   context "pushing a new version" do
     setup do
-      @rubygem = create(:rubygem)
+      @rubygem = create(:rubygem, owners: [@user])
       @cutter.stubs(:rubygem).returns @rubygem
       create(:version, rubygem: @rubygem, summary: "old summary")
       @version = create(:version, rubygem: @rubygem, summary: "new summary", pusher_api_key: @cutter.api_key)

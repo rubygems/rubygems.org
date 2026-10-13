@@ -215,8 +215,8 @@ class SignInTest < ApplicationSystemTestCase
     click_button "Authenticate"
 
     assert_current_path(dashboard_path)
-    refute page.has_selector? "#flash_notice"
     assert_text "Dashboard"
+    assert_no_selector "#flash_notice"
   end
 
   test "signing in with mfa enabled on `ui_and_api` with gem ownership that exceeds the recommended download threshold" do
@@ -238,8 +238,8 @@ class SignInTest < ApplicationSystemTestCase
     click_button "Authenticate"
 
     assert_current_path(dashboard_path)
-    refute page.has_selector? "#flash_notice"
     assert_text "Dashboard"
+    assert_no_selector "#flash_notice"
   end
 
   test "siging in when user does not have handle" do
@@ -308,9 +308,5 @@ class SignInTest < ApplicationSystemTestCase
 
     assert_text "Sign in"
     assert_text "Bad email or password."
-  end
-
-  teardown do
-    Capybara.reset_sessions!
   end
 end

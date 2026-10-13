@@ -10,9 +10,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
   test "bulk delete users" do
     admin_user = create(:admin_github_user, :is_admin)
     users = create_list(:user, 2)
-    avo_sign_in_as admin_user
-
-    visit avo.resources_users_path
+    avo_sign_in_as admin_user, at: avo.resources_users_path
 
     users.each do |user|
       find("tr[data-resource-id='#{user.id}'] input[type='checkbox']").check
@@ -32,13 +30,13 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
   test "bulk delete confirmation counts all matching users across pages" do
     admin_user = create(:admin_github_user, :is_admin)
-    # Cross-page behavior requires more than Avo's 24-row page size.
-    users = create_list(:user, 25) # rubocop:disable FactoryBot/ExcessiveCreateList
+    # Cross-page behavior requires more matching users than fit on one page,
+    # so use Avo's smallest page size option (12) to keep setup small.
+    users = create_list(:user, 13) # rubocop:disable FactoryBot/ExcessiveCreateList
     users.each { |user| create(:api_key, owner: user, name: "cross-page-campaign-key") }
     unrelated_user = create(:user)
-    avo_sign_in_as admin_user
+    avo_sign_in_as admin_user, at: avo.resources_users_path(per_page: 12)
 
-    visit avo.resources_users_path
     click_on "Filters"
     fill_in id: "avo_filters_api_key_name", with: "cross-page-campaign"
     click_on "Filter by API key name"
@@ -49,12 +47,12 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     assert_text "Select all matching"
     click_on "Select all matching"
 
-    assert_text "25 records selected from all pages"
+    assert_text "13 records selected from all pages"
     click_button "Actions"
     click_on "Delete User"
 
     within("[role='dialog']") do
-      assert_text "delete 25 selected users"
+      assert_text "delete 13 selected users"
     end
   end
 
@@ -71,9 +69,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
     unrelated_user = create(:user, created_at: matching_created_at)
     create(:api_key, owner: unrelated_user, name: "unrelated-key")
-    avo_sign_in_as admin_user
-
-    visit avo.resources_users_path
+    avo_sign_in_as admin_user, at: avo.resources_users_path
 
     click_on "Filters"
 
@@ -245,7 +241,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
             "changes" => {
               "email" => [user_attributes[:email], user.email],
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
-              "token_expires_at" => [user_attributes[:token_expires_at].as_json, user.token_expires_at.as_json],
               "mfa_level" => %w[ui_and_api disabled],
               "totp_seed" => [user_attributes[:totp_seed], nil],
               "mfa_hashed_recovery_codes" => [user_attributes[:mfa_hashed_recovery_codes], []],
@@ -262,7 +257,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "encrypted_password",
                 "mfa_level",
                 "mfa_hashed_recovery_codes",
-                "token_expires_at",
                 "totp_seed",
                 "remember_token",
                 "updated_at"
@@ -508,7 +502,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
               "mfa_hashed_recovery_codes" => [user_attributes[:mfa_hashed_recovery_codes], []],
               "mfa_level" => %w[ui_and_api disabled],
               "remember_token" => [user_attributes[:remember_token], nil],
-              "token_expires_at" => [user_attributes[:token_expires_at].as_json, user.token_expires_at.as_json],
               "totp_seed" => [user_attributes[:totp_seed], nil],
               "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json]
             },
@@ -520,7 +513,6 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "encrypted_password",
                 "mfa_level",
                 "mfa_hashed_recovery_codes",
-                "token_expires_at",
                 "totp_seed",
                 "remember_token",
                 "updated_at"
@@ -556,6 +548,8 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       avo_sign_in_as admin_user
 
       user = create(:user)
+      user.update!(unconfirmed_email: "stale-pending@rubygems-test.org")
+      setup_event_ids = user.events.ids
       user_attributes = user.attributes.with_indifferent_access
 
       visit avo.resources_user_path(user)
@@ -583,7 +577,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
       user.reload
 
       audit = user.audits.sole
-      email_added_event = user.events.where(tag: Events::UserEvent::EMAIL_ADDED).sole
+      email_added_event = user.events.where.not(id: setup_event_ids).where(tag: Events::UserEvent::EMAIL_ADDED).sole
       email_sent_event = user.events.where(tag: Events::UserEvent::EMAIL_SENT).sole
 
       page.assert_text audit.id
@@ -598,16 +592,18 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
                 "updated_at" => [user_attributes[:updated_at].as_json, user.updated_at.as_json],
                 "email" => [user_attributes[:email], user.email],
                 "email_confirmed" => [true, false],
-                "confirmation_token" => [user_attributes[:confirmation_token], user.confirmation_token],
-                "token_expires_at" => [user_attributes[:token_expires_at].as_json, user.token_expires_at.as_json]
+                "unconfirmed_email" => ["stale-pending@rubygems-test.org", nil]
               },
               "unchanged" => user.attributes
                 .except(
                   "email",
-                  "token_expires_at",
                   "email_confirmed",
-                  "confirmation_token",
+                  "unconfirmed_email",
                   "updated_at"
+                ).merge(
+                  "email_confirmation_email" => user_attributes[:email_confirmation_email],
+                  "email_confirmation_token_digest" => user_attributes[:email_confirmation_token_digest],
+                  "email_confirmation_token_expires_at" => user_attributes[:email_confirmation_token_expires_at]
                 ).transform_values(&:as_json)
             },
             email_added_event.to_gid.as_json => {
@@ -638,9 +634,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
 
   test "create user" do
     admin_user = create(:admin_github_user, :is_admin)
-    avo_sign_in_as admin_user
-
-    visit avo.resources_users_path
+    avo_sign_in_as admin_user, at: avo.resources_users_path
 
     click_button "Actions"
     click_on "Create User"

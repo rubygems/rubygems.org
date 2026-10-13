@@ -28,8 +28,15 @@ module VersionsHelper
     end
   end
 
-  def version_advisory?(advisories, version)
-    Array(advisories).any? { |advisory| advisory.affects?(version) }
+  def version_advisory_warning(advisories, version)
+    affecting = Array(advisories).select { |advisory| advisory.affects?(version) }
+    return if affecting.empty?
+
+    if affecting.any? { |advisory| advisory.critical? || advisory.malware? }
+      { class: "text-red-600 dark:text-red-400", icon: "error", label: t("versions.version.critically_vulnerable") }
+    else
+      { class: "text-yellow-700 dark:text-yellow-400", icon: "warning", label: t("versions.version.vulnerable") }
+    end
   end
 
   def download_count_component(rubygem, **options)

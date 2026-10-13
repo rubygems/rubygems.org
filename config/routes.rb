@@ -253,6 +253,7 @@ Rails.application.routes.draw do
 
     resource :email_confirmations, only: %i[new create] do
       get 'confirm', to: 'email_confirmations#update', as: :update
+      post 'confirm', to: 'email_confirmations#confirm', as: :confirm
       post 'otp_update', to: 'email_confirmations#otp_update', as: :otp_update
       post 'webauthn_update', to: 'email_confirmations#webauthn_update', as: :webauthn_update
       patch 'unconfirmed'

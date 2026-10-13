@@ -30,6 +30,7 @@ FactoryBot.define do
 
     trait :yanked do
       indexed { false }
+      yanked_at { Time.now.utc }
     end
 
     trait :mfa_required do

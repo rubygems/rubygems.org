@@ -167,6 +167,34 @@ class ParallelPusherTest < ActiveSupport::TestCase
     assert_equal pusher.spec.name, rubygem.reload.name
   end
 
+  should "keep the advisory lock across content address retries during a revival push" do
+    previous_owner = create(:user)
+    rubygem = create(:rubygem, name: track_gem("revival-retry-lock"))
+    rubygem.create_ownership(previous_owner)
+    yanked = create(:version, :yanked, rubygem: rubygem, number: "1.0.0", platform: "x86_64-linux")
+    FeatureFlag.enable_for_actor(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, @user)
+    spec = new_gemspec(rubygem.name, "1.0.0", "GemCutter", "arm64-darwin-25",
+                       ruby_version: "~> 3.4.0", rubygems_version: Version::CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION)
+    pusher = Pusher.new(@api_key, build_gem(spec))
+    content_address = Digest::SHA256.hexdigest(pusher.body.string).first(Version::DEFAULT_CONTENT_ADDRESS_LENGTH)
+    yanked.update_columns(content_address: content_address)
+
+    lock_held_after_rollbacks = []
+    record_lock = lambda do |*, payload|
+      lock_held_after_rollbacks << advisory_lock_held?(rubygem) if payload[:sql].start_with?("ROLLBACK TO SAVEPOINT")
+    end
+    ActiveSupport::Notifications.subscribed(record_lock, "sql.active_record") { pusher.process }
+
+    assert_equal 409, pusher.code
+    assert_includes pusher.message, "could not generate a unique content address"
+    assert_equal [true] * 4, lock_held_after_rollbacks
+    assert_equal [previous_owner], rubygem.reload.owners
+    assert_equal [yanked.id], rubygem.versions.ids
+  ensure
+    FeatureFlag.disable_for_actor(FeatureFlag::CONTENT_ADDRESSABLE_GEM_PUSHES, @user)
+    previous_owner&.destroy!
+  end
+
   should "take the advisory lock before destroying a version or its dependents" do
     rubygem = create(:rubygem, name: track_gem("destroy-lock-ordering"))
     version = create(:version, rubygem: rubygem)
@@ -282,6 +310,16 @@ class ParallelPusherTest < ActiveSupport::TestCase
   ensure
     updater&.kill if updater&.alive?
     updater&.join(5)
+  end
+
+  def advisory_lock_held?(rubygem)
+    Rubygem.connection.select_value(<<~SQL.squish)
+      SELECT EXISTS (
+        SELECT 1 FROM pg_locks
+        WHERE locktype = 'advisory' AND pid = pg_backend_pid() AND granted
+          AND objid = #{Integer(rubygem.id)} AND objsubid = 2
+      )
+    SQL
   end
 
   def wait_for_advisory_lock(pid, updater)

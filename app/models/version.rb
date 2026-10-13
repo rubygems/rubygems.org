@@ -7,6 +7,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   DEFAULT_CONTENT_ADDRESS_LENGTH = 8
   CONTENT_ADDRESS_FORMAT = /\A[0-9a-f]{#{DEFAULT_CONTENT_ADDRESS_LENGTH},64}\z/
   CONTENT_ADDRESSABLE_REQUIRED_RUBYGEMS_VERSION = ">= 4.1.0.a"
+  PUSH_GRACE_PERIOD = 10.minutes
 
   belongs_to :rubygem, touch: true
   has_many :dependencies, lambda {
@@ -142,8 +143,22 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     where(indexed: false)
   end
 
+  def self.pushing
+    where(indexed: false, yanked_at: nil, created_at: PUSH_GRACE_PERIOD.ago..)
+  end
+
   def self.by_position
     order(:position)
+  end
+
+  def self.by_display_order
+    reorder(:position)
+      .order(Arel.sql("CASE WHEN platform = 'ruby' THEN 0 ELSE 1 END ASC"))
+      .order(:platform)
+      .order(Arel.sql("CASE WHEN ruby_abi IS NULL THEN 0 ELSE 1 END ASC"))
+      .order(Arel.sql("string_to_array(ruby_abi, '.')::int[] DESC NULLS FIRST"))
+      .order(:content_address)
+      .order(created_at: :desc, id: :desc)
   end
 
   def self.by_created_at
@@ -269,12 +284,17 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     rubygem.refresh_indexed!
   end
 
-  def previous
-    rubygem.versions.find_by(position: position + 1)
-  end
+  def previous_and_next_in_display_order
+    ids = rubygem.versions.by_display_order.pluck(:id)
+    current_index = ids.index(id)
+    return [nil, nil] unless current_index
 
-  def next
-    rubygem.versions.find_by(position: position - 1)
+    previous_id = ids[current_index + 1]
+    next_id = current_index.positive? ? ids[current_index - 1] : nil
+
+    adjacent_versions = rubygem.versions.where(id: [previous_id, next_id].compact).index_by(&:id)
+
+    [adjacent_versions[previous_id], adjacent_versions[next_id]]
   end
 
   def yanked?
@@ -357,6 +377,12 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def slug
     full_name.delete_prefix("#{rubygem.name}-")
+  end
+
+  def display_id
+    return "#{number}-#{content_address}" if content_addressable?
+
+    number
   end
 
   def downloads_count

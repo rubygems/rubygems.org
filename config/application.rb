@@ -89,7 +89,12 @@ module Gemcutter
 
   DEFAULT_PAGE = 1
   DEFAULT_PAGINATION = 20
-  EMAIL_TOKEN_EXPIRES_AFTER = 3.hours
+  # Password reset links.
+  PASSWORD_RESET_TOKEN_EXPIRES_AFTER = 3.hours
+  # Sign-up confirmation (and resends), plus Avo admin email changes, which leave the account unconfirmed.
+  SIGN_UP_CONFIRMATION_TOKEN_EXPIRES_AFTER = 24.hours
+  # Self-service email change by a user whose current email is already confirmed.
+  EMAIL_CHANGE_CONFIRMATION_TOKEN_EXPIRES_AFTER = 3.hours
   HOST = config["host"].freeze
   HOST_DISPLAY = Gemcutter.config[:host_display].freeze
   NEWS_DAYS_LIMIT = 7.days
@@ -102,7 +107,7 @@ module Gemcutter
   MEMBERSHIP_INVITE_EXPIRES_AFTER = 7.days
   PROTOCOL = config["protocol"]
   REMEMBER_FOR = 2.weeks
-  SEARCH_NUM_REPLICAS = ENV.fetch("SEARCH_NUM_REPLICAS", 1).to_i
+  SEARCH_NUM_REPLICAS = ENV.fetch("SEARCH_NUM_REPLICAS", 0).to_i
   SEARCH_MAX_PAGES = 100 # Limit max page as ES result window is upper bounded by 10_000 records
   STATS_MAX_PAGES = 10
   STATS_PER_PAGE = 10

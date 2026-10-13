@@ -43,6 +43,11 @@ class Rack::Attack
 
   otp_create_action        = { controller: "sessions", action: "otp_create" }
   mfa_password_edit_action = { controller: "passwords", action: "otp_edit" }
+  email_confirmation_mfa_actions = [
+    { controller: "email_confirmations", action: "confirm" },
+    { controller: "email_confirmations", action: "otp_update" },
+    { controller: "email_confirmations", action: "webauthn_update" }
+  ]
 
   protected_ui_mfa_actions = [
     { controller: "totps", action: "create" },
@@ -50,7 +55,7 @@ class Rack::Attack
     { controller: "multifactor_auths", action: "update" },
     otp_create_action,
     mfa_password_edit_action
-  ]
+  ] + email_confirmation_mfa_actions
 
   protected_api_key_actions = [
     { controller: "api/v1/api_keys", action: "show" },
@@ -144,6 +149,9 @@ class Rack::Attack
         # password#otp_edit has the reset user bound to the session
         elsif protected_route?([mfa_password_edit_action], req.path, req.request_method)
           action_dispatch_req.session.fetch("password_reset_user", "").presence
+        # email confirmation binds the user being confirmed to the session
+        elsif protected_route?(email_confirmation_mfa_actions, req.path, req.request_method)
+          action_dispatch_req.session.fetch("email_confirmation_user", "").presence
         else
           remember_token_user_email(req)
         end

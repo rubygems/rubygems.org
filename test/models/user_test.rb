@@ -304,6 +304,28 @@ class UserTest < ActiveSupport::TestCase
         assert_contains user.errors[:unconfirmed_email],
           I18n.t("activerecord.errors.messages.disposable_email_domain", domain: "mailinator.com")
       end
+
+      should "be invalid while the current email is unconfirmed" do
+        user = create(:user, email_confirmed: false)
+        user.unconfirmed_email = "new@rubygems-test.org"
+
+        refute_predicate user, :valid?
+        assert_contains user.errors[:email], "must be confirmed before it can be changed"
+      end
+
+      should "be valid once the current email is confirmed" do
+        user = create(:user)
+        user.unconfirmed_email = "new@rubygems-test.org"
+
+        assert_predicate user, :valid?
+      end
+
+      should "not block an unconfirmed user from clearing a stale pending email" do
+        user = create(:user, unconfirmed_email: "stale@rubygems-test.org")
+        user.update_columns(email_confirmed: false)
+
+        assert user.update(unconfirmed_email: nil)
+      end
     end
 
     context "twitter_username" do
@@ -436,51 +458,81 @@ class UserTest < ActiveSupport::TestCase
       assert_equal [my_rubygem], @user.rubygems
     end
 
-    context "generate_confirmation_token" do
-      should "set confirmation token and token_expires_at" do
-        assert_changed(@user, :confirmation_token, :token_expires_at) do
-          @user.generate_confirmation_token
-          @user.save!
-        end
+    context "email confirmation tokens" do
+      should "store only a digest for initial verification and expire it after 24 hours" do
+        user = create(:user, :unconfirmed)
+
+        token = user.issue_email_confirmation!(user.email)
+
+        refute_equal token, user.reload.email_confirmation_token_digest
+        assert_equal User.email_confirmation_token_digest(token), user.email_confirmation_token_digest
+        assert_equal user.email, user.email_confirmation_email
+        assert_in_delta 24.hours.from_now, user.email_confirmation_token_expires_at, 2.seconds
+        assert_equal user, User.find_by_email_confirmation_token(token)
+        assert user.valid_email_confirmation_token?(token)
       end
 
-      context "when user has an unconfirmed email" do
-        setup do
-          @user.update(unconfirmed_email: "unconfirmed@rubygems-test.org")
-        end
+      should "expire an email-change token after three hours" do
+        @user.update!(unconfirmed_email: "unconfirmed@rubygems-test.org")
 
-        should "delete the unconfirmed email by default" do
-          assert_changed(@user, :unconfirmed_email, :confirmation_token, :token_expires_at) do
-            @user.generate_confirmation_token
-            @user.save!
-          end
+        token = @user.issue_email_confirmation!(@user.unconfirmed_email)
 
-          assert_nil @user.unconfirmed_email
-        end
-
-        should "not delete unconfirmed email when reset_unconfirmed_email is false" do
-          assert_changed(@user, :confirmation_token, :token_expires_at) do
-            @user.generate_confirmation_token(reset_unconfirmed_email: false)
-            @user.save!
-          end
-
-          assert_equal "unconfirmed@rubygems-test.org", @user.unconfirmed_email
-        end
+        assert @user.valid_email_confirmation_token?(token)
+        assert_in_delta 3.hours.from_now, @user.email_confirmation_token_expires_at, 2.seconds
       end
 
-      should "generate a sufficiently long token" do
-        @user.generate_confirmation_token
-        @user.save!
+      should "treat the exact expiry instant as expired" do
+        user = create(:user, :unconfirmed)
+        token = user.issue_email_confirmation!(user.email)
+        expiry = user.email_confirmation_token_expires_at
 
-        assert_operator @user.confirmation_token.length, :>=, 24, "Token must be at least 24 characters long"
+        travel_to(expiry, with_usec: true) { refute user.reload.valid_email_confirmation_token?(token) }
       end
-    end
 
-    context "unconfirmed_email update" do
-      should "set confirmation token and token_expires_at" do
-        assert_changed(@user, :confirmation_token, :token_expires_at) do
-          @user.update(unconfirmed_email: "some@one.com")
-        end
+      should "record an email verified event when confirming the sign-up email" do
+        user = create(:user, :unconfirmed)
+        token = user.issue_email_confirmation!(user.email)
+
+        assert_equal :confirmed, user.confirm_email_with_token(token)
+
+        event = user.events.where(tag: Events::UserEvent::EMAIL_VERIFIED).sole
+
+        assert_equal user.email, event.additional.email
+      end
+
+      should "record an email verified event when confirming an email change" do
+        @user.update!(unconfirmed_email: "changed@rubygems-test.org")
+        token = @user.issue_email_confirmation!(@user.unconfirmed_email)
+
+        assert_equal :confirmed, @user.confirm_email_with_token(token)
+
+        event = @user.events.where(tag: Events::UserEvent::EMAIL_VERIFIED).sole
+
+        assert_equal "changed@rubygems-test.org", event.additional.email
+      end
+
+      should "reject a token issued for a different target" do
+        @user.update!(unconfirmed_email: "first@rubygems-test.org")
+        token = @user.issue_email_confirmation!(@user.unconfirmed_email)
+
+        @user.update_column(:unconfirmed_email, "second@rubygems-test.org")
+
+        refute @user.reload.valid_email_confirmation_token?(token)
+        assert_equal :invalid_token, @user.confirm_email_with_token(token)
+        assert_equal "second@rubygems-test.org", @user.reload.unconfirmed_email
+      end
+
+      should "leave token authority intact when the target email cannot be saved" do
+        target = "taken@rubygems-test.org"
+        @user.update!(unconfirmed_email: target)
+        token = @user.issue_email_confirmation!(target)
+        create(:user, email: target)
+        original_email = @user.email
+
+        assert_equal :invalid_email, @user.confirm_email_with_token(token)
+        assert_equal original_email, @user.reload.email
+        assert_equal target, @user.unconfirmed_email
+        assert @user.valid_email_confirmation_token?(token)
       end
     end
 
@@ -524,27 +576,6 @@ class UserTest < ActiveSupport::TestCase
       assert_equal 1, all_hooks.keys.size
     end
 
-    context "#valid_confirmation_token?" do
-      should "return false when email confirmation token has expired" do
-        @user.update(confirmation_token: SecureRandom.hex(24), token_expires_at: 2.minutes.ago)
-
-        refute_predicate @user, :valid_confirmation_token?
-      end
-
-      should "return false when confirmation token is nil" do
-        @user.update(confirmation_token: nil, token_expires_at: 2.minutes.from_now)
-
-        refute_predicate @user, :valid_confirmation_token?
-      end
-
-      should "reutrn true when email confirmation token has not expired" do
-        two_minutes_in_future = 2.minutes.from_now
-        @user.update(confirmation_token: SecureRandom.hex(24), token_expires_at: two_minutes_in_future)
-
-        assert_predicate @user, :valid_confirmation_token?
-      end
-    end
-
     context "password reset tokens" do
       should "store only a digest and expire the token after three hours" do
         @user.update!(unconfirmed_email: "pending@rubygems-test.org")
@@ -567,11 +598,11 @@ class UserTest < ActiveSupport::TestCase
       end
 
       should "reject an email confirmation token" do
-        @user.update!(unconfirmed_email: "pending@rubygems-test.org")
-        token = @user.confirmation_token
+        user = create(:user, :unconfirmed)
+        token = user.issue_email_confirmation!(user.email)
 
         assert_nil User.find_by_password_reset_token(token)
-        refute @user.valid_password_reset_token?(token)
+        refute user.valid_password_reset_token?(token)
       end
 
       should "consume the token only after a valid password is saved" do
@@ -586,6 +617,23 @@ class UserTest < ActiveSupport::TestCase
         assert @user.authenticated?(PasswordHelpers::SECURE_TEST_PASSWORD)
         assert_equal :invalid_token,
           @user.update_password_with_token(PasswordHelpers::SECURE_TEST_PASSWORD, token:)
+      end
+
+      should "revoke email confirmation authority only after a successful password reset" do
+        reset_token = @user.issue_password_reset!
+        @user.update!(unconfirmed_email: "pending-after-reset@rubygems-test.org")
+        confirmation_token = @user.issue_email_confirmation!(@user.unconfirmed_email)
+        original_email = @user.email
+
+        assert_equal :invalid_password, @user.update_password_with_token("short", token: reset_token)
+        assert @user.reload.valid_email_confirmation_token?(confirmation_token)
+
+        assert_equal :updated, @user.update_password_with_token(PasswordHelpers::SECURE_TEST_PASSWORD, token: reset_token)
+        assert_nil @user.reload.email_confirmation_token_digest
+        assert_nil @user.email_confirmation_token_expires_at
+        assert_nil @user.email_confirmation_email
+        assert_equal :invalid_token, @user.confirm_email_with_token(confirmation_token)
+        assert_equal original_email, @user.reload.email
       end
 
       should "update the password when the persisted WebAuthn ID is missing" do
@@ -1129,6 +1177,34 @@ class UserTest < ActiveSupport::TestCase
       assert_changed(@user, :email, :password, :api_key, :remember_token) do
         @user.block!
       end
+    end
+  end
+
+  context "block with a pending email change" do
+    setup do
+      @user = create(:user)
+      @original_email = @user.email
+      @pending_email = "attacker@evil-test.org"
+      @user.update!(unconfirmed_email: @pending_email)
+      @confirmation_token = @user.issue_email_confirmation!(@pending_email)
+    end
+
+    should "discard the pending email instead of promoting it" do
+      @user.block!
+      @user.reload
+
+      assert @user.email.start_with?("security+locked-")
+      assert_nil @user.unconfirmed_email
+      assert_equal @original_email, @user.blocked_email
+      refute @user.valid_email_confirmation_token?(@confirmation_token)
+      assert_nil User.find_by_normalized_email(@pending_email)
+    end
+
+    should "still promote the pending email when an unblocked user confirms it" do
+      @user.confirm_email!
+
+      assert_equal @pending_email, @user.reload.email
+      assert_nil @user.unconfirmed_email
     end
   end
 
