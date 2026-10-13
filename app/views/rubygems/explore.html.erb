@@ -8,7 +8,8 @@
     title: t(".just_released.title"),
     description: t(".just_released.description"),
     icon: "history",
-    rubygems: @just_released,
+    rubygems: @just_released.map(&:rubygem),
+    versions: @just_released.index_by(&:rubygem_id),
     see_all_url: news_path %>
 
   <%= render "explore_section",
@@ -16,7 +17,8 @@
     title: t(".new_gems.title"),
     description: t(".new_gems.description"),
     icon: "auto-awesome",
-    rubygems: @new_gems %>
+    rubygems: @new_gems.map(&:rubygem),
+    versions: @new_gems.index_by(&:rubygem_id) %>
 
   <%= render "explore_section",
     id: "popular",

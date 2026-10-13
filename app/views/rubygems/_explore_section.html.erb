@@ -1,4 +1,4 @@
-<%# locals: (id:, title:, description:, icon:, rubygems:, see_all_url: nil, reverse_dependencies_counts: {}) -%>
+<%# locals: (id:, title:, description:, icon:, rubygems:, see_all_url: nil, reverse_dependencies_counts: {}, versions: {}) -%>
 <section id="<%= id %>">
   <%= render CardComponent.new do |c| %>
     <%= c.head class: "!pb-2" do %>
@@ -12,7 +12,7 @@
 
     <% if rubygems.any? %>
       <% rubygems.each do |rubygem| %>
-        <%= render RubygemComponent.new(rubygem:, reverse_dependencies_count: reverse_dependencies_counts[rubygem.id]) %>
+        <%= render RubygemComponent.new(rubygem:, version: versions[rubygem.id], reverse_dependencies_count: reverse_dependencies_counts[rubygem.id]) %>
       <% end %>
     <% else %>
       <p class="py-4 text-b3 text-neutral-600 dark:text-neutral-400"><%= t(".empty") %></p>

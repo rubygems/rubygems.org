@@ -1201,10 +1201,10 @@ class RubygemTest < ActiveSupport::TestCase
       %w[ruby java].each do |platform|
         create(:dependency, :runtime, rubygem: @json, version: create(:version, rubygem: multi_platform, number: "1.0.0", platform:))
       end
-      2.times { create(:dependency, :runtime, rubygem: @json, version: create(:version)) }
+      create_list(:dependency, 2, :runtime, rubygem: @json)
 
       # rack: two dependents through latest releases...
-      2.times { create(:dependency, :runtime, rubygem: @rack, version: create(:version)) }
+      create_list(:dependency, 2, :runtime, rubygem: @rack)
       # ...plus ones that must not count: an older release and a yanked release.
       moved_on = create(:rubygem)
       create(:dependency, :runtime, rubygem: @rack, version: create(:version, rubygem: moved_on, number: "1.0.0"))
@@ -1212,7 +1212,7 @@ class RubygemTest < ActiveSupport::TestCase
       create(:dependency, :runtime, rubygem: @rack, version: create(:version, :yanked))
 
       # rspec: the most dependents, but only as a development dependency.
-      4.times { create(:dependency, :development, rubygem: rspec, version: create(:version)) }
+      create_list(:dependency, 4, :development, rubygem: rspec)
     end
 
     should "count distinct gems whose latest release depends on each gem at runtime, highest first" do

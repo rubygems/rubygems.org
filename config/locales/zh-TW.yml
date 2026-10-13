@@ -45,6 +45,7 @@ zh-TW:
   time_ago: "%{duration} 前"
   title: RubyGems.org
   total_downloads: 總下載次數
+  version_downloads:
   try_again: 發生錯誤。請再試一次。
   update: 更新
   remove:
@@ -330,7 +331,7 @@ zh-TW:
         uptime: 上線時間
         secured_by:
       header:
-        gems:
+        explore:
         profile: 個人檔案
         dashboard: 儀表板
         settings: 設定
@@ -934,6 +935,7 @@ zh-TW:
       title: Gems
     explore:
       title:
+      breadcrumb:
       browse_by_letter:
       just_released:
         title:

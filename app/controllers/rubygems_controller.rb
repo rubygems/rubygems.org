@@ -18,7 +18,9 @@ class RubygemsController < ApplicationController
   def index
     respond_to do |format|
       format.html do
-        browsing_by_letter? ? index_letter : index_explore
+        @letter = Rubygem.letterize(gem_params[:letter])
+        @gems   = Rubygem.letter(@letter).includes(:latest_version, :gem_download).page(@page)
+        add_breadcrumb t(".title")
       end
       format.atom do
         @versions = Version.published.limit(Gemcutter::DEFAULT_PAGINATION)
@@ -52,33 +54,30 @@ class RubygemsController < ApplicationController
     add_breadcrumb t(".title")
   end
 
-  private
-
-  # Letter and page links predate the Explore hub, so either one keeps
-  # rendering the A–Z listing.
-  def browsing_by_letter?
-    gem_params[:letter].present? || gem_params[:page].present?
-  end
-
-  def index_letter
-    @letter = Rubygem.letterize(gem_params[:letter])
-    @gems   = Rubygem.letter(@letter).includes(:latest_version, :gem_download).page(@page)
-    add_breadcrumb t(".title"), rubygems_path
-    add_breadcrumb @letter
-  end
-
-  def index_explore
+  def explore
     explore_gems = Rubygem.preload(:latest_version, :gem_download)
-    @just_released = explore_gems.news(Gemcutter::NEWS_DAYS_LIMIT).limit(EXPLORE_SECTION_SIZE)
-    @new_gems = explore_gems.with_versions.where(created_at: Gemcutter::NEWS_DAYS_LIMIT.ago..).latest(EXPLORE_SECTION_SIZE)
+    recent_window = Gemcutter::NEWS_DAYS_LIMIT.ago..Time.current
+    # Match most_recent_version's preference for a Ruby release, falling back
+    # to the latest platform release. Rank and display that exact version.
+    latest_version_ids = Version.latest.where(rubygem_id: Version.latest.where(created_at: recent_window).select(:rubygem_id))
+      .order(:rubygem_id, Arel.sql("CASE WHEN platform = 'ruby' THEN 0 ELSE 1 END"), :position, id: :desc)
+      .pluck(Arel.sql("DISTINCT ON (rubygem_id) versions.id"))
+    downloaded_versions = Version.joins(:gem_download).order("gem_downloads.count DESC", created_at: :desc)
+      .preload(:gem_download, rubygem: :latest_version).limit(EXPLORE_SECTION_SIZE)
+    @just_released = downloaded_versions.where(id: latest_version_ids, created_at: recent_window)
+    @new_gems = downloaded_versions.where(rubygem_id: Rubygem.with_versions.with_one_version
+      .where(created_at: Gemcutter::NEWS_DAYS_LIMIT.ago..).reselect(:id))
     @popular = explore_gems.popular(Gemcutter::POPULAR_DAYS_LIMIT).limit(EXPLORE_SECTION_SIZE)
     @with_provenance = explore_gems.news_with_provenance(Gemcutter::NEWS_DAYS_LIMIT).limit(EXPLORE_SECTION_SIZE)
     @most_depended_on_counts = most_depended_on_counts
     most_depended_on = explore_gems.with_versions.where(id: @most_depended_on_counts.keys).index_by(&:id)
     @most_depended_on = @most_depended_on_counts.keys.filter_map { |id| most_depended_on[id] }
-    add_breadcrumb t(".title")
-    render "explore"
+    add_breadcrumb t(".breadcrumb")
+    set_surrogate_key "explore"
+    cache_expiry_headers(expiry: 60, fastly_expiry: 60) if cacheable_request?
   end
+
+  private
 
   # The aggregate scans every latest release (seconds on production data) and
   # changes slowly, so it is cached; race_condition_ttl lets other requests keep

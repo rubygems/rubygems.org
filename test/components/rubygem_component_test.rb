@@ -33,6 +33,16 @@ class RubygemComponentTest < ComponentTest
     assert_text "42,000"
   end
 
+  should "display the supplied version and its downloads instead of the gem total" do
+    version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "java")
+    version.gem_download.update!(count: 123)
+    render RubygemComponent.new(rubygem: @rubygem, version:)
+
+    assert_selector "code", text: "1.0.0"
+    assert_selector "span[title='Downloads for my-gem-1.0.0-java: 123']", text: "123"
+    refute_text "42,000"
+  end
+
   should "display the gem description" do
     render RubygemComponent.new(rubygem: @rubygem)
 

@@ -96,6 +96,23 @@ class RubygemsControllerTest < ActionController::TestCase
   end
 
   context "On GET to index with no parameters" do
+    should "render the original alphabetical A listing" do
+      create(:rubygem, name: "amethyst", number: "1.0.0")
+      create(:rubygem, name: "amber", number: "1.0.0")
+      create(:rubygem, name: "aardvark")
+      create(:rubygem, name: "zebra", number: "1.0.0")
+
+      get :index
+
+      assert_response :success
+      assert_equal %w[amber amethyst], page.all("[data-testid='rubygem-name']").map(&:text)
+      assert page.has_selector?("nav[aria-label='Breadcrumb'] [aria-current='page']", text: "Gems", exact_text: true)
+      assert page.has_link?("B", href: rubygems_path(letter: "B"))
+      refute page.has_selector?("#just-released")
+    end
+  end
+
+  context "On GET to explore" do
     setup do
       Rails.cache.delete(RubygemsController::MOST_DEPENDED_ON_CACHE_KEY)
 
@@ -103,7 +120,7 @@ class RubygemsControllerTest < ActionController::TestCase
       create(:version, rubygem: @old_release, created_at: 20.days.ago)
 
       @brand_new = create(:rubygem, name: "brand-new", created_at: 2.days.ago)
-      create(:version, rubygem: @brand_new, created_at: 2.days.ago)
+      create(:version, rubygem: @brand_new, number: "1.0.0.pre", created_at: 2.days.ago)
 
       @new_with_update = create(:rubygem, name: "new-with-update", created_at: 3.days.ago)
       create(:version, rubygem: @new_with_update, number: "0.1.0", created_at: 3.days.ago)
@@ -116,9 +133,9 @@ class RubygemsControllerTest < ActionController::TestCase
       create(:attestation, version: create(:version, rubygem: @attested, created_at: 1.hour.ago))
 
       @depended_on = create(:rubygem, name: "depended-on", number: "1.0.0")
-      2.times { create(:dependency, :runtime, rubygem: @depended_on, version: create(:version)) }
+      create_list(:dependency, 2, :runtime, rubygem: @depended_on)
 
-      get :index
+      get :explore
     end
 
     should respond_with :success
@@ -163,12 +180,56 @@ class RubygemsControllerTest < ActionController::TestCase
       assert page.has_link?(I18n.t("rubygems.explore.browse_by_letter"), href: rubygems_path(letter: "A"))
       refute page.has_selector?("a[href='#{rubygems_path(letter: 'B')}']")
     end
+
+    should "show Explore as the current breadcrumb" do
+      assert page.has_selector?("nav[aria-label='Breadcrumb'] [aria-current='page']", text: "Explore", exact_text: true)
+    end
   end
 
-  context "On GET to index with no recent gems" do
+  context "On GET to explore with more recent gems than fit in a section" do
+    should "select the five most downloaded versions rather than gem totals or the five newest releases" do
+      %w[first second third fourth fifth sixth].each_with_index do |name, index|
+        gem = create(:rubygem, name:, downloads: (6 - index) * 1_000, created_at: (index + 1).days.ago)
+        version = create(:version, rubygem: gem, created_at: (index + 1).days.ago)
+        version.gem_download.update!(count: (index + 1) * 100)
+      end
+
+      get :explore
+
+      expected_downloads = %w[600 500 400 300 200]
+      expected_links = %w[sixth fifth fourth third second].map { |name| rubygem_path(name) }
+      %w[just-released new-gems].each do |id|
+        links = page.all("##{id} a[href^='/gems/']").map { |link| link[:href] }
+
+        assert_equal expected_links, links
+        assert_equal expected_downloads, page.all("##{id} span[title^='Downloads for']").map(&:text)
+      end
+    end
+
+    should "rank and display one consistent version per gem rather than an older or alternate platform's downloads" do
+      gem = create(:rubygem, name: "multi-platform", created_at: 30.days.ago)
+      old = create(:version, rubygem: gem, number: "1.0.0", created_at: 20.days.ago)
+      old.gem_download.update!(count: 90_000)
+      ruby = create(:version, rubygem: gem, number: "2.0.0", created_at: 2.days.ago)
+      ruby.gem_download.update!(count: 120)
+      java = create(:version, rubygem: gem, number: "2.0.0", platform: "java", created_at: 1.day.ago)
+      java.gem_download.update!(count: 8_000)
+      other = create(:rubygem, name: "platform-only")
+      other_version = create(:version, rubygem: other, number: "3.0.0", platform: "java")
+      other_version.gem_download.update!(count: 250)
+
+      get :explore
+
+      assert_equal([rubygem_path(other.name), rubygem_path(gem.name)], page.all("#just-released a[href^='/gems/']").pluck(:href))
+      assert_equal %w[250 120], page.all("#just-released span[title^='Downloads for']").map(&:text)
+      assert_equal %w[3.0.0 2.0.0], page.all("#just-released code").map(&:text)
+    end
+  end
+
+  context "On GET to explore with no recent gems" do
     setup do
       Rails.cache.delete(RubygemsController::MOST_DEPENDED_ON_CACHE_KEY)
-      get :index
+      get :explore
     end
 
     should respond_with :success
@@ -179,7 +240,7 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
-  context "On repeated GETs to index" do
+  context "On repeated GETs to explore" do
     setup do
       # Other workers' setups flush the shared memcached (Rack::Attack.cache.store.clear),
       # so give this test a private store.
@@ -191,7 +252,7 @@ class RubygemsControllerTest < ActionController::TestCase
       Rubygem.expects(:most_depended_on_counts).once.returns({ @rubygem.id => 42 })
 
       2.times do
-        get :index
+        get :explore
 
         assert page.find_by_id("most-depended-on").has_content?("42 dependents")
       end

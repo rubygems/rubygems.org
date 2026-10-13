@@ -50,6 +50,7 @@ en:
   time_ago: "%{duration} ago"
   title: RubyGems.org
   total_downloads: Total downloads
+  version_downloads: "Downloads for %{version}"
   try_again: Something went wrong. Please try again.
   update: Update
   remove: Remove
@@ -335,7 +336,7 @@ en:
         uptime: Uptime
         secured_by: Secured by
       header:
-        gems: Gems
+        explore: Explore
         profile: Profile
         dashboard: Dashboard
         settings: Settings
@@ -940,13 +941,14 @@ en:
       title: Gems
     explore:
       title: Explore gems
+      breadcrumb: Explore
       browse_by_letter: Browse all gems A–Z
       just_released:
         title: Just released
-        description: The newest releases from the past week.
+        description: Releases from the past week, ranked by version downloads.
       new_gems:
         title: New gems this week
-        description: Gems published for the first time in the past week.
+        description: First releases from the past week, ranked by version downloads.
       popular:
         title: Popular & recently updated
         description: The most downloaded gems with a release in the past 10 weeks.

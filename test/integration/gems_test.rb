@@ -82,14 +82,26 @@ class GemsTest < ActionDispatch::IntegrationTest
   end
 
   test "anonymous explore request sets public cache headers" do
-    get rubygems_path
+    get explore_path
 
     assert_response :success
     assert page.has_selector?("#just-released")
     assert_nil response.headers["Set-Cookie"]
-    assert_includes response.headers["Cache-Control"], "public"
-    assert_includes response.headers["Surrogate-Control"], "max-age=60"
-    assert_equal "gems/index", response.headers["Surrogate-Key"]
+    assert_equal "max-age=60, public", response.headers["Cache-Control"]
+    assert_equal "max-age=60, stale-while-revalidate=30, stale-if-error=30", response.headers["Surrogate-Control"]
+    assert_equal "explore", response.headers["Surrogate-Key"]
+  end
+
+  test "authenticated explore requests are not publicly cacheable" do
+    post session_path(session: { who: @user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+
+    get explore_path
+
+    assert_response :success
+    refute_includes response.headers["Cache-Control"], "public"
+    assert_includes response.headers["Cache-Control"], "private"
+    assert_includes response.headers["Cache-Control"], "no-store"
+    assert_equal "max-age=0", response.headers["Surrogate-Control"]
   end
 
   test "header navigation links to the gems explore page first" do
@@ -98,8 +110,30 @@ class GemsTest < ActionDispatch::IntegrationTest
     desktop_links = page.all("header nav.lg\\:flex a")
     mobile_links = page.all("header dialog nav a", visible: :all)
 
-    assert_equal [I18n.t("layouts.application.header.gems"), rubygems_path], [desktop_links.first.text, desktop_links.first[:href]]
-    assert_equal rubygems_path, mobile_links.first[:href]
+    assert_equal ["Explore", explore_path], [desktop_links.first.text, desktop_links.first[:href]]
+    assert_equal ["Explore", explore_path], [mobile_links.first.text(:all), mobile_links.first[:href]]
+  end
+
+  test "explore links to the original alphabetical gem directory" do
+    create(:rubygem, name: "amber", number: "1.0.0")
+    get explore_path
+
+    assert_response :success
+    browse = page.find_link("Browse all gems A–Z")
+
+    assert_equal rubygems_path(letter: "A"), browse[:href]
+    get browse[:href]
+
+    assert_response :success
+    assert page.has_link?("B", href: rubygems_path(letter: "B"))
+    assert page.has_link?(href: rubygem_path("amber"))
+    refute page.has_selector?("#just-released")
+
+    get rubygems_path
+
+    assert_response :success
+    assert page.has_link?(href: rubygem_path("amber"))
+    refute page.has_selector?("#just-released")
   end
 
   test "anonymous gem show request does not set a session cookie" do

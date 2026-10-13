@@ -51,6 +51,7 @@ es:
   time_ago: hace %{duration}
   title: RubyGems.org
   total_downloads: Total de descargas
+  version_downloads:
   try_again: Algo salió mal. Por favor inténtalo nuevamente.
   update: Actualizar
   remove:
@@ -348,7 +349,7 @@ es:
         uptime: Uptime
         secured_by: Protegido por
       header:
-        gems:
+        explore:
         profile: Perfil
         dashboard: Dashboard
         settings: Configuración
@@ -1031,6 +1032,7 @@ es:
       title: Gemas
     explore:
       title:
+      breadcrumb:
       browse_by_letter:
       just_released:
         title:

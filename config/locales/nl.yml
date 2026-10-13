@@ -45,6 +45,7 @@ nl:
   time_ago: "%{duration} geleden"
   title: RubyGems.org
   total_downloads:
+  version_downloads:
   try_again: Er is iets fout gegaan, probeer het opnieuw.
   update: Wijzig
   remove:
@@ -333,7 +334,7 @@ nl:
         uptime: Uptime
         secured_by:
       header:
-        gems:
+        explore:
         profile: Profiel
         dashboard: Dashboard
         settings: Instellingen
@@ -933,6 +934,7 @@ nl:
       title: alle gems
     explore:
       title:
+      breadcrumb:
       browse_by_letter:
       just_released:
         title:

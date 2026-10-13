@@ -11,6 +11,7 @@ class RubygemComponent < ApplicationComponent
   register_value_helper :number_with_delimiter
 
   prop :rubygem
+  prop :version
   # Shown instead of the download count when a list is ranked by dependents.
   prop :reverse_dependencies_count
 
@@ -21,7 +22,7 @@ class RubygemComponent < ApplicationComponent
            data: { testid: "rubygem-name" }) do
           plain @rubygem.name
         end
-        version = latest_version_number(@rubygem)
+        version = @version&.number || latest_version_number(@rubygem)
         if version
           code(class: "ml-2 shrink-0 px-2 text-c3 bg-green-200 dark:bg-green-800 rounded-sm text-neutral-900 dark:text-white") { plain version }
         end
@@ -31,7 +32,7 @@ class RubygemComponent < ApplicationComponent
         p(class: "text-b3 text-neutral-600 dark:text-neutral-400 truncate flex-1 mr-4") do
           short_info(@rubygem)
         end
-        @reverse_dependencies_count ? reverse_dependencies_count : download_count_component(@rubygem)
+        @reverse_dependencies_count ? reverse_dependencies_count : download_count_component(@rubygem, version: @version)
       end
     end
   end

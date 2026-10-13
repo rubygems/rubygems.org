@@ -50,6 +50,7 @@ fr:
   time_ago: il y a %{duration}
   title: RubyGems.org
   total_downloads: Total de téléchargements
+  version_downloads:
   try_again: Une erreur est survenue. Veuillez réessayer.
   update: Mise à jour
   remove:
@@ -339,7 +340,7 @@ fr:
         uptime: Uptime
         secured_by:
       header:
-        gems:
+        explore:
         profile: Profil
         dashboard: Dashboard
         settings: Paramètres
@@ -963,6 +964,7 @@ fr:
       title: Gems
     explore:
       title:
+      breadcrumb:
       browse_by_letter:
       just_released:
         title:

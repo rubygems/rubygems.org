@@ -50,6 +50,7 @@ pt-BR:
   time_ago: "%{duration} atrás"
   title: RubyGems.org
   total_downloads: Total de downloads
+  version_downloads:
   try_again: Algo deu errado. Por favor, tente novamente.
   update: Atualizar
   remove:
@@ -338,7 +339,7 @@ pt-BR:
         uptime: Uptime
         secured_by:
       header:
-        gems:
+        explore:
         profile: Perfil
         dashboard: Painel de Controle
         settings: Configurações da Conta
@@ -944,6 +945,7 @@ pt-BR:
       title: Gems
     explore:
       title:
+      breadcrumb:
       browse_by_letter:
       just_released:
         title:

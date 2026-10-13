@@ -46,6 +46,7 @@ ja:
   time_ago: "%{duration}前"
   title: RubyGems.org
   total_downloads: 累計ダウンロード数
+  version_downloads:
   try_again: エラーが発生しました。再試行してください。
   update: 更新
   remove: 削除
@@ -331,7 +332,7 @@ ja:
         uptime: 稼働時間
         secured_by: セキュリティ
       header:
-        gems:
+        explore:
         profile: プロフィール
         dashboard: ダッシュボード
         settings: 設定
@@ -947,6 +948,7 @@ ja:
       title: gem
     explore:
       title:
+      breadcrumb:
       browse_by_letter:
       just_released:
         title:
