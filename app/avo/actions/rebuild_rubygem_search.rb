@@ -4,7 +4,7 @@ class Avo::Actions::RebuildRubygemSearch < Avo::Actions::ApplicationAction
   self.name = "Rebuild Rubygem Search"
   self.message = "Recreate mappings and populate the entire Rubygem search index in the maintenance queue. " \
                  "This is expensive and does not replay concurrent writes. Keep search-data writers paused from before enqueueing " \
-                 "until completion and verification; see doc/search-rebuild.md. Monitor the job in /admin/good_job."
+                 "until completion and verification. Monitor the job in /admin/good_job."
   self.visible = lambda {
     Admin::RubygemPolicy.new(current_user, Rubygem).act_on? && view == :index
   }
