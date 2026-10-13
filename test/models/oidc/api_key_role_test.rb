@@ -104,6 +104,31 @@ class OIDC::ApiKeyRoleTest < ActiveSupport::TestCase
       refute_predicate access_policy_events.sole.additional, :by_owner
     end
 
+    should "keep the request details when the owner changed it" do
+      Current.user = @role.user
+      Current.request = request_with_ip
+
+      @role.update!(access_policy: @policy)
+      event = access_policy_events.sole
+
+      assert_equal "1.2.3.4", event.ip_address.ip_address.to_s
+      assert_predicate event.additional.user_agent_info, :present?
+    end
+
+    # The owner can read this event, and the events table renders the request's
+    # address and user agent to them, so an admin's must not be attached.
+    should "withhold the request details when someone else changed it" do
+      Current.user = create(:user)
+      Current.request = request_with_ip
+
+      @role.update!(access_policy: @policy)
+      event = access_policy_events.sole
+
+      assert_nil event.ip_address
+      assert_nil event.geoip_info
+      assert_nil event.additional.user_agent_info
+    end
+
     should "record nothing when the access policy does not change" do
       @role.update!(name: "Renamed without touching the access policy")
 
@@ -119,6 +144,13 @@ class OIDC::ApiKeyRoleTest < ActiveSupport::TestCase
   end
 
   private
+
+  def request_with_ip
+    ActionDispatch::TestRequest.create(
+      "REMOTE_ADDR" => "1.2.3.4",
+      "HTTP_USER_AGENT" => "Mozilla/5.0 (Macintosh) AppleWebKit/537.36 Chrome/120.0 Safari/537.36"
+    )
+  end
 
   def access_policy_events
     @role.user.events.where(tag: Events::UserEvent::OIDC_API_KEY_ROLE_ACCESS_POLICY_CHANGED)
