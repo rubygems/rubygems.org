@@ -19,8 +19,7 @@ class OIDC::AccessPolicy < ApplicationModel
 
     class Condition < ApplicationModel
       # Ruby memoizes most catastrophic patterns, but one using a backreference
-      # or a lookahead still backtracks without bound, and a claim is matched on
-      # a request thread with nothing else to stop it.
+      # or a lookahead still backtracks without bound.
       MATCH_TIMEOUT = 0.5
 
       def match?(jwt)
@@ -29,16 +28,13 @@ class OIDC::AccessPolicy < ApplicationModel
         when "string_equals"
           value == claim_value
         when "string_matches"
-          # A claim is only ever matched as a string: Regexp#match? raises on an
-          # Integer or an Array, and a numeric claim like `iat` is advertised by
-          # the providers, so a condition could be written against one.
+          # Regexp#match? raises on a non String, and numeric claims such as
+          # `iat` are advertised by the providers.
           return false unless claim_value.is_a?(String)
 
           begin
             matcher.match?(claim_value)
           rescue Regexp::TimeoutError
-            # Denying is the safe answer, and the policy is still too expensive
-            # to evaluate, so say so.
             logger.warn("Condition timed out", claim:, value:)
             false
           end
@@ -47,14 +43,10 @@ class OIDC::AccessPolicy < ApplicationModel
         end
       end
 
-      # Anchored: the pattern has to describe the whole claim, not merely occur
-      # somewhere in it. Grouped so that a top level alternation in the pattern
-      # cannot escape the anchors.
-      #
-      # Built in one place because the wrapping decides what compiles: a value
-      # ending in a backslash is invalid on its own and invalid wrapped, but for
-      # a different reason, so validating the bare value could disagree with
-      # what is matched.
+      # Anchored so the pattern describes the whole claim, grouped so a top level
+      # alternation cannot escape the anchors. Built in one place because the
+      # wrapping decides what compiles, so validating the bare value could
+      # disagree with what is matched.
       def matcher
         Regexp.new("\\A(?:#{value})\\z", timeout: MATCH_TIMEOUT)
       end
@@ -85,9 +77,7 @@ class OIDC::AccessPolicy < ApplicationModel
         errors.add(:value, "must be #{value_type}") unless value.is_a?(value_type)
       end
 
-      # Without this an unparseable pattern saves and only fails when a token is
-      # exchanged, where it raises rather than denying, so the role stops
-      # working with no sign of why.
+      # Otherwise an unparseable pattern saves and raises on every exchange.
       def value_compiles
         matcher
       rescue RegexpError => e

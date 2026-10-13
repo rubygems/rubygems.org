@@ -11,10 +11,9 @@ class Avo::Resources::OIDCProvider < Avo::BaseResource
 
   def fields
     field :issuer, as: :text, link_to_resource: true
-    # The configuration is the issuer's OIDC discovery document, kept up to date
-    # by Avo::Actions::RefreshOIDCProvider. Editing it by hand would be undone by
-    # the next refresh, and `jwks_uri` is where that refresh fetches the signing
-    # keys from, so it is shown but not editable.
+    # The issuer's discovery document, overwritten by
+    # Avo::Actions::RefreshOIDCProvider, and `jwks_uri` is where that refresh
+    # fetches signing keys from.
     field :configuration, as: :nested, disabled: true do
       visible_on = %i[edit new]
       OIDC::Provider::Configuration.then { it.required_attributes + it.optional_attributes }.each do |k|

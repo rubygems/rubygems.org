@@ -54,8 +54,6 @@ class Events::UserEvent < ApplicationRecord
   OIDC_API_KEY_ROLE_ACCESS_POLICY_CHANGED = define_event "user:oidc_api_key_role:access_policy_changed" do
     attribute :name, :string
     attribute :api_key_role_gid, :global_id
-    # Whether the change was made by the owner of the role rather than by an
-    # admin acting on their behalf.
     attribute :by_owner, :boolean
     attribute :conditions, Types::ArrayOf.new(ActiveRecord::Type::String.new)
   end

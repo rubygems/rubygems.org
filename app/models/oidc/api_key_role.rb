@@ -40,9 +40,8 @@ class OIDC::ApiKeyRole < ApplicationRecord
     end
   end
 
-  # The owner is told that their trust policy changed. The admin panel records an
-  # Audit, which they cannot see, and a key being minted for a repository the
-  # policy now trusts is only mailed once that has already happened.
+  # The admin panel records an Audit the owner cannot see, and api_key_created is
+  # only mailed once a key has already been minted.
   after_update_commit :record_access_policy_change, if: :saved_change_to_access_policy?
 
   def record_access_policy_change

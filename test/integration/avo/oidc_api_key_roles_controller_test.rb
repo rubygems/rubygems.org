@@ -111,7 +111,6 @@ class Avo::OIDCApiKeyRolesControllerTest < ActionDispatch::IntegrationTest
       { "operator" => "string_matches", "claim" => "workflow_ref", "value" => "fakeuser/oidc-test/.github/workflows/release.yml@.*" }
     ], changes.dig("access_policy", 1, "statements", 0, "conditions")
 
-    # The owner is told that someone else changed their trust policy
     event = oidc_api_key_role.user.events.where(tag: Events::UserEvent::OIDC_API_KEY_ROLE_ACCESS_POLICY_CHANGED).sole
 
     refute_predicate event.additional, :by_owner
@@ -122,12 +121,9 @@ class Avo::OIDCApiKeyRolesControllerTest < ActionDispatch::IntegrationTest
     ], event.additional.conditions
   end
 
-  # `disabled` only keeps a field out of the permitted params at the top level of
-  # a resource: Avo::Fields::NestedField#to_permitted_param permits every field
-  # it holds. So the effect and the principal of a statement do reach the
-  # controller and are only stopped by
-  # Avo::Resources::OIDCApiKeyRole.merge_conditions. Pin the shape here so that
-  # widening it has to be deliberate.
+  # NestedField#to_permitted_param permits every field it holds regardless of
+  # `disabled`, so effect and principal do reach the controller and are stopped
+  # only by merge_conditions. Pinned so widening it has to be deliberate.
   test "only the conditions of a statement are permitted beyond the fixed fields" do
     resource = Avo::Resources::OIDCApiKeyRole.new(record: create(:oidc_api_key_role), view: Avo::ViewInquirer.new("edit"))
     resource.detect_fields
@@ -139,9 +135,8 @@ class Avo::OIDCApiKeyRolesControllerTest < ActionDispatch::IntegrationTest
     ], resource.get_field_definitions.select(&:updatable).map(&:to_permitted_param)
   end
 
-  # The update redirects to the audit, so its diff has to render. It reads the
-  # access policy back through the nested field, which cannot report whether it
-  # is visible unless the fields it holds were hydrated with a view.
+  # The update redirects to the audit, whose diff reads the access policy back
+  # through the nested field.
   test "the audit page renders the access policy diff" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
     oidc_api_key_role = create(:oidc_api_key_role)
@@ -162,7 +157,6 @@ class Avo::OIDCApiKeyRolesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     page.assert_text "Access policy"
     page.assert_text "Conditions"
-    # Both sides of the diff
     page.assert_text "repo:segiddins/oidc-test:ref:refs/heads/main"
     page.assert_text "repo:fakeuser/oidc-test:ref:refs/heads/main"
   end
@@ -243,15 +237,13 @@ class Avo::OIDCApiKeyRolesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  # The comment is the only record of why a trust policy was changed, so it is
-  # checked here rather than only in the test that needs Avo Pro.
+  # Checked here as well as in the test that needs Avo Pro.
   test "not updating an api key role as admin without a detailed comment" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
     oidc_api_key_role = create(:oidc_api_key_role)
     attributes = oidc_api_key_role.reload.attributes
     policy = { statements: { "0" => { conditions: { "0" => { operator: "string_matches", claim: "sub", value: ".*" } } } } }
 
-    # Too short, blank, and absent altogether
     [{ comment: "typo" }, { comment: "" }, {}].each do |comment|
       patch avo.resources_oidc_api_key_role_path(oidc_api_key_role),
         params: { "oidc/api_key_role" => comment.merge(access_policy: policy) }
@@ -264,9 +256,8 @@ class Avo::OIDCApiKeyRolesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  # The submitted statements are matched to the persisted ones by position, so a
-  # form rendered against a policy that has since changed must not be saved: its
-  # conditions would land on a statement the admin never looked at.
+  # Statements are matched by position, so a form rendered against a policy that
+  # has since changed would write onto a statement the admin never looked at.
   test "not updating an api key role as admin from a form rendered against a different policy" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
     oidc_api_key_role = create(:oidc_api_key_role, access_policy: {
@@ -305,7 +296,6 @@ conditions: [operator: "string_equals", claim: "sub", value: "repo:fakeuser/secr
     oidc_api_key_role = create(:oidc_api_key_role)
     attributes = oidc_api_key_role.reload.attributes
 
-    # Without a sufficiently detailed comment, and with no comment at all
     ["typo", ""].each do |comment|
       patch avo.resources_oidc_api_key_role_path(oidc_api_key_role), params: {
         "oidc/api_key_role" => {
@@ -345,8 +335,7 @@ conditions: [operator: "string_equals", claim: "sub", value: "repo:fakeuser/secr
     assert_response :unprocessable_entity
     page.assert_text "unknown for the provider"
 
-    # With a pattern that does not compile, which would otherwise save and then
-    # raise every time a token was exchanged against the role
+    # With a pattern that does not compile
     patch avo.resources_oidc_api_key_role_path(oidc_api_key_role), params: {
       "oidc/api_key_role" => {
         comment: "Widening the role with a pattern I got wrong",

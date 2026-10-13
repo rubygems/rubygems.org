@@ -6,9 +6,8 @@ class Avo::Resources::OIDCApiKeyRole < Avo::BaseResource
   self.model_class = ::OIDC::ApiKeyRole
 
   def fields
-    # Admins can only change the conditions of the access policy statements.
-    # Everything else is disabled, which renders it disabled on the edit form
-    # and leaves it out of the permitted params on update.
+    # `disabled` keeps a top level field out of the permitted params; `readonly`
+    # would render it uneditable but still let a crafted request write it.
     field :token, as: :text, link_to_resource: true, disabled: true
     field :id, as: :id, link_to_resource: true, hide_on: :index, disabled: true
     # Fields generated from the model
@@ -21,8 +20,6 @@ class Avo::Resources::OIDCApiKeyRole < Avo::BaseResource
       field :gems, as: :tags, suggestions: -> { Rubygem.limit(10).pluck(:name).map { { value: it, label: it } } }, disabled: true
     end
     field :access_policy, as: :nested, update_using: -> { Avo::Resources::OIDCApiKeyRole.merge_conditions(record, value) } do
-      # The statements are fixed: none can be added or removed, and the effect
-      # and principal of each one stay as they are. Only the conditions change.
       field :statements, as: :array_of, field: :nested, readonly: true do
         field :effect, as: :select, options: { "Allow" => "allow" }, default: "Allow", disabled: true
         field :principal, as: :nested, field_options: { stacked: false } do
@@ -39,17 +36,11 @@ class Avo::Resources::OIDCApiKeyRole < Avo::BaseResource
     field :id_tokens, as: :has_many
   end
 
-  # Builds the access policy to save from the record's persisted policy and the
-  # submitted form value. Every statement keeps its persisted effect and
-  # principal and takes the conditions submitted for it.
-  #
-  # Submitted statements are matched to persisted ones by position, because the
-  # array field keeps only the order of the submitted indexes and not the
-  # indexes themselves. That is only trustworthy for a form rendered against
-  # the policy being saved, so anything that does not line up is rejected
-  # rather than ignored: a form rendered against a policy that has since
-  # changed would otherwise write its conditions onto a different statement
-  # than the one the admin was looking at.
+  # Statements are matched by position, because the array field keeps the order
+  # of the submitted indexes and not the indexes themselves. That only holds for
+  # a form rendered against the policy being saved, so anything that does not
+  # line up is rejected rather than ignored: otherwise a stale form writes its
+  # conditions onto a statement the admin never looked at.
   def self.merge_conditions(record, submitted)
     access_policy = record.access_policy
     return access_policy if access_policy&.statements.blank?
@@ -75,9 +66,8 @@ class Avo::Resources::OIDCApiKeyRole < Avo::BaseResource
     OIDC::AccessPolicy.new(statements:)
   end
 
-  # The effect and principal are rendered disabled, so a browser leaves them out
-  # of the submission entirely. Anything that does send them has to send them
-  # unchanged.
+  # Disabled inputs are not submitted, so these are normally absent. Anything
+  # that does send them has to send them unchanged.
   def self.same_statement?(statement, submitted)
     return false if submitted.key?(:effect) && submitted[:effect] != statement.effect
     return false if submitted.key?(:principal) && submitted.dig(:principal, :oidc) != statement.principal&.oidc

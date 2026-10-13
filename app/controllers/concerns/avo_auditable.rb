@@ -15,12 +15,9 @@ module AvoAuditable
       destroying = action == "destroy"
       fields = destroying ? {} : cast_nullable(model_params)
 
-      # A missing comment has to be rejected the same way a short one is.
-      # `comment` is not an attribute of the record, so a request that simply
-      # leaves it out would otherwise skip this check entirely and be audited
-      # with the generated action name in place of an explanation. Destroying
-      # does not render the comment field, so it stays exempt. Matches the check
-      # actions make in Avo::Actions::ApplicationAction.
+      # `comment` is not an attribute of the record, so a request that leaves it
+      # out skips the check unless absence is tested for. Destroying renders no
+      # comment field, so it stays exempt.
       unless destroying || fields[:comment].presence&.then { it.length >= 10 }
         @record.errors.add :comment, "must supply a sufficiently detailed comment"
       end

@@ -156,8 +156,6 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
         assert_nil @access_policy.verify_access!(JSON::JWT.new({ iss: "iss", c: "one/two/three" }))
       end
 
-      # The pattern has to describe the claim in full, so a claim that merely
-      # contains it does not match.
       should "raise AccessError when the claim only contains the pattern" do
         assert_raise(OIDC::AccessPolicy::AccessError) do
           @access_policy.verify_access!(JSON::JWT.new({ iss: "iss", c: "zero/one/two/three" }))
@@ -227,8 +225,7 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
         assert_predicate @access_policy, :valid?
       end
 
-      # Regexp#match? raises TypeError on anything but a string, which would be
-      # a 500 on the exchange rather than a denial.
+      # Regexp#match? raises TypeError on anything but a string.
       should "raise AccessError for a numeric claim" do
         jwt = JSON::JWT.new({ iss: "iss", iat: 1_760_000_000 })
 
@@ -245,8 +242,7 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
 
     context "with a string_matches condition that backtracks without bound" do
       setup do
-        # Ruby memoizes most catastrophic patterns, but not one using a
-        # backreference, so this one runs until it is stopped.
+        # Ruby memoizes most catastrophic patterns, but not one with a backreference.
         @access_policy = OIDC::AccessPolicy.new(statements: [
                                                   effect: "allow",
           principal: { oidc: "iss" },
