@@ -55,12 +55,13 @@
                       <span class="text-b4 font-semibold text-red-600 dark:text-red-400"><%= t "versions.version.yanked" %></span>
                     <% end %>
                     <% if advisory_warning %>
-                      <span data-testid="version-vulnerability">
+                      <span class="flex" data-testid="version-vulnerability">
                         <%= render TooltipComponent.new(
                           text: advisory_warning[:label],
                           placement: :right,
                           trigger_class: "#{advisory_warning[:class]} align-middle",
-                          trigger_label: advisory_warning[:label]
+                          trigger_label: advisory_warning[:label],
+                          href: rubygem_version_path(version.rubygem.slug, version.slug, anchor: "advisories")
                         ) do %>
                           <%= icon_tag advisory_warning[:icon], size: 5, aria: { hidden: "true" } %>
                         <% end %>

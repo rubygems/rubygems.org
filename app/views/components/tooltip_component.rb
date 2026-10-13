@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TooltipComponent < ApplicationComponent
-  attr_reader :text, :placement, :id, :trigger_class, :trigger_label
+  attr_reader :text, :placement, :id, :trigger_class, :trigger_label, :href
 
   PLACEMENTS = {
     top: "left-1/2 bottom-full mb-2 -translate-x-1/2",
@@ -10,29 +10,31 @@ class TooltipComponent < ApplicationComponent
   }.freeze
 
   # NOTE: When using an icon instead of text, add a trigger_label for the aria-describedby
-  def initialize(text:, placement: :top, id: nil, trigger_class: nil, trigger_label: nil)
+  # Pass href to render the trigger as a link instead of a button.
+  def initialize(text:, placement: :top, id: nil, trigger_class: nil, trigger_label: nil, href: nil) # rubocop:disable Metrics/ParameterLists
     super()
     @text = text
     @placement = placement.to_sym
     @id = id || "tooltip-#{SecureRandom.alphanumeric(10)}"
     @trigger_class = trigger_class
     @trigger_label = trigger_label
+    @href = href
   end
 
   def view_template(&block)
     span(class: WRAPPER) do
-      button(
-        type: "button",
-        class: classes(TRIGGER, trigger_class),
-        aria: { describedby: id, label: trigger_label }.compact,
-        &block
-      )
+      aria = { describedby: id, label: trigger_label }.compact
+      if href
+        a(href:, class: classes(TRIGGER, trigger_class), aria:, &block)
+      else
+        button(type: "button", class: classes(TRIGGER, "cursor-help", trigger_class), aria:, &block)
+      end
       span(id: id, role: "tooltip", class: classes(BUBBLE, PLACEMENTS.fetch(placement))) { text }
     end
   end
 
   WRAPPER = "group/tooltip relative inline-block"
-  TRIGGER = "cursor-help rounded-sm focus:outline-2 focus:outline-offset-2 focus:outline-orange-500"
+  TRIGGER = "rounded-sm focus:outline-2 focus:outline-offset-2 focus:outline-orange-500"
   BUBBLE = "pointer-events-none absolute z-20 w-max max-w-xs " \
            "rounded-md px-2 py-1 text-left text-b4 font-normal normal-case shadow-md " \
            "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 " \
