@@ -11,9 +11,10 @@ class SyncAdvisoriesJob < ApplicationJob
     key: name
   )
 
-  def perform(source: nil, force: false)
+  # Accept force for jobs enqueued before the advisory rollout flag was removed.
+  def perform(source: nil, force: false) # rubocop:disable Lint/UnusedMethodArgument
     if source
-      Advisory::Fetcher.sync(source, force:)
+      Advisory::Fetcher.sync(source)
     else
       Advisory::Fetcher.sync_all
     end

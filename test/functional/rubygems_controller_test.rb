@@ -460,22 +460,13 @@ class RubygemsControllerTest < ActionController::TestCase
              identifier: "GHSA-test-show-0001")
     end
 
-    should "not show advisories when the source flag is off" do
-      get :show, params: { id: @rubygem.slug }
-
-      refute page.has_css?("[data-testid='gem-advisories']")
-      refute page.has_content?("vulnerable")
-    end
-
-    should "show advisories affecting the latest version when the source is enabled" do
+    should "show advisories affecting the latest version to logged-out visitors" do
       create(:advisory, :with_rubygem, :unfixed, rubygem: @rubygem,
              summary: "RCE in Action Pack",
              identifier: "GHSA-test-show-0002",
              severity: :high)
 
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        get :show, params: { id: @rubygem.slug }
-      end
+      get :show, params: { id: @rubygem.slug }
 
       assert page.has_css?("[data-testid='gem-advisories']")
       assert page.has_content?("RCE in Action Pack")
@@ -484,32 +475,20 @@ class RubygemsControllerTest < ActionController::TestCase
     end
 
     should "not show a patched latest version as vulnerable for older ranges" do
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        get :show, params: { id: @rubygem.slug }
-      end
+      get :show, params: { id: @rubygem.slug }
 
       refute page.has_css?("[data-testid='gem-advisories']")
       assert page.has_content?("vulnerable")
     end
 
-    should "show advisories only to the signed-in user the source is enabled for" do
+    should "show advisories to signed-in users" do
       create(:advisory, :with_rubygem, :unfixed, rubygem: @rubygem,
              summary: "RCE in Action Pack",
              identifier: "GHSA-test-show-0004")
-      enabled_user = create(:user)
-      other_user = create(:user)
+      sign_in_as(create(:user))
+      get :show, params: { id: @rubygem.slug }
 
-      with_feature FeatureFlag::OSV_ADVISORIES, actor: enabled_user do
-        sign_in_as(enabled_user)
-        get :show, params: { id: @rubygem.slug }
-
-        assert page.has_content?("RCE in Action Pack")
-
-        sign_in_as(other_user)
-        get :show, params: { id: @rubygem.slug }
-
-        refute page.has_content?("RCE in Action Pack")
-      end
+      assert page.has_content?("RCE in Action Pack")
     end
 
     should "hide withdrawn advisories" do
@@ -517,9 +496,7 @@ class RubygemsControllerTest < ActionController::TestCase
              summary: "Withdrawn advisory",
              identifier: "GHSA-test-show-0003")
 
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        get :show, params: { id: @rubygem.slug }
-      end
+      get :show, params: { id: @rubygem.slug }
 
       refute page.has_content?("Withdrawn advisory")
     end

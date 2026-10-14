@@ -19,23 +19,19 @@ class Advisory::Fetcher
       raise NotImplementedError, "#{name} must define .advisory_class"
     end
 
-    delegate :enabled?, to: :advisory_class
-
     def sync_all
-      Advisory.enabled_sources.each { |klass| klass::Fetcher.new.sync }
+      Advisory::SOURCES.each { |klass| klass::Fetcher.new.sync }
     end
 
-    def sync(source, force: false)
+    def sync(source)
       klass = source.is_a?(Class) ? source : source.constantize
       raise ArgumentError, "Unknown advisory source: #{source.inspect}" unless Advisory::SOURCES.include?(klass)
 
-      klass::Fetcher.new.sync(force:)
+      klass::Fetcher.new.sync
     end
   end
 
-  def sync(force: false)
-    return unless force || self.class.enabled?
-
+  def sync
     import(fetch.flat_map { |document| map(document) })
   end
 

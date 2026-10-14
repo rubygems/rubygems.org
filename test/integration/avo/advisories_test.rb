@@ -38,7 +38,7 @@ class Avo::AdvisoriesTest < ActionDispatch::IntegrationTest
         action_id: "Avo::Actions::SyncAdvisories",
         resource_view: "index",
         fields: {
-          comment: "Warming the advisories table before enabling the public flag",
+          comment: "Refreshing the advisories snapshot",
           source: "Advisory::OSV"
         }
       },
@@ -46,7 +46,7 @@ class Avo::AdvisoriesTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_enqueued_jobs 1, only: SyncAdvisoriesJob
-    assert_enqueued_with(job: SyncAdvisoriesJob, args: [source: "Advisory::OSV", force: true])
+    assert_enqueued_with(job: SyncAdvisoriesJob, args: [source: "Advisory::OSV"])
 
     audit = Audit.where(action: "Sync Advisories").sole
 
@@ -70,7 +70,7 @@ class Avo::AdvisoriesTest < ActionDispatch::IntegrationTest
           action_id: "Avo::Actions::SyncAdvisories",
           resource_view: "index",
           fields: {
-            comment: "Warming the advisories table before enabling the public flag",
+            comment: "Refreshing the advisories snapshot",
             source: "Advisory::OSV"
           }
         },

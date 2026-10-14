@@ -24,18 +24,6 @@ class Advisory::OSV::FetcherTest < ActiveSupport::TestCase
     }
   end
 
-  context "feature flag" do
-    should "follow Advisory::OSV" do
-      refute_predicate Advisory::OSV::Fetcher, :enabled?
-    end
-
-    should "be enabled when the advisory source is enabled" do
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        assert_predicate Advisory::OSV::Fetcher, :enabled?
-      end
-    end
-  end
-
   context "#fetch" do
     should "parse JSON documents from the OSV RubyGems dump" do
       other = @document.merge("id" => "GHSA-other-0000-0000", "summary" => "Other")
@@ -203,22 +191,11 @@ class Advisory::OSV::FetcherTest < ActiveSupport::TestCase
   end
 
   context "#sync" do
-    should "no-op when the flag is off" do
+    should "import fetched documents without a feature flag" do
       fetcher = Advisory::OSV::Fetcher.new
       fetcher.stubs(:fetch).returns([@document])
 
       fetcher.sync
-
-      assert_empty Advisory::OSV.where(identifier: "GHSA-mm33-5vfq-3mm3")
-    end
-
-    should "import fetched documents when the flag is on" do
-      fetcher = Advisory::OSV::Fetcher.new
-      fetcher.stubs(:fetch).returns([@document])
-
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        fetcher.sync
-      end
 
       assert Advisory::OSV.exists?(identifier: "GHSA-mm33-5vfq-3mm3", rubygem_name: "actionpack")
       assert Advisory::OSV.exists?(identifier: "GHSA-mm33-5vfq-3mm3", rubygem_name: "rails")
@@ -228,9 +205,7 @@ class Advisory::OSV::FetcherTest < ActiveSupport::TestCase
       create(:advisory, identifier: "GHSA-stale-0000-0000", rubygem_name: "stale")
       stub_osv_dump([@document])
 
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        Advisory::OSV::Fetcher.new.sync
-      end
+      Advisory::OSV::Fetcher.new.sync
 
       assert Advisory::OSV.exists?(identifier: "GHSA-mm33-5vfq-3mm3", rubygem_name: "actionpack")
       assert Advisory::OSV.exists?(identifier: "GHSA-mm33-5vfq-3mm3", rubygem_name: "rails")
@@ -241,9 +216,7 @@ class Advisory::OSV::FetcherTest < ActiveSupport::TestCase
       create(:advisory, identifier: "GHSA-keep-0000-0000", rubygem_name: "actionpack")
       stub_request(:get, Advisory::OSV::Fetcher::DUMP_URL).to_return(status: 200, body: "not a zip")
 
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        assert_raises(Advisory::Fetcher::Error) { Advisory::OSV::Fetcher.new.sync }
-      end
+      assert_raises(Advisory::Fetcher::Error) { Advisory::OSV::Fetcher.new.sync }
 
       assert Advisory::OSV.exists?(identifier: "GHSA-keep-0000-0000", rubygem_name: "actionpack")
     end
@@ -253,9 +226,7 @@ class Advisory::OSV::FetcherTest < ActiveSupport::TestCase
       Advisory::OSV::Fetcher.new.import([])
       stub_osv_dump([@document])
 
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        Advisory::OSV::Fetcher.new.sync
-      end
+      Advisory::OSV::Fetcher.new.sync
 
       assert Advisory::OSV.exists?(identifier: "GHSA-mm33-5vfq-3mm3", rubygem_name: "actionpack")
       assert Advisory::OSV.exists?(identifier: "GHSA-mm33-5vfq-3mm3", rubygem_name: "rails")

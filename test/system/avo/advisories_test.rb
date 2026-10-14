@@ -17,19 +17,19 @@ class Avo::AdvisoriesSystemTest < ApplicationSystemTestCase
     click_on "Sync Advisories"
 
     select "OSV", from: "Source"
-    fill_in "Comment", with: "Warming the advisories table before enabling the public flag"
+    fill_in "Comment", with: "Refreshing the advisories snapshot"
     click_button "Sync"
 
     page.assert_text "Advisory sync job scheduled"
     page.assert_text "Sync Advisories"
 
     assert_enqueued_jobs 1, only: SyncAdvisoriesJob
-    assert_enqueued_with(job: SyncAdvisoriesJob, args: [source: "Advisory::OSV", force: true])
+    assert_enqueued_with(job: SyncAdvisoriesJob, args: [source: "Advisory::OSV"])
 
     audit = Audit.where(action: "Sync Advisories").sole
 
     assert_equal admin_user, audit.admin_github_user
     assert_equal admin_user, audit.auditable
-    assert_equal "Warming the advisories table before enabling the public flag", audit.comment
+    assert_equal "Refreshing the advisories snapshot", audit.comment
   end
 end

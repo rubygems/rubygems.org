@@ -34,45 +34,21 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
     }
   end
 
-  context ".enabled?" do
-    should "follow the advisory class flag" do
-      refute_predicate Advisory::OSV::Fetcher, :enabled?
-
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        assert_predicate Advisory::OSV::Fetcher, :enabled?
-      end
-    end
-  end
-
   context ".sync_all" do
-    should "not sync when the fetcher flag is off" do
-      Advisory::OSV::Fetcher.any_instance.expects(:sync).never
-
-      Advisory::Fetcher.sync_all
-    end
-
-    should "sync enabled fetchers" do
+    should "sync registered fetchers without a feature flag" do
       Advisory::OSV::Fetcher.any_instance.stubs(:fetch).returns([@document])
 
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        Advisory::Fetcher.sync_all
-      end
+      Advisory::Fetcher.sync_all
 
       assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
     end
   end
 
   context ".sync" do
-    should "not sync when the source flag is off" do
-      Advisory::OSV::Fetcher.any_instance.expects(:fetch).never
-
-      Advisory::Fetcher.sync("Advisory::OSV")
-    end
-
-    should "sync the given source when forced even if its flag is off" do
+    should "sync the given source without a feature flag" do
       Advisory::OSV::Fetcher.any_instance.stubs(:fetch).returns([@document])
 
-      Advisory::Fetcher.sync("Advisory::OSV", force: true)
+      Advisory::Fetcher.sync("Advisory::OSV")
 
       assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
     end
@@ -85,32 +61,11 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
   end
 
   context "#sync" do
-    should "not fetch or import when the flag is off" do
+    should "import mapped documents without a feature flag" do
       fetcher = FakeFetcher.new
       fetcher.documents = [@document]
-      fetcher.expects(:fetch).never
 
       fetcher.sync
-
-      assert_empty Advisory::OSV.where(identifier: "GHSA-test-0001-0001")
-    end
-
-    should "import when forced even if the flag is off" do
-      fetcher = FakeFetcher.new
-      fetcher.documents = [@document]
-
-      fetcher.sync(force: true)
-
-      assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
-    end
-
-    should "import mapped documents when the flag is on" do
-      fetcher = FakeFetcher.new
-      fetcher.documents = [@document]
-
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        fetcher.sync
-      end
 
       advisory = Advisory::OSV.find_by!(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
 

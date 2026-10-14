@@ -15,12 +15,6 @@ class Advisory::OSVTest < ActiveSupport::TestCase
       .backed_by_column_of_type(:string)
   end
 
-  context ".feature_flag" do
-    should "use the OSV advisories flag" do
-      assert_equal FeatureFlag::OSV_ADVISORIES, Advisory::OSV.feature_flag
-    end
-  end
-
   context "severity" do
     should "accept each severity value and allow nil" do
       %w[low moderate high critical].each do |severity|
