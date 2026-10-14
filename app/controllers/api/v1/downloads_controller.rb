@@ -3,6 +3,9 @@
 class Api::V1::DownloadsController < Api::BaseController
   def index
     total = GemDownload.total_count
+    # The homepage ticker polls this every 10 seconds; let Fastly absorb the traffic.
+    # Browsers get max-age=0 so each poll reaches Fastly instead of a stale local copy.
+    cache_expiry_headers(expiry: 0, fastly_expiry: 10)
     respond_to do |format|
       format.any(:all) { render plain: total }
       format.json { render json: { total: total } }

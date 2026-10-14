@@ -41,6 +41,18 @@ class HomepageTest < ActionDispatch::IntegrationTest
     assert_select "#header-search form[role='search']", count: 1
   end
 
+  test "downloads ticker links to stats and polls the downloads API" do
+    create(:gem_download, count: 1_234_567)
+
+    get root_path
+
+    assert_response :success
+    assert_select "a[href='#{stats_path}'][data-controller='downloads-ticker']" \
+                  "[data-downloads-ticker-url-value='/api/v1/downloads.json']", count: 1 do
+      assert_select "[data-downloads-ticker-target='count']", text: "1,234,567"
+    end
+  end
+
   test "anonymous request does not set a session cookie" do
     get root_path
 
