@@ -1,4 +1,7 @@
 inherit_from: .rubocop_todo.yml
+require:
+  - ./lib/cops/repeated_nested_create
+
 plugins:
   - rubocop-performance
   - rubocop-rails
@@ -16,6 +19,12 @@ AllCops:
   ParserEngine: parser_prism
   TargetRubyVersion: 4.0
   NewCops: enable
+
+FactoryBot/RepeatedNestedCreate:
+  Description: Review repeated nested factory creation without changing per-iteration evaluation.
+  Enabled: true
+  Include:
+    - test/**/*.rb
 
 Rails/SkipsModelValidations:
   Enabled: false

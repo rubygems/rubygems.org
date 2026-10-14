@@ -16,6 +16,13 @@ class TooltipComponentTest < ComponentTest
     assert_selector "button sup", text: "*"
   end
 
+  should "render the trigger as a link when given an href" do
+    render TooltipComponent.new(text: "Vulnerable", id: "tip-1", href: "/gems/rack#advisories") { "!" }
+
+    assert_selector "a[href='/gems/rack#advisories'][aria-describedby='tip-1']", text: "!"
+    refute_selector "button"
+  end
+
   should "generate a unique id per instance" do
     ids = Array.new(3).map do
       render TooltipComponent.new(text: "hi") { "?" }

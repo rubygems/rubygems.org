@@ -292,7 +292,7 @@ class VersionsControllerTest < ActionController::TestCase
         get :show, params: { rubygem_id: @rubygem.name, id: "1.0.0" }
       end
 
-      assert page.has_css?("[data-testid='gem-advisories']")
+      assert page.has_css?("#advisories[data-testid='gem-advisories']")
       assert page.has_content?("XSS in Action Pack")
     end
 
@@ -326,8 +326,9 @@ class VersionsControllerTest < ActionController::TestCase
         get :index, params: { rubygem_id: @rubygem.name }
       end
 
-      warning = css_select("[data-testid='version-vulnerability'] button[aria-describedby]").sole
+      warning = css_select("[data-testid='version-vulnerability'] a[aria-describedby]").sole
 
+      assert_equal rubygem_version_path(@rubygem.slug, "1.0.0", anchor: "advisories"), warning["href"]
       assert_select "[data-testid='version-vulnerability'] svg", count: 1
       assert_select "##{warning['aria-describedby']}[role='tooltip'].left-full", text: "vulnerable", count: 1
     end
@@ -337,9 +338,9 @@ class VersionsControllerTest < ActionController::TestCase
         get :index, params: { rubygem_id: @rubygem.name }
       end
 
-      assert_select "[data-testid='version-vulnerability'] button.text-yellow-700[aria-label='vulnerable']", count: 1
+      assert_select "[data-testid='version-vulnerability'] a.text-yellow-700[aria-label='vulnerable']", count: 1
       assert_select "[data-testid='version-vulnerability'] use[href$='#warning']", count: 1
-      assert_select "[data-testid='version-vulnerability'] button.text-red-600", count: 0
+      assert_select "[data-testid='version-vulnerability'] a.text-red-600", count: 0
     end
 
     should "use a red warning when an affecting advisory is critical" do
@@ -351,10 +352,10 @@ class VersionsControllerTest < ActionController::TestCase
         get :index, params: { rubygem_id: @rubygem.name }
       end
 
-      assert_select "[data-testid='version-vulnerability'] button.text-red-600[aria-label='critically vulnerable']", count: 1
+      assert_select "[data-testid='version-vulnerability'] a.text-red-600[aria-label='critically vulnerable']", count: 1
       assert_select "[data-testid='version-vulnerability'] use[href$='#error']", count: 1
       assert_select "[role='tooltip']", text: "critically vulnerable", count: 1
-      assert_select "[data-testid='version-vulnerability'] button.text-yellow-700", count: 0
+      assert_select "[data-testid='version-vulnerability'] a.text-yellow-700", count: 0
     end
 
     should "not mark affected versions when the source flag is off" do
