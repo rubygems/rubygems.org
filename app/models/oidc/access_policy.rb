@@ -39,11 +39,10 @@ class OIDC::AccessPolicy < ApplicationModel
         end
       end
 
-      # Anchored so the pattern describes the whole claim, grouped so a top level
-      # alternation cannot escape the anchors. Built in one place because the
-      # wrapping decides what compiles, so validating the bare value could
-      # disagree with what is matched.
+      # Compile independently before wrapping so unmatched parentheses cannot
+      # escape the group and turn the anchors into separate alternatives.
       def matcher
+        Regexp.new(value)
         Regexp.new("\\A(?:#{value})\\z")
       end
 

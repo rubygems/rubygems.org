@@ -203,8 +203,20 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
       should "fail to validate rather than save and raise when a token is exchanged" do
         @access_policy.validate
 
-        assert_equal ["is not a valid regular expression: premature end of char-class: /\\A(?:repo:fakeuser\\/[)\\z/"],
+        assert_equal ["is not a valid regular expression: premature end of char-class: /repo:fakeuser\\/[/"],
           @access_policy.errors.messages[:"statements[0].conditions[0].value"]
+      end
+
+      should "reject patterns that escape the whole-claim anchors" do
+        @access_policy.statements.sole.conditions.sole.value = "foo)|(?:bar"
+
+        refute_predicate @access_policy, :valid?
+
+        %w[fooXYZ evil/bar].each do |claim|
+          assert_raise(RegexpError) do
+            @access_policy.verify_access!(JSON::JWT.new(iss: "iss", sub: claim))
+          end
+        end
       end
     end
 

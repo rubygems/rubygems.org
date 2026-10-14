@@ -142,6 +142,27 @@ class OIDC::ApiKeyRolesControllerIntegrationTest < ActionDispatch::IntegrationTe
       assert_equal id_token_count, OIDC::IdToken.count
     end
 
+    should "reject a pattern that escapes the whole-claim anchors without side effects" do
+      attributes = @api_key_role.attributes
+      params = access_policy_params(1)
+      params[:oidc_api_key_role][:access_policy][:statements_attributes]["0"][:conditions_attributes]["0"] = {
+        operator: "string_matches", claim: "sub", value: "foo)|(?:bar"
+      }
+
+      assert_no_difference ["ApiKey.count", "OIDC::IdToken.count", "Events::UserEvent.count", "Audit.count"] do
+        assert_no_enqueued_emails do
+          patch profile_oidc_api_key_role_url(@api_key_role.token),
+            params: params.to_json,
+            headers: { "CONTENT_TYPE" => "application/json", "HTTP_ACCEPT" => "text/html" }
+        end
+      end
+
+      assert_response :success
+      page.assert_text "is not a valid regular expression"
+
+      assert_equal attributes, @api_key_role.reload.attributes
+    end
+
     should "delete" do
       delete profile_oidc_api_key_role_url(@api_key_role.token)
 
