@@ -1,0 +1,60 @@
+<%
+  legend_class = "mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-500 dark:text-neutral-400"
+  option_class = "flex items-center gap-2 py-1 text-b3 text-neutral-800 dark:text-neutral-200 cursor-pointer"
+  count_class = "ml-auto shrink-0 text-neutral-500 dark:text-neutral-400 tabular-nums"
+  input_class = "h-4 w-4 border-neutral-300 dark:border-neutral-700 text-orange-500 focus:ring-orange-500"
+  active_count = (filters.updated ? 1 : 0) + filters.licenses.size
+  updated_counts = filters.updated_counts(aggregations)
+  license_counts = filters.license_counts(aggregations)
+%>
+
+<button type="button" class="lg:hidden flex w-full items-center justify-between py-2 text-b2 font-semibold"
+        data-action="reveal#toggle" data-reveal-target="button" aria-controls="search-filters-panel">
+  <span>
+    <%= t("searches.show.filters.title") %>
+    <% if active_count.positive? %>
+      <span class="ml-1 px-2 rounded-full text-c3 bg-orange-100 dark:bg-orange-900 text-orange-700 dark:text-orange-300"><%= active_count %></span>
+    <% end %>
+  </span>
+  <%= icon_tag "keyboard-arrow-down", class: "transition-transform", data: { reveal_target: "toggle" } %>
+</button>
+
+<div id="search-filters-panel" class="hidden lg:block space-y-6 pt-2 lg:pt-0" data-reveal-target="item">
+  <fieldset class="min-w-0">
+    <legend class="<%= legend_class %>"><%= t("searches.show.filters.updated") %></legend>
+    <label class="<%= option_class %>">
+      <%= radio_button_tag :updated, "", filters.updated.nil?, id: "updated_any", class: input_class,
+        data: { action: "auto-submit#submit" } %>
+      <span><%= t("searches.show.filters.updated_any") %></span>
+    </label>
+    <% SearchFilters::UPDATED_WITHIN.each_key do |within| %>
+      <label class="<%= option_class %>">
+        <%= radio_button_tag :updated, within, filters.updated == within, id: "updated_#{within}", class: input_class,
+          data: { action: "auto-submit#submit" } %>
+        <span><%= t("searches.show.filters.updated_within.#{within}") %></span>
+        <span class="<%= count_class %>"><%= number_with_delimiter(updated_counts[within].to_i) %></span>
+      </label>
+    <% end %>
+  </fieldset>
+
+  <% if license_counts.any? %>
+    <fieldset class="min-w-0">
+      <legend class="<%= legend_class %>"><%= t("searches.show.filters.license") %></legend>
+      <% license_counts.each_with_index do |(license, count), index| %>
+        <label class="<%= option_class %>">
+          <%= check_box_tag "license[]", license, filters.licenses.include?(license), id: "license_#{index}",
+            class: "#{input_class} rounded", data: { action: "auto-submit#submit" } %>
+          <span class="min-w-0 truncate" title="<%= license %>"><%= license %></span>
+          <% if count %>
+            <span class="<%= count_class %>"><%= number_with_delimiter(count) %></span>
+          <% end %>
+        </label>
+      <% end %>
+    </fieldset>
+  <% end %>
+
+  <noscript>
+    <%= button_tag t("searches.show.filters.apply"), type: :submit, name: nil,
+      class: "px-4 py-2 rounded-lg bg-orange-500 text-white text-b3 font-semibold" %>
+  </noscript>
+</div>

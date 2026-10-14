@@ -27,7 +27,7 @@ class SearchTest < ApplicationSystemTestCase
     fill_in "query", with: "LDAP"
     click_button "search_submit"
 
-    assert_text "NO GEMS FOUND"
+    assert_text "No gems found"
     assert_text "YANKED (1)"
 
     click_link "Yanked (1)"
@@ -74,15 +74,46 @@ class SearchTest < ApplicationSystemTestCase
 
       visit "/search?query=ruby"
 
-      assert_text "DISPLAYING GEM 1 - 1 OF 3 IN TOTAL"
+      assert_text "3 gems"
 
       find(".last-page-button").click
 
-      assert_text "DISPLAYING GEM 2 - 2 OF 3 IN TOTAL"
+      assert_current_path "/search?page=2&query=ruby"
+      assert_text "3 gems"
 
       Gemcutter::SEARCH_MAX_PAGES = orignal_val
       Kaminari.configure { |c| c.default_per_page = 30 }
     end
+  end
+
+  test "filtering and sorting search results" do
+    mit = create(:rubygem, name: "ruby-mit", downloads: 10)
+    create(:version, rubygem: mit, licenses: ["MIT"])
+    apache = create(:rubygem, name: "ruby-apache", downloads: 20)
+    create(:version, rubygem: apache, licenses: ["Apache-2.0"])
+    Rubygem.reindex
+
+    visit "/search?query=ruby"
+
+    assert_text "2 gems"
+
+    # `check` re-reads the checkbox after clicking, but auto-submit has already replaced the page.
+    find_field("Apache-2.0").click
+
+    assert_current_path(/license%5B%5D=Apache-2.0/)
+    assert_text "1 gem"
+    assert_no_selector "[data-testid='rubygem-name']", text: "ruby-mit"
+
+    within("[data-testid='active-filters']") { click_link "Apache-2.0" }
+
+    assert_text "2 gems"
+
+    select "Name A–Z", from: "Sort"
+
+    # Turbo updates the URL before rendering; the selected attribute only exists in the new page.
+    assert_selector "select[name=sort] option[value=name][selected]"
+    assert_current_path(/sort=name/)
+    assert_equal %w[ruby-apache ruby-mit], all("[data-testid='rubygem-name']").map(&:text)
   end
 
   test "searching for reverse dependencies" do

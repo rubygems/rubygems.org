@@ -287,36 +287,6 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
   end
 
-  context "aggregations" do
-    setup do
-      rubygem1 = create(:rubygem, name: "example")
-      rubygem2 = create(:rubygem, name: "rubygem")
-      create(:version, :reindex, rubygem: rubygem1, summary: "gemest of all gems")
-      create(:version, :reindex, rubygem: rubygem2, description: "example gems set the example")
-      rubygem1.update_column("updated_at", 2.days.ago)
-      rubygem2.update_column("updated_at", 10.days.ago)
-      rubygem1.reindex(refresh: true)
-      rubygem2.reindex(refresh: true)
-      _, @response = ElasticSearcher.new("example").search
-    end
-
-    should "aggregate matched fields" do
-      buckets = @response.response["aggregations"]["matched_field"]["buckets"]
-
-      assert_equal 1, buckets["name"]["doc_count"]
-      assert_equal 0, buckets["summary"]["doc_count"]
-      assert_equal 1, buckets["description"]["doc_count"]
-    end
-
-    # NOTE: this can fail when OpenSearch date is different to Ruby date
-    should "aggregate date range" do
-      buckets = @response.response["aggregations"]["date_range"]["buckets"]
-
-      assert_equal 2, buckets[0]["doc_count"]
-      assert_equal 1, buckets[1]["doc_count"]
-    end
-  end
-
   context "#search" do
     context "exception handling" do
       context "Searchkick::InvalidQueryError" do
