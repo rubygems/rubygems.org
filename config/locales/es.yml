@@ -1337,6 +1337,15 @@ es:
       one: 1 segundo
   form:
     optional:
+  gem_list_component:
+    label:
+    placeholder:
+    clear:
+    all:
+      one:
+      other:
+    matches:
+    no_results:
   gem_sort_component:
     label:
     menu_label:
