@@ -3,6 +3,69 @@
 require "application_system_test_case"
 
 class NavigationTest < ApplicationSystemTestCase
+  test "about opens on hover and its links remain reachable" do
+    visit root_path
+
+    menu = "header [data-dropdown-target='menu']"
+    button = find("header [data-controller='dropdown'] button")
+
+    assert_no_selector menu
+    button.hover
+
+    assert_selector menu
+
+    links = all("#{menu} a")
+
+    assert_equal ["RubyGems.org", "Status", "Data", "Security", "Help"], links.map(&:text)
+    links.each do |link|
+      link.hover
+
+      assert_selector menu
+    end
+
+    find("header a", text: "docs", exact_text: true).hover
+
+    assert_no_selector menu
+    button.hover
+    find("#{menu} a", text: "RubyGems.org", exact_text: true).click
+
+    assert_current_path page_path("about")
+  end
+
+  test "about stays open for keyboard focus after the mouse leaves and closes when focus leaves" do
+    visit root_path
+
+    menu = "header [data-dropdown-target='menu']"
+    button = find("header [data-controller='dropdown'] button")
+    button.hover
+    button.send_keys(:tab)
+    find("header a", text: "docs", exact_text: true).hover
+
+    assert_selector "#{menu} a:focus", text: "RubyGems.org"
+    assert_selector menu
+
+    page.driver.with_playwright_page { it.keyboard.press("Tab") }
+
+    assert_selector "#{menu} a:focus", text: "Status"
+
+    page.driver.with_playwright_page do |pw_page|
+      4.times { pw_page.keyboard.press("Tab") }
+    end
+
+    assert_no_selector menu
+    assert_selector "header a:focus", text: "Sign in"
+
+    button.hover
+    button.send_keys(:tab)
+    find("header a", text: "docs", exact_text: true).hover
+
+    assert_selector "#{menu} a:focus", text: "RubyGems.org"
+
+    page.driver.with_playwright_page { it.keyboard.press("Enter") }
+
+    assert_current_path page_path("about")
+  end
+
   test "opening and closing the account menu" do
     user = create(:user, handle: "menu-user")
     sign_in(user)
