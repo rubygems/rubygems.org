@@ -11,6 +11,7 @@ class Avo::Resources::Rubygem < Avo::BaseResource
   }
 
   def actions
+    action Avo::Actions::RebuildRubygemSearch
     action Avo::Actions::ReleaseReservedNamespace
     action Avo::Actions::AddOwner
     action Avo::Actions::YankRubygem
