@@ -24,10 +24,26 @@ class OIDC::AccessPolicy < ApplicationModel
         when "string_equals"
           value == claim_value
         when "string_matches"
-          Regexp.new(value).match?(claim_value)
+          # Regexp#match? raises on a non String, and numeric claims such as
+          # `iat` are advertised by the providers.
+          return false unless claim_value.is_a?(String)
+
+          begin
+            matcher.match?(claim_value)
+          rescue Regexp::TimeoutError
+            logger.warn("Condition timed out", claim:, value:)
+            false
+          end
         else
           raise "Unknown operator #{operator.inspect}"
         end
+      end
+
+      # Compile independently before wrapping so unmatched parentheses cannot
+      # escape the group and turn the anchors into separate alternatives.
+      def matcher
+        Regexp.new(value)
+        Regexp.new("\\A(?:#{value})\\z")
       end
 
       attribute :operator, :string
@@ -41,6 +57,7 @@ class OIDC::AccessPolicy < ApplicationModel
       validates :operator, presence: true, inclusion: { in: OPERATORS }
       validates :claim, presence: true
       validate :value_expected_type?
+      validate :value_compiles, if: -> { operator == "string_matches" && value.is_a?(String) }
 
       def value_type
         case operator
@@ -53,6 +70,13 @@ class OIDC::AccessPolicy < ApplicationModel
 
       def value_expected_type?
         errors.add(:value, "must be #{value_type}") unless value.is_a?(value_type)
+      end
+
+      # Otherwise an unparseable pattern saves and raises on every exchange.
+      def value_compiles
+        matcher
+      rescue RegexpError => e
+        errors.add(:value, "is not a valid regular expression: #{e.message.lines.first.strip}")
       end
     end
 

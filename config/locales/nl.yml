@@ -1265,6 +1265,11 @@ nl:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+      oidc_api_key_role:
+        oidc_api_key_role_access_policy_changed:
+        role_name:
+        changed_by_admin:
+        conditions:
       password:
         password_compromised:
         mfa_status:
