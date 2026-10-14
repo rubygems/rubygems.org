@@ -335,6 +335,18 @@ Rails.application.routes.draw do
   ################################################################################
   # UI Images
 
+  get '/sponsor_logos/:signed_id', to: 'sponsor_logos#show', as: :sponsor_logo, format: false
+
+  # Avo uses url_for/rails_blob_path for previews and downloads. Both resolve
+  # to our checked read endpoint; no general Active Storage routes are drawn.
+  direct :rails_blob do |attachment, options|
+    blob = attachment.respond_to?(:blob) ? attachment.blob : attachment
+    route_for(:sponsor_logo, blob.signed_id, options)
+  end
+  resolve('ActiveStorage::Blob') { |blob, options| route_for(:rails_blob, blob, options) }
+  resolve('ActiveStorage::Attachment') { |attachment, options| route_for(:rails_blob, attachment, options) }
+  resolve('ActiveStorage::Attached::One') { |attachment, options| route_for(:rails_blob, attachment, options) }
+
   scope constraints: { format: /jpe?g/ }, defaults: { format: :jpeg } do
     resources :users, only: [] do
       get 'avatar', on: :member, to: 'avatars#show', format: true

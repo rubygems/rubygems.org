@@ -15,6 +15,7 @@ pkg/
 reports/brakeman/*
 server/
 tmp/
+/storage/
 tags
 .idea
 chef
