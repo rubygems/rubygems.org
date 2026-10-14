@@ -9,6 +9,8 @@ class ElasticSearcher
     Errno::ECONNRESET
   ].freeze
 
+  SUGGESTION_FIELDS = %w[name version downloads summary].freeze
+
   class SearchNotAvailableError < StandardError
   end
 
@@ -51,7 +53,7 @@ class ElasticSearcher
       page: @page, per_page: Kaminari.config.default_per_page, load: false
     )
     result = result.response["suggest"]["completion_suggestion"][0]["options"]
-    result.map { |gem| gem["_source"]["name"] }
+    result.map { |gem| gem["_source"].slice(*SUGGESTION_FIELDS) }
   rescue *CONNECTION_ERRORS => e
     Rails.error.report(e, handled: true)
     StatsD.increment("search.failure", tags: { exception: e.class.name })
@@ -122,7 +124,7 @@ class ElasticSearcher
 
     OpenSearch::DSL::Search.search do
       suggest :completion_suggestion, prefix: query_str, completion: { field: "suggest", contexts: { yanked: false }, size: 30 }
-      source "name"
+      source SUGGESTION_FIELDS
     end
   end
 

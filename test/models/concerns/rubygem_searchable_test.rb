@@ -228,11 +228,11 @@ class RubygemSearchableTest < ActiveSupport::TestCase
       assert_equal suggestions, response.suggestions
     end
 
-    should "return names of suggestion gems" do
+    should "return name, version, downloads and summary of suggestion gems" do
       response = ElasticSearcher.new("keywor").suggestions
-      suggestions = %w[keyword keywordo]
 
-      assert_equal suggestions, %W[#{response[0]} #{response[1]}]
+      assert_equal %w[keyword keywordo], response.pluck("name")
+      assert_equal %w[name version downloads summary], response[0].keys
     end
   end
 
