@@ -11,8 +11,9 @@ class DropdownComponentTest < ComponentTest
   end
 
   should "name the button by its label and point it at the menu it opens" do
-    assert_selector "button#sort-button[type='button'][popovertarget='sort-menu']", text: "Sort: Name"
-    assert_selector "button[aria-haspopup='menu'][aria-expanded='false'][aria-controls='sort-menu']"
+    assert_selector "button#sort-button[type='button'][popovertarget='sort-menu']", text: "Sort: Name", visible: :all
+    assert_selector "button[aria-haspopup='menu'][aria-expanded='false'][aria-controls='sort-menu']", visible: :all
+    assert_no_selector "button#sort-button"
   end
 
   should "render a closed, named menu" do

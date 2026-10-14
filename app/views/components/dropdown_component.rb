@@ -7,40 +7,46 @@
 #     menu.item_to "Downloads", "?sort=downloads", checked: false
 #   end
 #
-# The menu is a native popover, so it renders above clipping containers such as
-# cards, and closes on Escape or an outside click. The dropdown-menu controller
-# adds positioning, aria-expanded and arrow-key navigation.
+# The menu stays hidden until the dropdown-menu controller can enhance it.
+# Callers can supply a fallback block for browsers without JavaScript/popovers.
 class DropdownComponent < ApplicationComponent
   prop :label
   prop :menu_label
+  prop :fallback, default: nil
   prop :id, default: -> { "dropdown-#{SecureRandom.alphanumeric(10)}" }
 
   def view_template(&)
-    div(class: "inline-flex", data: { controller: "dropdown-menu", action: "resize@window->dropdown-menu#position" }) do
-      button(
-        type: "button",
-        id: button_id,
-        popovertarget: menu_id,
-        class: BUTTON,
-        aria: { haspopup: "menu", expanded: "false", controls: menu_id },
-        data: { dropdown_menu_target: "button", action: "keydown->dropdown-menu#buttonKeydown" }
-      ) do
-        span { @label }
-        icon_tag("arrow-drop-down", size: 5)
-      end
+    div(data: { controller: "dropdown-menu",
+                action: "resize@window->dropdown-menu#position pointerdown@document->dropdown-menu#dismissOutside" }) do
+      div(data: { dropdown_menu_target: "fallback" }) { @fallback.call } if @fallback
 
-      div(
-        id: menu_id,
-        popover: "auto",
-        role: "menu",
-        aria: { label: @menu_label },
-        class: MENU,
-        data: {
-          dropdown_menu_target: "menu",
-          action: "beforetoggle->dropdown-menu#position toggle->dropdown-menu#toggled keydown->dropdown-menu#menuKeydown"
-        },
-        &
-      )
+      # These wrappers have no display utilities that could override [hidden].
+      div(hidden: true, data: { dropdown_menu_target: "enhanced" }) do
+        button(
+          type: "button",
+          id: button_id,
+          popovertarget: menu_id,
+          class: BUTTON,
+          aria: { haspopup: "menu", expanded: "false", controls: menu_id },
+          data: { dropdown_menu_target: "button", action: "keydown->dropdown-menu#buttonKeydown" }
+        ) do
+          span { @label }
+          icon_tag("arrow-drop-down", size: 5)
+        end
+
+        div(
+          id: menu_id,
+          popover: "auto",
+          role: "menu",
+          aria: { label: @menu_label },
+          class: MENU,
+          data: {
+            dropdown_menu_target: "menu",
+            action: "beforetoggle->dropdown-menu#position toggle->dropdown-menu#toggled keydown->dropdown-menu#menuKeydown"
+          },
+          &
+        )
+      end
     end
   end
 

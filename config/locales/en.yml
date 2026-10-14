@@ -1202,6 +1202,7 @@ en:
   gem_sort_component:
     label: "Sort: %{sort}"
     menu_label: Sort gems by
+    apply: Apply sort
     options:
       relevance: Best match
       recent: Most recently published

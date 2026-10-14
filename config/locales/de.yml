@@ -1271,6 +1271,7 @@ de:
   gem_sort_component:
     label:
     menu_label:
+    apply:
     options:
       relevance:
       recent:

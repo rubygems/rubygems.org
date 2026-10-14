@@ -79,7 +79,70 @@ class GemSortDropdownTest < ApplicationSystemTestCase
     assert_selector SORT_BUTTON, text: "Sort: Most recently published"
   end
 
+  test "sorting without JavaScript preserves parameters, resets pagination and remembers the selection" do
+    own_gems "alpha" => 10, "bravo" => 30
+    page.driver.with_playwright_page do |pw_page|
+      cdp = pw_page.context.new_cdp_session(pw_page)
+      cdp.send_message("Emulation.setScriptExecutionDisabled", params: { value: true })
+      begin
+        check_fallback_sorting
+      ensure
+        cdp.send_message("Emulation.setScriptExecutionDisabled", params: { value: false })
+        cdp.detach
+      end
+    end
+  end
+
+  test "sorting without popover support keeps the native form" do
+    own_gems "alpha" => 10, "bravo" => 30
+    page.driver.with_playwright_page do |pw_page|
+      pw_page.add_init_script(script: "delete HTMLElement.prototype.showPopover")
+    end
+
+    check_fallback_sorting
+  end
+
+  test "outside touch dismisses even when native light dismissal does not work" do
+    own_gems "alpha" => 10
+    visit profile_path(@user.handle)
+    # Manual popovers simulate a browser that cannot light-dismiss automatically.
+    page.execute_script("document.querySelector('[role=menu]').setAttribute('popover', 'manual')")
+    find(SORT_BUTTON).click
+
+    assert_selector MENU
+
+    page.driver.with_playwright_page do |pw_page|
+      pw_page.locator("h1").dispatch_event("pointerdown", eventInit: { pointerType: "touch", bubbles: true })
+    end
+
+    assert_no_selector MENU
+    assert_selector "#{SORT_BUTTON}[aria-expanded='false']:focus"
+    assert_no_selector "select[name='sort']"
+  end
+
   private
+
+  def check_fallback_sorting
+    visit profile_path(@user.handle, page: 1, query: "keep & this", filters: { names: %w[alpha bravo] })
+
+    assert_no_selector SORT_BUTTON
+    assert_no_selector MENU
+    assert_equal "downloads", find_field("Sort gems by").value
+    assert_equal %w[bravo alpha], all("h4").map(&:text)
+
+    select "Alphabetical", from: "Sort gems by"
+    click_button "Apply sort"
+
+    assert_equal %w[alpha bravo], all("h4").map(&:text)
+    query = Rack::Utils.parse_nested_query(URI.parse(current_url).query)
+
+    assert_equal({ "sort" => "name", "query" => "keep & this", "filters" => { "names" => %w[alpha bravo] } }, query)
+
+    visit profile_path(@user.handle)
+
+    assert_equal "name", find_field("Sort gems by").value
+    assert_equal %w[alpha bravo], all("h4").map(&:text)
+  end
 
   def own_gems(downloads_by_name)
     downloads_by_name.each do |name, downloads|

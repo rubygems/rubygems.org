@@ -23,6 +23,14 @@ class GemSortPreferenceTest < ActionDispatch::IntegrationTest
     assert_equal %w[sortgem-b sortgem-c sortgem-a], listed_gems
     assert_nil cookies[:gem_sort]
     assert_select "button[aria-haspopup='menu'][aria-expanded='false']", text: "Sort: Number of downloads"
+    assert_select "form[method='get'][action='#{profile_path(@user.handle)}']" do
+      assert_select "label", text: /Sort gems by/
+      assert_select "select[name='sort'] option" do |options|
+        assert_equal %w[recent downloads name], options.pluck("value")
+      end
+      assert_select "option[selected][value='downloads']"
+      assert_select "button[type='submit']", text: "Apply sort"
+    end
     assert_select "[role='menu'][aria-label='Sort gems by'] [role='menuitemradio']" do |items|
       assert_equal(["Most recently published", "Number of downloads", "Alphabetical"], items.map { it.text.strip })
       assert_equal(%w[false true false], items.pluck("aria-checked"))
@@ -72,6 +80,14 @@ class GemSortPreferenceTest < ActionDispatch::IntegrationTest
       assert_equal(["Best match", "Most recently published", "Number of downloads", "Alphabetical"], items.map { it.text.strip })
       # Changing the order keeps the query and goes back to the first page.
       assert_equal "#{search_path}?query=sortgem&sort=name", items.last["href"]
+    end
+    assert_select "form[method='get'][action='#{search_path}']" do
+      assert_select "input[type='hidden'][name='query'][value='sortgem']"
+      assert_select "input[name='page'], input[name='sort']", count: 0
+      assert_select "select[name='sort'] option" do |options|
+        assert_equal %w[relevance recent downloads name], options.pluck("value")
+      end
+      assert_select "option[selected][value='relevance']"
     end
 
     get search_path(query: "sortgem", sort: "relevance")

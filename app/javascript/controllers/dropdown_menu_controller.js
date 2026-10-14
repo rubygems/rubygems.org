@@ -5,14 +5,28 @@ const MARGIN = 8;
 
 // Menu button (https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/) built
 // on a native popover. The browser opens the menu from the button
-// (popovertarget), closes it on Escape or an outside click, and returns focus
+// (popovertarget), closes it on Escape, and returns focus
 // to the button. This controller anchors the menu under the button, keeps
-// aria-expanded in sync, and moves focus between items with the arrow keys.
+// aria-expanded in sync, moves focus between items with the arrow keys, and
+// handles outside pointers even on iOS versions with broken light dismissal.
+// If this module cannot load/parse or popovers are unavailable, keep the HTML
+// fallback: importmaps do not transpile this controller for older browsers.
 export default class extends Controller {
-  static targets = ["button", "menu", "item"];
+  static targets = ["button", "menu", "item", "fallback", "enhanced"];
 
   // Focus target for the next open: an item index, or null for the checked item.
   #focusOnOpen = null;
+
+  connect() {
+    if (typeof this.menuTarget.showPopover !== "function") return;
+
+    this.enhancedTarget.hidden = false;
+    if (this.hasFallbackTarget) {
+      if (this.fallbackTarget.contains(document.activeElement))
+        this.buttonTarget.focus();
+      this.fallbackTarget.hidden = true;
+    }
+  }
 
   // The menu lives in the top layer, positioned against the document, so it
   // scrolls with the page and is not clipped by overflow-hidden ancestors.
@@ -20,6 +34,7 @@ export default class extends Controller {
   // on (left edge for a button on the left, e.g. a wrapped mobile header),
   // kept MARGIN inside the screen once its width is known (when open).
   position() {
+    if (this.enhancedTarget.hidden) return;
     const button = this.buttonTarget.getBoundingClientRect();
     const viewportWidth = document.documentElement.clientWidth;
     const maxOffset = viewportWidth - MARGIN - this.menuTarget.offsetWidth;
@@ -47,6 +62,17 @@ export default class extends Controller {
 
   close() {
     if (this.#isOpen()) this.menuTarget.hidePopover();
+  }
+
+  dismissOutside(event) {
+    if (
+      this.buttonTarget.contains(event.target) ||
+      this.menuTarget.contains(event.target)
+    )
+      return;
+    const restoreFocus = this.menuTarget.contains(document.activeElement);
+    this.close();
+    if (restoreFocus) this.buttonTarget.focus();
   }
 
   buttonKeydown(event) {
@@ -90,7 +116,9 @@ export default class extends Controller {
   }
 
   #isOpen() {
-    return this.menuTarget.matches(":popover-open");
+    return (
+      !this.enhancedTarget.hidden && this.menuTarget.matches(":popover-open")
+    );
   }
 
   #checkedIndex() {
