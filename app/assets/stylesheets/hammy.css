@@ -31,6 +31,10 @@ dialog::backdrop {
   .account-menu[closing]::backdrop {
     animation: account-menu-backdrop-close 120ms ease-in both;
   }
+
+  .dropdown-menu:popover-open {
+    animation: account-menu-open 120ms ease-out;
+  }
 }
 
 @keyframes account-menu-backdrop-open {

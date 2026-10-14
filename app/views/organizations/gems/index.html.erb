@@ -10,8 +10,9 @@
 <h1 class="text-h2 mb-10"><%= t("organizations.show.gems") %></h1>
 
 <%= render CardComponent.new do |c| %>
-  <%= c.head do %>
+  <%= c.head(class: "flex-wrap gap-3") do %>
     <%= c.title t("organizations.show.gems"), icon: "gems", count: @gems_count %>
+    <%= render GemSortComponent.new(current: @gem_sort, options: @gem_sort_options) unless @gems.empty? %>
   <% end %>
   <% if @gems.empty? %>
     <%= prose do %>

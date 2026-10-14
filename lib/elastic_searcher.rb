@@ -15,9 +15,19 @@ class ElasticSearcher
   class InvalidQueryError < StandardError
   end
 
-  def initialize(query, page: 1)
+  # Result orders offered on the search page. "relevance" keeps the scored
+  # order; the rest mirror Rubygem::SORTS using indexed fields.
+  SORTS = {
+    "relevance" => nil,
+    "recent" => [{ published_at: "desc" }, { "name.unanalyzed" => "asc" }],
+    "downloads" => [{ downloads: "desc" }, { "name.unanalyzed" => "asc" }],
+    "name" => ["name.unanalyzed" => "asc"]
+  }.freeze
+
+  def initialize(query, page: 1, sort: "relevance")
     @query = SearchQuerySanitizer.sanitize(query)
     @page = page
+    @sort = SORTS.fetch(sort)
   end
 
   def search
@@ -63,6 +73,7 @@ class ElasticSearcher
   def search_definition(for_api: false) # rubocop:disable Metrics/MethodLength
     query_str = @query
     source_array = for_api ? api_source : ui_source
+    sort_fields = @sort
 
     OpenSearch::DSL::Search.search do
       query do
@@ -111,6 +122,7 @@ class ElasticSearcher
         end
       end
 
+      sort sort_fields if sort_fields
       source source_array
       # Return suggestions unless there's no query from the user
       suggest :suggest_name, text: query_str, term: { field: "name.suggest", suggest_mode: "always" } if query_str.present?

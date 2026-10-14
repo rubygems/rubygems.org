@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 class SearchesController < ApplicationController
+  include GemSortable
+
   before_action -> { set_page Gemcutter::SEARCH_MAX_PAGES }, only: :show
+  before_action -> { set_gem_sort(options: ElasticSearcher::SORTS.keys, default: "relevance") }, only: :show
 
   rescue_from SearchQuerySanitizer::QueryTooLongError,
               SearchQuerySanitizer::MalformedQueryError, with: :render_invalid_query
@@ -10,7 +13,7 @@ class SearchesController < ApplicationController
     # Return early for blank queries. Non-string params (e.g., arrays) are converted
     # to strings by SearchQuerySanitizer via to_s, which handles them safely.
     return if params[:query].blank?
-    @error_msg, @gems = ElasticSearcher.new(params[:query], page: @page).search
+    @error_msg, @gems = ElasticSearcher.new(params[:query], page: @page, sort: @gem_sort).search
 
     add_breadcrumb(t(".title"), root_path)
 

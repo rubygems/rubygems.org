@@ -149,6 +149,24 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
     joins(:gem_download).order("gem_downloads.count DESC")
   }
 
+  scope :by_recently_published, lambda {
+    order(Arel.sql("(SELECT MAX(versions.created_at) FROM versions " \
+                   "WHERE versions.rubygem_id = rubygems.id AND versions.indexed) DESC NULLS LAST"))
+  }
+
+  # Orders a gem list by a user-chosen sort. Name breaks ties so equal counts or
+  # dates still come back in a stable order.
+  SORTS = %w[recent downloads name].freeze
+
+  scope :sorted_by, lambda { |sort|
+    case sort
+    when "recent" then by_recently_published.by_name
+    when "downloads" then by_downloads.by_name
+    when "name" then by_name
+    else raise ArgumentError, "unknown gem sort: #{sort.inspect}"
+    end
+  }
+
   scope :news, lambda { |days|
     joins(:latest_version)
       .where("versions.created_at BETWEEN ? AND ?", days.ago.in_time_zone, Time.zone.now)

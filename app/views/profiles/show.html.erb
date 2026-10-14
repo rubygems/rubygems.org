@@ -8,8 +8,9 @@
 <h1 class="text-h2 mb-10"><%= t(".title", username: @user.display_handle) %></h1>
 
 <%= render CardComponent.new do |c| %>
-  <%= c.head do %>
+  <%= c.head(class: "flex-wrap gap-3") do %>
     <%= c.title t(".gems"), icon: "gems", count: @user.total_rubygems_count %>
+    <%= render GemSortComponent.new(current: @gem_sort, options: @gem_sort_options) unless @rubygems.empty? %>
   <% end %>
 
   <% if @rubygems.empty? %>
