@@ -1165,6 +1165,56 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
+  context ".most_depended_on_counts" do
+    setup do
+      @json = create(:rubygem, number: "1.0.0")
+      @rack = create(:rubygem, number: "1.0.0")
+      rspec = create(:rubygem, number: "1.0.0")
+
+      # json: three distinct dependents, one of which depends from two platform
+      # builds of its latest release (must count once).
+      multi_platform = create(:rubygem)
+      %w[ruby java].each do |platform|
+        create(:dependency, :runtime, rubygem: @json, version: create(:version, rubygem: multi_platform, number: "1.0.0", platform:))
+      end
+      create_list(:dependency, 2, :runtime, rubygem: @json)
+
+      # rack: two dependents through latest releases...
+      create_list(:dependency, 2, :runtime, rubygem: @rack)
+      # ...plus ones that must not count: an older release and a yanked release.
+      moved_on = create(:rubygem)
+      create(:dependency, :runtime, rubygem: @rack, version: create(:version, rubygem: moved_on, number: "1.0.0"))
+      create(:version, rubygem: moved_on, number: "2.0.0")
+      create(:dependency, :runtime, rubygem: @rack, version: create(:version, :yanked))
+
+      # rspec: the most dependents, but only as a development dependency.
+      create_list(:dependency, 4, :development, rubygem: rspec)
+    end
+
+    should "count distinct gems whose latest release depends on each gem at runtime, highest first" do
+      assert_equal [[@json.id, 3], [@rack.id, 2]], Rubygem.most_depended_on_counts.to_a
+    end
+
+    should "agree with the per-gem reverse runtime dependency count" do
+      counts = Rubygem.most_depended_on_counts
+
+      assert_equal @json.unique_reverse_runtime_dependencies.count, counts[@json.id]
+      assert_equal @rack.unique_reverse_runtime_dependencies.count, counts[@rack.id]
+    end
+
+    should "respect the limit" do
+      assert_equal({ @json.id => 3 }, Rubygem.most_depended_on_counts(1))
+    end
+
+    should "exclude unindexed target gems before taking the limit" do
+      yanked = create(:rubygem)
+      create(:version, :yanked, rubygem: yanked)
+      create_list(:dependency, 4, :runtime, rubygem: yanked)
+
+      assert_equal [[@json.id, 3], [@rack.id, 2]], Rubygem.most_depended_on_counts(2).to_a
+    end
+  end
+
   context "unconfirmed ownership" do
     setup do
       @rubygem               = create(:rubygem)
