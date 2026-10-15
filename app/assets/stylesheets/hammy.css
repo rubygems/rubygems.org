@@ -91,3 +91,18 @@ dialog::backdrop {
 .t-item--hidden {
   display: none !important;
 }
+
+/* Match the real dropdown button, not just the native no-JavaScript select. */
+.gem-filter-controls input[type="search"],
+.gem-filter-controls button[aria-haspopup="menu"],
+.gem-filter-controls select {
+  height: 38px;
+  line-height: 24px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+/* The explicit, labelled reset button works consistently across browsers. */
+.gem-filter-controls input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}

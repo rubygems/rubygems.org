@@ -3,10 +3,10 @@
 class CardComponent < ApplicationComponent
   include Phlex::Rails::Helpers::LinkTo
 
-  def view_template(&)
+  def view_template(**attributes, &)
     color = "bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white "
     box = "w-full px-4 py-6 md:p-10 mb-10 rounded-md shadow overflow-hidden"
-    article(class: classes(color, box), &)
+    article(class: classes(color, box), **attributes, &)
   end
 
   def head(title = nil, icon: nil, count: nil, url: nil, **options, &block)

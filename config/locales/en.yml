@@ -1227,6 +1227,15 @@ en:
       one: "1 second"
   form:
     optional: optional
+  gem_list_component:
+    label: Filter by gem name
+    placeholder: Filter by gem name…
+    clear: Clear filter
+    all:
+      one: "%{count} gem"
+      other: "%{count} gems"
+    matches: "Matching gems: %{count} of %{total}"
+    no_results: No gems match your filter.
   gem_sort_component:
     label: "Sort: %{sort}"
     menu_label: Sort gems by

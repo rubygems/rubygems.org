@@ -1240,6 +1240,15 @@ ja:
       one: 1秒
   form:
     optional: 省略できます
+  gem_list_component:
+    label:
+    placeholder:
+    clear:
+    all:
+      one:
+      other:
+    matches:
+    no_results:
   gem_sort_component:
     label:
     menu_label:

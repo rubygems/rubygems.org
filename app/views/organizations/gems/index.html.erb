@@ -9,11 +9,7 @@
 
 <h1 class="text-h2 mb-10"><%= t("organizations.show.gems") %></h1>
 
-<%= render CardComponent.new do |c| %>
-  <%= c.head(class: "flex-wrap gap-3") do %>
-    <%= c.title t("organizations.show.gems"), icon: "gems", count: @gems_count %>
-    <%= render GemSortComponent.new(current: @gem_sort, options: @gem_sort_options) unless @gems.empty? %>
-  <% end %>
+<%= render GemListComponent.new(title: t("organizations.show.gems"), count: @gems_count, current: @gem_sort, options: @gem_sort_options) do |c| %>
   <% if @gems.empty? %>
     <%= prose do %>
       <i><%= t('organizations.show.no_gems') %></i>
@@ -24,6 +20,7 @@
         <%= c.list_item_to(
           rubygem_path(rubygem.slug),
           title: short_info(rubygem.most_recent_version),
+          data: { gem_filter_target: "item", gem_name: rubygem.name },
         ) do %>
           <div class="flex flex-col w-full justify-between">
             <div class="flex flex-row w-full items-center justify-between">
