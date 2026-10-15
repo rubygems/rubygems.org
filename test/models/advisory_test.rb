@@ -65,7 +65,7 @@ class AdvisoryTest < ActiveSupport::TestCase
       @advisory = create(:advisory)
     end
 
-    should "return current rows from registered sources without a feature flag" do
+    should "return current rows from registered sources" do
       create(:advisory, :withdrawn)
 
       assert_equal [@advisory], Advisory.visible.to_a

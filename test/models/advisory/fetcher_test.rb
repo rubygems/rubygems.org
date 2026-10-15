@@ -35,7 +35,7 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
   end
 
   context ".sync_all" do
-    should "sync registered fetchers without a feature flag" do
+    should "sync registered fetchers" do
       Advisory::OSV::Fetcher.any_instance.stubs(:fetch).returns([@document])
 
       Advisory::Fetcher.sync_all
@@ -45,7 +45,7 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
   end
 
   context ".sync" do
-    should "sync the given source without a feature flag" do
+    should "sync the given source" do
       Advisory::OSV::Fetcher.any_instance.stubs(:fetch).returns([@document])
 
       Advisory::Fetcher.sync("Advisory::OSV")
@@ -61,7 +61,7 @@ class Advisory::FetcherTest < ActiveSupport::TestCase
   end
 
   context "#sync" do
-    should "import mapped documents without a feature flag" do
+    should "import mapped documents" do
       fetcher = FakeFetcher.new
       fetcher.documents = [@document]
 

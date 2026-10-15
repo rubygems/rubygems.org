@@ -191,7 +191,7 @@ class Advisory::OSV::FetcherTest < ActiveSupport::TestCase
   end
 
   context "#sync" do
-    should "import fetched documents without a feature flag" do
+    should "import fetched documents" do
       fetcher = Advisory::OSV::Fetcher.new
       fetcher.stubs(:fetch).returns([@document])
 

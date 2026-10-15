@@ -21,7 +21,7 @@ class SyncAdvisoriesJobTest < ActiveJob::TestCase
   end
 
   context "#perform" do
-    should "sync registered fetchers without a feature flag" do
+    should "sync registered fetchers" do
       Advisory::OSV::Fetcher.any_instance.stubs(:fetch).returns([@document])
 
       SyncAdvisoriesJob.perform_now
@@ -29,7 +29,7 @@ class SyncAdvisoriesJobTest < ActiveJob::TestCase
       assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
     end
 
-    should "sync the given source without a feature flag" do
+    should "sync the given source" do
       Advisory::OSV::Fetcher.any_instance.stubs(:fetch).returns([@document])
 
       SyncAdvisoriesJob.perform_now(source: "Advisory::OSV")
