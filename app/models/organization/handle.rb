@@ -63,6 +63,7 @@ class Organization::Handle
     sign_in
     sign_out
     sign_up
+    sponsor_logos
     stats
     subscriptions
     teams
