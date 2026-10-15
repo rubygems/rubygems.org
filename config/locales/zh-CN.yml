@@ -46,6 +46,7 @@ zh-CN:
   time_ago: "%{duration} 前"
   title: RubyGems.org
   total_downloads: 下载总量
+  version_downloads:
   try_again: 出了点儿问题，请重试。
   update: 更新
   remove:
@@ -331,6 +332,7 @@ zh-CN:
         uptime: 服务运行时间
         secured_by: 安全保护
       header:
+        explore:
         profile: 个人信息
         dashboard: 仪表盘
         settings: 设置
@@ -870,6 +872,10 @@ zh-CN:
     security_events:
       title:
       description_html:
+  rubygem_component:
+    reverse_dependencies:
+      one:
+      other:
   rubygems:
     aside:
       downloads_for_this_version: 这个版本
@@ -935,6 +941,28 @@ zh-CN:
     index:
       downloads: 下载
       title: Gem
+    explore:
+      title:
+      breadcrumb:
+      browse_by_letter:
+      just_released:
+        title:
+        description:
+      new_gems:
+        title:
+        description:
+      popular:
+        title:
+        description:
+      most_depended_on:
+        title:
+        description:
+      provenance:
+        title:
+        description:
+    explore_section:
+      see_all:
+      empty:
     advisories:
       title:
         one:
@@ -1194,6 +1222,24 @@ zh-CN:
       one:
   form:
     optional:
+  gem_list_component:
+    label:
+    placeholder:
+    clear:
+    all:
+      one:
+      other:
+    matches:
+    no_results:
+  gem_sort_component:
+    label:
+    menu_label:
+    apply:
+    options:
+      relevance:
+      recent:
+      downloads:
+      name:
   events:
     table_component:
       event:
@@ -1242,6 +1288,11 @@ zh-CN:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+      oidc_api_key_role:
+        oidc_api_key_role_access_policy_changed:
+        role_name:
+        changed_by_admin:
+        conditions:
       password:
         password_compromised:
         mfa_status:

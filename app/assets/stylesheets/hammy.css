@@ -31,6 +31,10 @@ dialog::backdrop {
   .account-menu[closing]::backdrop {
     animation: account-menu-backdrop-close 120ms ease-in both;
   }
+
+  .dropdown-menu:popover-open {
+    animation: account-menu-open 120ms ease-out;
+  }
 }
 
 @keyframes account-menu-backdrop-open {
@@ -86,4 +90,19 @@ dialog::backdrop {
    !important so it wins over Tailwind display utilities (flex, block) on the same element. */
 .t-item--hidden {
   display: none !important;
+}
+
+/* Match the real dropdown button, not just the native no-JavaScript select. */
+.gem-filter-controls input[type="search"],
+.gem-filter-controls button[aria-haspopup="menu"],
+.gem-filter-controls select {
+  height: 38px;
+  line-height: 24px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+/* The explicit, labelled reset button works consistently across browsers. */
+.gem-filter-controls input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
 }

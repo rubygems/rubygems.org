@@ -22,7 +22,7 @@ class Avo::Fields::ArrayOfField < Avo::Fields::BaseField
 
   def fill_field(model, key, value, params)
     value = value.each_value.map do |v|
-      template_member.fill_field(NestedField::Holder.new, :item, v, params).item
+      template_member.fill_field(Avo::Fields::NestedField::Holder.new, :item, v, params).item
     end
     super
   end

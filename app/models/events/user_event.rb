@@ -51,6 +51,13 @@ class Events::UserEvent < ApplicationRecord
     attribute :api_key_gid, :global_id
   end
 
+  OIDC_API_KEY_ROLE_ACCESS_POLICY_CHANGED = define_event "user:oidc_api_key_role:access_policy_changed" do
+    attribute :name, :string
+    attribute :api_key_role_gid, :global_id
+    attribute :by_owner, :boolean
+    attribute :conditions, Types::ArrayOf.new(ActiveRecord::Type::String.new)
+  end
+
   PASSWORD_CHANGED = define_event "user:password:changed"
 
   PASSWORD_COMPROMISED = define_event "user:password:compromised" do

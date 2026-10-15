@@ -46,6 +46,7 @@ ja:
   time_ago: "%{duration}前"
   title: RubyGems.org
   total_downloads: 累計ダウンロード数
+  version_downloads:
   try_again: エラーが発生しました。再試行してください。
   update: 更新
   remove: 削除
@@ -331,6 +332,7 @@ ja:
         uptime: 稼働時間
         secured_by: セキュリティ
       header:
+        explore:
         profile: プロフィール
         dashboard: ダッシュボード
         settings: 設定
@@ -874,6 +876,10 @@ ja:
       description_html: |-
         このページにはあなたのアカウントに起こったセキュリティ事象が表示されます。
         何か疑わしい活動を見かけたら、<a href='mailto:support@rubygems.org'>サポートまでお問い合わせ</a>ください。
+  rubygem_component:
+    reverse_dependencies:
+      one:
+      other:
   rubygems:
     aside:
       downloads_for_this_version: このバージョンのみ
@@ -940,6 +946,28 @@ ja:
     index:
       downloads: ダウンロード数
       title: gem
+    explore:
+      title:
+      breadcrumb:
+      browse_by_letter:
+      just_released:
+        title:
+        description:
+      new_gems:
+        title:
+        description:
+      popular:
+        title:
+        description:
+      most_depended_on:
+        title:
+        description:
+      provenance:
+        title:
+        description:
+    explore_section:
+      see_all:
+      empty:
     advisories:
       title:
         one:
@@ -1212,6 +1240,24 @@ ja:
       one: 1秒
   form:
     optional: 省略できます
+  gem_list_component:
+    label:
+    placeholder:
+    clear:
+    all:
+      one:
+      other:
+    matches:
+    no_results:
+  gem_sort_component:
+    label:
+    menu_label:
+    apply:
+    options:
+      relevance:
+      recent:
+      downloads:
+      name:
   events:
     table_component:
       event: 事象
@@ -1260,6 +1306,11 @@ ja:
         api_key_gem_html: gem：%{gem}
         api_key_mfa: MFA：%{mfa}
         not_required: 必要ではありません
+      oidc_api_key_role:
+        oidc_api_key_role_access_policy_changed:
+        role_name:
+        changed_by_admin:
+        conditions:
       password:
         password_compromised:
         mfa_status:

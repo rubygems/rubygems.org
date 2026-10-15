@@ -26,7 +26,8 @@ module RubygemSearchable
           suggest: { type: "completion", contexts: { name: "yanked", type: "category" } },
           yanked: { type: "boolean" },
           downloads: { type: "long" },
-          updated: { type: "date" }
+          updated: { type: "date" },
+          published_at: { type: "date" }
         }
       }
     scope :search_import, -> { includes(:linkset, :gem_download, :most_recent_version, :versions, :latest_version) }
@@ -62,6 +63,7 @@ module RubygemSearchable
         summary:           latest_version&.summary,
         description:       latest_version&.description,
         updated:           updated_at,
+        published_at:      latest_published_at,
         dependencies: {
           development: deps&.select { |r| r.rubygem && r.scope == "development" },
           runtime: deps&.select { |r| r.rubygem && r.scope == "runtime" }
@@ -84,6 +86,10 @@ module RubygemSearchable
     end
 
     private
+
+    def latest_published_at
+      versions.select(&:indexed?).map(&:created_at).max
+    end
 
     def suggest_json
       {

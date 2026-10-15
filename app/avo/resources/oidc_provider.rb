@@ -11,7 +11,10 @@ class Avo::Resources::OIDCProvider < Avo::BaseResource
 
   def fields
     field :issuer, as: :text, link_to_resource: true
-    field :configuration, as: :nested do
+    # The issuer's discovery document, overwritten by
+    # Avo::Actions::RefreshOIDCProvider, and `jwks_uri` is where that refresh
+    # fetches signing keys from.
+    field :configuration, as: :nested, disabled: true do
       visible_on = %i[edit new]
       OIDC::Provider::Configuration.then { it.required_attributes + it.optional_attributes }.each do |k|
         field k, as: (k.to_s.end_with?("s_supported") ? :tags : :text),

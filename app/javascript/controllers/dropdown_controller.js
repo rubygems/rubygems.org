@@ -5,10 +5,30 @@ import { Controller } from "@hotwired/stimulus";
 export default class extends Controller {
   static targets = ["menu"];
 
+  show(e) {
+    if (e.pointerType === "mouse") {
+      this.menuTarget.classList.remove("hidden");
+    }
+  }
+
   hide(e) {
-    !this.element.contains(e.target) &&
-      !this.menuTarget.classList.contains("hidden") &&
-      this.menuTarget.classList.add("hidden");
+    if (e.type === "pointerleave") {
+      if (
+        e.pointerType !== "mouse" ||
+        this.element.contains(document.activeElement)
+      )
+        return;
+    } else if (e.type === "focusout") {
+      if (
+        this.element.contains(e.relatedTarget) ||
+        this.element.matches(":hover")
+      )
+        return;
+    } else if (this.element.contains(e.target)) {
+      return;
+    }
+
+    this.menuTarget.classList.add("hidden");
   }
 
   toggle(e) {

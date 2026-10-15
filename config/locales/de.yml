@@ -57,6 +57,7 @@ de:
   time_ago: seit %{duration}
   title: RubyGems.org
   total_downloads: Downloads insgesamt
+  version_downloads:
   try_again: Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.
   update: Aktualisieren
   remove:
@@ -353,6 +354,7 @@ de:
         uptime: Betriebszeit
         secured_by:
       header:
+        explore:
         profile: Profil
         dashboard: Dashboard
         settings: Einstellungen
@@ -949,6 +951,10 @@ de:
     security_events:
       title:
       description_html:
+  rubygem_component:
+    reverse_dependencies:
+      one:
+      other:
   rubygems:
     aside:
       downloads_for_this_version: Für diese Version
@@ -1014,6 +1020,28 @@ de:
     index:
       downloads: Downloads
       title: Gems
+    explore:
+      title:
+      breadcrumb:
+      browse_by_letter:
+      just_released:
+        title:
+        description:
+      new_gems:
+        title:
+        description:
+      popular:
+        title:
+        description:
+      most_depended_on:
+        title:
+        description:
+      provenance:
+        title:
+        description:
+    explore_section:
+      see_all:
+      empty:
     advisories:
       title:
         one:
@@ -1268,6 +1296,24 @@ de:
       one:
   form:
     optional:
+  gem_list_component:
+    label:
+    placeholder:
+    clear:
+    all:
+      one:
+      other:
+    matches:
+    no_results:
+  gem_sort_component:
+    label:
+    menu_label:
+    apply:
+    options:
+      relevance:
+      recent:
+      downloads:
+      name:
   events:
     table_component:
       event:
@@ -1316,6 +1362,11 @@ de:
         api_key_gem_html:
         api_key_mfa:
         not_required:
+      oidc_api_key_role:
+        oidc_api_key_role_access_policy_changed:
+        role_name:
+        changed_by_admin:
+        conditions:
       password:
         password_compromised:
         mfa_status:

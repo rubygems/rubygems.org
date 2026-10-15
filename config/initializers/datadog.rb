@@ -40,6 +40,7 @@ Datadog.configure do |c|
 
   # Configuring tracing (when enabled)
   if enabled
+    c.tracing.partial_flush.enabled = true
     c.tracing.report_hostname = true
 
     c.tracing.instrument :aws

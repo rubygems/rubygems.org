@@ -33,6 +33,16 @@ class RubygemComponentTest < ComponentTest
     assert_text "42,000"
   end
 
+  should "display the supplied version and its downloads instead of the gem total" do
+    version = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "java")
+    version.gem_download.update!(count: 123)
+    render RubygemComponent.new(rubygem: @rubygem, version:)
+
+    assert_selector "code", text: "1.0.0"
+    assert_selector "span[title='Downloads for my-gem-1.0.0-java: 123']", text: "123"
+    refute_text "42,000"
+  end
+
   should "display the gem description" do
     render RubygemComponent.new(rubygem: @rubygem)
 
@@ -59,5 +69,19 @@ class RubygemComponentTest < ComponentTest
     render RubygemComponent.new(rubygem: @rubygem)
 
     refute_selector "code"
+  end
+
+  should "display the reverse dependencies count instead of downloads when given" do
+    render RubygemComponent.new(rubygem: @rubygem, reverse_dependencies_count: 12_345)
+
+    assert_text "12,345 dependents"
+    refute_text "42,000"
+  end
+
+  should "use the singular for one reverse dependency" do
+    render RubygemComponent.new(rubygem: @rubygem, reverse_dependencies_count: 1)
+
+    assert_text "1 dependent"
+    refute_text "1 dependents"
   end
 end

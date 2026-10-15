@@ -40,23 +40,26 @@
 
             <!-- Desktop Navigation Links -->
             <nav class="hidden lg:flex flex-row ml-7 items-center justify-end text-b2 text-neutral-800 dark:text-white leading-7">
-              <%= link_to t("layouts.application.footer.blog"), "https://blog.rubygems.org", class: "lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
+              <%= link_to t("layouts.application.header.explore"), explore_path, class: "lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
+              <%= link_to t("layouts.application.footer.blog"), "https://blog.rubygems.org", class: "ml-7 lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
               <%= link_to t("layouts.application.footer.statistics"), stats_path, class: "ml-7 lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
               <%= link_to t("layouts.application.footer.docs"), "https://guides.rubygems.org/command-reference/#gem-install", class: "ml-7 lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
               <!-- About links -->
-              <div class="flex relative ml-7" data-controller="dropdown">
-                <button data-action="dropdown#toggle click@window->dropdown#hide" class="flex items-center text-neutral-900 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-400 focus:outline-none lowercase">
+              <div class="flex relative ml-7" data-controller="dropdown" data-action="pointerenter->dropdown#show pointerleave->dropdown#hide focusout->dropdown#hide">
+                <button data-action="dropdown#toggle click@window->dropdown#hide" class="flex items-center cursor-pointer text-neutral-900 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-400 focus:outline-none lowercase">
                   <span><%= t("layouts.application.footer.about") %></span>
                   <%= icon_tag "arrow-drop-down" %>
                 </button>
 
                 <!-- About Dropdown Menu -->
-                <div data-dropdown-target="menu" class="z-50 hidden absolute -left-4 top-8 bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded shadow-lg text-b2 text-neutral-700 dark:text-neutral-300 divide-y divide-neutral-200 dark:divide-neutral-800">
-                  <%= link_to t('title'), page_path("about"), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
-                  <%= link_to t('layouts.application.footer.status'), "https://status.rubygems.org", data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
-                  <%= link_to t('layouts.application.footer.data'), page_path("data"), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
-                  <%= link_to t('layouts.application.footer.security'), page_path("security"), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
-                  <%= mail_to "support@rubygems.org", t('layouts.application.footer.help'), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                <div data-dropdown-target="menu" class="z-50 hidden absolute -left-4 top-full pt-1">
+                  <div class="bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded shadow-lg text-b2 text-neutral-700 dark:text-neutral-300 divide-y divide-neutral-200 dark:divide-neutral-800">
+                    <%= link_to t('title'), page_path("about"), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                    <%= link_to t('layouts.application.footer.status'), "https://status.rubygems.org", data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                    <%= link_to t('layouts.application.footer.data'), page_path("data"), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                    <%= link_to t('layouts.application.footer.security'), page_path("security"), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                    <%= mail_to "support@rubygems.org", t('layouts.application.footer.help'), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                  </div>
                 </div>
               </div>
               <%# Locale switcher temporarily disabled to improve cacheability and mitigate bot abuse %>
@@ -78,6 +81,7 @@
 
                 <!-- Mobile nav links -->
                 <nav class="flex flex-col py-3 text-left text-[18px] leading-6 text-neutral-900 dark:text-white">
+                  <%= link_to t("layouts.application.header.explore"), explore_path, class: "px-6 py-2 font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
                   <%= link_to t("layouts.application.footer.blog"), "https://blog.rubygems.org", class: "px-6 py-2 font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
                   <%= link_to t("layouts.application.footer.statistics"), stats_path, class: "px-6 py-2 font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
                   <%= link_to t("layouts.application.footer.docs"), "https://guides.rubygems.org/command-reference/#gem-install", class: "px-6 py-2 font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800" %>

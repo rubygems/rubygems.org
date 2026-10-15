@@ -32,7 +32,10 @@ class ApplicationComponent < Phlex::HTML
     @translation_path ||= name&.dup.tap do |n|
       n.gsub!(/(::[^:]+)View/, '\1')
       n.gsub!("::", ".")
-      n.gsub!(/([a-z])([A-Z])/, '\1_\2')
+      # Split an acronym from the word that follows it before splitting on case,
+      # so OIDCApiKeyRole becomes oidc_api_key_role and not oidcapi_key_role.
+      n.gsub!(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
+      n.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
       n.downcase!
     end
   end

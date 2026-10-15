@@ -1122,6 +1122,45 @@ class RubygemTest < ActiveSupport::TestCase
     end
   end
 
+  context ".sorted_by" do
+    setup do
+      # Created out of name order so an unordered tie would not come back sorted by luck.
+      @charlie = create(:rubygem, name: "charlie", downloads: 10)
+      @bravo = create(:rubygem, name: "bravo", downloads: 30)
+      @alpha = create(:rubygem, name: "alpha", downloads: 10)
+      create(:version, rubygem: @alpha, created_at: 1.day.ago)
+      create(:version, rubygem: @charlie, created_at: 2.days.ago)
+      create(:version, rubygem: @bravo, created_at: 3.days.ago)
+      # A yanked release is not a publish, and touching the gem is not one either.
+      create(:version, rubygem: @bravo, created_at: 1.hour.ago, indexed: false)
+      @charlie.touch
+    end
+
+    should "order by name" do
+      assert_equal [@alpha, @bravo, @charlie], Rubygem.sorted_by("name").to_a
+    end
+
+    should "order by downloads, breaking ties by name" do
+      tied = %w[foxtrot delta hotel echo golf].map { |name| create(:rubygem, name:, downloads: 10) }
+
+      assert_equal [@bravo, @alpha, @charlie, *tied.sort_by(&:name)], Rubygem.sorted_by("downloads").to_a
+    end
+
+    should "order by the latest indexed version, newest first" do
+      assert_equal [@alpha, @charlie, @bravo], Rubygem.sorted_by("recent").to_a
+    end
+
+    should "put gems without indexed versions last when ordering by recent" do
+      unpublished = create(:rubygem, name: "aaa-unpublished")
+
+      assert_equal unpublished, Rubygem.sorted_by("recent").to_a.last
+    end
+
+    should "reject an unknown sort" do
+      assert_raises(ArgumentError) { Rubygem.sorted_by("downloads; DROP TABLE rubygems") }
+    end
+  end
+
   context "with downloaded gems and versions created at specific times" do
     setup do
       @rubygem1 = create(:rubygem, downloads: 10)
@@ -1162,6 +1201,56 @@ class RubygemTest < ActiveSupport::TestCase
 
         assert_equal expected_order, @popular_gems
       end
+    end
+  end
+
+  context ".most_depended_on_counts" do
+    setup do
+      @json = create(:rubygem, number: "1.0.0")
+      @rack = create(:rubygem, number: "1.0.0")
+      rspec = create(:rubygem, number: "1.0.0")
+
+      # json: three distinct dependents, one of which depends from two platform
+      # builds of its latest release (must count once).
+      multi_platform = create(:rubygem)
+      %w[ruby java].each do |platform|
+        create(:dependency, :runtime, rubygem: @json, version: create(:version, rubygem: multi_platform, number: "1.0.0", platform:))
+      end
+      create_list(:dependency, 2, :runtime, rubygem: @json)
+
+      # rack: two dependents through latest releases...
+      create_list(:dependency, 2, :runtime, rubygem: @rack)
+      # ...plus ones that must not count: an older release and a yanked release.
+      moved_on = create(:rubygem)
+      create(:dependency, :runtime, rubygem: @rack, version: create(:version, rubygem: moved_on, number: "1.0.0"))
+      create(:version, rubygem: moved_on, number: "2.0.0")
+      create(:dependency, :runtime, rubygem: @rack, version: create(:version, :yanked))
+
+      # rspec: the most dependents, but only as a development dependency.
+      create_list(:dependency, 4, :development, rubygem: rspec)
+    end
+
+    should "count distinct gems whose latest release depends on each gem at runtime, highest first" do
+      assert_equal [[@json.id, 3], [@rack.id, 2]], Rubygem.most_depended_on_counts.to_a
+    end
+
+    should "agree with the per-gem reverse runtime dependency count" do
+      counts = Rubygem.most_depended_on_counts
+
+      assert_equal @json.unique_reverse_runtime_dependencies.count, counts[@json.id]
+      assert_equal @rack.unique_reverse_runtime_dependencies.count, counts[@rack.id]
+    end
+
+    should "respect the limit" do
+      assert_equal({ @json.id => 3 }, Rubygem.most_depended_on_counts(1))
+    end
+
+    should "exclude unindexed target gems before taking the limit" do
+      yanked = create(:rubygem)
+      create(:version, :yanked, rubygem: yanked)
+      create_list(:dependency, 4, :runtime, rubygem: yanked)
+
+      assert_equal [[@json.id, 3], [@rack.id, 2]], Rubygem.most_depended_on_counts(2).to_a
     end
   end
 

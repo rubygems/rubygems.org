@@ -12,6 +12,9 @@ class RubygemsController < ApplicationController
 
   layout "subject", only: %i[show security_events]
 
+  EXPLORE_SECTION_SIZE = 5
+  MOST_DEPENDED_ON_CACHE_KEY = "rubygems/explore/most_depended_on"
+
   def index
     respond_to do |format|
       format.html do
@@ -51,7 +54,39 @@ class RubygemsController < ApplicationController
     add_breadcrumb t(".title")
   end
 
+  def explore
+    explore_gems = Rubygem.preload(:latest_version, :gem_download)
+    recent_window = Gemcutter::NEWS_DAYS_LIMIT.ago..Time.current
+    # Match most_recent_version's preference for a Ruby release, falling back
+    # to the latest platform release. Rank and display that exact version.
+    latest_version_ids = Version.latest.where(rubygem_id: Version.latest.where(created_at: recent_window).select(:rubygem_id))
+      .order(:rubygem_id, Arel.sql("CASE WHEN platform = 'ruby' THEN 0 ELSE 1 END"), :position, id: :desc)
+      .pluck(Arel.sql("DISTINCT ON (rubygem_id) versions.id"))
+    downloaded_versions = Version.joins(:gem_download).order("gem_downloads.count DESC", created_at: :desc)
+      .preload(:gem_download, rubygem: :latest_version).limit(EXPLORE_SECTION_SIZE)
+    @just_released = downloaded_versions.where(id: latest_version_ids, created_at: recent_window)
+    @new_gems = downloaded_versions.where(rubygem_id: Rubygem.with_versions.with_one_version
+      .where(created_at: Gemcutter::NEWS_DAYS_LIMIT.ago..).reselect(:id))
+    @popular = explore_gems.popular(Gemcutter::POPULAR_DAYS_LIMIT).limit(EXPLORE_SECTION_SIZE)
+    @with_provenance = @just_released.with_provenance.reorder(created_at: :desc)
+    @most_depended_on_counts = most_depended_on_counts
+    most_depended_on = explore_gems.with_versions.where(id: @most_depended_on_counts.keys).index_by(&:id)
+    @most_depended_on = @most_depended_on_counts.keys.filter_map { |id| most_depended_on[id] }
+    add_breadcrumb t(".breadcrumb")
+    set_surrogate_key "explore"
+    cache_expiry_headers(expiry: 60, fastly_expiry: 60) if cacheable_request?
+  end
+
   private
+
+  # The aggregate scans every latest release (seconds on production data) and
+  # changes slowly, so it is cached; race_condition_ttl lets other requests keep
+  # serving the old value while one request recomputes it.
+  def most_depended_on_counts
+    Rails.cache.fetch(MOST_DEPENDED_ON_CACHE_KEY, expires_in: 1.day, race_condition_ttl: 5.minutes) do
+      Rubygem.most_depended_on_counts(EXPLORE_SECTION_SIZE)
+    end
+  end
 
   def show_reserved_gem
     return unless GemNameReservation.reserved?(params[:id])

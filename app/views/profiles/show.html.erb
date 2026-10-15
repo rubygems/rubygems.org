@@ -7,11 +7,7 @@
 <!-- Main Content -->
 <h1 class="text-h2 mb-10"><%= t(".title", username: @user.display_handle) %></h1>
 
-<%= render CardComponent.new do |c| %>
-  <%= c.head do %>
-    <%= c.title t(".gems"), icon: "gems", count: @user.total_rubygems_count %>
-  <% end %>
-
+<%= render GemListComponent.new(title: t(".gems"), count: @rubygems.size, current: @gem_sort, options: @gem_sort_options) do |c| %>
   <% if @rubygems.empty? %>
     <%= prose do %>
       <i><%= t(".no_gems") %></i>
@@ -23,6 +19,7 @@
         <%= c.list_item_to(
           rubygem_path(rubygem.slug),
           title: short_info(version),
+          data: { gem_filter_target: "item", gem_name: rubygem.name },
         ) do %>
           <div class="flex flex-col w-full justify-between">
             <div class="flex flex-row w-full items-center justify-between">

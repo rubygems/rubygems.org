@@ -39,10 +39,11 @@ module VersionsHelper
     end
   end
 
-  def download_count_component(rubygem, **options)
-    downloads = number_with_delimiter(rubygem.downloads)
+  def download_count_component(rubygem, version: nil, **options)
+    downloads = number_with_delimiter(version ? version.downloads_count : rubygem.downloads)
     options[:class] = "flex text-neutral-600 dark:text-neutral-400 text-nowrap text-b3 space-x-1 items-center #{options[:class]}"
-    options[:title] = "#{t('total_downloads')}: #{downloads}"
+    label = version ? t("version_downloads", version: version.full_name) : t("total_downloads")
+    options[:title] = "#{label}: #{downloads}"
 
     tag.span(**options) do
       concat icon_tag("arrow-circle-down", size: 5)

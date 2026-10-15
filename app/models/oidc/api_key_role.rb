@@ -40,6 +40,26 @@ class OIDC::ApiKeyRole < ApplicationRecord
     end
   end
 
+  # The admin panel records an Audit the owner cannot see, and api_key_created is
+  # only mailed once a key has already been minted.
+  after_update_commit :record_access_policy_change, if: :saved_change_to_access_policy?
+
+  def record_access_policy_change
+    by_owner = Current.user == user
+    user.record_event!(
+      Events::UserEvent::OIDC_API_KEY_ROLE_ACCESS_POLICY_CHANGED,
+      # The event is the owner's to read, and show_additional_info? renders the
+      # request's address and user agent to them. Withhold an admin's.
+      request: by_owner ? Current.request : nil,
+      name:,
+      api_key_role_gid: to_global_id,
+      by_owner:,
+      conditions: Array.wrap(access_policy&.statements).flat_map do |statement|
+        Array.wrap(statement.conditions).map { "#{it.claim} #{it.operator} #{it.value}" }
+      end
+    )
+  end
+
   before_validation :set_statement_principals
   attribute :access_policy, Types::JsonDeserializable.new(OIDC::AccessPolicy)
   validates :access_policy, presence: true, nested: true
