@@ -164,6 +164,8 @@ GEM
       aws-sigv4 (~> 1.5)
     aws-sigv4 (1.12.1)
       aws-eventstream (~> 1, >= 1.0.2)
+    aws_advanced_ruby_driver_wrapper (1.0.1)
+      concurrent-ruby (~> 1.3, >= 1.3.7)
     base64 (0.3.0)
     bcrypt (3.1.22)
     benchmark-ips (2.15.1)
@@ -930,6 +932,7 @@ DEPENDENCIES
   avo_upgrade (~> 0.1.1)
   aws-sdk-s3 (~> 1.232)
   aws-sdk-sqs (~> 1.119)
+  aws_advanced_ruby_driver_wrapper (~> 1.0.1)
   bcrypt (~> 3.1)
   blazer (~> 3.5.1)
   bootsnap (~> 1.26)
@@ -1083,6 +1086,7 @@ CHECKSUMS
   aws-sdk-s3 (1.232.1) sha256=124440f3a44fbc28cc3a2dec6eaeeea2a236bfc33772005010a19baa62654870
   aws-sdk-sqs (1.119.0) sha256=62d4d505303879e6e416a7346d35e6f93d0b794f2555f37ed6535b48c133795e
   aws-sigv4 (1.12.1) sha256=6973ff95cb0fd0dc58ba26e90e9510a2219525d07620c8babeb70ef831826c00
+  aws_advanced_ruby_driver_wrapper (1.0.1) sha256=53d43b52617559c6475b7621a1000d59476945c7830f567dbedfdbca9218e37d
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bcrypt (3.1.22) sha256=1f0072e88c2d705d94aff7f2c5cb02eb3f1ec4b8368671e19112527489f29032
   benchmark-ips (2.15.1) sha256=07a1a9f3c6105ecaf68c174fc3fbcddd71a0e9ada6236ae03093a0dcfd812d59
