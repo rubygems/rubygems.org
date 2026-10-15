@@ -216,6 +216,44 @@ class Api::V1::OIDC::RubygemTrustedPublishersControllerTest < ActionDispatch::In
         assert_equal "Unsupported trusted publisher type", response.parsed_body["error"]
       end
 
+      context "with GitLab trusted publishing" do
+        setup do
+          stub_request(:get, "https://gitlab.com/api/v4/projects/mygroup%2Fmyproject")
+            .to_return(status: 200, body: { id: 123_456 }.to_json, headers: { "Content-Type" => "application/json" })
+          @gitlab_params = {
+            trusted_publisher_type: OIDC::TrustedPublisher::GitLab.polymorphic_name,
+            trusted_publisher: { project_path: "mygroup/myproject", ci_config_path: ".gitlab-ci.yml" }
+          }
+        end
+
+        teardown do
+          disable_feature(FeatureFlag::GITLAB_TRUSTED_PUBLISHING)
+        end
+
+        should "create a GitLab trusted publisher when enabled for the API key owner" do
+          enable_feature(FeatureFlag::GITLAB_TRUSTED_PUBLISHING, actor: @api_key.owner)
+
+          assert_difference ["OIDC::RubygemTrustedPublisher.count", "OIDC::TrustedPublisher::GitLab.count"], 1 do
+            post api_v1_rubygem_trusted_publishers_path(@rubygem.slug), params: @gitlab_params,
+              headers: { "HTTP_AUTHORIZATION" => "12345" }
+          end
+
+          assert_response :created
+          assert_equal "OIDC::TrustedPublisher::GitLab", response.parsed_body["trusted_publisher_type"]
+        end
+
+        should "reject GitLab trusted publishers when disabled" do
+          assert_no_difference ["OIDC::RubygemTrustedPublisher.count", "OIDC::TrustedPublisher::GitLab.count"] do
+            post api_v1_rubygem_trusted_publishers_path(@rubygem.slug), params: @gitlab_params,
+              headers: { "HTTP_AUTHORIZATION" => "12345" }
+          end
+
+          assert_response :unprocessable_content
+          assert_equal "Unsupported trusted publisher type", response.parsed_body["error"]
+          assert_not_requested :get, %r{\Ahttps://gitlab\.com/api/v4/projects/}
+        end
+      end
+
       should "error creating trusted publisher with invalid config" do
         stub_request(:get, "https://api.github.com/users/example")
           .to_return(status: 200, body: { id: "123456" }.to_json, headers: { "Content-Type" => "application/json" })

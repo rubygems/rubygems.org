@@ -171,6 +171,8 @@ module RubygemsHelper
     case api_key_owner
     when OIDC::TrustedPublisher::GitHubAction
       image_tag "github_icon.png", width: 48, height: 48, theme: :light, alt: "GitHub", title: api_key_owner.name
+    when OIDC::TrustedPublisher::GitLab
+      image_tag "gitlab_icon.png", width: 48, height: 48, theme: :light, alt: "GitLab", title: api_key_owner.name
     else
       raise ArgumentError, "unknown api_key_owner type #{api_key_owner.class}"
     end
@@ -210,6 +212,17 @@ module RubygemsHelper
       count: "true",
       size: "large"
     }
+  end
+
+  def gitlab_params(rubygem)
+    candidates = [rubygem.links.source_code_uri, rubygem.links.homepage_uri].compact
+    link = candidates.lazy.filter_map { |l| URI(l) }.find { |u| u.host == "gitlab.com" }
+    return unless link
+
+    # path is e.g. /group/project or /group/subgroup/project — drop leading "/"
+    { project_path: link.path.delete_prefix("/") }
+  rescue URI::InvalidURIError
+    nil
   end
 
   def copy_field_tag(name, value, label: nil, aria_label: nil)

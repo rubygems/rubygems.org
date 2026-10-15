@@ -9,11 +9,19 @@ class OIDC::PendingTrustedPublishersControllerTest < ActionDispatch::Integration
 
     @trusted_publisher = create(:oidc_pending_trusted_publisher, user: @user, rubygem_name: "pending-gem-name")
     @expired_trusted_publisher = create(:oidc_pending_trusted_publisher, user: @user, expires_at: 1.day.ago, rubygem_name: "expired-gem-name")
+
+    stub_request(:get, %r{\Ahttps://gitlab\.com/api/v4/projects/})
+      .to_return(status: 200, body: { id: 123_456 }.to_json, headers: { "Content-Type" => "application/json" })
   end
 
   context "with a verified session" do
     setup do
+      enable_feature(FeatureFlag::GITLAB_TRUSTED_PUBLISHING, actor: @user)
       post(authenticate_session_path(verify_password: { password: PasswordHelpers::SECURE_TEST_PASSWORD }))
+    end
+
+    teardown do
+      disable_feature(FeatureFlag::GITLAB_TRUSTED_PUBLISHING)
     end
 
     should "get index" do
@@ -47,6 +55,73 @@ class OIDC::PendingTrustedPublishersControllerTest < ActionDispatch::Integration
       end
 
       assert_redirected_to profile_oidc_pending_trusted_publishers_url
+    end
+
+    should "create gitlab pending trusted publisher" do
+      assert_difference("OIDC::PendingTrustedPublisher.count") do
+        post profile_oidc_pending_trusted_publishers_url, params: {
+          oidc_pending_trusted_publisher: {
+            rubygem_name: "my-new-gem",
+            trusted_publisher_type: OIDC::TrustedPublisher::GitLab.polymorphic_name,
+            trusted_publisher_attributes: {
+              project_path: "mygroup/myproject",
+              ci_config_path: ".gitlab-ci.yml"
+            }
+          }
+        }
+      end
+
+      assert_redirected_to profile_oidc_pending_trusted_publishers_url
+      assert_equal "mygroup/myproject", OIDC::TrustedPublisher::GitLab.last.project_path
+    end
+
+    should "error creating invalid gitlab pending trusted publisher" do
+      assert_no_difference("OIDC::PendingTrustedPublisher.count") do
+        post profile_oidc_pending_trusted_publishers_url, params: {
+          oidc_pending_trusted_publisher: {
+            rubygem_name: "my-new-gem",
+            trusted_publisher_type: OIDC::TrustedPublisher::GitLab.polymorphic_name,
+            trusted_publisher_attributes: {
+              project_path: "mygroup/myproject",
+              ci_config_path: "not-a-yaml-file.txt"
+            }
+          }
+        }
+
+        assert_response :unprocessable_content
+        assert_equal ["Trusted publisher ci config path must end with .yml or .yaml"].to_sentence, flash[:error]
+      end
+    end
+
+    should "get new with gitlab provider selected" do
+      get new_profile_oidc_pending_trusted_publisher_url(trusted_publisher_type: "gitlab")
+
+      assert_response :success
+      assert_select "option[value='gitlab'][selected]"
+    end
+
+    should "hide GitLab and reject GitLab pending publishers when the flag is disabled" do
+      disable_feature(FeatureFlag::GITLAB_TRUSTED_PUBLISHING)
+
+      get new_profile_oidc_pending_trusted_publisher_url(trusted_publisher_type: "gitlab")
+
+      assert_response :success
+      assert_select "option[value='gitlab']", count: 0
+      assert_select "option[value='github_actions'][selected]"
+
+      assert_no_difference ["OIDC::PendingTrustedPublisher.count", "OIDC::TrustedPublisher::GitLab.count"] do
+        post profile_oidc_pending_trusted_publishers_url, params: {
+          oidc_pending_trusted_publisher: {
+            rubygem_name: "flagged-gem",
+            trusted_publisher_type: OIDC::TrustedPublisher::GitLab.polymorphic_name,
+            trusted_publisher_attributes: { project_path: "mygroup/myproject", ci_config_path: ".gitlab-ci.yml" }
+          }
+        }
+      end
+
+      assert_response :redirect
+      assert_equal "Unsupported trusted publisher type", flash[:error]
+      assert_not_requested :get, %r{\Ahttps://gitlab\.com/api/v4/projects/}
     end
 
     should "error creating trusted publisher with type" do
