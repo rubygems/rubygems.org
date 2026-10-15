@@ -37,6 +37,8 @@ class OIDC::PendingTrustedPublisher < ApplicationRecord
     reserved = GemNameReservation.reserved?(rubygem_name)
     return errors.add(:rubygem_name, :reserved) if reserved
 
+    return errors.add(:rubygem_name, :reserved_prefix) if reserved_prefix?
+
     rubygem = Rubygem.name_is(rubygem_name).first
     return if rubygem.nil? || rubygem.pushable?
 
@@ -49,5 +51,14 @@ class OIDC::PendingTrustedPublisher < ApplicationRecord
 
     return unless gem_typo.protected_typo?
     errors.add :rubygem_name, "'#{rubygem_name}' is too similar to an existing gem named '#{gem_typo.protected_gem}'"
+  end
+
+  # Claiming a name under another organization's reserved prefix is rejected
+  # here so the user finds out now rather than on their first push.
+  def reserved_prefix?
+    reservation = PrefixReservation.covering(rubygem_name).first
+    return false if reservation.nil? || reservation.organization.nil?
+
+    !reservation.organization.user_is_member?(user)
   end
 end
