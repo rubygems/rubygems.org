@@ -21,32 +21,28 @@ class SyncAdvisoriesJobTest < ActiveJob::TestCase
   end
 
   context "#perform" do
-    should "not sync when fetcher flags are off" do
-      Advisory::OSV::Fetcher.any_instance.expects(:sync).never
-
-      SyncAdvisoriesJob.perform_now
-    end
-
-    should "sync enabled fetchers" do
+    should "sync registered fetchers" do
       Advisory::OSV::Fetcher.any_instance.stubs(:fetch).returns([@document])
 
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        SyncAdvisoriesJob.perform_now
-      end
+      SyncAdvisoriesJob.perform_now
 
       assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
     end
 
-    should "not sync a given source when flags are off" do
-      Advisory::OSV::Fetcher.any_instance.expects(:fetch).never
-
-      SyncAdvisoriesJob.perform_now(source: "Advisory::OSV")
-    end
-
-    should "sync the given source when forced even if flags are off" do
+    should "sync the given source" do
       Advisory::OSV::Fetcher.any_instance.stubs(:fetch).returns([@document])
 
-      SyncAdvisoriesJob.perform_now(source: "Advisory::OSV", force: true)
+      SyncAdvisoriesJob.perform_now(source: "Advisory::OSV")
+
+      assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
+    end
+
+    should "execute previously enqueued jobs with the force argument" do
+      Advisory::OSV::Fetcher.any_instance.stubs(:fetch).returns([@document])
+
+      perform_enqueued_jobs do
+        SyncAdvisoriesJob.perform_later(source: "Advisory::OSV", force: true)
+      end
 
       assert Advisory::OSV.exists?(identifier: "GHSA-test-0001-0001", rubygem_name: "actionpack")
     end

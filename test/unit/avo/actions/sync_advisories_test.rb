@@ -24,7 +24,7 @@ class SyncAdvisoriesTest < ActiveJob::TestCase
     perform_action
 
     assert_enqueued_jobs 1, only: SyncAdvisoriesJob
-    assert_enqueued_with(job: SyncAdvisoriesJob, args: [source: "Advisory::OSV", force: true])
+    assert_enqueued_with(job: SyncAdvisoriesJob, args: [source: "Advisory::OSV"])
   end
 
   should "not enqueue when the source is unknown" do
@@ -51,7 +51,7 @@ class SyncAdvisoriesTest < ActiveJob::TestCase
   end
 
   should "record an Avo audit against the operator" do
-    comment = "Warming the advisories table before enabling the public flag"
+    comment = "Refreshing the advisories snapshot"
 
     perform_action(comment:)
 

@@ -288,24 +288,14 @@ class VersionsControllerTest < ActionController::TestCase
     end
 
     should "show the advisory on an affected version page" do
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        get :show, params: { rubygem_id: @rubygem.name, id: "1.0.0" }
-      end
+      get :show, params: { rubygem_id: @rubygem.name, id: "1.0.0" }
 
       assert page.has_css?("#advisories[data-testid='gem-advisories']")
       assert page.has_content?("XSS in Action Pack")
     end
 
     should "not show the advisory on a patched version page" do
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        get :show, params: { rubygem_id: @rubygem.name, id: "2.0.0" }
-      end
-
-      refute page.has_css?("[data-testid='gem-advisories']")
-    end
-
-    should "not show advisories when the source flag is off" do
-      get :show, params: { rubygem_id: @rubygem.name, id: "1.0.0" }
+      get :show, params: { rubygem_id: @rubygem.name, id: "2.0.0" }
 
       refute page.has_css?("[data-testid='gem-advisories']")
     end
@@ -321,10 +311,8 @@ class VersionsControllerTest < ActionController::TestCase
              identifier: "GHSA-test-idx-0001")
     end
 
-    should "mark affected versions with a warning tooltip when the source is enabled" do
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        get :index, params: { rubygem_id: @rubygem.name }
-      end
+    should "mark affected versions with a warning tooltip" do
+      get :index, params: { rubygem_id: @rubygem.name }
 
       warning = css_select("[data-testid='version-vulnerability'] a[aria-describedby]").sole
 
@@ -334,9 +322,7 @@ class VersionsControllerTest < ActionController::TestCase
     end
 
     should "use a yellow warning when no affecting advisory is critical" do
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        get :index, params: { rubygem_id: @rubygem.name }
-      end
+      get :index, params: { rubygem_id: @rubygem.name }
 
       assert_select "[data-testid='version-vulnerability'] a.text-yellow-700[aria-label='vulnerable']", count: 1
       assert_select "[data-testid='version-vulnerability'] use[href$='#warning']", count: 1
@@ -348,20 +334,12 @@ class VersionsControllerTest < ActionController::TestCase
              ranges: ["introduced" => "1.0.0", "fixed" => "2.0.0"],
              identifier: "GHSA-test-idx-0002")
 
-      with_feature FeatureFlag::OSV_ADVISORIES do
-        get :index, params: { rubygem_id: @rubygem.name }
-      end
+      get :index, params: { rubygem_id: @rubygem.name }
 
       assert_select "[data-testid='version-vulnerability'] a.text-red-600[aria-label='critically vulnerable']", count: 1
       assert_select "[data-testid='version-vulnerability'] use[href$='#error']", count: 1
       assert_select "[role='tooltip']", text: "critically vulnerable", count: 1
       assert_select "[data-testid='version-vulnerability'] a.text-yellow-700", count: 0
-    end
-
-    should "not mark affected versions when the source flag is off" do
-      get :index, params: { rubygem_id: @rubygem.name }
-
-      assert_select "[data-testid='version-vulnerability']", count: 0
     end
   end
 

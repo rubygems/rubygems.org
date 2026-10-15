@@ -2,7 +2,7 @@
 
 class Avo::Actions::SyncAdvisories < Avo::Actions::ApplicationAction
   self.name = "Sync Advisories"
-  self.message = "Fetch and replace security advisories from the selected source. This runs even when the public source flag is off."
+  self.message = "Fetch and replace security advisories from the selected source."
   self.visible = lambda {
     current_user.team_member?("rubygems-org") && view == :index
   }
@@ -26,7 +26,7 @@ class Avo::Actions::SyncAdvisories < Avo::Actions::ApplicationAction
     end
 
     def handle_standalone
-      if SyncAdvisoriesJob.perform_later(source: fields[:source], force: true)
+      if SyncAdvisoriesJob.perform_later(source: fields[:source])
         succeed("Advisory sync job scheduled")
       else
         error "Failed to enqueue advisory sync job. Another may already be queued"
