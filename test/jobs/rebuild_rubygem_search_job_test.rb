@@ -4,17 +4,15 @@ require "test_helper"
 
 class RebuildRubygemSearchJobTest < ActiveJob::TestCase
   setup do
-    @original_suffix = Searchkick.index_suffix
-    Searchkick.index_suffix = "rebuild_#{SecureRandom.hex(6)}"
     Rubygem.reindex(import: false)
     @index = Rubygem.searchkick_index
     @old_index = Searchkick.client.indices.get_alias(name: @index.name).keys.sole
   end
 
   teardown do
-    @index.delete
     @index.clean_indices
-    Searchkick.index_suffix = @original_suffix
+    # Searchkick memoizes the index name, so this is the worker's shared index.
+    Rubygem.reindex(import: false)
   end
 
   test "rebuilding mappings and all documents without publication side effects" do
