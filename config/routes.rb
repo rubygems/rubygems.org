@@ -346,6 +346,8 @@ Rails.application.routes.draw do
   get 'pages' => 'pages#index', constraints: { format: :html }, as: :pages
   get 'pages/sponsors' => redirect('/pages/supporters'), constraints: { format: :html }
   get 'pages/*id' => 'pages#show', constraints: { format: :html, id: Regexp.union(Gemcutter::PAGES) }, as: :page
+  get 'supporters' => 'pages#show', defaults: { id: 'supporters' }, constraints: { format: :html }, as: :supporters
+  get 'security' => 'pages#show', defaults: { id: 'security' }, constraints: { format: :html }, as: :security
 
   resources :policies, only: %i[index show], constraints: { format: :html, policy: Regexp.union(Gemcutter::POLICY_PAGES) },
     param: :policy do
