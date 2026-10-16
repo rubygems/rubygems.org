@@ -240,7 +240,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: <%= environment %>
-                key: database_url
+                key: <%= environment == 'staging' ? 'web_database_url' : 'database_url' %>
         securityContext:
           privileged: false
         lifecycle:
