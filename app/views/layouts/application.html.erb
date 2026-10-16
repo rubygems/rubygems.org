@@ -4,14 +4,14 @@
   <title><%= page_title %></title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="google-site-verification" content="AuesbWQ9MCDMmC1lbDlw25RJzyqWOcDYpuaCjgPxEZY" />
-  <link rel="apple-touch-icon" href="/apple-touch-icons/apple-touch-icon.png" />
+  <meta name="google-site-verification" content="AuesbWQ9MCDMmC1lbDlw25RJzyqWOcDYpuaCjgPxEZY">
+  <link rel="apple-touch-icon" href="/apple-touch-icons/apple-touch-icon.png">
   <% ["57x57", "72x72", "76x76", "114x114","120x120", "144x144", "152x152", "180x180"].each do |size| %>
-    <link rel="apple-touch-icon" sizes="<%= size %>" href="/apple-touch-icons/apple-touch-icon-<%= size %>.png" />
+    <link rel="apple-touch-icon" sizes="<%= size %>" href="/apple-touch-icons/apple-touch-icon-<%= size %>.png">
   <% end %>
   <link rel="mask-icon" href="/rubygems_logo.svg" color="#e9573f">
-  <link rel="fluid-icon" href="/fluid-icon.png"/>
-  <link rel="search" type="application/opensearchdescription+xml" title="<%=t :title %>" href="/opensearch.xml">
+  <link rel="fluid-icon" href="/fluid-icon.png">
+  <link rel="search" type="application/opensearchdescription+xml" title="<%= t :title %>" href="/opensearch.xml">
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 
   <%= stylesheet_link_tag("hammy") %>
@@ -58,6 +58,7 @@
                     <%= link_to t('layouts.application.footer.status'), "https://status.rubygems.org", data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
                     <%= link_to t('layouts.application.footer.data'), page_path("data"), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
                     <%= link_to t('layouts.application.footer.security'), page_path("security"), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
+                    <%= link_to t('pages.supporters.title'), supporters_path, data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
                     <%= mail_to "support@rubygems.org", t('layouts.application.footer.help'), data: { reveal_target: "item" }, class: "block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %>
                   </div>
                 </div>
@@ -94,6 +95,7 @@
                       <li><%= link_to t('layouts.application.footer.status'), "https://status.rubygems.org", class: "block px-6 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %></li>
                       <li><%= link_to t('layouts.application.footer.data'), page_path("data"), class: "block px-6 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %></li>
                       <li><%= link_to t('layouts.application.footer.security'), page_path("security"), class: "block px-6 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %></li>
+                      <li><%= link_to t('pages.supporters.title'), supporters_path, class: "block px-6 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %></li>
                       <li><%= mail_to "support@rubygems.org", t('layouts.application.footer.help'), class: "block px-6 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-800" %></li>
                     </ul>
                   </section>
@@ -186,6 +188,7 @@
               <li><%= link_to t("layouts.application.footer.policies"), policies_path, class: "hover:text-neutral-600" %></li>
               <li><%= link_to t("layouts.application.footer.status"), "https://status.rubygems.org", class: "hover:text-neutral-600" %></li>
               <li><%= link_to t("layouts.application.footer.security"), page_path("security"), class: "hover:text-neutral-600" %></li>
+              <li><%= link_to t('pages.supporters.title'), supporters_path, class: "hover:text-neutral-600" %></li>
               <li><%= mail_to "support@rubygems.org", t('layouts.application.footer.help'), class: "hover:text-neutral-600" %></li>
             </ul>
           </nav>

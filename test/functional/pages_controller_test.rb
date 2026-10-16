@@ -13,7 +13,7 @@ class PagesControllerTest < ActionController::TestCase
 
   context "when invalid page is requested" do
     should "error" do
-      assert_raises(ActionController::UrlGenerationError) do
+      assert_raises(ActionController::RoutingError) do
         get :show, params: { id: "not-found-page" }
       end
     end
