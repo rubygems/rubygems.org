@@ -73,7 +73,7 @@ gem "rubyzip", "~> 3.7"
 gem "yaml-schema", "~> 1.2"
 
 # Admin dashboard
-gem "avo", "~> 3.32"
+gem "avo", "~> 3.33"
 gem "pagy", "~> 8.4"
 gem "view_component", "~> 4.15.0"
 gem "pundit", "~> 2.5"
