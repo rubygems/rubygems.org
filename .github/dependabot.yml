@@ -1,7 +1,14 @@
 version: 2
+registries:
+  avo:
+    type: rubygems-server
+    url: https://packager.dev/avo-hq/
+    token: ${{secrets.BUNDLE_PACKAGER__DEV}}
 updates:
   - package-ecosystem: bundler
     directory: "/"
+    registries:
+      - avo
     schedule:
       interval: weekly
     cooldown:
