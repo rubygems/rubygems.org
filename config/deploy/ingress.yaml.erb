@@ -12,6 +12,11 @@ metadata:
     alb.ingress.kubernetes.io/tags: Env=<%= environment %>,Service=rubygems.org
     alb.ingress.kubernetes.io/healthcheck-path: /internal/ping
     alb.ingress.kubernetes.io/load-balancer-name: <%= environment %>-rubygems-org
+    <% if environment == 'staging' %>
+    # Raised for the PostgreSQL 18 Blue/Green switchover. The AWS default is 60
+    # seconds. Set it back to 60 explicitly afterwards, rather than removing it.
+    alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=120
+    <% end %>
 spec:
   tls:
   - hosts:
