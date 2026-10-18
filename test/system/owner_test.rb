@@ -423,10 +423,6 @@ class OwnerTest < ApplicationSystemTestCase
     assert_cell maintainer, "Role", "Maintainer"
   end
 
-  teardown do
-    disable_virtual_authenticator
-  end
-
   private
 
   # Signs in through ClearanceBackdoor. The sign-in form is covered by sign_in_test.rb;

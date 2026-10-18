@@ -123,8 +123,5 @@ class WebauthnCredentialsTest < ApplicationSystemTestCase
     end
 
     assert_equal "New security device added on RubyGems.org", webauthn_credential_creation_email.subject
-
-    # Cleanup test data
-    disable_virtual_authenticator
   end
 end

@@ -15,10 +15,6 @@ class SignInWebauthnTest < ApplicationSystemTestCase
     @mfa_recovery_codes = @user.new_mfa_recovery_codes
   end
 
-  teardown do
-    disable_virtual_authenticator
-  end
-
   test "sign in with webauthn mfa" do
     visit sign_in_path
 

@@ -11,7 +11,6 @@ class MultifactorAuthsTest < ApplicationSystemTestCase
 
   teardown do
     @user.disable_totp!
-    disable_virtual_authenticator
   end
 
   context "cache-control" do

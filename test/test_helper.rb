@@ -213,9 +213,9 @@ class ActiveSupport::TestCase
   end
 
   def create_webauthn_credential_while_signed_in
-    visit edit_settings_path
+    enable_virtual_authenticator
 
-    enable_virtual_authenticator(resident_key: true, user_verification: true, user_verified: true)
+    visit edit_settings_path
 
     credential_nickname = "new cred"
     fill_in "Nickname", with: credential_nickname
@@ -233,21 +233,8 @@ class ActiveSupport::TestCase
     @user.reload
   end
 
-  def enable_virtual_authenticator(resident_key: false, user_verification: false, user_verified: false)
-    page.driver.with_playwright_page do |pw_page|
-      @cdp_session ||= pw_page.context.new_cdp_session(pw_page)
-      @cdp_session.send_message("WebAuthn.enable")
-      result = @cdp_session.send_message("WebAuthn.addVirtualAuthenticator", params: {
-                                           options: {
-                                             protocol: "ctap2",
-                                             transport: "internal",
-                                             hasResidentKey: resident_key,
-                                             hasUserVerification: user_verification,
-                                             isUserVerified: user_verified
-                                           }
-                                         })
-      @authenticator_id = result["authenticatorId"]
-    end
+  def enable_virtual_authenticator
+    page.driver.with_playwright_page { |pw_page| pw_page.context.credentials.install }
   end
 
   # Gives user a discoverable credential without driving the registration UI:
@@ -255,53 +242,19 @@ class ActiveSupport::TestCase
   # authenticator holds the matching private key. Use this when a test is about
   # authenticating, not registering.
   def add_webauthn_credential_to_virtual_authenticator(user)
-    key = OpenSSL::PKey::EC.generate("prime256v1")
-    cose_public_key = COSE::Key::EC2.from_pkey(key)
-    cose_public_key.alg = -7 # ES256
-    credential_id = SecureRandom.random_bytes(16)
+    page.driver.with_playwright_page do |pw_page|
+      credentials = pw_page.context.credentials
+      credentials.install
+      credential = credentials.create(URI(Capybara.app_host).host, userHandle: user.webauthn_id)
+      key = OpenSSL::PKey.read(Base64.urlsafe_decode64(credential["publicKey"]))
+      cose_public_key = COSE::Key::EC2.from_pkey(key)
+      cose_public_key.alg = -7 # ES256
 
-    credential = create(:webauthn_credential, user:, nickname: "new cred",
-                        external_id: Base64.urlsafe_encode64(credential_id, padding: false),
-                        public_key: WebAuthn.configuration.encoder.encode(cose_public_key.serialize),
-                        sign_count: 0)
-
-    enable_virtual_authenticator(resident_key: true, user_verification: true, user_verified: true)
-    page.driver.with_playwright_page do
-      # CDP binary fields are standard (not URL-safe) base64.
-      @cdp_session.send_message("WebAuthn.addCredential", params: {
-                                  authenticatorId: @authenticator_id,
-                                  credential: {
-                                    credentialId: Base64.strict_encode64(credential_id),
-                                    isResidentCredential: true,
-                                    rpId: URI(Capybara.app_host).host,
-                                    privateKey: Base64.strict_encode64(key.private_to_der),
-                                    userHandle: Base64.strict_encode64(Base64.urlsafe_decode64(user.webauthn_id)),
-                                    signCount: 0
-                                  }
-                                })
+      create(:webauthn_credential, user:, nickname: "new cred",
+             external_id: credential["id"],
+             public_key: WebAuthn.configuration.encoder.encode(cose_public_key.serialize),
+             sign_count: 0)
     end
-
-    credential
-  end
-
-  def disable_virtual_authenticator
-    return unless @cdp_session && @authenticator_id
-
-    # Teardown can run while the page is on a non-Playwright driver (e.g. a test
-    # that switched to :rack_test). Guard the Playwright-only call so cleanup
-    # can't raise NoMethodError and mask the original test failure.
-    if page.driver.respond_to?(:with_playwright_page)
-      page.driver.with_playwright_page do |_pw_page|
-        @cdp_session.send_message("WebAuthn.removeVirtualAuthenticator", params: {
-                                    authenticatorId: @authenticator_id
-                                  })
-      rescue Playwright::TargetClosedError
-        # Browser already closed during teardown
-      end
-    end
-  ensure
-    @authenticator_id = nil
-    @cdp_session = nil
   end
 
   def setup_rstuf
