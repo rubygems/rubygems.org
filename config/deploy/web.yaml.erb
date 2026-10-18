@@ -43,6 +43,14 @@ spec:
             scheme: HTTP
           initialDelaySeconds: 30
           periodSeconds: 5
+          <% if environment == 'staging' %>
+          # Raised for the PostgreSQL 18 Blue/Green switchover. While the AWS
+          # wrapper holds requests every Puma thread can be busy, so pings
+          # queue, and the defaults (1 second, 3 failures) would mark every
+          # pod unready after about 15 seconds.
+          timeoutSeconds: 5
+          failureThreshold: 24
+          <% end %>
         livenessProbe:
           tcpSocket:
             port: http-puma
