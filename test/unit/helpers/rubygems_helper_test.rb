@@ -162,7 +162,7 @@ class RubygemsHelperTest < ActionView::TestCase
     should "sanitize rdoc strings" do
       text = "== FOO\nclick[javascript:alert('foo')]"
 
-      assert_equal "\n<h2>FOO</h2>\n\n<p><a>click</a></p>\n", simple_markup(text)
+      assert_equal "\n<h2>FOO</h2>\n\n<p>click</p>\n", simple_markup(text)
 
       assert_predicate simple_markup(text), :html_safe?
     end
