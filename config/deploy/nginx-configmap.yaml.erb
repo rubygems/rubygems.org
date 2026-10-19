@@ -104,6 +104,11 @@ data:
         proxy_set_header Host $host;
         proxy_set_header X-Request-Start "t=${msec}";
         proxy_redirect off;
+        <% if environment == 'staging' %>
+        # Raised for the PostgreSQL 18 Blue/Green switchover, when the AWS
+        # wrapper holds requests rather than failing them. The default is 60s.
+        proxy_read_timeout 120s;
+        <% end %>
 
         client_max_body_size 500M;
 
