@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "herb/engine"
+require "herb/engine/validators"
 
 class ErbSafetyTest < ActiveSupport::TestCase
   ERB_GLOB = File.join(
@@ -15,8 +17,7 @@ class ErbSafetyTest < ActiveSupport::TestCase
         Herb::Engine.new(
           source,
           filename:,
-          validation_mode: :raise,
-          validators: { security: true }
+          visitors: Herb::Engine::Validators.all(security: true)
         )
       end
     end
