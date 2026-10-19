@@ -254,10 +254,11 @@ class Pusher
         if api_key.user?
           rubygem.create_ownership(owner)
         elsif api_key.trusted_publisher?
-          raise ActiveRecord::Rollback unless pending_trusted_publisher || notify("No pending publisher found", 404)
+          pending_publisher = pending_trusted_publisher
+          raise ActiveRecord::Rollback unless pending_publisher || notify("No pending publisher found", 404)
 
           logger.info { "Reifying pending publisher" }
-          rubygem.create_ownership(pending_trusted_publisher.user)
+          rubygem.create_ownership(pending_publisher.user)
           owner.rubygem_trusted_publishers.create!(rubygem: rubygem)
         else
           notify_unauthorized
@@ -444,10 +445,9 @@ class Pusher
   end
 
   def pending_trusted_publisher
-    return @pending_trusted_publisher if defined?(@pending_trusted_publisher)
-    return @pending_trusted_publisher = nil unless api_key.trusted_publisher?
+    return unless api_key.trusted_publisher?
 
-    @pending_trusted_publisher = owner.pending_trusted_publishers.unexpired.rubygem_name_is(rubygem.name).first
+    owner.pending_trusted_publishers.unexpired.rubygem_name_is(rubygem.name).first
   end
 
   def organization_handle_from_spec

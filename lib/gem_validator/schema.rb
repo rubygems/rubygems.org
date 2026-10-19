@@ -136,7 +136,7 @@ module GemValidator::Schema # rubocop:disable Metrics/ModuleLength
               "type" => "string",
               "minLength" => 2,
               "maxLength" => 40,
-              "pattern" => /\A[0-9A-Za-z][A-Za-z_\-0-9]*\z/
+              "pattern" => Patterns::ORGANIZATION_HANDLE_PATTERN
             }
           },
           "propertyNames" => {

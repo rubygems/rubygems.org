@@ -765,58 +765,35 @@ class PusherTest < ActiveSupport::TestCase
       maintainer = create(:user)
       create(:membership, :maintainer, user: maintainer, organization: @organization)
       api_key = create(:api_key, owner: maintainer)
+      cutter = push_gem_named("org-maintainer-gem", organization_handle: @organization.handle, api_key: api_key)
 
-      assert_no_difference %w[Rubygem.count Ownership.count Version.count Events::OrganizationEvent.count] do
-        cutter = push_gem_named("org-maintainer-gem", organization_handle: @organization.handle, api_key: api_key)
-
-        refute cutter.process
-        assert_equal 403, cutter.code
-        assert_equal "You do not have permission to add a gem to organization 'org-example'.", cutter.message
-      end
-
-      assert_nil Rubygem.find_by(name: "org-maintainer-gem")
+      assert_new_gem_push_rejected cutter
+      assert_equal "You do not have permission to add a gem to organization 'org-example'.", cutter.message
     end
 
     should "deny a non-member and not create the gem" do
       guest = create(:user)
       api_key = create(:api_key, owner: guest)
+      cutter = push_gem_named("org-guest-gem", organization_handle: @organization.handle, api_key: api_key)
 
-      assert_no_difference %w[Rubygem.count Ownership.count Version.count] do
-        cutter = push_gem_named("org-guest-gem", organization_handle: @organization.handle, api_key: api_key)
-
-        refute cutter.process
-        assert_equal 403, cutter.code
-        assert_equal "You do not have permission to add a gem to organization 'org-example'.", cutter.message
-      end
-
-      assert_nil Rubygem.find_by(name: "org-guest-gem")
+      assert_new_gem_push_rejected cutter
+      assert_equal "You do not have permission to add a gem to organization 'org-example'.", cutter.message
     end
 
     should "deny an unconfirmed admin and not create the gem" do
       pending_admin = create(:user)
       create(:membership, :pending, :admin, user: pending_admin, organization: @organization)
       api_key = create(:api_key, owner: pending_admin)
+      cutter = push_gem_named("org-pending-gem", organization_handle: @organization.handle, api_key: api_key)
 
-      assert_no_difference %w[Rubygem.count Ownership.count Version.count] do
-        cutter = push_gem_named("org-pending-gem", organization_handle: @organization.handle, api_key: api_key)
-
-        refute cutter.process
-        assert_equal 403, cutter.code
-      end
-
-      assert_nil Rubygem.find_by(name: "org-pending-gem")
+      assert_new_gem_push_rejected cutter
     end
 
     should "return 404 when the organization handle does not exist" do
-      assert_no_difference %w[Rubygem.count Ownership.count Version.count] do
-        cutter = push_gem_named("org-missing-gem", organization_handle: "no-such-org")
+      cutter = push_gem_named("org-missing-gem", organization_handle: "no-such-org")
 
-        refute cutter.process
-        assert_equal 404, cutter.code
-        assert_equal "Could not find organization 'no-such-org'.", cutter.message
-      end
-
-      assert_nil Rubygem.find_by(name: "org-missing-gem")
+      assert_new_gem_push_rejected cutter, code: 404
+      assert_equal "Could not find organization 'no-such-org'.", cutter.message
     end
 
     should "ignore organization metadata on an existing user-owned gem" do
@@ -951,21 +928,32 @@ class PusherTest < ActiveSupport::TestCase
       assert_organization_added_events rubygem, actor: @user
     end
 
+    %w[revoked expired].product(%w[personal organization]).each do |state, ownership|
+      should "reject a pending trusted publisher #{state} during a first push for #{ownership} ownership" do
+        name = "#{state}-#{ownership}-gem"
+        pending_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: name, user: @user)
+        api_key = create(:api_key, owner: pending_publisher.trusted_publisher, scopes: %i[push_rubygem])
+        organization_handle = @organization.handle if ownership == "organization"
+        cutter = push_gem_named(name, organization_handle:, api_key:)
+        change = state == "revoked" ? -> { pending_publisher.destroy! } : -> { travel_to(pending_publisher.expires_at + 1.second) }
+        validate = cutter.method(:validate)
+        # Change the registration after real validation, before transactional authorization.
+        cutter.define_singleton_method(:validate) { validate.call.tap { change.call } }
+
+        assert_new_gem_push_rejected cutter
+        assert_equal "You are not allowed to push this gem.", cutter.message
+      end
+    end
+
     should "deny a pending trusted publisher whose user cannot add gems to the organization" do
       maintainer = create(:user)
       create(:membership, :maintainer, user: maintainer, organization: @organization)
       pending_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "trusted-maintainer-gem", user: maintainer)
       api_key = create(:api_key, owner: pending_publisher.trusted_publisher, scopes: %i[push_rubygem])
+      cutter = push_gem_named("trusted-maintainer-gem", organization_handle: @organization.handle, api_key: api_key)
 
-      assert_no_difference %w[Rubygem.count Ownership.count Version.count Events::OrganizationEvent.count] do
-        cutter = push_gem_named("trusted-maintainer-gem", organization_handle: @organization.handle, api_key: api_key)
-
-        refute cutter.process
-        assert_equal 403, cutter.code
-        assert_equal "You do not have permission to add a gem to organization 'org-example'.", cutter.message
-      end
-
-      assert_nil Rubygem.find_by(name: "trusted-maintainer-gem")
+      assert_new_gem_push_rejected cutter
+      assert_equal "You do not have permission to add a gem to organization 'org-example'.", cutter.message
     end
   end
 
@@ -998,6 +986,17 @@ class PusherTest < ActiveSupport::TestCase
     refute Version.exists?(full_name: cutter.version.full_name)
     assert_nil RubygemFs.instance.get("gems/#{cutter.version.gem_file_name}")
     assert_nil RubygemFs.instance.get("quick/Marshal.4.8/#{cutter.version.full_name}.gemspec.rz")
+  end
+
+  def assert_new_gem_push_rejected(cutter, code: 403)
+    assert_no_difference %w[Rubygem.count Ownership.count Version.count OIDC::RubygemTrustedPublisher.count
+                            Events::RubygemEvent.count Events::OrganizationEvent.count] do
+      assert_no_changes -> { RubygemFs.instance.each_key.to_a.sort } do
+        assert_no_enqueued_jobs { refute cutter.process }
+      end
+    end
+    assert_equal code, cutter.code
+    assert_nil Rubygem.find_by(name: cutter.rubygem.name)
   end
 
   def assert_organization_added_events(rubygem, actor:)
