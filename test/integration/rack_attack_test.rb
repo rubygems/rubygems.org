@@ -168,41 +168,88 @@ class RackAttackTest < ActionDispatch::IntegrationTest
     context "expontential backoff" do
       context "with successful gem push" do
         setup do
-          Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
-            under_backoff_limit = (Rack::Attack::EXP_BASE_REQUEST_LIMIT * level) - 1
-            @push_exp_throttle_level_key = "#{Rack::Attack::PUSH_EXP_THROTTLE_KEY}/#{level}:#{@ip_address}"
-            under_backoff_limit.times { Rack::Attack.cache.count(@push_exp_throttle_level_key, exp_base_limit_period**level) }
-
-            @push_throttle_per_user_key = "#{Rack::Attack::PUSH_THROTTLE_PER_USER_KEY}/#{level}:#{@user.to_gid}"
-            under_backoff_limit.times { Rack::Attack.cache.count(@push_throttle_per_user_key, exp_base_limit_period**level) }
-          end
-
+          RubygemFs.mock!
           create(:api_key, key: "12334", scopes: %i[push_rubygem], owner: @user)
-          post "/api/v1/gems",
-            params: gem_file("test-0.0.0.gem", &:read),
-            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
         end
 
-        should "reset gem push rate limit rack attack key" do
-          Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
-            period = exp_base_limit_period**level
+        versions = %w[0.0.0 1.0.0]
+        Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
+          should "allow successive gem pushes after reaching backoff level #{level}" do
+            freeze_time do
+              limit = (Rack::Attack::EXP_BASE_REQUEST_LIMIT * level) - 1
+              update_limit_for("#{Rack::Attack::PUSH_EXP_THROTTLE_KEY}/#{level}:#{@ip_address}", limit, exp_base_limit_period**level)
+              update_limit_for("#{Rack::Attack::PUSH_THROTTLE_PER_USER_KEY}/#{level}:#{@user.to_gid}", limit, exp_base_limit_period**level)
 
-            time_counter = (Time.now.to_i / period).to_i
-            prev_time_counter = time_counter - 1
+              versions.each do |number|
+                assert_difference "Version.count", 1 do
+                  post "/api/v1/gems",
+                    params: gem_file("test-#{number}.gem", &:read),
+                    headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
 
-            assert_nil Rack::Attack.cache.read("#{time_counter}:#{@push_exp_throttle_level_key}")
-            assert_nil Rack::Attack.cache.read("#{prev_time_counter}:#{@push_exp_throttle_level_key}")
-            assert_nil Rack::Attack.cache.read("#{time_counter}:#{@push_throttle_per_user_key}")
-            assert_nil Rack::Attack.cache.read("#{prev_time_counter}:#{@push_throttle_per_user_key}")
+                  assert_response :ok
+                end
+
+                assert_predicate Rubygem.find_by!(name: "test").versions.find_by!(number:), :indexed?
+                assert_equal gem_file("test-#{number}.gem", &:read), RubygemFs.instance.get("gems/test-#{number}.gem")
+              end
+            end
+          end
+
+          [Rack::Attack::PUSH_EXP_THROTTLE_KEY, Rack::Attack::PUSH_THROTTLE_PER_USER_KEY].each do |scope|
+            should "retain unsuccessful gem push attempts for #{scope} at backoff level #{level}" do
+              freeze_time do
+                discriminator = scope == Rack::Attack::PUSH_EXP_THROTTLE_KEY ? @ip_address : @user.to_gid
+                limit = (Rack::Attack::EXP_BASE_REQUEST_LIMIT * level) - 1
+                update_limit_for("#{scope}/#{level}:#{discriminator}", limit, exp_base_limit_period**level)
+                stored_keys = RubygemFs.instance.each_key.to_a
+
+                assert_no_difference ["Version.count", "Rubygem.count", "Ownership.count"] do
+                  assert_no_enqueued_jobs do
+                    post "/api/v1/gems", params: "not a gem",
+                      headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
+
+                    assert_response :unprocessable_entity
+
+                    post "/api/v1/gems",
+                      params: gem_file("test-1.0.0.gem", &:read),
+                      headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
+
+                    assert_response :too_many_requests
+                    assert_equal expected_retry_after(level), response.headers["Retry-After"]
+                  end
+                end
+
+                assert_equal stored_keys, RubygemFs.instance.each_key.to_a
+              end
+            end
           end
         end
 
-        should "not rate limit successive requests" do
-          post "/api/v1/gems",
-            params: gem_file("test-1.0.0.gem", &:read),
-            headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
+        should "retain the fixed hourly IP limit after a successful gem push" do
+          freeze_time do
+            update_limit_for("api/push/ip:#{@ip_address}", Rack::Attack::PUSH_LIMIT - 1, push_limit_period)
 
-          assert_response :ok
+            post "/api/v1/gems",
+              params: gem_file("test-0.0.0.gem", &:read),
+              headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
+
+            assert_response :ok
+            stored_keys = RubygemFs.instance.each_key.to_a
+
+            assert_no_difference ["Version.count", "Rubygem.count", "Ownership.count"] do
+              assert_no_enqueued_jobs do
+                post "/api/v1/gems",
+                  params: gem_file("test-1.0.0.gem", &:read),
+                  headers: { REMOTE_ADDR: @ip_address, HTTP_AUTHORIZATION: "12334", CONTENT_TYPE: "application/octet-stream" }
+
+                assert_response :too_many_requests
+                assert_equal (push_limit_period - (Time.now.to_i % push_limit_period)).to_s, response.headers["Retry-After"]
+              end
+            end
+
+            assert_equal stored_keys, RubygemFs.instance.each_key.to_a
+            assert_nil RubygemFs.instance.get("gems/test-1.0.0.gem")
+          end
         end
       end
 

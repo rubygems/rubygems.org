@@ -3,6 +3,9 @@
 module RackAttackReset
   class << self
     def gem_push_backoff(remote_ip, user_display_id)
+      remote_ip = Rack::Attack.throttle_discriminator_normalizer.call(remote_ip)
+      user_display_id = Rack::Attack.throttle_discriminator_normalizer.call(user_display_id)
+
       Rack::Attack::EXP_BACKOFF_LEVELS.each do |level|
         keys(level, remote_ip, user_display_id).each { |key| Rack::Attack.cache.store.delete(key) }
       end
