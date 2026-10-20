@@ -64,6 +64,20 @@ class PagesTest < ApplicationSystemTestCase
     assert_text("Supporters")
   end
 
+  test "renders /supporters" do
+    visit "/supporters"
+
+    assert_current_path "/supporters"
+    assert_text("Supporters")
+  end
+
+  test "renders /security" do
+    visit "/security"
+
+    assert_current_path "/security"
+    assert_text("Reporting a security issue")
+  end
+
   test "redirects /pages/sponsors to /pages/supporters" do
     visit "/pages/sponsors"
 

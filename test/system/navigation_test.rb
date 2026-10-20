@@ -16,7 +16,7 @@ class NavigationTest < ApplicationSystemTestCase
 
     links = all("#{menu} a")
 
-    assert_equal ["RubyGems.org", "Status", "Data", "Security", "Help"], links.map(&:text)
+    assert_equal ["RubyGems.org", "Status", "Data", "Security", "RubyGems Supporters", "Help"], links.map(&:text)
     links.each do |link|
       link.hover
 
@@ -49,7 +49,7 @@ class NavigationTest < ApplicationSystemTestCase
     assert_selector "#{menu} a:focus", text: "Status"
 
     page.driver.with_playwright_page do |pw_page|
-      4.times { pw_page.keyboard.press("Tab") }
+      5.times { pw_page.keyboard.press("Tab") }
     end
 
     assert_no_selector menu
