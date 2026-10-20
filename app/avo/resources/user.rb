@@ -49,6 +49,7 @@ class Avo::Resources::User < Avo::BaseResource
     action Avo::Actions::ChangeUserEmail
     action Avo::Actions::DeleteUser
     action Avo::Actions::ResetApiKey
+    action Avo::Actions::ResetGemPushThrottling
     action Avo::Actions::ResetUser2fa
     action Avo::Actions::UnblockUser
     action Avo::Actions::YankRubygemsForUser
