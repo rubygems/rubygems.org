@@ -1255,6 +1255,7 @@ fr:
     label:
     placeholder:
     clear:
+    apply:
     all:
       one:
       other:

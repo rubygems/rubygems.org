@@ -1214,6 +1214,7 @@ zh-TW:
     label:
     placeholder:
     clear:
+    apply:
     all:
       one:
       other:

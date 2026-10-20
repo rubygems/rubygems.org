@@ -19,4 +19,7 @@ module Patterns
   SPECIAL_CHAR_SUFFIX_REGEXP  = /[#{Regexp.escape(SPECIAL_CHARACTERS)}]\z/o
   BANNED_EXTENSIONS           = %w[gem json html gemspec].freeze
   BANNED_EXTENSION_REGEXP     = /\.(?:#{Regexp.union(BANNED_EXTENSIONS)})\z/i
+
+  # Use JavaScript's whitespace definition, including Unicode spaces and BOM.
+  GEM_NAME_FILTER_TERM = /[^\s\p{Zs}\u2028\u2029\uFEFF]+/
 end

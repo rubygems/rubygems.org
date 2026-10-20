@@ -36,8 +36,8 @@
   <% end %>
 <% end %>
 
-<%= render GemListComponent.new(title: t(".gems"), count: @gems_count, current: @gem_sort, options: @gem_sort_options) do |c| %>
-  <% if @gems.empty? %>
+<%= render GemListComponent.new(title: t(".gems"), count: @gems_count, current: @gem_sort, options: @gem_sort_options, collection: @gems) do |c| %>
+  <% if @gems_count.zero? %>
     <%= prose do %>
       <i><%= t('.no_gems') %></i>
     <% end %>
@@ -47,7 +47,7 @@
         <%= c.list_item_to(
           rubygem_path(rubygem.slug),
           title: short_info(rubygem.most_recent_version),
-          data: { gem_filter_target: "item", gem_name: rubygem.name },
+          data: { turbo: false },
         ) do %>
           <div class="flex flex-col w-full justify-between">
             <div class="flex flex-row w-full items-center justify-between">
@@ -64,7 +64,7 @@
     <% end %>
   <% end %>
   <% if policy(@organization).add_gem? %>
-  <div class="pt-6 flex flex-row justify-end">
+  <div class="pt-6 flex flex-row justify-end" data-turbo="false">
     <%= render ButtonComponent.new t(".transfer"), transfer_rubygems_path, type: :link %>
   </div>
   <% end %>

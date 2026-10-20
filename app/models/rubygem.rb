@@ -125,6 +125,12 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
     where("UPPER(name) LIKE UPPER(?)", "#{letter}%")
   }
 
+  scope :name_matches, lambda { |query|
+    query.to_s.scan(Patterns::GEM_NAME_FILTER_TERM).reduce(all) do |gems, term|
+      gems.where("rubygems.name ILIKE ?", "%#{sanitize_sql_like(term)}%")
+    end
+  }
+
   scope :total_count, lambda {
     with_versions.count
   }

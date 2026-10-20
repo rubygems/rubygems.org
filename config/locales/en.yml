@@ -1231,6 +1231,7 @@ en:
     label: Filter by gem name
     placeholder: Filter by gem name…
     clear: Clear filter
+    apply: Apply filter
     all:
       one: "%{count} gem"
       other: "%{count} gems"

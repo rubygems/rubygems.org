@@ -9,6 +9,7 @@ class OrganizationsController < Organizations::BaseController
 
   before_action :find_organization, only: %i[show edit update]
   before_action :set_gem_sort, only: :show
+  before_action :set_page, only: :show
 
   layout "subject"
 
@@ -23,7 +24,9 @@ class OrganizationsController < Organizations::BaseController
     @gems = @organization
       .rubygems
       .with_versions
+      .name_matches(params[:gem_filter])
       .sorted_by(@gem_sort)
+      .page(@page)
       .preload(:most_recent_version, :gem_download)
       .load_async
     @gems_count = @organization.rubygems.with_versions.count
