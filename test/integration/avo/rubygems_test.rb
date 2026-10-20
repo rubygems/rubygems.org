@@ -154,7 +154,7 @@ class Avo::RubygemsTest < ActionDispatch::IntegrationTest
     admin.update!(info_data:)
     admin_sign_in_as admin
     create(:user, email: "security@rubygems.org")
-    rubygem = create(:rubygem, owners: [create(:user)])
+    rubygem = create(:rubygem, owners: [create(:user)], number: "1.0.0")
     new_owner = create(:user)
     event_ids = rubygem.events.ids
 
