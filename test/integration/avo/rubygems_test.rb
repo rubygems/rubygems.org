@@ -113,6 +113,61 @@ class Avo::RubygemsTest < ActionDispatch::IntegrationTest
       as: :turbo_stream
   end
 
+  def post_add_owner(rubygem, owner)
+    post "/admin/resources/rubygems/#{rubygem.to_param}/actions",
+      params: {
+        action_id: "Avo::Actions::AddOwner",
+        resource_view: "show",
+        fields: {
+          avo_resource_ids: rubygem.to_param,
+          owner: owner.to_param,
+          comment: "Adding a maintainer at their request"
+        }
+      },
+      as: :turbo_stream
+  end
+
+  test "adding an owner as a rubygems.org operator" do
+    admin = create(:admin_github_user, :is_admin)
+    admin_sign_in_as admin
+    security_user = create(:user, email: "security@rubygems.org")
+    rubygem = create(:rubygem, owners: [create(:user)])
+    new_owner = create(:user)
+
+    post_add_owner(rubygem, new_owner)
+
+    assert_response :success
+    ownership = rubygem.ownerships.find_by!(user: new_owner)
+
+    assert_predicate ownership, :confirmed?
+    assert_equal security_user, ownership.authorizer
+    audit = rubygem.audits.where(action: "Add owner").sole
+
+    assert_equal admin, audit.admin_github_user
+    assert_equal "Adding a maintainer at their request", audit.comment
+  end
+
+  test "not adding an owner as an operator outside the rubygems.org team" do
+    admin = create(:admin_github_user, :is_admin)
+    info_data = admin.info_data.deep_dup
+    info_data[:viewer][:organization][:teams][:edges].reject! { |edge| edge.dig(:node, :slug) == "rubygems-org" }
+    admin.update!(info_data:)
+    admin_sign_in_as admin
+    create(:user, email: "security@rubygems.org")
+    rubygem = create(:rubygem, owners: [create(:user)])
+    new_owner = create(:user)
+    event_ids = rubygem.events.ids
+
+    assert_no_enqueued_jobs do
+      post_add_owner(rubygem, new_owner)
+    end
+
+    assert_redirected_to avo.root_path
+    refute rubygem.ownerships.exists?(user: new_owner)
+    assert_equal event_ids, rubygem.events.reload.ids
+    assert_empty rubygem.audits
+  end
+
   test "bulk yanking rubygems as a rubygems.org operator" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
     create(:user, email: "security@rubygems.org")

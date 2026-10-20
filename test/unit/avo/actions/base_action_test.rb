@@ -32,8 +32,22 @@ class BaseActionTest < ActiveSupport::TestCase
     @view_context = mock
     @avo = mock
     @view_context.stubs(:avo).returns(@avo)
+    @view_context.stubs(:main_app).returns(nil)
     @avo.stubs(:resources_audit_path).returns("resources_audit_path")
     Avo::Current.stubs(:view_context).returns(@view_context)
+  end
+
+  test "inherited actions authorize only rubygems.org operators" do
+    admin = create(:admin_github_user, :is_admin)
+    Avo::Current.stubs(:user).returns(admin)
+
+    assert_predicate EmptyAction.new, :authorized?
+
+    info_data = admin.info_data.deep_dup
+    info_data[:viewer][:organization][:teams][:edges].reject! { |edge| edge.dig(:node, :slug) == "rubygems-org" }
+    admin.update!(info_data:)
+
+    refute_predicate EmptyAction.new, :authorized?
   end
 
   test "handles errors" do

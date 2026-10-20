@@ -3,6 +3,10 @@
 class Avo::Actions::ApplicationAction < Avo::BaseAction
   include SemanticLogger::Loggable
 
+  self.authorize = lambda {
+    current_user.team_member?(Gemcutter::RUBYGEMS_ORG_TEAM)
+  }
+
   def fields
     field :comment, as: :textarea, required: true,
       help: "A comment explaining why this action was taken.<br>Will be saved in the audit log.<br>Must be more than 10 characters."

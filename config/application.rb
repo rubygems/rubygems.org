@@ -89,6 +89,7 @@ module Gemcutter
 
   DEFAULT_PAGE = 1
   DEFAULT_PAGINATION = 20
+  RUBYGEMS_ORG_TEAM = "rubygems-org"
   # Password reset links.
   PASSWORD_RESET_TOKEN_EXPIRES_AFTER = 3.hours
   # Sign-up confirmation (and resends), plus Avo admin email changes, which leave the account unconfirmed.
