@@ -7,6 +7,16 @@ class Avo::UsersTest < ActionDispatch::IntegrationTest
   include AdminHelpers
   include RateLimitHelpers
 
+  setup do
+    # Other parallel workers clear the shared Memcached store between tests.
+    @original_rack_attack_store = Rack::Attack.cache.store
+    Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
+  end
+
+  teardown do
+    Rack::Attack.cache.store = @original_rack_attack_store
+  end
+
   test "getting users as admin" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
     user = create(:user, created_at: Time.zone.local(1997, 4, 15, 12, 30))
