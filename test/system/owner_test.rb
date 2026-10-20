@@ -425,6 +425,26 @@ class OwnerTest < ApplicationSystemTestCase
 
   private
 
+  # Playwright's Credentials API replaces navigator.credentials.create/get
+  # instead of using Chromium's built-in virtual authenticator. Use CDP here
+  # to test registration and authentication with Chromium's virtual authenticator,
+  # independently of Playwright's WebAuthn implementation.
+  def enable_virtual_authenticator
+    page.driver.with_playwright_page do |pw_page|
+      cdp_session = pw_page.context.new_cdp_session(pw_page)
+      cdp_session.send_message("WebAuthn.enable")
+      cdp_session.send_message("WebAuthn.addVirtualAuthenticator", params: {
+                                 options: {
+                                   protocol: "ctap2",
+                                   transport: "internal",
+                                   hasResidentKey: true,
+                                   hasUserVerification: true,
+                                   isUserVerified: true
+                                 }
+                               })
+    end
+  end
+
   # Signs in through ClearanceBackdoor. The sign-in form is covered by sign_in_test.rb;
   # these tests only need a signed-in session to start from.
   def sign_in_as(user)
