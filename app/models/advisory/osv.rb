@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Advisory::OSV < Advisory
-  def self.feature_flag = FeatureFlag::OSV_ADVISORIES
-
   enum :severity, { low: "low", moderate: "moderate", high: "high", critical: "critical" }, validate: { allow_nil: true }
 
   def malware?
