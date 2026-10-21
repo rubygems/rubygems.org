@@ -478,14 +478,17 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def bulk_reorder_versions
     version_numbers = reload.versions.pluck(:id, :number)
-    numbers = version_numbers.map(&:last).uniq.sort_by { |n| Gem::Version.new(n) }.reverse
-    position_by_number = numbers.each_with_index.to_h
+    # Equal versions spelled differently, such as 1.0 and 1.0.0 on different
+    # platforms, share a position, like builds of the same number do.
+    segments = version_numbers.to_h { |_, number| [number, Gem::Version.new(number).canonical_segments] }
+    ranked = segments.values.uniq.sort_by { |canonical| Gem::Version.new(canonical.join(".")) }.reverse
+    position_by_segments = ranked.each_with_index.to_h
 
     ids = []
     positions = []
     version_numbers.each do |version_id, number|
       ids << version_id
-      positions << position_by_number.fetch(number)
+      positions << position_by_segments.fetch(segments.fetch(number))
     end
 
     update_query = ["update versions set position = positions_data.position, latest = false

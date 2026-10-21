@@ -188,6 +188,16 @@ class RubygemTest < ActiveSupport::TestCase
       assert version2_ruby.reload.latest
     end
 
+    should "rank equal versions spelled differently together, so the ruby release wins the tie" do
+      java = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "java")
+      ruby = create(:version, rubygem: @rubygem, number: "1.0", platform: "ruby")
+
+      @rubygem.reorder_versions
+
+      assert_equal ruby.reload.position, java.reload.position
+      assert_equal ruby, @rubygem.reload.most_recent_version
+    end
+
     should "not have a most recent version if no versions exist" do
       assert_nil @rubygem.most_recent_version
     end
