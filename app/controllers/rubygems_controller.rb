@@ -57,10 +57,9 @@ class RubygemsController < ApplicationController
   def explore
     explore_gems = Rubygem.preload(:latest_version, :gem_download)
     recent_window = Gemcutter::NEWS_DAYS_LIMIT.ago..Time.current
-    # Match most_recent_version's preference for a Ruby release, falling back
-    # to the latest platform release. Rank and display that exact version.
+    # Rank and display the same release as most_recent_version.
     latest_version_ids = Version.latest.where(rubygem_id: Version.latest.where(created_at: recent_window).select(:rubygem_id))
-      .order(:rubygem_id, Arel.sql("CASE WHEN platform = 'ruby' THEN 0 ELSE 1 END"), :position, id: :desc)
+      .order(:rubygem_id).most_recent_first
       .pluck(Arel.sql("DISTINCT ON (rubygem_id) versions.id"))
     downloaded_versions = Version.joins(:gem_download).order("gem_downloads.count DESC", created_at: :desc)
       .preload(:gem_download, rubygem: :latest_version).limit(EXPLORE_SECTION_SIZE)
