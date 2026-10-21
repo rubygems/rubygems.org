@@ -5,11 +5,20 @@ class PrefixReservation < ApplicationRecord
     presence: true,
     length: { maximum: Gemcutter::MAX_FIELD_LENGTH, minimum: 3 }
   validate :downcase_prefix_check
+  validate :prefix_does_not_overlap
 
   belongs_to :organization
 
   scope :covering, lambda { |name|
     where("left(?, length(prefix)) = lower(prefix)", name.to_s.downcase.strip)
+  }
+
+  # Reservations where one prefix starts with the other, so a gem name could
+  # match both. Exact matches are left to the uniqueness validation.
+  scope :overlapping, lambda { |prefix|
+    value = prefix.to_s.downcase.strip
+    where("left(:value, length(prefix)) = lower(prefix) OR left(lower(prefix), length(:value)) = :value", value:)
+      .where.not("lower(prefix) = ?", value)
   }
 
   def self.reserved?(name)
@@ -35,6 +44,18 @@ class PrefixReservation < ApplicationRecord
   end
 
   private
+
+  # A name under two overlapping prefixes would be claimable by neither
+  # organization, or by whichever reservation the lookup happened to find.
+  def prefix_does_not_overlap
+    return if prefix.blank?
+
+    overlap = PrefixReservation.overlapping(prefix).where.not(id:).order(:prefix).first
+    return if overlap.nil?
+
+    owner = " for the #{overlap.organization.handle} organization" if overlap.organization
+    errors.add(:prefix, "overlaps the existing '#{overlap.prefix}' reservation#{owner}")
+  end
 
   def downcase_prefix_check
     return unless prefix.to_s != prefix.to_s.downcase

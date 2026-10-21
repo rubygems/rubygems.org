@@ -27,6 +27,53 @@ class PrefixReservationTest < ActiveSupport::TestCase
     end
   end
 
+  context "with an existing prefix reservation" do
+    setup do
+      @organization = create(:organization, handle: "acme-corp")
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+    end
+
+    should "reject a longer prefix that starts with the existing prefix" do
+      prefix_reservation = build(:prefix_reservation, prefix: "acme-corp")
+
+      refute_predicate prefix_reservation, :valid?
+      assert_includes prefix_reservation.errors[:prefix], "overlaps the existing 'acme' reservation for the acme-corp organization"
+    end
+
+    should "reject a shorter prefix that the existing prefix starts with" do
+      prefix_reservation = build(:prefix_reservation, prefix: "acm")
+
+      refute_predicate prefix_reservation, :valid?
+      assert_includes prefix_reservation.errors[:prefix], "overlaps the existing 'acme' reservation for the acme-corp organization"
+    end
+
+    should "reject an overlapping prefix for the same organization" do
+      refute_predicate build(:prefix_reservation, organization: @organization, prefix: "acme-widgets"), :valid?
+    end
+
+    should "allow a prefix that only shares leading characters" do
+      assert_predicate build(:prefix_reservation, prefix: "acne"), :valid?
+    end
+
+    should "not treat an underscore as a wildcard when checking overlap" do
+      create(:prefix_reservation, prefix: "down_town")
+
+      assert_predicate build(:prefix_reservation, prefix: "downtown"), :valid?
+    end
+
+    should "not report an existing reservation as overlapping itself" do
+      assert_predicate PrefixReservation.find_by!(prefix: "acme"), :valid?
+    end
+
+    should "still reject an overlap after the existing reservation's organization is deleted" do
+      @organization.update!(deleted_at: Time.zone.now)
+      prefix_reservation = build(:prefix_reservation, prefix: "acme-corp")
+
+      refute_predicate prefix_reservation, :valid?
+      assert_includes prefix_reservation.errors[:prefix], "overlaps the existing 'acme' reservation"
+    end
+  end
+
   context "#reserved?" do
     should "return true if the input is a match to an existing prefix" do
       create(:prefix_reservation, prefix: "downtown")

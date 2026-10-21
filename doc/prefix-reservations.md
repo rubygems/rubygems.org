@@ -5,6 +5,11 @@ rubygems.org admin creates one in Avo. For example, `acme` reserves
 `acme-widgets`, `acme_widgets`, and `acmewidgets`. Matching ignores case and
 treats `_` literally.
 
+Reservations can't overlap: if `acme` is reserved, neither `acme-corp` nor
+`acm` can be, even for the same organization. That way every gem name falls
+under at most one reservation. A reservation whose organization was deleted
+still blocks overlapping prefixes until it is destroyed.
+
 ## Who can create a gem under a reserved prefix
 
 `ReservedPrefixValidator` runs on `Rubygem#name` for new gems and renames, and
