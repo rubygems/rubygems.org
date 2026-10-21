@@ -544,6 +544,36 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "On POST to create with a variant of a gem whose only recent release has a lower number" do
+      setup do
+        existing = create(:rubygem, name: "t_es-t", downloads: 3002)
+        create(:version, rubygem: existing, number: "2.0.0", platform: "java", created_at: 6.years.ago)
+        create(:version, rubygem: existing, number: "1.0.0", created_at: 1.day.ago)
+        post :create, body: gem_file("test-1.0.0.gem", &:read)
+      end
+
+      should respond_with :forbidden
+      should "not register the new gem" do
+        assert_nil Rubygem.find_by(name: "test")
+        assert_equal "There was a problem saving your gem: Name 'test' is too similar to an existing gem named 't_es-t'", @response.body
+      end
+    end
+
+    context "On POST to create with a variant of a gem with no recent release" do
+      setup do
+        existing = create(:rubygem, name: "t_es-t", downloads: 3002)
+        create(:version, rubygem: existing, number: "2.0.0", platform: "java", created_at: 6.years.ago)
+        create(:version, rubygem: existing, number: "1.0.0", created_at: 6.years.ago)
+        post :create, body: gem_file("test-1.0.0.gem", &:read)
+      end
+
+      should respond_with :success
+
+      should "register the new gem" do
+        assert_equal ["1.0.0"], Rubygem.find_by!(name: "test").versions.pluck(:number)
+      end
+    end
+
     context "On POST to create for someone else's gem" do
       setup do
         @other_user = create(:user)
