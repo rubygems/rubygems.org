@@ -54,11 +54,12 @@ class OIDC::PendingTrustedPublisher < ApplicationRecord
   end
 
   # Claiming a name under another organization's reserved prefix is rejected
-  # here so the user finds out now rather than on their first push.
+  # here so the user finds out now rather than on their first push. This is
+  # looser than the push check; see doc/prefix-reservations.md.
   def reserved_prefix?
     reservation = PrefixReservation.covering(rubygem_name).first
-    return false if reservation.nil? || reservation.organization.nil?
+    return false if reservation.nil?
 
-    !reservation.organization.user_is_member?(user)
+    !reservation.organization&.user_is_member?(user)
   end
 end

@@ -50,46 +50,83 @@ class PrefixReservationTest < ActiveSupport::TestCase
   context "#permitted?" do
     setup do
       @organization = create(:organization)
+      @member = create(:user)
+      create(:membership, user: @member, organization: @organization)
       @prefix_reservation = create(:prefix_reservation, organization: @organization, prefix: "acme")
     end
 
-    should "permit a gem that belongs to the organization" do
-      assert @prefix_reservation.permitted?(build(:rubygem, name: "acme-widgets", organization: @organization))
+    should "permit a new gem a member claims for the organization" do
+      assert @prefix_reservation.permitted?(claimed_rubygem(organization: @organization, by: @member))
     end
 
-    should "permit a gem being pushed by a member of the organization" do
+    should "not permit a new gem a member claims for another organization" do
+      refute @prefix_reservation.permitted?(claimed_rubygem(organization: create(:organization), by: @member))
+    end
+
+    should "not permit a new gem a member pushes without claiming the organization" do
       rubygem = build(:rubygem, name: "acme-widgets")
-      rubygem.pushed_by = create(:user).tap { create(:membership, user: it, organization: @organization) }
-
-      assert @prefix_reservation.permitted?(rubygem)
-    end
-
-    should "permit a gem owned by a member of the organization" do
-      member = create(:user)
-      create(:membership, user: member, organization: @organization)
-
-      assert @prefix_reservation.permitted?(create(:rubygem, name: "widgets", owners: [member]))
-    end
-
-    should "permit a name claimed by a pending trusted publisher belonging to a member" do
-      member = create(:user)
-      create(:membership, user: member, organization: @organization)
-      create(:oidc_pending_trusted_publisher, user: member, rubygem_name: "acme-widgets")
-
-      assert @prefix_reservation.permitted?(build(:rubygem, name: "acme-widgets"))
-    end
-
-    should "not permit a gem with no connection to the organization" do
-      rubygem = build(:rubygem, name: "acme-widgets")
-      rubygem.pushed_by = create(:user)
+      rubygem.pushed_by = @member
 
       refute @prefix_reservation.permitted?(rubygem)
     end
 
+    should "not permit a new gem a non-member claims for the organization" do
+      refute @prefix_reservation.permitted?(claimed_rubygem(organization: @organization, by: create(:user)))
+    end
+
+    should "not permit a new gem claimed by an unconfirmed member" do
+      pending_member = create(:user)
+      create(:membership, :pending, user: pending_member, organization: @organization)
+
+      refute @prefix_reservation.permitted?(claimed_rubygem(organization: @organization, by: pending_member))
+    end
+
+    should "not permit a new gem that only sets the organization without a claiming member" do
+      refute @prefix_reservation.permitted?(build(:rubygem, name: "acme-widgets", organization: @organization))
+    end
+
+    should "permit renaming a gem that already belongs to the organization" do
+      assert @prefix_reservation.permitted?(create(:rubygem, name: "widgets", organization: @organization))
+    end
+
+    should "not permit renaming a gem owned by a member outside the organization" do
+      refute @prefix_reservation.permitted?(create(:rubygem, name: "widgets", owners: [@member]))
+    end
+
     should "not permit anything once the organization is deleted" do
+      rubygem = claimed_rubygem(organization: @organization, by: @member)
       @organization.update!(deleted_at: Time.zone.now)
 
-      refute @prefix_reservation.reload.permitted?(build(:rubygem, name: "acme-widgets"))
+      refute @prefix_reservation.reload.permitted?(rubygem)
+    end
+  end
+
+  context "#conflict_message" do
+    setup do
+      @organization = create(:organization, handle: "acme-corp")
+      @prefix_reservation = create(:prefix_reservation, organization: @organization, prefix: "acme")
+    end
+
+    should "name the organization and tell its admins how to claim the gem" do
+      assert_equal "'acme-widgets' starts with 'acme', a prefix reserved by the acme-corp organization. " \
+                   "If you are an admin of acme-corp, add `spec.metadata[\"rubygems_organization\"] = \"acme-corp\"` " \
+                   "to your gemspec to push it to the organization.",
+                   @prefix_reservation.conflict_message("acme-widgets")
+    end
+
+    should "omit the organization once it is deleted" do
+      @organization.update!(deleted_at: Time.zone.now)
+
+      assert_equal "'acme-widgets' starts with 'acme', a reserved prefix.",
+                   @prefix_reservation.reload.conflict_message("acme-widgets")
+    end
+  end
+
+  private
+
+  def claimed_rubygem(organization:, by:)
+    build(:rubygem, name: "acme-widgets").tap do |rubygem|
+      rubygem.claim_for_organization(organization, by:)
     end
   end
 end
