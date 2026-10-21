@@ -63,16 +63,7 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
   # will create an event
   include Events::Recordable
 
-  has_one :most_recent_version,
-    lambda {
-      order(
-        Arel.sql("case when #{quoted_table_name}.latest AND #{quoted_table_name}.platform = 'ruby' then 0 " \
-                 "when #{quoted_table_name}.latest then 1 else 2 end"),
-        :position,
-        id: :desc
-      )
-    },
-    class_name: "Version", inverse_of: :rubygem
+  has_one :most_recent_version, -> { most_recent_first }, class_name: "Version", inverse_of: :rubygem
 
   validates :name,
     length: { maximum: Gemcutter::MAX_FIELD_LENGTH },
