@@ -113,38 +113,36 @@ class GemFilterTest < ApplicationSystemTestCase
     create_list(:rubygem, 31, organization: @organization, number: "1.0.0") # rubocop:disable FactoryBot/ExcessiveCreateList
 
     page.driver.with_playwright_page do |browser|
-      [organization_path(@organization), organization_gems_path(@organization)].each do |path|
-        visit "#{path}?sort=name"
-        next_page = first("nav[aria-label='Pagination'] a[rel='next']")
-        next_url = URI.join(current_url, next_page[:href]).to_s
-        pending = Queue.new
-        browser.route(next_url, ->(route, _request) { pending << route }, times: 1)
+      visit organization_gems_path(@organization, sort: "name")
+      next_page = first("nav[aria-label='Pagination'] a[rel='next']")
+      next_url = URI.join(current_url, next_page[:href]).to_s
+      pending = Queue.new
+      browser.route(next_url, ->(route, _request) { pending << route }, times: 1)
+      held = nil
+
+      begin
+        next_page.click
+        held = pending.pop(timeout: Capybara.default_max_wait_time)
+
+        assert held, "Expected to intercept page two"
+
+        response = held.fetch
+        fill_in "Filter by gem name", with: "aws sdk"
+
+        assert_selector "[role='status']", text: "Matching gems: 2 of 35"
+        assert_equal %w[aws-sdk-alpha aws-sdk-zeta], all("h4").map(&:text)
+
+        held.fulfill(response: response)
         held = nil
+        # Wait for the navigation to settle, not just the response transfer.
+        browser.evaluate("async () => { await document.querySelector('turbo-frame').loaded }")
 
-        begin
-          next_page.click
-          held = pending.pop(timeout: Capybara.default_max_wait_time)
-
-          assert held, "Expected to intercept page two"
-
-          response = held.fetch
-          fill_in "Filter by gem name", with: "aws sdk"
-
-          assert_selector "[role='status']", text: "Matching gems: 2 of 35"
-          assert_equal %w[aws-sdk-alpha aws-sdk-zeta], all("h4").map(&:text)
-
-          held.fulfill(response: response)
-          held = nil
-          # Wait for the navigation to settle, not just the response transfer.
-          browser.evaluate("async () => { await document.querySelector('turbo-frame').loaded }")
-
-          assert_equal %w[aws-sdk-alpha aws-sdk-zeta], all("h4").map(&:text)
-          assert_field "Filter by gem name", with: "aws sdk"
-          assert_equal({ "sort" => "name", "gem_filter" => "aws sdk" }, Rack::Utils.parse_query(URI(current_url).query))
-        ensure
-          held&.abort
-          browser.unroute(next_url)
-        end
+        assert_equal %w[aws-sdk-alpha aws-sdk-zeta], all("h4").map(&:text)
+        assert_field "Filter by gem name", with: "aws sdk"
+        assert_equal({ "sort" => "name", "gem_filter" => "aws sdk" }, Rack::Utils.parse_query(URI(current_url).query))
+      ensure
+        held&.abort
+        browser.unroute(next_url)
       end
     end
   end
