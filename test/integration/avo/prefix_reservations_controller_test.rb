@@ -50,6 +50,20 @@ class Avo::PrefixReservationsControllerTest < ActionDispatch::IntegrationTest
     page.assert_text "acme"
   end
 
+  test "creating a prefix reservation that overlaps an existing one as admin" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+    other_organization = create(:organization)
+
+    assert_no_difference [-> { PrefixReservation.count }, -> { Audit.count }] do
+      post avo.resources_prefix_reservations_path, params: {
+        prefix_reservation: { prefix: "acme-widgets", organization_id: other_organization.to_param, comment: "Reserving acme-widgets" }
+      }
+    end
+
+    assert_response :unprocessable_content
+    page.assert_text "overlaps the existing 'acme' reservation for the #{@organization.handle} organization"
+  end
+
   test "resource search_query scope" do
     requires_avo_pro
 
