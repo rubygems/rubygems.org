@@ -153,7 +153,6 @@ class EmailConfirmationTest < ApplicationSystemTestCase
   end
 
   teardown do
-    disable_virtual_authenticator
     Capybara.reset_sessions!
   end
 

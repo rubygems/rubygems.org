@@ -113,7 +113,6 @@ class WebAuthnVerificationTest < ApplicationSystemTestCase
 
   def teardown
     @mock_client.kill_server
-    disable_virtual_authenticator
   end
 
   private
