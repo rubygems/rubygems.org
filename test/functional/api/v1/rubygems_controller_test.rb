@@ -874,10 +874,10 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
           travel 2.hours
         end
         @request.env["HTTP_AUTHORIZATION"] = case credential
-                                            when "missing" then nil
-                                            when "empty" then ""
-                                            else key
-                                            end
+                                             when "missing" then nil
+                                             when "empty" then ""
+                                             else key
+                                             end
         Pusher.expects(:new).never
         @controller.expects(:track_gem_push).never
 
