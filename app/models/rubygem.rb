@@ -90,8 +90,8 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
     presence: true,
     uniqueness: { case_sensitive: false },
     name_format: true,
-    reserved_prefix: true,
     if: :needs_name_validation?
+  validates :name, reserved_prefix: true, if: -> { needs_name_validation? || taken_over_by_pusher? }
   validate :reserved_names_exclusion, if: :needs_name_validation?
   validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
 
@@ -358,6 +358,12 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def reserved_name?
     GemNameReservation.reserved?(name) if name.present?
+  end
+
+  # True when the current push makes the pusher this gem's new owner: a new
+  # gem, or a pushable one the pusher doesn't own (Pusher disowns it first).
+  def taken_over_by_pusher?
+    new_record? || (pushed_by.present? && !pushed_by.owns_gem?(self) && pushable?)
   end
 
   def create_ownership(user)

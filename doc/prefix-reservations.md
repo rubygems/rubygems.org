@@ -12,8 +12,8 @@ still blocks overlapping prefixes until it is destroyed.
 
 ## Who can create a gem under a reserved prefix
 
-`ReservedPrefixValidator` runs on `Rubygem#name` for new gems and renames, and
-defers to `PrefixReservation#permitted?`:
+`ReservedPrefixValidator` runs on `Rubygem#name` for new gems, renames, and
+takeovers, and defers to `PrefixReservation#permitted?`:
 
 - **New gem**: the push must claim the reserving organization through gemspec
   metadata, and the claiming user must be a confirmed member:
@@ -30,12 +30,17 @@ defers to `PrefixReservation#permitted?`:
   organization.
 - **Deleted organization**: the prefix stays reserved, and nobody can create
   a gem under it until the reservation is destroyed.
+- **Takeover of an abandoned gem**: rejected. A push can take over an
+  existing gem that has no indexed versions and isn't protected (see
+  `Rubygem#pushable?`). `Rubygem#taken_over_by_pusher?` runs the validator
+  for these pushes. Takeovers ignore `rubygems_organization` metadata, so
+  even an admin of the reserving organization can't claim the gem this way;
+  it needs a rubygems.org admin.
 
-Gems that existed before the reservation keep pushing versions, because name
-validation only runs on new records and renames.
+Owners of gems that existed before the reservation can keep pushing versions.
 
-When a push is rejected, the error names the organization and gives the
-metadata line above.
+When a push is rejected, the error names the organization. For a new gem it
+also gives the metadata line above.
 
 ## Known issue: pending trusted publishers are checked more loosely than pushes
 

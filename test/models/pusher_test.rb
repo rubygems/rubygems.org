@@ -496,6 +496,48 @@ class PusherTest < ActiveSupport::TestCase
 
       assert push_gem_named("acme-legacy", version: "0.0.2").process
     end
+
+    context "with an abandoned gem that predates the reservation" do
+      setup do
+        @organization.prefix_reservations.destroy_all
+        @previous_owner = create(:user)
+        @abandoned = create(:rubygem, name: "acme-abandoned", owners: [@previous_owner])
+        create(:version, :yanked, rubygem: @abandoned, number: "0.0.1")
+        @abandoned.update_columns(created_at: 1.year.ago, updated_at: 1.year.ago)
+        create(:prefix_reservation, organization: @organization, prefix: "acme")
+      end
+
+      should "reject a non-member reclaiming it" do
+        cutter = push_gem_named("acme-abandoned", api_key: create(:api_key, owner: create(:user)))
+
+        assert_no_difference [-> { Version.count }, -> { Ownership.count }, -> { Events::OrganizationEvent.count }] do
+          refute cutter.process
+        end
+        assert_equal 403, cutter.code
+        assert_match(/starts with 'acme', a prefix reserved by the acme-corp organization/, cutter.message)
+        refute_includes cutter.message, "rubygems_organization"
+        assert_equal [@previous_owner], @abandoned.reload.owners
+      end
+
+      # Takeover pushes ignore organization metadata, so even an admin of the
+      # reserving organization can't claim the gem this way.
+      should "reject an admin of the reserving organization reclaiming it" do
+        assert_no_prefix_reserved_push push_gem_named("acme-abandoned", organization_handle: @organization.handle)
+        assert_equal [@previous_owner], @abandoned.reload.owners
+        assert_nil @abandoned.organization
+      end
+
+      should "reject a non-member reclaiming it when it already belongs to the reserving organization" do
+        @abandoned.update_columns(organization_id: @organization.id)
+
+        assert_no_prefix_reserved_push push_gem_named("acme-abandoned", api_key: create(:api_key, owner: create(:user)))
+        assert_equal [@previous_owner], @abandoned.reload.owners
+      end
+
+      should "let the previous owner push a new version" do
+        assert push_gem_named("acme-abandoned", api_key: create(:api_key, owner: @previous_owner)).process
+      end
+    end
   end
 
   context "checking if the rubygem can be pushed to" do
