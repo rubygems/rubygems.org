@@ -14,8 +14,6 @@ class PrefixReservationTest < ActiveSupport::TestCase
     should_not allow_value("").for(:prefix)
     should_not allow_value("a").for(:prefix)
 
-    should validate_uniqueness_of(:prefix).case_insensitive
-
     should validate_length_of(:prefix).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
     should validate_length_of(:prefix).is_at_least(3)
 
@@ -43,6 +41,13 @@ class PrefixReservationTest < ActiveSupport::TestCase
     setup do
       @organization = create(:organization, handle: "acme-corp")
       create(:prefix_reservation, organization: @organization, prefix: "acme")
+    end
+
+    should "reject the same prefix" do
+      prefix_reservation = build(:prefix_reservation, prefix: "acme")
+
+      refute_predicate prefix_reservation, :valid?
+      assert_includes prefix_reservation.errors[:prefix], "overlaps the existing 'acme' reservation for the acme-corp organization"
     end
 
     should "reject a longer prefix that starts with the existing prefix" do

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class PrefixReservation < ApplicationRecord
-  validates :prefix, uniqueness: { case_sensitive: false },
-    presence: true,
+  validates :prefix, presence: true,
     length: { maximum: Gemcutter::MAX_FIELD_LENGTH, minimum: 3 }
   validate :downcase_prefix_check
   validate :prefix_does_not_overlap
@@ -14,12 +13,11 @@ class PrefixReservation < ApplicationRecord
     where("left(?, length(prefix)) = prefix", name.to_s.downcase)
   }
 
-  # Reservations where one prefix starts with the other, so a gem name could
-  # match both. Exact matches are left to the uniqueness validation.
+  # Reservations where one prefix starts with the other, including an exact
+  # match, so a gem name could match both.
   scope :overlapping, lambda { |prefix|
     value = prefix.to_s.downcase
     where("left(:value, length(prefix)) = prefix OR left(prefix, length(:value)) = :value", value:)
-      .where.not(prefix: value)
   }
 
   def self.reserved?(name)
