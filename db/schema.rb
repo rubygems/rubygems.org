@@ -861,6 +861,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_233055) do
   add_foreign_key "ownership_requests", "users", column: "approver_id", name: "ownership_requests_approver_id_fk"
   add_foreign_key "ownership_requests", "users", name: "ownership_requests_user_id_fk"
   add_foreign_key "ownerships", "users", on_delete: :cascade
+  add_foreign_key "prefix_reservations", "organizations"
   add_foreign_key "rubygem_transfers", "organizations"
   add_foreign_key "rubygem_transfers", "users", column: "created_by_id"
   add_foreign_key "rubygems", "organizations", on_delete: :nullify

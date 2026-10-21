@@ -7,8 +7,9 @@ treats `_` literally.
 
 Reservations can't overlap: if `acme` is reserved, neither `acme-corp` nor
 `acm` can be, even for the same organization. That way every gem name falls
-under at most one reservation. A reservation whose organization was deleted
-still blocks overlapping prefixes until it is destroyed.
+under at most one reservation. A reservation without an organization, or
+whose organization was deleted, still blocks overlapping prefixes until it is
+destroyed.
 
 ## Who can create a gem under a reserved prefix
 
@@ -28,8 +29,10 @@ takeovers, and defers to `PrefixReservation#permitted?`:
   pending trusted publisher.
 - **Rename**: allowed only when the gem already belongs to the reserving
   organization.
-- **Deleted organization**: the prefix stays reserved, and nobody can create
-  a gem under it until the reservation is destroyed.
+- **No organization, or a deleted one**: the prefix stays reserved, and
+  nobody can create a gem under it until the reservation is destroyed.
+  `organization_id` is nullable, so an admin can leave it blank to block a
+  prefix outright.
 - **Takeover of an abandoned gem**: rejected. A push can take over an
   existing gem that has no indexed versions and isn't protected (see
   `Rubygem#pushable?`). `Rubygem#taken_over_by_pusher?` runs the validator

@@ -7,7 +7,7 @@ class PrefixReservation < ApplicationRecord
   validate :downcase_prefix_check
   validate :prefix_does_not_overlap
 
-  belongs_to :organization
+  belongs_to :organization, optional: true
 
   scope :covering, lambda { |name|
     where("left(?, length(prefix)) = lower(prefix)", name.to_s.downcase.strip)
