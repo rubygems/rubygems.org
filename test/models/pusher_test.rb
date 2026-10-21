@@ -508,30 +508,20 @@ class PusherTest < ActiveSupport::TestCase
       end
 
       should "reject a non-member reclaiming it" do
-        cutter = push_gem_named("acme-abandoned", api_key: create(:api_key, owner: create(:user)))
-
-        assert_no_difference [-> { Version.count }, -> { Ownership.count }, -> { Events::OrganizationEvent.count }] do
-          refute cutter.process
-        end
-        assert_equal 403, cutter.code
-        assert_match(/starts with 'acme', a prefix reserved by the acme-corp organization/, cutter.message)
-        refute_includes cutter.message, "rubygems_organization"
-        assert_equal [@previous_owner], @abandoned.reload.owners
+        assert_no_takeover push_gem_named("acme-abandoned", api_key: create(:api_key, owner: create(:user)))
       end
 
       # Takeover pushes ignore organization metadata, so even an admin of the
       # reserving organization can't claim the gem this way.
       should "reject an admin of the reserving organization reclaiming it" do
-        assert_no_prefix_reserved_push push_gem_named("acme-abandoned", organization_handle: @organization.handle)
-        assert_equal [@previous_owner], @abandoned.reload.owners
+        assert_no_takeover push_gem_named("acme-abandoned", organization_handle: @organization.handle)
         assert_nil @abandoned.organization
       end
 
       should "reject a non-member reclaiming it when it already belongs to the reserving organization" do
         @abandoned.update_columns(organization_id: @organization.id)
 
-        assert_no_prefix_reserved_push push_gem_named("acme-abandoned", api_key: create(:api_key, owner: create(:user)))
-        assert_equal [@previous_owner], @abandoned.reload.owners
+        assert_no_takeover push_gem_named("acme-abandoned", api_key: create(:api_key, owner: create(:user)))
       end
 
       should "let the previous owner push a new version" do
@@ -1131,6 +1121,15 @@ class PusherTest < ActiveSupport::TestCase
       rubygem: rubygem.name, rubygem_gid: rubygem.to_gid.to_s,
       added_by: actor.display_handle, actor_gid: actor.to_gid.to_s
     }, @organization.events.where(tag: Events::OrganizationEvent::RUBYGEM_ADDED).sole
+  end
+
+  def assert_no_takeover(cutter)
+    assert_no_difference [-> { Version.count }, -> { Ownership.count }, -> { Events::OrganizationEvent.count }] do
+      refute cutter.process
+    end
+    assert_equal 403, cutter.code
+    assert_match(/You do not have permission to push to this gem/, cutter.message)
+    assert_equal [@previous_owner], @abandoned.reload.owners
   end
 
   def assert_no_prefix_reserved_push(cutter)
