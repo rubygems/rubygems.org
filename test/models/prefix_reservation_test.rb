@@ -19,6 +19,18 @@ class PrefixReservationTest < ActiveSupport::TestCase
     should validate_length_of(:prefix).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
     should validate_length_of(:prefix).is_at_least(3)
 
+    should belong_to(:organization).optional
+
+    should "save without an organization" do
+      assert_predicate create(:prefix_reservation, organization: nil), :persisted?
+    end
+
+    should "reject an organization_id that doesn't exist" do
+      assert_raises(ActiveRecord::InvalidForeignKey) do
+        create(:prefix_reservation, organization_id: Organization.maximum(:id).to_i + 1)
+      end
+    end
+
     should "validate downcase" do
       prefix_reservation = build(:prefix_reservation, prefix: "ABX")
 
