@@ -27,19 +27,23 @@ class PrefixReservation < ApplicationRecord
 
   # A new gem under the prefix must be claimed for the reserving organization
   # by one of its members. A gem already in the organization can be renamed
-  # into the prefix, since a member had to add it to the organization.
+  # into the prefix, since a member had to add it to the organization. A push
+  # that takes over an abandoned gem is never permitted, because Pusher ignores
+  # organization metadata on takeovers, so the gem can't be claimed.
   def permitted?(rubygem)
     return false if organization.nil?
-    return rubygem.organization_id == organization_id if rubygem.persisted?
+    return !rubygem.taken_over_by_pusher? && rubygem.organization_id == organization_id if rubygem.persisted?
 
     rubygem.claimed_organization == organization && organization.user_is_member?(rubygem.claimed_by)
   end
 
-  def conflict_message(name)
+  def conflict_message(name, existing_gem: false)
     return "'#{name}' starts with '#{prefix}', a reserved prefix." if organization.nil?
 
-    "'#{name}' starts with '#{prefix}', a prefix reserved by the #{organization.handle} organization. " \
-      "If you are an admin of #{organization.handle}, add `spec.metadata[\"rubygems_organization\"] = " \
+    message = "'#{name}' starts with '#{prefix}', a prefix reserved by the #{organization.handle} organization."
+    return message if existing_gem
+
+    "#{message} If you are an admin of #{organization.handle}, add `spec.metadata[\"rubygems_organization\"] = " \
       "\"#{organization.handle}\"` to your gemspec to push it to the organization."
   end
 
