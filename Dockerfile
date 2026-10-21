@@ -8,8 +8,9 @@ FROM ruby:$RUBY_VERSION-alpine${ALPINE_VERSION} AS base
 # Install packages
 RUN --mount=type=cache,id=dev-apk-cache,sharing=locked,target=/var/cache/apk \
   --mount=type=cache,id=dev-apk-lib,sharing=locked,target=/var/lib/apk \
-  apk add \
-  ca-certificates \
+  apk add --update-cache --upgrade \
+  'ca-certificates>=20261020-r0' \
+  'ca-certificates-bundle>=20261020-r0' \
   bash \
   tzdata \
   xz-libs \
