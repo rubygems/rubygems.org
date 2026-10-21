@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { Turbo } from "@hotwired/turbo-rails";
 
 export default class extends Controller {
   static targets = [
@@ -9,6 +10,8 @@ export default class extends Controller {
     "empty",
     "clear",
     "sort",
+    "form",
+    "submit",
   ];
 
   connect() {
@@ -17,11 +20,40 @@ export default class extends Controller {
     this.inputTarget.value =
       new URL(window.location.href).searchParams.get("gem_filter") || "";
     this.controlsTarget.hidden = false;
+    if (this.hasFormTarget) {
+      this.submitTarget.hidden = true;
+      this.updateSort();
+      return;
+    }
     this.statusTarget.hidden = false;
     this.filter();
   }
 
+  disconnect() {
+    clearTimeout(this.timer);
+  }
+
+  submit(event) {
+    event.preventDefault();
+    clearTimeout(this.timer);
+    const url = new URL(this.formTarget.action);
+    url.search = new URLSearchParams(new FormData(this.formTarget)).toString();
+    // Keep filtering and pagination on the same frame navigation path.
+    // Turbo-managed form submissions cancel separately from frame links, so
+    // an older page response could overwrite newer filtered results.
+    Turbo.visit(url.href, {
+      frame: this.formTarget.dataset.turboFrame,
+      action: "advance",
+    });
+  }
+
   filter() {
+    this.updateSort();
+    if (this.hasFormTarget) {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => this.formTarget.requestSubmit(), 250);
+      return;
+    }
     const query = this.inputTarget.value.trim();
     const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
     let count = 0;
@@ -40,10 +72,14 @@ export default class extends Controller {
       ? this.statusTarget.dataset.matches.replace("%{count}", count)
       : this.statusTarget.dataset.all;
     this.emptyTarget.hidden = count !== 0;
+  }
+
+  updateSort() {
+    const query = this.inputTarget.value.trim();
     this.clearTarget.hidden = this.inputTarget.value.length === 0;
 
     // Sorting still navigates through GemSortable; carry the local filter with
-    // it without changing global search, the sort cookie, or the current URL.
+    // it without changing global search or the sort cookie.
     this.sortTarget.querySelectorAll("a").forEach((link) => {
       const url = new URL(link.href);
       if (query) url.searchParams.set("gem_filter", query);

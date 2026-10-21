@@ -60,14 +60,53 @@ class GemFilterTest < ApplicationSystemTestCase
     page.driver.with_playwright_page do |pw_page|
       pw_page.add_init_script(script: "delete HTMLElement.prototype.showPopover")
     end
-    visit profile_path(@user.handle, sort: "downloads")
-    fill_in "Filter by gem name", with: "AWS sdk"
-    select "Alphabetical", from: "Sort gems by"
-    click_button "Apply sort"
+    [profile_path(@user.handle), organization_path(@organization), organization_gems_path(@organization)].each do |path|
+      visit "#{path}?sort=downloads"
+      fill_in "Filter by gem name", with: "AWS sdk"
+      select "Alphabetical", from: "Sort gems by"
+      click_button "Apply sort"
 
-    assert_selector "h4", count: 2
-    assert_equal %w[aws-sdk-alpha aws-sdk-zeta], all("h4").map(&:text)
-    assert_field "Filter by gem name", with: "AWS sdk"
+      assert_selector "h4", count: 2
+      assert_equal %w[aws-sdk-alpha aws-sdk-zeta], all("h4").map(&:text)
+      assert_field "Filter by gem name", with: "AWS sdk"
+    end
+  end
+
+  test "organization filtering finds off-page gems and carries the filter through pagination and sorting" do
+    gems = create_list(:rubygem, 31, organization: @organization, number: "1.0.0") # rubocop:disable FactoryBot/ExcessiveCreateList
+    names = gems.map(&:name).sort
+
+    [organization_path(@organization), organization_gems_path(@organization)].each do |path|
+      visit "#{path}?sort=name&page=2"
+      fill_in "Filter by gem name", with: "RubyGem"
+
+      assert_selector "h4", count: 30
+      assert_equal names.first(30), all("h4").map(&:text)
+      assert_selector "[role='status']", text: "Matching gems: 31 of 35"
+      assert_no_selector "a[rel='prev']"
+      first("nav[aria-label='Pagination'] a[rel='next']").click
+
+      assert_selector "h4", count: 1
+      assert_equal names.last(1), all("h4").map(&:text)
+      assert_field "Filter by gem name", with: "RubyGem"
+      assert_selector "[role='status']", text: "Matching gems: 31 of 35"
+
+      click_button "Sort: Alphabetical"
+      click_link "Number of downloads"
+
+      assert_selector "h4", count: 30
+      assert_field "Filter by gem name", with: "RubyGem"
+      page.refresh
+
+      assert_selector "h4", count: 30
+      assert_field "Filter by gem name", with: "RubyGem"
+      find("button[aria-label='Clear filter']").click
+
+      assert_selector "h4", count: 30
+      assert_selector "[role='status']", text: "35 gems"
+      assert_field "Filter by gem name", with: ""
+      assert_selector "input[aria-label='Filter by gem name']:focus"
+    end
   end
 
   test "filter and sort have matching heights and fit desktop and narrow screens" do

@@ -1226,6 +1226,7 @@ zh-CN:
     label:
     placeholder:
     clear:
+    apply:
     all:
       one:
       other:
