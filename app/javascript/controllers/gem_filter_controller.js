@@ -38,7 +38,9 @@ export default class extends Controller {
     clearTimeout(this.timer);
     const url = new URL(this.formTarget.action);
     url.search = new URLSearchParams(new FormData(this.formTarget)).toString();
-    // Share pagination's frame navigation so newer requests cancel older ones.
+    // Keep filtering and pagination on the same frame navigation path.
+    // Turbo-managed form submissions cancel separately from frame links, so
+    // an older page response could overwrite newer filtered results.
     Turbo.visit(url.href, {
       frame: this.formTarget.dataset.turboFrame,
       action: "advance",
