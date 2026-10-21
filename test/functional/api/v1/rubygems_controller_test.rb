@@ -66,6 +66,23 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "On GET to show for a gem whose newest release is for another platform" do
+      setup do
+        @rubygem = create(:rubygem)
+        create(:version, rubygem: @rubygem, number: "0.3.8", description: "The old ruby release")
+        java = create(:version, rubygem: @rubygem, number: "0.5.4", platform: "java", description: "The newest java release")
+        java.gem_download.update!(count: 1234)
+        get :show, params: { id: @rubygem.slug }, format: "json"
+      end
+
+      should "describe the newest version on any platform" do
+        body = JSON.load(@response.body)
+
+        assert_equal ["0.5.4", "java", "The newest java release", 1234],
+          body.values_at("version", "platform", "info", "version_downloads")
+      end
+    end
+
     context "On GET to show for a gem that not hosted" do
       setup do
         @rubygem = create(:rubygem)
