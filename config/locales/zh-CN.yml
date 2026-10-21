@@ -27,6 +27,7 @@ zh-CN:
   forbidden:
   api_gem_not_found:
   api_key_forbidden: API 密钥没有访问权限
+  api_key_invalid:
   api_key_soft_deleted:
   api_key_insufficient_scope:
   email_not_confirmed:

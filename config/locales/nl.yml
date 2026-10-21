@@ -26,6 +26,7 @@ nl:
   forbidden:
   api_gem_not_found:
   api_key_forbidden:
+  api_key_invalid:
   api_key_soft_deleted:
   api_key_insufficient_scope:
   email_not_confirmed:

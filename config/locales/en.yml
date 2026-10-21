@@ -31,6 +31,7 @@ en:
   forbidden: Forbidden
   api_gem_not_found: This gem could not be found
   api_key_forbidden: The API key doesn't have access
+  api_key_invalid: Access Denied. Your key is invalid. Check your keys at https://rubygems.org/profile/api_keys or sign in with `gem signin`
   api_key_soft_deleted: An invalid API key cannot be used. Please delete it and create a new one.
   api_key_insufficient_scope: This API key cannot perform the specified action on this gem.
   email_not_confirmed: Please confirm your email address before using the API. Check your inbox for a confirmation link.

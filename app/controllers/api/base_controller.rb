@@ -53,7 +53,7 @@ class Api::BaseController < ApplicationController
     params_key = request.headers["Authorization"] || ""
     hashed_key = Digest::SHA256.hexdigest(params_key)
     @api_key   = ApiKey.unexpired.find_by_hashed_key(hashed_key)
-    return render_unauthorized unless @api_key
+    return render_unauthorized(params_key.present? ? t(:api_key_invalid) : t(:please_sign_up)) unless @api_key
     Current.api_key = @api_key
     set_tags "gemcutter.api_key.owner" => @api_key.owner.to_gid, "gemcutter.user.api_key_id" => @api_key.id
     return render_forbidden(t(:email_not_confirmed)) if @api_key.user&.unconfirmed?
@@ -78,8 +78,8 @@ class Api::BaseController < ApplicationController
     render_forbidden(t(:api_key_forbidden)) if @api_key.user.blank?
   end
 
-  def render_unauthorized
-    render plain: t(:please_sign_up), status: :unauthorized
+  def render_unauthorized(message = t(:please_sign_up))
+    render plain: message, status: :unauthorized
   end
 
   def render_forbidden(error = nil)

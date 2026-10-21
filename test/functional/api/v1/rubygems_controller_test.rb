@@ -863,6 +863,52 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
   end
 
   context "with incorrect api key" do
+    %w[missing empty unknown revoked expired].each do |credential|
+      should "deny a push with #{credential} credentials without side effects" do
+        key = "invalid-push-key"
+        case credential
+        when "revoked"
+          create(:api_key, key: key, scopes: %i[push_rubygem]).destroy!
+        when "expired"
+          create(:api_key, key: key, scopes: %i[push_rubygem], expires_at: 1.hour.from_now)
+          travel 2.hours
+        end
+        @request.env["HTTP_AUTHORIZATION"] = case credential
+                                            when "missing" then nil
+                                            when "empty" then ""
+                                            else key
+                                            end
+        Pusher.expects(:new).never
+        @controller.expects(:track_gem_push).never
+
+        assert_no_difference ["Rubygem.count", "Version.count", "Ownership.count", "ApiKey.count"] do
+          assert_no_enqueued_jobs do
+            post :create, body: gem_file(&:read)
+          end
+        end
+
+        assert_response :unauthorized
+        assert_equal "text/plain", @response.media_type
+        if %w[missing empty].include?(credential)
+          assert_equal "Access Denied. Please sign up for an account at https://rubygems.org", @response.body
+        else
+          assert_equal "Access Denied. Your key is invalid. Check your keys at https://rubygems.org/profile/api_keys " \
+                       "or sign in with `gem signin`", @response.body
+          refute_includes @response.body, key
+        end
+      end
+    end
+
+    should "deny an index request with an unknown api key as plain text" do
+      @request.env["HTTP_AUTHORIZATION"] = "unknown-index-key"
+      get :index, format: :json
+
+      assert_response :unauthorized
+      assert_equal "text/plain", @response.media_type
+      assert_equal "Access Denied. Your key is invalid. Check your keys at https://rubygems.org/profile/api_keys " \
+                   "or sign in with `gem signin`", @response.body
+    end
+
     context "on GET to index with JSON for a list of gems without api key" do
       setup do
         get :index, format: "json"
