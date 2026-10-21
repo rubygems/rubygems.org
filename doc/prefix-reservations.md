@@ -46,34 +46,14 @@ Owners of gems that existed before the reservation can keep pushing versions.
 When a new gem is rejected, the error names the organization and gives the
 metadata line above.
 
-## Known issue: pending trusted publishers are checked more loosely than pushes
+## Pending trusted publishers
 
-`OIDC::PendingTrustedPublisher#reserved_prefix?` lets **any confirmed member**
-of the reserving organization register a pending trusted publisher for a name
-under the prefix. The first push from that publisher is checked against the
-stricter push rule, so it succeeds only when:
+`OIDC::PendingTrustedPublisher#reserved_prefix?` uses the same
+`OrganizationPolicy#add_gem?` check as a push, so only an admin or owner of
+the reserving organization can register a pending trusted publisher for a
+name under the prefix.
 
-1. the gemspec sets `rubygems_organization` to the reserving organization, and
-2. the user who registered the pending publisher is an admin or owner of that
-   organization.
-
-This lets a user set up a pending publisher that can never push:
-
-- A maintainer or plain member registers a pending publisher for
-  `acme-widgets`. Registration succeeds, but every push fails the
-  `add_gem?` check with "You do not have permission to add a gem to
-  organization 'acme-corp'."
-- An admin registers a pending publisher but the gemspec leaves out
-  `rubygems_organization`. Every push fails with the reserved prefix error.
-
-In both cases the user only finds out when the workflow first runs, not when
-they register the publisher.
-
-Possible fixes:
-
-- Require `add_gem?` on the reserving organization when registering a pending
-  publisher for a name under the prefix, so registration and push agree on
-  the role.
-- Record the organization on the pending publisher at registration, and
-  assign the gem to it on the first push, so the gemspec metadata isn't
-  needed.
+Registration can't see the gemspec, though. If the gemspec leaves out
+`rubygems_organization`, the first push still fails with the reserved prefix
+error. Recording the organization on the pending publisher at registration
+would close that gap.
