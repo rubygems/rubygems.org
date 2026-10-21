@@ -9,16 +9,17 @@ class PrefixReservation < ApplicationRecord
 
   belongs_to :organization, optional: true
 
+  # Prefixes are validated lowercase, so only the name needs downcasing.
   scope :covering, lambda { |name|
-    where("left(?, length(prefix)) = lower(prefix)", name.to_s.downcase.strip)
+    where("left(?, length(prefix)) = prefix", name.to_s.downcase)
   }
 
   # Reservations where one prefix starts with the other, so a gem name could
   # match both. Exact matches are left to the uniqueness validation.
   scope :overlapping, lambda { |prefix|
-    value = prefix.to_s.downcase.strip
-    where("left(:value, length(prefix)) = lower(prefix) OR left(lower(prefix), length(:value)) = :value", value:)
-      .where.not("lower(prefix) = ?", value)
+    value = prefix.to_s.downcase
+    where("left(:value, length(prefix)) = prefix OR left(prefix, length(:value)) = :value", value:)
+      .where.not(prefix: value)
   }
 
   def self.reserved?(name)
