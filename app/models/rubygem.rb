@@ -8,6 +8,17 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
   # existing owner bypass the typo protection for their own gems. Not persisted.
   attr_accessor :pushed_by
 
+  # The organization a new gem's spec claims via rubygems_organization metadata
+  # and the user claiming it on that organization's behalf (set by Pusher once
+  # the claim is authorized). The gem is only assigned to the organization
+  # after it saves, so reserved prefix validation reads these. Not persisted.
+  attr_reader :claimed_organization, :claimed_by
+
+  def claim_for_organization(organization, by:)
+    @claimed_organization = organization
+    @claimed_by = by
+  end
+
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :rubygem
   has_many :ownerships_including_unconfirmed, dependent: :destroy, class_name: "Ownership"
   has_many :owners, through: :ownerships, source: :user

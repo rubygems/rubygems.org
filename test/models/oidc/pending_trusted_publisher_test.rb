@@ -56,6 +56,17 @@ class OIDC::PendingTrustedPublisherTest < ActiveSupport::TestCase
     assert_equal ["starts with a prefix reserved by another organization"], publisher.errors[:rubygem_name]
   end
 
+  test "validates rubygem name is not under a prefix reserved by a deleted organization" do
+    organization = create(:organization)
+    create(:prefix_reservation, organization: organization, prefix: "acme")
+    publisher = build(:oidc_pending_trusted_publisher, rubygem_name: "acme-widgets")
+    create(:membership, user: publisher.user, organization: organization)
+    organization.update!(deleted_at: Time.zone.now)
+
+    refute_predicate publisher, :valid?
+    assert_equal ["starts with a prefix reserved by another organization"], publisher.errors[:rubygem_name]
+  end
+
   test "allows a member of the reserving organization to claim a name under the prefix" do
     organization = create(:organization)
     create(:prefix_reservation, organization: organization, prefix: "acme")
