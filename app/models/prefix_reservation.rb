@@ -16,26 +16,25 @@ class PrefixReservation < ApplicationRecord
     covering(name).exists?
   end
 
+  # A new gem under the prefix must be claimed for the reserving organization
+  # by one of its members. A gem already in the organization can be renamed
+  # into the prefix, since a member had to add it to the organization.
   def permitted?(rubygem)
-    return true if rubygem.organization_id == organization_id
-    # TODO: do we need to do these last two? Will a gem always be owned by an organization?
-    return true if rubygem.pushed_by.is_a?(User) && organization.user_is_member?(rubygem.pushed_by)
-    return true if rubygem.owners.any? { organization.user_is_member?(it) }
+    return false if organization.nil?
+    return rubygem.organization_id == organization_id if rubygem.persisted?
 
-    pending_trusted_publisher_member?(rubygem.name)
+    rubygem.claimed_organization == organization && organization.user_is_member?(rubygem.claimed_by)
   end
 
   def conflict_message(name)
-    "'#{name}' starts with '#{prefix}', a prefix reserved by the #{organization.handle} organization."
+    return "'#{name}' starts with '#{prefix}', a reserved prefix." if organization.nil?
+
+    "'#{name}' starts with '#{prefix}', a prefix reserved by the #{organization.handle} organization. " \
+      "If you are an admin of #{organization.handle}, add `spec.metadata[\"rubygems_organization\"] = " \
+      "\"#{organization.handle}\"` to your gemspec to push it to the organization."
   end
 
   private
-
-  # A gem first pushed by a trusted publisher has no owner yet at validation
-  # time; the pending publisher records the user who claimed the name.
-  def pending_trusted_publisher_member?(rubygem_name)
-    OIDC::PendingTrustedPublisher.unexpired.rubygem_name_is(rubygem_name).any? { organization.user_is_member?(it.user) }
-  end
 
   def downcase_prefix_check
     return unless prefix.to_s != prefix.to_s.downcase
