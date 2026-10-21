@@ -963,6 +963,19 @@ class RubygemTest < ActiveSupport::TestCase
 
         refute_predicate @haml, :pushable?
       end
+
+      should "not be pushable if the name is under a reserved prefix" do
+        @haml.update(created_at: 101.days.ago, updated_at: 101.days.ago)
+        create(:prefix_reservation, prefix: "ham")
+
+        refute_predicate @haml, :pushable?
+      end
+    end
+
+    should "be pushable if it is a new record under a reserved prefix" do
+      create(:prefix_reservation, prefix: "ham")
+
+      assert_predicate build(:rubygem, name: "haml-new"), :pushable?
     end
 
     should "not be pushable if it has versions" do

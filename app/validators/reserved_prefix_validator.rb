@@ -9,6 +9,6 @@ class ReservedPrefixValidator < ActiveModel::EachValidator
     reservation = PrefixReservation.covering(value).first
     return if reservation.nil? || reservation.permitted?(record)
 
-    record.errors.add(attribute, reservation.conflict_message(value, existing_gem: record.persisted?))
+    record.errors.add(attribute, reservation.conflict_message(value))
   end
 end
