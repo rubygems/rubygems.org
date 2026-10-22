@@ -64,6 +64,34 @@ class Avo::PrefixReservationsControllerTest < ActionDispatch::IntegrationTest
     page.assert_text "overlaps the existing 'acme' reservation for the #{@organization.handle} organization"
   end
 
+  test "creating and destroying a prefix reservation records who did each as admin" do
+    admin = create(:admin_github_user, :is_admin)
+    admin_sign_in_as admin
+
+    post avo.resources_prefix_reservations_path, params: {
+      prefix_reservation: { prefix: "widget", organization_id: @organization.to_param, comment: "Reserving widget for Acme Corp" }
+    }
+    prefix_reservation = PrefixReservation.find_by!(prefix: "widget")
+
+    get avo.resources_associations_index_path(
+      resource_name: "prefix_reservations",
+      id: prefix_reservation.id,
+      related_name: "audits"
+    )
+
+    assert_response :success
+    page.assert_text "Manual create of PrefixReservation"
+
+    delete avo.resources_prefix_reservation_path(prefix_reservation)
+
+    refute PrefixReservation.exists?(prefix_reservation.id)
+    audits = Audit.where(auditable_type: "PrefixReservation", auditable_id: prefix_reservation.id).order(:id)
+
+    assert_equal ["Manual create of PrefixReservation", "Manual destroy of PrefixReservation"], audits.map(&:action)
+    assert_equal [admin, admin], audits.map(&:admin_github_user)
+    assert_equal "Reserving widget for Acme Corp", audits.first.comment
+  end
+
   test "resource search_query scope" do
     requires_avo_pro
 
