@@ -19,5 +19,7 @@ class Avo::Resources::PrefixReservation < Avo::BaseResource
 
     field :created_at, as: :date_time, sortable: true, readonly: true, only_on: %i[index show]
     field :updated_at, as: :date_time, sortable: true, readonly: true, only_on: %i[index show]
+
+    field :audits, as: :has_many
   end
 end

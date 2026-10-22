@@ -7,6 +7,9 @@ class PrefixReservation < ApplicationRecord
   validate :prefix_does_not_overlap
 
   belongs_to :organization, optional: true
+  # Audits keep pointing at a destroyed reservation so its create and destroy
+  # audits stay linked to each other.
+  has_many :audits, as: :auditable, inverse_of: :auditable, dependent: nil
 
   # Prefixes are validated lowercase, so only the name needs downcasing.
   scope :covering, lambda { |name|
