@@ -46,4 +46,51 @@ class OIDC::PendingTrustedPublisherTest < ActiveSupport::TestCase
     refute_predicate publisher, :valid?
     assert_equal ["is reserved"], publisher.errors[:rubygem_name]
   end
+
+  test "validates rubygem name is not under a reserved prefix for a non-member" do
+    organization = create(:organization)
+    create(:prefix_reservation, organization: organization, prefix: "acme")
+    publisher = build(:oidc_pending_trusted_publisher, rubygem_name: "acme-widgets")
+
+    refute_predicate publisher, :valid?
+    assert_equal ["starts with a reserved prefix"], publisher.errors[:rubygem_name]
+  end
+
+  test "validates rubygem name is not under a prefix reserved by a deleted organization" do
+    organization = create(:organization)
+    create(:prefix_reservation, organization: organization, prefix: "acme")
+    publisher = build(:oidc_pending_trusted_publisher, rubygem_name: "acme-widgets")
+    create(:membership, :admin, user: publisher.user, organization: organization)
+    organization.update!(deleted_at: Time.zone.now)
+
+    refute_predicate publisher, :valid?
+    assert_equal ["starts with a reserved prefix"], publisher.errors[:rubygem_name]
+  end
+
+  test "allows an admin of the reserving organization to claim a name under the prefix" do
+    organization = create(:organization)
+    create(:prefix_reservation, organization: organization, prefix: "acme")
+    publisher = build(:oidc_pending_trusted_publisher, rubygem_name: "acme-widgets")
+    create(:membership, :admin, user: publisher.user, organization: organization)
+
+    assert_predicate publisher, :valid?
+  end
+
+  test "validates rubygem name is not under a prefix reserved by an organization the user only maintains" do
+    organization = create(:organization)
+    create(:prefix_reservation, organization: organization, prefix: "acme")
+    publisher = build(:oidc_pending_trusted_publisher, rubygem_name: "acme-widgets")
+    create(:membership, :maintainer, user: publisher.user, organization: organization)
+
+    refute_predicate publisher, :valid?
+    assert_equal ["starts with a reserved prefix"], publisher.errors[:rubygem_name]
+  end
+
+  test "validates rubygem name is not under a prefix with no organization" do
+    create(:prefix_reservation, organization: nil, prefix: "acme")
+    publisher = build(:oidc_pending_trusted_publisher, rubygem_name: "acme-widgets")
+
+    refute_predicate publisher, :valid?
+    assert_equal ["starts with a reserved prefix"], publisher.errors[:rubygem_name]
+  end
 end

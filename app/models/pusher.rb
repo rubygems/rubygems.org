@@ -249,7 +249,7 @@ class Pusher
       persist_version
 
       if rubygem.unowned?
-        claimed_organization.add_new_rubygem!(rubygem, actor: @organization_claimed_by) if @organization_claimed_by
+        claimed_organization.add_new_rubygem!(rubygem, actor: rubygem.claimed_by) if rubygem.claimed_by
 
         if api_key.user?
           rubygem.create_ownership(owner)
@@ -458,7 +458,7 @@ class Pusher
     return notify("Could not find organization '#{organization_handle_from_spec}'.", 404) unless claimed_organization
 
     actor = api_key.user? ? owner : pending_trusted_publisher&.user
-    return @organization_claimed_by = actor if actor && OrganizationPolicy.new(actor, claimed_organization).add_gem?
+    return rubygem.claim_for_organization(claimed_organization, by: actor) if actor && OrganizationPolicy.new(actor, claimed_organization).add_gem?
 
     notify("You do not have permission to add a gem to organization '#{claimed_organization.handle}'.", 403)
   end

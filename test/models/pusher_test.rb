@@ -418,6 +418,118 @@ class PusherTest < ActiveSupport::TestCase
     end
   end
 
+  context "pushing a gem name covered by a prefix reservation" do
+    setup do
+      @organization = create(:organization, handle: "acme-corp")
+      create(:membership, :admin, user: @user, organization: @organization)
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+    end
+
+    should "let a member claim a new gem for the reserving organization" do
+      cutter = push_gem_named("acme-widgets", organization_handle: @organization.handle)
+
+      assert_predicate cutter, :process
+      assert_equal @organization, Rubygem.find_by!(name: "acme-widgets").organization
+    end
+
+    should "let a trusted publisher claim a new gem for the reserving organization on behalf of a member" do
+      pending_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "acme-widgets", user: @user)
+      api_key = create(:api_key, owner: pending_publisher.trusted_publisher, scopes: %i[push_rubygem])
+      cutter = push_gem_named("acme-widgets", organization_handle: @organization.handle, api_key:)
+
+      assert_predicate cutter, :process
+      assert_equal @organization, Rubygem.find_by!(name: "acme-widgets").organization
+    end
+
+    should "reject a member pushing a new gem without claiming the reserving organization" do
+      cutter = push_gem_named("acme-widgets")
+
+      assert_no_prefix_reserved_push cutter
+      assert_includes cutter.message, 'add `spec.metadata["rubygems_organization"] = "acme-corp"` to your gemspec'
+    end
+
+    should "reject a new gem under the prefix of a deleted organization" do
+      @organization.update!(deleted_at: Time.zone.now)
+      cutter = push_gem_named("acme-widgets")
+
+      assert_no_difference [-> { Rubygem.count }, -> { Version.count }, -> { Ownership.count }] do
+        refute cutter.process
+      end
+      assert_equal 403, cutter.code
+      assert_match(/'acme-widgets' starts with 'acme', a reserved prefix\./, cutter.message)
+    end
+
+    should "reject a member claiming a new gem for a different organization" do
+      other_organization = create(:organization, handle: "other-org", owners: [@user])
+
+      assert_no_prefix_reserved_push push_gem_named("acme-widgets", organization_handle: other_organization.handle)
+      assert_empty other_organization.events.where(tag: Events::OrganizationEvent::RUBYGEM_ADDED)
+    end
+
+    should "reject a trusted publisher push that does not claim the reserving organization" do
+      pending_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "acme-widgets", user: @user)
+      api_key = create(:api_key, owner: pending_publisher.trusted_publisher, scopes: %i[push_rubygem])
+
+      assert_no_prefix_reserved_push push_gem_named("acme-widgets", api_key:)
+    end
+
+    should "reject a non-member claiming a new gem for the reserving organization" do
+      outsider = create(:user)
+      cutter = push_gem_named("acme-widgets", organization_handle: @organization.handle, api_key: create(:api_key, owner: outsider))
+
+      assert_no_difference -> { Rubygem.count } do
+        refute cutter.process
+      end
+      assert_equal 403, cutter.code
+      assert_equal "You do not have permission to add a gem to organization 'acme-corp'.", cutter.message
+    end
+
+    should "reject a non-member pushing a new gem without organization metadata" do
+      assert_no_prefix_reserved_push push_gem_named("acme-widgets", api_key: create(:api_key, owner: create(:user)))
+    end
+
+    should "allow a gem that predates the reservation to push a new version" do
+      @organization.prefix_reservations.destroy_all
+      rubygem = create(:rubygem, name: "acme-legacy", owners: [@user])
+      create(:version, rubygem: rubygem, number: "0.0.1")
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+
+      assert push_gem_named("acme-legacy", version: "0.0.2").process
+    end
+
+    context "with an abandoned gem that predates the reservation" do
+      setup do
+        @organization.prefix_reservations.destroy_all
+        @previous_owner = create(:user)
+        @abandoned = create(:rubygem, name: "acme-abandoned", owners: [@previous_owner])
+        create(:version, :yanked, rubygem: @abandoned, number: "0.0.1")
+        @abandoned.update_columns(created_at: 1.year.ago, updated_at: 1.year.ago)
+        create(:prefix_reservation, organization: @organization, prefix: "acme")
+      end
+
+      should "reject a non-member reclaiming it" do
+        assert_no_takeover push_gem_named("acme-abandoned", api_key: create(:api_key, owner: create(:user)))
+      end
+
+      # Takeover pushes ignore organization metadata, so even an admin of the
+      # reserving organization can't claim the gem this way.
+      should "reject an admin of the reserving organization reclaiming it" do
+        assert_no_takeover push_gem_named("acme-abandoned", organization_handle: @organization.handle)
+        assert_nil @abandoned.organization
+      end
+
+      should "reject a non-member reclaiming it when it already belongs to the reserving organization" do
+        @abandoned.update_columns(organization_id: @organization.id)
+
+        assert_no_takeover push_gem_named("acme-abandoned", api_key: create(:api_key, owner: create(:user)))
+      end
+
+      should "let the previous owner push a new version" do
+        assert push_gem_named("acme-abandoned", api_key: create(:api_key, owner: @previous_owner)).process
+      end
+    end
+  end
+
   context "checking if the rubygem can be pushed to" do
     setup do
       @cutter.stubs(:spec).returns stub(metadata: {})
@@ -1009,6 +1121,23 @@ class PusherTest < ActiveSupport::TestCase
       rubygem: rubygem.name, rubygem_gid: rubygem.to_gid.to_s,
       added_by: actor.display_handle, actor_gid: actor.to_gid.to_s
     }, @organization.events.where(tag: Events::OrganizationEvent::RUBYGEM_ADDED).sole
+  end
+
+  def assert_no_takeover(cutter)
+    assert_no_difference [-> { Version.count }, -> { Ownership.count }, -> { Events::OrganizationEvent.count }] do
+      refute cutter.process
+    end
+    assert_equal 403, cutter.code
+    assert_match(/You do not have permission to push to this gem/, cutter.message)
+    assert_equal [@previous_owner], @abandoned.reload.owners
+  end
+
+  def assert_no_prefix_reserved_push(cutter)
+    assert_no_difference [-> { Rubygem.count }, -> { Version.count }, -> { Ownership.count }, -> { Events::OrganizationEvent.count }] do
+      refute cutter.process
+    end
+    assert_equal 403, cutter.code
+    assert_match(/starts with 'acme', a prefix reserved by the acme-corp organization/, cutter.message)
   end
 
   def push_gem_named(name, version: "1.0.0", organization_handle: nil, api_key: @api_key)
