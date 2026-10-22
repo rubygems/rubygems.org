@@ -70,6 +70,9 @@ class MultifactorAuthsController < ApplicationController
     when "ui_and_api", "ui_and_gem_signin"
       flash[:success] = t("multifactor_auths.update.success")
       current_user.update!(mfa_level: level_param)
+      if current_user.saved_change_to_mfa_level?
+        track_appsec_event("mfa.level.change", "mfa.previous_level": current_user.mfa_level_before_last_save, "mfa.level": current_user.mfa_level)
+      end
     else
       flash[:error] = t("multifactor_auths.update.invalid_level")
     end

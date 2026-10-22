@@ -6,6 +6,53 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
   include StatsD::Instrument::Assertions
 
+  context "AppSec API key tracking" do
+    should "identify a user authenticated with an API key" do
+      key = create(:api_key, key: "test-key", scopes: [:push_rubygem])
+      @request.env["HTTP_AUTHORIZATION"] = "test-key"
+      assert_appsec_user(key.user) { post :create, body: "invalid gem" }
+      assert_response :unprocessable_content
+    end
+
+    should "not assign a human identity to a trusted publisher" do
+      create(:api_key, :trusted_publisher, key: "test-key", scopes: [:push_rubygem])
+      @request.env["HTTP_AUTHORIZATION"] = "test-key"
+      span = with_appsec_trace { post :create, body: "invalid gem" }
+
+      assert_nil span.get_tag("usr.id")
+      assert_nil span.get_tag("usr.login")
+      assert_response :unprocessable_content
+    end
+
+    should "track revoked keys without publishing or enqueueing jobs" do
+      key = create(:api_key, key: "test-key", scopes: [:push_rubygem])
+      key.soft_delete!
+      @request.env["HTTP_AUTHORIZATION"] = "test-key"
+      assert_no_difference [-> { Version.count }, -> { GoodJob::Job.count }] do
+        assert_appsec_event("api_key.authentication.failure", user: key.user, metadata: { "reason" => "revoked" }) do
+          post :create, body: gem_file(&:read)
+        end
+      end
+      assert_response :forbidden
+    end
+
+    %w[invalid expired missing].each do |kind|
+      should "track #{kind} API keys without publishing or enqueueing jobs" do
+        if kind == "expired"
+          key = create(:api_key, key: "test-key", scopes: [:push_rubygem])
+          key.update_column(:expires_at, 1.minute.ago)
+        end
+        @request.env["HTTP_AUTHORIZATION"] = kind == "missing" ? nil : "test-key"
+        assert_no_difference [-> { Version.count }, -> { GoodJob::Job.count }] do
+          assert_appsec_event("api_key.authentication.failure", metadata: { "reason" => kind == "missing" ? "missing" : "invalid_or_expired" }) do
+            post :create, body: gem_file(&:read)
+          end
+        end
+        assert_response :unauthorized
+      end
+    end
+  end
+
   should "route old paths to new controller" do
     get_route = { controller: "api/v1/rubygems", action: "show", id: "rails", format: "json" }
 
@@ -325,27 +372,21 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
 
       should "track a successful push with Datadog AppSec" do
-        span = with_appsec_trace { post :create, body: gem_file(&:read) }
-
-        assert_equal "true", span.get_tag("appsec.events.gem.push.success.track")
-        assert_equal @user.id.to_s, span.get_tag("appsec.events.gem.push.success.usr.id")
-        assert_equal "test", span.get_tag("appsec.events.gem.push.success.gem.name")
-        assert_equal "0.0.0", span.get_tag("appsec.events.gem.push.success.gem.version")
+        assert_appsec_event("gem.push.success", user: @user, metadata: { "gem.name" => "test", "gem.version" => "0.0.0" }) do
+          post :create, body: gem_file(&:read)
+        end
       end
 
       should "track a failed push with Datadog AppSec" do
-        span = with_appsec_trace { post :create, body: "really bad gem" }
-
-        assert_equal "true", span.get_tag("appsec.events.gem.push.failure.track")
-        assert_equal @user.id.to_s, span.get_tag("appsec.events.gem.push.failure.usr.id")
-        assert_nil span.get_tag("appsec.events.gem.push.failure.gem.version")
+        assert_appsec_event("gem.push.failure", user: @user, metadata: { "gem.version" => nil }) do
+          post :create, body: "really bad gem"
+        end
       end
 
       should "tag the AppSec push event with the actor" do
-        span = with_appsec_trace { post :create, body: gem_file(&:read) }
-
-        assert_equal @user.to_gid.to_s, span.get_tag("appsec.events.gem.push.success.actor.gid")
-        assert_equal "user", span.get_tag("appsec.events.gem.push.success.actor.type")
+        assert_appsec_event("gem.push.success", user: @user, metadata: { "actor.gid" => @user.to_gid, "actor.type" => "user" }) do
+          post :create, body: gem_file(&:read)
+        end
       end
 
       context "push log line" do
