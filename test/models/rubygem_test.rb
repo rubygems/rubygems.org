@@ -39,6 +39,25 @@ class RubygemTest < ActiveSupport::TestCase
       refute_predicate build(:rubygem, name: "acmewidgets"), :valid?
     end
 
+    should "reject a name with an underscore after the prefix" do
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+
+      refute_predicate build(:rubygem, name: "acme_widgets"), :valid?
+    end
+
+    should "reject a name covered by the prefix regardless of case" do
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+
+      rubygem = build(:rubygem, name: "Acme-Widgets")
+
+      refute_predicate rubygem, :valid?
+      assert_includes rubygem.errors[:name],
+                      "'Acme-Widgets' starts with 'acme', a prefix reserved by the acme-corp organization. " \
+                      "If you are an admin of acme-corp, add `spec.metadata[\"rubygems_organization\"] = \"acme-corp\"` " \
+                      "to your gemspec to push it to the organization."
+      refute_predicate build(:rubygem, name: "ACMEwidgets"), :valid?
+    end
+
     should "allow a name that only looks like the prefix" do
       create(:prefix_reservation, organization: @organization, prefix: "acme")
 
