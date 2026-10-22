@@ -3,6 +3,7 @@
 class PrefixReservation < ApplicationRecord
   validates :prefix, presence: true,
     length: { maximum: Gemcutter::MAX_FIELD_LENGTH, minimum: 3 }
+  validate :prefix_format
   validate :downcase_prefix_check
   validate :prefix_does_not_overlap
 
@@ -28,13 +29,13 @@ class PrefixReservation < ApplicationRecord
   end
 
   # A new gem under the prefix must be claimed for the reserving organization
-  # by one of its members. A gem already in the organization can be renamed
-  # into the prefix, since a member had to add it to the organization.
+  # by a user who can claim the prefix. A gem already in the organization can
+  # be renamed into the prefix, since an admin had to add it to the organization.
   def permitted?(rubygem)
     return false if organization.nil?
     return rubygem.organization_id == organization_id if rubygem.persisted?
 
-    rubygem.claimed_organization == organization && organization.user_is_member?(rubygem.claimed_by)
+    rubygem.claimed_organization == organization && claimable_by?(rubygem.claimed_by)
   end
 
   # Whether the user may claim a new gem under the prefix for the reserving
@@ -66,6 +67,15 @@ class PrefixReservation < ApplicationRecord
 
     owner = " for the #{overlap.organization.handle} organization" if overlap.organization
     errors.add(:prefix, "overlaps the existing '#{overlap.prefix}' reservation#{owner}")
+  end
+
+  # A prefix with characters no gem name can contain would reserve nothing.
+  # Unlike a gem name, a prefix may end with a separator, e.g. "acme-".
+  def prefix_format
+    return if prefix.blank?
+
+    errors.add(:prefix, "can only include letters, numbers, periods, dashes, and underscores") unless Patterns::NAME_PATTERN.match?(prefix)
+    errors.add(:prefix, "can not begin with a period, dash, or underscore") if Patterns::SPECIAL_CHAR_PREFIX_REGEXP.match?(prefix)
   end
 
   def downcase_prefix_check

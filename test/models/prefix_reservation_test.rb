@@ -29,6 +29,27 @@ class PrefixReservationTest < ActiveSupport::TestCase
       end
     end
 
+    should "reject characters a gem name can't contain" do
+      ["acme ", "acme*", "acme/widgets", "ac me"].each do |prefix|
+        prefix_reservation = build(:prefix_reservation, prefix:)
+
+        refute_predicate prefix_reservation, :valid?, "expected #{prefix.inspect} to be invalid"
+        assert_includes prefix_reservation.errors[:prefix], "can only include letters, numbers, periods, dashes, and underscores"
+      end
+    end
+
+    should "reject a prefix that begins with a period, dash, or underscore" do
+      prefix_reservation = build(:prefix_reservation, prefix: "-acme")
+
+      refute_predicate prefix_reservation, :valid?
+      assert_includes prefix_reservation.errors[:prefix], "can not begin with a period, dash, or underscore"
+    end
+
+    should "allow a prefix that ends with a period, dash, or underscore" do
+      assert_predicate build(:prefix_reservation, prefix: "acme-"), :valid?
+      assert_predicate build(:prefix_reservation, prefix: "acme.rb"), :valid?
+    end
+
     should "validate downcase" do
       prefix_reservation = build(:prefix_reservation, prefix: "ABX")
 
@@ -114,22 +135,22 @@ class PrefixReservationTest < ActiveSupport::TestCase
   context "#permitted?" do
     setup do
       @organization = create(:organization)
-      @member = create(:user)
-      create(:membership, user: @member, organization: @organization)
+      @admin = create(:user)
+      create(:membership, :admin, user: @admin, organization: @organization)
       @prefix_reservation = create(:prefix_reservation, organization: @organization, prefix: "acme")
     end
 
-    should "permit a new gem a member claims for the organization" do
-      assert @prefix_reservation.permitted?(claimed_rubygem(organization: @organization, by: @member))
+    should "permit a new gem an admin claims for the organization" do
+      assert @prefix_reservation.permitted?(claimed_rubygem(organization: @organization, by: @admin))
     end
 
-    should "not permit a new gem a member claims for another organization" do
-      refute @prefix_reservation.permitted?(claimed_rubygem(organization: create(:organization), by: @member))
+    should "not permit a new gem an admin claims for another organization" do
+      refute @prefix_reservation.permitted?(claimed_rubygem(organization: create(:organization), by: @admin))
     end
 
-    should "not permit a new gem a member pushes without claiming the organization" do
+    should "not permit a new gem an admin pushes without claiming the organization" do
       rubygem = build(:rubygem, name: "acme-widgets")
-      rubygem.pushed_by = @member
+      rubygem.pushed_by = @admin
 
       refute @prefix_reservation.permitted?(rubygem)
     end
@@ -138,11 +159,18 @@ class PrefixReservationTest < ActiveSupport::TestCase
       refute @prefix_reservation.permitted?(claimed_rubygem(organization: @organization, by: create(:user)))
     end
 
-    should "not permit a new gem claimed by an unconfirmed member" do
-      pending_member = create(:user)
-      create(:membership, :pending, user: pending_member, organization: @organization)
+    should "not permit a new gem claimed by an unconfirmed admin" do
+      pending_admin = create(:user)
+      create(:membership, :admin, :pending, user: pending_admin, organization: @organization)
 
-      refute @prefix_reservation.permitted?(claimed_rubygem(organization: @organization, by: pending_member))
+      refute @prefix_reservation.permitted?(claimed_rubygem(organization: @organization, by: pending_admin))
+    end
+
+    should "not permit a new gem a maintainer claims for the organization" do
+      maintainer = create(:user)
+      create(:membership, :maintainer, user: maintainer, organization: @organization)
+
+      refute @prefix_reservation.permitted?(claimed_rubygem(organization: @organization, by: maintainer))
     end
 
     should "not permit a new gem that only sets the organization without a claiming member" do
@@ -153,12 +181,12 @@ class PrefixReservationTest < ActiveSupport::TestCase
       assert @prefix_reservation.permitted?(create(:rubygem, name: "widgets", organization: @organization))
     end
 
-    should "not permit renaming a gem owned by a member outside the organization" do
-      refute @prefix_reservation.permitted?(create(:rubygem, name: "widgets", owners: [@member]))
+    should "not permit renaming a gem owned by an admin outside the organization" do
+      refute @prefix_reservation.permitted?(create(:rubygem, name: "widgets", owners: [@admin]))
     end
 
     should "not permit anything once the organization is deleted" do
-      rubygem = claimed_rubygem(organization: @organization, by: @member)
+      rubygem = claimed_rubygem(organization: @organization, by: @admin)
       @organization.update!(deleted_at: Time.zone.now)
 
       refute @prefix_reservation.reload.permitted?(rubygem)

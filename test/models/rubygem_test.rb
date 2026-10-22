@@ -6,8 +6,8 @@ class RubygemTest < ActiveSupport::TestCase
   context "with a prefix reserved by an organization" do
     setup do
       @organization = create(:organization, handle: "acme-corp")
-      @member = create(:user)
-      create(:membership, user: @member, organization: @organization)
+      @admin = create(:user)
+      create(:membership, :admin, user: @admin, organization: @organization)
     end
 
     should "reject a new gem name covered by the prefix" do
@@ -27,7 +27,7 @@ class RubygemTest < ActiveSupport::TestCase
       @organization.update!(deleted_at: Time.zone.now)
 
       rubygem = build(:rubygem, name: "acme-widgets")
-      rubygem.claim_for_organization(@organization, by: @member)
+      rubygem.claim_for_organization(@organization, by: @admin)
 
       refute_predicate rubygem, :valid?
       assert_includes rubygem.errors[:name], "'acme-widgets' starts with 'acme', a reserved prefix."
@@ -87,20 +87,20 @@ class RubygemTest < ActiveSupport::TestCase
       refute_predicate rubygem, :valid?
     end
 
-    should "allow a new gem a member claims for the organization" do
+    should "allow a new gem an admin claims for the organization" do
       create(:prefix_reservation, organization: @organization, prefix: "acme")
 
       rubygem = build(:rubygem, name: "acme-widgets")
-      rubygem.claim_for_organization(@organization, by: @member)
+      rubygem.claim_for_organization(@organization, by: @admin)
 
       assert_predicate rubygem, :valid?
     end
 
-    should "reject a new gem a member pushes without claiming the organization" do
+    should "reject a new gem an admin pushes without claiming the organization" do
       create(:prefix_reservation, organization: @organization, prefix: "acme")
 
       rubygem = build(:rubygem, name: "acme-widgets")
-      rubygem.pushed_by = @member
+      rubygem.pushed_by = @admin
 
       refute_predicate rubygem, :valid?
     end
@@ -114,8 +114,8 @@ class RubygemTest < ActiveSupport::TestCase
       assert_predicate rubygem, :valid?
     end
 
-    should "reject a rename by a member when the gem is not in the organization" do
-      rubygem = create(:rubygem, name: "widgets", owners: [@member])
+    should "reject a rename by an admin when the gem is not in the organization" do
+      rubygem = create(:rubygem, name: "widgets", owners: [@admin])
       create(:prefix_reservation, organization: @organization, prefix: "acme")
 
       rubygem.name = "acme-widgets"
