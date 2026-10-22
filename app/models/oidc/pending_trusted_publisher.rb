@@ -53,13 +53,10 @@ class OIDC::PendingTrustedPublisher < ApplicationRecord
     errors.add :rubygem_name, "'#{rubygem_name}' is too similar to an existing gem named '#{gem_typo.protected_gem}'"
   end
 
-  # Uses the same role check as Pusher, so the user finds out now rather than
-  # on their first push that they can't claim a name under the prefix.
+  # Checked at registration so the user finds out now rather than on their
+  # first push that they can't claim a name under the prefix.
   def reserved_prefix?
     reservation = PrefixReservation.covering(rubygem_name).first
-    return false if reservation.nil?
-    return true if reservation.organization.nil?
-
-    !OrganizationPolicy.new(user, reservation.organization).add_gem?
+    reservation.present? && !reservation.claimable_by?(user)
   end
 end

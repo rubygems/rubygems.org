@@ -165,6 +165,57 @@ class PrefixReservationTest < ActiveSupport::TestCase
     end
   end
 
+  context "#claimable_by?" do
+    setup do
+      @organization = create(:organization)
+      @prefix_reservation = create(:prefix_reservation, organization: @organization, prefix: "acme")
+    end
+
+    should "be claimable by an admin of the organization" do
+      admin = create(:user)
+      create(:membership, :admin, user: admin, organization: @organization)
+
+      assert @prefix_reservation.claimable_by?(admin)
+    end
+
+    should "be claimable by an owner of the organization" do
+      owner = create(:user)
+      create(:membership, :owner, user: owner, organization: @organization)
+
+      assert @prefix_reservation.claimable_by?(owner)
+    end
+
+    should "not be claimable by a maintainer of the organization" do
+      maintainer = create(:user)
+      create(:membership, :maintainer, user: maintainer, organization: @organization)
+
+      refute @prefix_reservation.claimable_by?(maintainer)
+    end
+
+    should "not be claimable by an unconfirmed admin of the organization" do
+      pending_admin = create(:user)
+      create(:membership, :admin, :pending, user: pending_admin, organization: @organization)
+
+      refute @prefix_reservation.claimable_by?(pending_admin)
+    end
+
+    should "not be claimable by a non-member" do
+      refute @prefix_reservation.claimable_by?(create(:user))
+    end
+
+    should "not be claimable once the organization is deleted" do
+      admin = create(:user)
+      create(:membership, :admin, user: admin, organization: @organization)
+      @organization.update!(deleted_at: Time.zone.now)
+
+      refute @prefix_reservation.reload.claimable_by?(admin)
+    end
+
+    should "not be claimable without an organization" do
+      refute create(:prefix_reservation, organization: nil, prefix: "widget").claimable_by?(create(:user))
+    end
+  end
+
   context "#conflict_message" do
     setup do
       @organization = create(:organization, handle: "acme-corp")

@@ -37,6 +37,15 @@ class PrefixReservation < ApplicationRecord
     rubygem.claimed_organization == organization && organization.user_is_member?(rubygem.claimed_by)
   end
 
+  # Whether the user may claim a new gem under the prefix for the reserving
+  # organization. Uses the same role check as Pusher, so a prefix with no
+  # organization, or a deleted one, can't be claimed by anyone.
+  def claimable_by?(user)
+    return false if organization.nil?
+
+    OrganizationPolicy.new(user, organization).add_gem?
+  end
+
   def conflict_message(name)
     return "'#{name}' starts with '#{prefix}', a reserved prefix." if organization.nil?
 
