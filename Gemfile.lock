@@ -224,7 +224,7 @@ GEM
       base64
       ssrf_filter (~> 1.5)
     csv (3.3.6)
-    dalli (4.3.7)
+    dalli (5.2.2)
       logger
     datadog (2.44.0)
       cgi
@@ -944,7 +944,7 @@ DEPENDENCIES
   chartkick (~> 5.2)
   clearance (~> 2.12)
   csv (~> 3.3)
-  dalli (~> 4.3, >= 4.3.7)
+  dalli (~> 5.2)
   datadog (~> 2.44)
   debug (~> 1.0)
   derailed_benchmarks (~> 2.2)
@@ -1114,7 +1114,7 @@ CHECKSUMS
   crass (1.0.7) sha256=94868719948664c89ddcaf0a37c65048413dfcb1c869470a5f7a7ceb5390b295
   css_parser (3.1.0) sha256=ef68b7a629e88539fc8017fa2ecc066ad4b4d36004efdf7e58703034a519796f
   csv (3.3.6) sha256=aba61e7e507a66f03d45cb1f3c4b6359861c3504038b422962875dce099e4456
-  dalli (4.3.7) sha256=18fbeb8061cdc54aca26b1284f858a685238c3fe57c42e0b104a54bd0528c6c5
+  dalli (5.2.2) sha256=23ad7dd2891525b720be39a550eba144bebebfe807d3d51b4582be2997d63f73
   datadog (2.44.0) sha256=7902626b2726966a6d16cacd5b2fbada31e12d7f5168d852a73dfb3e25b63fbe
   datadog-ruby_core_source (3.5.6) sha256=07d8909b9314af709da80966cf7e160da19ca1c396a8f45d175615f675a89569
   date (3.6.0) sha256=18ac945c4e24ebd93534f8eab8c2fd8c5604b3e977105b3798d62a1e8d27b580
