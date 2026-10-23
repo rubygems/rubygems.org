@@ -3,6 +3,8 @@
 require "cgi"
 require "shoryuken"
 
+Shoryuken.sqs_client_receive_message_opts = { wait_time_seconds: 20 }
+
 class SqsWorker
   include Shoryuken::Worker
 
