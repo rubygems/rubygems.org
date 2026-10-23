@@ -3,28 +3,28 @@
 module AppsecTracking
   private
 
-  def identify_appsec_user(user)
+  def identify_appsec_user(actor:)
     trace = Datadog::Tracing.active_trace
-    return unless trace && user
+    return unless trace && actor
 
-    Datadog::Kit::Identity.set_user(trace, id: user.id.to_s, login: Digest::SHA256.hexdigest(user.handle || user.email))
+    Datadog::Kit::Identity.set_user(trace, id: actor.id.to_s, login: Digest::SHA256.hexdigest(actor.handle || actor.email))
   end
 
-  def track_appsec_login_success(user)
+  def track_appsec_login_success(actor:)
     Datadog::Kit::AppSec::Events::V2.track_user_login_success(
-      Digest::SHA256.hexdigest(user.handle || user.email), user.id.to_s
+      Digest::SHA256.hexdigest(actor.handle || actor.email), actor.id.to_s
     )
   end
 
-  def track_appsec_login_failure(user, login: nil, **metadata)
-    user ||= begin
+  def track_appsec_login_failure(actor:, login: nil, **metadata)
+    actor ||= begin
       User.find_by_email(login) || User.find_by(handle: login) if login.present?
     rescue Encoding::UndefinedConversionError
       nil
     end
-    login = user ? (user.handle || user.email) : login.to_s
-    metadata[:"usr.id"] = user.id.to_s if user
-    Datadog::Kit::AppSec::Events::V2.track_user_login_failure(Digest::SHA256.hexdigest(login), user.present?, metadata)
+    login = actor ? (actor.handle || actor.email) : login.to_s
+    metadata[:"usr.id"] = actor.id.to_s if actor
+    Datadog::Kit::AppSec::Events::V2.track_user_login_failure(Digest::SHA256.hexdigest(login), actor.present?, metadata)
   end
 
   def track_appsec_event(event, user: current_user, **metadata)

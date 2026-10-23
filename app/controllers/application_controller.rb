@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
   def set_user_tag
     return unless signed_in?
     set_tag "gemcutter.user.id", current_user.id
-    identify_appsec_user(current_user)
+    identify_appsec_user(actor: current_user)
   end
 
   rescue_from(ActionController::ParameterMissing) do |e|

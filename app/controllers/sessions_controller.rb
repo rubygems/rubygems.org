@@ -105,7 +105,7 @@ class SessionsController < Clearance::SessionsController
         StatsD.increment "login.success"
         current_user.record_event!(Events::UserEvent::LOGIN_SUCCESS, request:,
           two_factor_method:, two_factor_label:, authentication_method:)
-        track_appsec_login_success(current_user)
+        track_appsec_login_success(actor: current_user)
         set_login_flash
         redirect_to(url_after_create)
       else
@@ -115,7 +115,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def login_failure(message, reason: "invalid_credentials")
-    track_appsec_login_failure(@user, login: action_name == "create" ? who : nil,
+    track_appsec_login_failure(actor: @user, login: action_name == "create" ? who : nil,
       reason:, authentication_method: action_name == "webauthn_full_create" ? "webauthn" : "password")
     StatsD.increment "login.failure"
     flash.now.alert = message

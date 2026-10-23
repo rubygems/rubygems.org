@@ -59,7 +59,7 @@ class Api::BaseController < ApplicationController
     end
     Current.api_key = @api_key
     set_tags "gemcutter.api_key.owner" => @api_key.owner.to_gid, "gemcutter.user.api_key_id" => @api_key.id
-    identify_appsec_user(@api_key.user)
+    identify_appsec_user(actor: @api_key.user)
     return render_forbidden(t(:email_not_confirmed)) if @api_key.user&.unconfirmed?
     Current.user = @api_key.user
     return unless @api_key.soft_deleted?

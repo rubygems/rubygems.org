@@ -47,7 +47,7 @@ class Api::V1::WebauthnVerificationsController < Api::BaseController
   def authenticated_user(api_key)
     if api_key&.user?
       Current.api_key = api_key
-      identify_appsec_user(api_key.user)
+      identify_appsec_user(actor: api_key.user)
       return Current.user = api_key.user
     end
     # Rails treats the block's return value as the auth result;
@@ -56,9 +56,9 @@ class Api::V1::WebauthnVerificationsController < Api::BaseController
     authenticate_or_request_with_http_basic do |username, password|
       user = User.authenticate(username.strip, password)
       if user
-        track_appsec_login_success(user)
+        track_appsec_login_success(actor: user)
       else
-        track_appsec_login_failure(nil, login: username.strip, authentication_method: "password")
+        track_appsec_login_failure(actor: nil, login: username.strip, authentication_method: "password")
       end
       Current.user = user
     end

@@ -15,7 +15,7 @@ class Api::V1::ApiKeysController < Api::BaseController
   def create
     authenticate_or_request_with_http_basic do |username, password|
       user = User.authenticate(username, password)
-      track_appsec_login_failure(nil, login: username, authentication_method: "password") unless user
+      track_appsec_login_failure(actor: nil, login: username, authentication_method: "password") unless user
 
       check_mfa(user) do
         key = generate_unique_rubygems_key
@@ -30,7 +30,7 @@ class Api::V1::ApiKeysController < Api::BaseController
   def update
     authenticate_or_request_with_http_basic do |username, password|
       user = User.authenticate(username, password)
-      track_appsec_login_failure(nil, login: username, authentication_method: "password") unless user
+      track_appsec_login_failure(actor: nil, login: username, authentication_method: "password") unless user
 
       check_mfa(user) do
         api_key = user.api_keys.find_by!(hashed_key: hashed_key(key_param))
@@ -57,10 +57,10 @@ class Api::V1::ApiKeysController < Api::BaseController
       return render_forbidden t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp if user.mfa_required_not_yet_enabled?
       return render_forbidden t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp if user.mfa_required_weak_level_enabled?
 
-      track_appsec_login_success(user)
+      track_appsec_login_success(actor: user)
       yield
     elsif user.mfa_enabled?
-      track_appsec_login_failure(user, authentication_method: "password", reason: otp.present? ? "invalid_otp" : "missing_otp")
+      track_appsec_login_failure(actor: user, authentication_method: "password", reason: otp.present? ? "invalid_otp" : "missing_otp")
       prompt_text = otp.present? ? t(:otp_incorrect) : t(:otp_missing)
       render plain: prompt_text, status: :unauthorized
     else
