@@ -8,8 +8,7 @@ class RackAttackTest < ActionDispatch::IntegrationTest
   include ActionMailer::TestHelper
 
   setup do
-    # MemCacheStore#clear flushes every worker's counters, so run the real backend separately with PARALLEL_WORKERS=1.
-    Rack::Attack.cache.store = ENV["RACK_ATTACK_MEMCACHED_TESTS"] == "1" ? Rails.cache : ActiveSupport::Cache::MemoryStore.new
+    Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
 
     @ip_address = "1.2.3.4"
     @user = create(:user, email: "nick@rubygems-test.org", password: PasswordHelpers::SECURE_TEST_PASSWORD,
