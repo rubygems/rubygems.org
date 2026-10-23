@@ -11,7 +11,7 @@ services:
       timeout: 5s
       retries: 12
   cache:
-    image: index.docker.io/library/memcached@sha256:f4504742a8fb03c3ac0cd172e1c1d2277117629f8d21d52f78307121ddc3de5f # 1.4.39
+    image: index.docker.io/library/memcached@sha256:ace04eccd7785ba9fac8f857b5a8eeb74ed3928d277563fa84bbd471a3ddc898 # 1.6.22
     ports:
       - "127.0.0.1:11211:11211"
     healthcheck:

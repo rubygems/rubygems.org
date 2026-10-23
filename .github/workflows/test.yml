@@ -66,6 +66,13 @@ jobs:
         env:
           TEST_COMMAND: ${{ matrix.tests.command }}
 
+      - name: RackAttack with Memcached
+        if: matrix.tests.id == 'general'
+        run: bin/rails test test/integration/rack_attack_test.rb
+        env:
+          PARALLEL_WORKERS: "1"
+          RACK_ATTACK_MEMCACHED_TESTS: "1"
+
       - name: Save capybara screenshots
         if: ${{ failure() && steps.test-all.outcome == 'failure' }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
