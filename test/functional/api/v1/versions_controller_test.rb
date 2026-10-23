@@ -195,6 +195,20 @@ class Api::V1::VersionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "on GET to latest for a gem whose newest release is for another platform" do
+    setup do
+      @rubygem = create(:rubygem)
+      create(:version, rubygem: @rubygem, number: "0.3.8")
+      create(:version, rubygem: @rubygem, number: "0.5.4", platform: "java")
+    end
+
+    should "return the newest version on any platform" do
+      get_latest @rubygem
+
+      assert_equal "0.5.4", JSON.load(@response.body)["version"]
+    end
+  end
+
   context "on GET to jsonp version of latest" do
     setup do
       @rubygem = create(:rubygem)

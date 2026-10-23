@@ -177,14 +177,25 @@ class RubygemTest < ActiveSupport::TestCase
       assert java.reload.latest
     end
 
-    should "not return platform gem for latest if the ruby version is old" do
-      version3_mswin = create(:version, rubygem: @rubygem, number: "3.0.0", platform: "mswin")
-      version2_ruby  = create(:version, rubygem: @rubygem, number: "2.0.0", platform: "ruby")
+    should "return the newest platform version for most_recent even if the ruby version is older" do
+      version3_java = create(:version, rubygem: @rubygem, number: "3.0.0", platform: "java")
+      version2_ruby = create(:version, rubygem: @rubygem, number: "2.0.0", platform: "ruby")
 
       @rubygem.reorder_versions
 
-      assert_equal version2_ruby.reload, @rubygem.most_recent_version
-      assert version3_mswin.reload.latest
+      assert_equal version3_java.reload, @rubygem.most_recent_version
+      assert_equal version3_java, Rubygem.preload(:most_recent_version).find(@rubygem.id).most_recent_version
+      assert version2_ruby.reload.latest
+    end
+
+    should "rank equal versions spelled differently together, so the ruby release wins the tie" do
+      java = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "java")
+      ruby = create(:version, rubygem: @rubygem, number: "1.0", platform: "ruby")
+
+      @rubygem.reorder_versions
+
+      assert_equal ruby.reload.position, java.reload.position
+      assert_equal ruby, @rubygem.reload.most_recent_version
     end
 
     should "not have a most recent version if no versions exist" do
