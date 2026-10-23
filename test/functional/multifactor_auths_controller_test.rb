@@ -5,6 +5,33 @@ require "test_helper"
 class MultifactorAuthsControllerTest < ActionController::TestCase
   include ActionMailer::TestHelper
 
+  context "AppSec tracking" do
+    setup do
+      @user = create(:user)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+      sign_in_as(@user)
+      put :update, params: { level: "ui_and_gem_signin" }
+    end
+
+    should "track MFA policy weakening with old and new levels" do
+      assert_appsec_event("mfa.level.change", user: @user, metadata: { "mfa.previous_level" => "ui_and_api", "mfa.level" => "ui_and_gem_signin" }) do
+        post :otp_update, params: { level: "ui_and_gem_signin", otp: ROTP::TOTP.new(@user.totp_seed).now }
+      end
+      assert_response :redirect
+      assert_predicate @user.reload, :mfa_ui_and_gem_signin?
+    end
+
+    should "not track or apply weakening without a valid OTP" do
+      assert_no_changes -> { @user.reload.mfa_level } do
+        refute_appsec_event("mfa.level.change") do
+          post :otp_update, params: { level: "ui_and_gem_signin", otp: "invalid" }
+        end
+      end
+      assert_response :redirect
+      assert_equal I18n.t("totps.incorrect_otp"), flash[:error]
+    end
+  end
+
   context "when logged in" do
     setup do
       @user = create(:user)

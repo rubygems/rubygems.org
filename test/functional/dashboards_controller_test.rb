@@ -80,10 +80,7 @@ class DashboardsControllerTest < ActionController::TestCase
       end
 
       should "set hashed usr.login and usr.id tags" do
-        span = with_appsec_trace { get :show, format: "atom" }
-
-        assert_equal @user.id.to_s, span.get_tag("usr.id")
-        assert_match(/eed7fe63e132.*cbaf0e/, span.get_tag("usr.login"))
+        assert_appsec_user(@user) { get :show, format: "atom" }
       end
     end
 

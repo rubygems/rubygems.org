@@ -15,6 +15,7 @@ class Api::V1::ApiKeysController < Api::BaseController
   def create
     authenticate_or_request_with_http_basic do |username, password|
       user = User.authenticate(username, password)
+      track_appsec_login_failure(actor: nil, login: username, authentication_method: "password") unless user
 
       check_mfa(user) do
         key = generate_unique_rubygems_key
@@ -29,11 +30,13 @@ class Api::V1::ApiKeysController < Api::BaseController
   def update
     authenticate_or_request_with_http_basic do |username, password|
       user = User.authenticate(username, password)
+      track_appsec_login_failure(actor: nil, login: username, authentication_method: "password") unless user
 
       check_mfa(user) do
         api_key = user.api_keys.find_by!(hashed_key: hashed_key(key_param))
 
         if api_key.update(api_key_update_params(api_key))
+          track_api_key_event("api_key.update", api_key)
           respond_with "Scopes for the API key #{api_key.name} updated"
         else
           errors = api_key.errors.full_messages
@@ -47,18 +50,17 @@ class Api::V1::ApiKeysController < Api::BaseController
 
   def check_mfa(user)
     return false unless user
-    if user.unconfirmed?
-      render_forbidden t(:email_not_confirmed)
-    elsif user.mfa_gem_signin_authorized?(otp)
+    return render_forbidden t(:email_not_confirmed) if user.unconfirmed?
+
+    if user.mfa_gem_signin_authorized?(otp)
       Current.user = user
-      if user.mfa_required_not_yet_enabled?
-        render_forbidden t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp
-      elsif user.mfa_required_weak_level_enabled?
-        render_forbidden t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp
-      else
-        yield
-      end
+      return render_forbidden t("multifactor_auths.api.mfa_required_not_yet_enabled").chomp if user.mfa_required_not_yet_enabled?
+      return render_forbidden t("multifactor_auths.api.mfa_required_weak_level_enabled").chomp if user.mfa_required_weak_level_enabled?
+
+      track_appsec_login_success(actor: user)
+      yield
     elsif user.mfa_enabled?
+      track_appsec_login_failure(actor: user, authentication_method: "password", reason: otp.present? ? "invalid_otp" : "missing_otp")
       prompt_text = otp.present? ? t(:otp_incorrect) : t(:otp_missing)
       render plain: prompt_text, status: :unauthorized
     else
@@ -68,6 +70,7 @@ class Api::V1::ApiKeysController < Api::BaseController
 
   def save_and_respond(api_key, key)
     if api_key.errors.blank? && api_key.save
+      track_api_key_event("api_key.create", api_key)
       Mailer.api_key_created(api_key.id).deliver_later
       respond_with key
     else

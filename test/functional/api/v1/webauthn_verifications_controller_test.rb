@@ -5,6 +5,27 @@ require "test_helper"
 # Not to be confused with WebauthnVerificationsControllerTest. This is for the API.
 
 class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
+  context "AppSec tracking" do
+    setup do
+      @user = create(:user)
+      create(:webauthn_credential, user: @user)
+    end
+
+    should "track a basic auth password login" do
+      authorize_with(" #{@user.email} :#{@user.password}")
+      assert_appsec_event("users.login.success", user: @user) { post :create }
+      assert_response :success
+    end
+
+    should "track a basic auth failure without issuing a verification" do
+      authorize_with("#{@user.email}:wrong-password")
+      assert_no_difference -> { WebauthnVerification.count } do
+        assert_appsec_event("users.login.failure", user: @user) { post :create }
+      end
+      assert_response :unauthorized
+    end
+  end
+
   should "route new paths to new controller" do
     route = { controller: "api/v1/webauthn_verifications", action: "create" }
 

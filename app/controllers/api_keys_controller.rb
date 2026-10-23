@@ -50,6 +50,7 @@ class ApiKeysController < ApplicationController
     end
 
     if @api_key.save
+      track_api_key_event("api_key.create", @api_key)
       Mailer.api_key_created(@api_key.id).deliver_later
 
       session[:api_key] = key
@@ -70,6 +71,7 @@ class ApiKeysController < ApplicationController
     end
 
     if @api_key.save
+      track_api_key_event("api_key.update", @api_key)
       redirect_to profile_api_keys_path, flash: { notice: t(".success") }
     else
       flash.now[:error] = @api_key.errors.full_messages.to_sentence
@@ -83,6 +85,7 @@ class ApiKeysController < ApplicationController
     if api_key.expired?
       flash[:error] = t(".already_expired")
     elsif api_key.expire!
+      track_api_key_event("api_key.expire", api_key)
       flash[:notice] = t(".success", name: api_key.name)
     else
       flash[:error] = api_key.errors.full_messages.to_sentence
@@ -92,6 +95,7 @@ class ApiKeysController < ApplicationController
 
   def reset
     if current_user.api_keys.expire_all!
+      track_appsec_event("api_key.reset")
       flash[:notice] = t(".success")
     else
       flash[:error] = t("try_again")

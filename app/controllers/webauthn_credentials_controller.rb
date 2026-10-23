@@ -30,6 +30,7 @@ class WebauthnCredentialsController < ApplicationController
   def destroy
     webauthn_credential = current_user.webauthn_credentials.find(params.expect(:id))
     if webauthn_credential.destroy
+      track_appsec_event("mfa.webauthn.remove", "credential.id": webauthn_credential.id.to_s)
       flash[:notice] = t(".webauthn_credential.confirm_delete")
     else
       flash[:error] = webauthn_credential.errors.full_messages.to_sentence

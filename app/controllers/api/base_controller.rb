@@ -53,12 +53,18 @@ class Api::BaseController < ApplicationController
     params_key = request.headers["Authorization"] || ""
     hashed_key = Digest::SHA256.hexdigest(params_key)
     @api_key   = ApiKey.unexpired.find_by_hashed_key(hashed_key)
-    return render_unauthorized unless @api_key
+    unless @api_key
+      track_appsec_event("api_key.authentication.failure", user: nil, reason: params_key.blank? ? "missing" : "invalid_or_expired")
+      return render_unauthorized
+    end
     Current.api_key = @api_key
     set_tags "gemcutter.api_key.owner" => @api_key.owner.to_gid, "gemcutter.user.api_key_id" => @api_key.id
+    identify_appsec_user(actor: @api_key.user)
     return render_forbidden(t(:email_not_confirmed)) if @api_key.user&.unconfirmed?
     Current.user = @api_key.user
-    render_forbidden(t(:api_key_soft_deleted)) if @api_key.soft_deleted?
+    return unless @api_key.soft_deleted?
+    track_appsec_event("api_key.authentication.failure", user: @api_key.user, reason: "revoked", "api_key.id": @api_key.id.to_s)
+    render_forbidden(t(:api_key_soft_deleted))
   end
 
   def pundit_user
