@@ -1,10 +1,6 @@
 # Shoryuken config for processing AWS SQS messages
 # See https://github.com/phstc/shoryuken#configuration
-aws:
-  receive_message:
-    wait_time_seconds: 10
-    attribute_names:
-      - ApproximateReceiveCount
-      - SentTimestamp
-concurrency: 1
-delay: 120
+# Bound database handoffs without serializing production's notification bursts.
+concurrency: <%= ENV["RAILS_ENV"] == "production" ? 5 : 1 %>
+# Long polling already waits for work; resume immediately after an empty poll.
+delay: 0
