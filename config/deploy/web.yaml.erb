@@ -242,7 +242,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: <%= environment %>
-                key: web_database_url
+                key: database_url
         securityContext:
           privileged: false
         lifecycle:
