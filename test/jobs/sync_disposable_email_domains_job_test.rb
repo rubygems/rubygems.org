@@ -5,10 +5,17 @@ require "test_helper"
 class SyncDisposableEmailDomainsJobTest < ActiveJob::TestCase
   include StatsD::Instrument::Assertions
 
+  # Exercise the real size guards with small lists, not half a million domains.
+  def run
+    stub_const(SyncDisposableEmailDomainsJob, :MIN_EXPECTED_DOMAINS, 3) do
+      stub_const(SyncDisposableEmailDomainsJob, :MAX_EXPECTED_DOMAINS, 10) { super }
+    end
+  end
+
   # Build a blocklist that comfortably clears MIN_EXPECTED_DOMAINS so the
   # poisoned-upstream tripwire doesn't fire for the happy-path tests.
-  def realistic_blocklist(extra: [])
-    base = Array.new(SyncDisposableEmailDomainsJob::MIN_EXPECTED_DOMAINS + 50) { |i| "disposable-#{i}.example.test-domain.io" }
+  def realistic_blocklist(extra: [], count: SyncDisposableEmailDomainsJob::MIN_EXPECTED_DOMAINS + 1)
+    base = Array.new(count) { |i| "disposable-#{i}.example.test-domain.io" }
     "#{(base + extra).join("\n")}\n"
   end
 
@@ -19,9 +26,13 @@ class SyncDisposableEmailDomainsJobTest < ActiveJob::TestCase
 
   context "#perform" do
     should "insert upstream domains" do
-      stub_upstream(blocklist: realistic_blocklist(extra: %w[mailinator.com guerrillamail.com]))
-      SyncDisposableEmailDomainsJob.perform_now
+      # Keep coverage across the job's 1,000-row upsert batch boundary.
+      stub_const(SyncDisposableEmailDomainsJob, :MAX_EXPECTED_DOMAINS, 1_002) do
+        stub_upstream(blocklist: realistic_blocklist(count: 1_000, extra: %w[mailinator.com guerrillamail.com]))
+        SyncDisposableEmailDomainsJob.perform_now
+      end
 
+      assert_equal 1_002, BlockedEmailDomain.upstream.count
       assert BlockedEmailDomain.exists?(domain: "mailinator.com", source: BlockedEmailDomain.sources[:upstream])
       assert BlockedEmailDomain.exists?(domain: "guerrillamail.com")
     end
