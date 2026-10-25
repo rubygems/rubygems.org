@@ -88,9 +88,7 @@ class EmailConfirmationTest < ApplicationSystemTestCase
   end
 
   test "requesting confirmation mail with webauthn enabled" do
-    @user.confirm_email!
-    create_webauthn_credential
-    @user.update!(email_confirmed: false)
+    add_webauthn_credential_to_virtual_authenticator(@user)
 
     request_confirmation_mail @user.email
 
@@ -112,9 +110,8 @@ class EmailConfirmationTest < ApplicationSystemTestCase
   end
 
   test "requesting confirmation mail with webauthn enabled using recovery codes" do
-    @user.confirm_email!
-    create_webauthn_credential
-    @user.update!(email_confirmed: false)
+    add_webauthn_credential_to_virtual_authenticator(@user)
+    @mfa_recovery_codes = @user.new_mfa_recovery_codes
 
     request_confirmation_mail @user.email
 

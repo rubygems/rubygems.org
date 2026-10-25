@@ -4,11 +4,17 @@ require "application_system_test_case"
 
 class GemFilterTest < ApplicationSystemTestCase
   setup do
+    @original_per_page = Kaminari.config.default_per_page
+    Kaminari.config.default_per_page = 4
     @user = create(:user)
     @organization = create(:organization, owners: [@user])
     { "aws-sdk-zeta" => 30, "aws-sdk-alpha" => 10, "aws-tools" => 20, "other-sdk" => 40 }.each do |name, downloads|
       create(:version, rubygem: create(:rubygem, name:, downloads:, owners: [@user], organization: @organization))
     end
+  end
+
+  teardown do
+    Kaminari.config.default_per_page = @original_per_page
   end
 
   test "visitors filter gem names, sort matching gems and reset on profiles and organization pages" do
@@ -73,37 +79,37 @@ class GemFilterTest < ApplicationSystemTestCase
   end
 
   test "organization filtering finds off-page gems and carries the filter through pagination and sorting" do
-    gems = create_list(:rubygem, 31, organization: @organization, number: "1.0.0") # rubocop:disable FactoryBot/ExcessiveCreateList
+    gems = create_list(:rubygem, 5, organization: @organization, number: "1.0.0")
     names = gems.map(&:name).sort
 
     [organization_path(@organization), organization_gems_path(@organization)].each do |path|
       visit "#{path}?sort=name&page=2"
       fill_in "Filter by gem name", with: "RubyGem"
 
-      assert_selector "h4", count: 30
-      assert_equal names.first(30), all("h4").map(&:text)
-      assert_selector "[role='status']", text: "Matching gems: 31 of 35"
+      assert_selector "h4", count: 4
+      assert_equal names.first(4), all("h4").map(&:text)
+      assert_selector "[role='status']", text: "Matching gems: 5 of 9"
       assert_no_selector "a[rel='prev']"
       first("nav[aria-label='Pagination'] a[rel='next']").click
 
       assert_selector "h4", count: 1
       assert_equal names.last(1), all("h4").map(&:text)
       assert_field "Filter by gem name", with: "RubyGem"
-      assert_selector "[role='status']", text: "Matching gems: 31 of 35"
+      assert_selector "[role='status']", text: "Matching gems: 5 of 9"
 
       click_button "Sort: Alphabetical"
       click_link "Number of downloads"
 
-      assert_selector "h4", count: 30
+      assert_selector "h4", count: 4
       assert_field "Filter by gem name", with: "RubyGem"
       page.refresh
 
-      assert_selector "h4", count: 30
+      assert_selector "h4", count: 4
       assert_field "Filter by gem name", with: "RubyGem"
       find("button[aria-label='Clear filter']").click
 
-      assert_selector "h4", count: 30
-      assert_selector "[role='status']", text: "35 gems"
+      assert_selector "h4", count: 4
+      assert_selector "[role='status']", text: "9 gems"
       assert_field "Filter by gem name", with: ""
       assert_selector "input[aria-label='Filter by gem name']:focus"
     end

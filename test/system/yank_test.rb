@@ -86,7 +86,7 @@ class YankTest < ApplicationSystemTestCase
     assert_text "1.0.0"
     assert page.has_selector?("a[alt='#{other_api_key.user.handle}']")
     assert_no_text("0.0.0")
-    refute page.has_selector?("a[alt='#{@user.handle}']")
+    assert_no_selector "a[alt='#{@user.handle}']"
   end
 
   teardown do

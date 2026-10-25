@@ -73,8 +73,6 @@ class Avo::BlockedEmailDomainsSystemTest < ApplicationSystemTestCase
 
     # No actions are available on upstream rows, so the Actions button is disabled.
     assert_no_text "Unblock Email Domain"
-    assert_raises(Capybara::ElementNotFound) do
-      find("button:not([disabled])", text: "Actions")
-    end
+    assert_no_selector "button:not([disabled])", text: "Actions"
   end
 end
