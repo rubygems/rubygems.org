@@ -90,10 +90,7 @@ class ElasticSearcher
               end
 
               should do
-                prefix "name.unanalyzed" do
-                  value query_str
-                  boost 7
-                end
+                prefix "name.unanalyzed" => { value: query_str, boost: 7, case_insensitive: true }
               end
 
               minimum_should_match 1
