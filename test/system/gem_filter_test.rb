@@ -86,9 +86,9 @@ class GemFilterTest < ApplicationSystemTestCase
       visit "#{path}?sort=name&page=2"
       fill_in "Filter by gem name", with: "RubyGem"
 
+      assert_selector "[role='status']", text: "Matching gems: 5 of 9"
       assert_selector "h4", count: 4
       assert_equal names.first(4), all("h4").map(&:text)
-      assert_selector "[role='status']", text: "Matching gems: 5 of 9"
       assert_no_selector "a[rel='prev']"
       first("nav[aria-label='Pagination'] a[rel='next']").click
 
