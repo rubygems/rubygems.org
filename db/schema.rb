@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_12_233055) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_25_000003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -767,6 +767,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_12_233055) do
     t.index ["canonical_number", "rubygem_id", "platform"], name: "index_versions_canonical_platform_no_abi", unique: true, where: "(ruby_abi IS NULL)"
     t.index ["created_at"], name: "index_versions_on_created_at"
     t.index ["full_name"], name: "index_versions_on_full_name"
+    t.index ["id"], name: "index_versions_on_id_for_indexed_position_zero", where: "(indexed AND (\"position\" = 0))", include: ["rubygem_id"]
     t.index ["indexed", "yanked_at"], name: "index_versions_on_indexed_and_yanked_at"
     t.index ["number"], name: "index_versions_on_number"
     t.index ["position", "rubygem_id"], name: "index_versions_on_position_and_rubygem_id"
