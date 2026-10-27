@@ -434,6 +434,10 @@ class RubygemsControllerTest < ActionController::TestCase
       assert page.has_content?("A mostly native JRuby wrapper")
       refute page.has_content?("The old ruby release")
     end
+
+    should "label the newest release with its platform" do
+      assert page.has_css?("[data-testid='version-platform']", text: "java")
+    end
   end
 
   context "On GET to show with a gem that has multiple versions" do
@@ -452,6 +456,7 @@ class RubygemsControllerTest < ActionController::TestCase
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@versions[0].number)
       assert page.has_css?("[data-testid='version-date']", text: @versions[0].built_at.to_date.to_fs(:long))
+      refute page.has_css?("[data-testid='version-platform']")
 
       assert page.has_content?("Versions")
       assert page.has_content?(@versions[2].number)
