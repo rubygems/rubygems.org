@@ -7,16 +7,16 @@ ruby file: ".ruby-version"
 gem "rails", "~> 8.1.4"
 gem "rails-i18n", "~> 8.1.0"
 
-gem "aws-sdk-s3", "~> 1.233"
-gem "aws-sdk-sqs", "~> 1.119"
+gem "aws-sdk-s3", "~> 1.234"
+gem "aws-sdk-sqs", "~> 1.120"
 gem "aws_advanced_ruby_driver_wrapper", "~> 1.0.1", require: "aws_advanced_ruby_driver_wrapper/postgresql"
 gem "bootsnap", "~> 1.26"
 gem "clearance", "~> 2.12"
 gem "dalli", "~> 4.3", ">= 4.3.7"
-gem "datadog", "~> 2.44"
+gem "datadog", "~> 2.46"
 gem "dogstatsd-ruby", "~> 5.7"
 gem "google-protobuf", "~> 4.36"
-gem "faraday", "~> 2.14"
+gem "faraday", "~> 2.15"
 gem "faraday-retry", "~> 2.4"
 gem "faraday-restrict-ip-addresses", "~> 0.3.0", require: "faraday/restrict_ip_addresses"
 gem "flipper", "~> 1.4"
@@ -26,7 +26,7 @@ gem "good_job", "~> 3.99"
 gem "gravtastic", "~> 3.2"
 gem "honeybadger", "~> 6.9.3", require: false
 gem "http_accept_language", "~> 2.1"
-gem "kaminari", "~> 1.2"
+gem "kaminari", "~> 1.3"
 gem "mail", "~> 2.9"
 gem "octokit", "~> 10.0"
 gem "omniauth-github", "~> 2.0"
@@ -75,7 +75,7 @@ gem "yaml-schema", "~> 1.2"
 # Admin dashboard
 gem "avo", "~> 3.33"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 4.15.0"
+gem "view_component", "~> 4.16.0"
 gem "pundit", "~> 2.5"
 gem "chartkick", "~> 5.2"
 gem "groupdate", "~> 6.8"
@@ -83,7 +83,7 @@ gem "prop_initializer", "~> 0.4"
 
 group :avo, optional: true do
   source "https://packager.dev/avo-hq/" do
-    gem "avo-advanced", "~> 3.32"
+    gem "avo-advanced", "~> 3.33"
   end
 end
 
@@ -130,7 +130,7 @@ group :development, :test do
   gem "rubocop-rails", "~> 2.38", require: false
   gem "rubocop-performance", "~> 1.27", require: false
   gem "rubocop-minitest", "~> 0.41", require: false
-  gem "rubocop-capybara", "~> 3.0", require: false
+  gem "rubocop-capybara", "~> 3.1", require: false
   gem "rubocop-factory_bot", "~> 2.28", require: false
 end
 
@@ -153,7 +153,7 @@ group :test do
   gem "shoulda-context", "~> 3.0.0.rc1"
   gem "shoulda-matchers", "~> 8.0"
   gem "capybara-playwright-driver", "~> 0.5"
-  gem "webmock", "~> 3.30"
+  gem "webmock", "~> 3.34"
   gem "simplecov", "~> 1.3", require: false
   gem "simplecov-cobertura", "~> 4.0", require: false
   gem "aggregate_assertions", "~> 0.3.0"
