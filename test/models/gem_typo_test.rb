@@ -121,8 +121,17 @@ class GemTypoTest < ActiveSupport::TestCase
 
     should "return false when most recent release was more than GemTypo::LAST_RELEASE_TIME ago" do
       create(:version, rubygem: @existing, created_at: 6.years.ago)
+      @existing.versions.update_all(created_at: 6.years.ago)
 
       refute_predicate @gem_typo, :protected_typo?
+    end
+
+    should "return true when a recent release has a lower number than an old release for another platform" do
+      @existing.versions.update_all(created_at: 6.years.ago)
+      create(:version, rubygem: @existing, number: "9.0.0", platform: "java", created_at: 6.years.ago)
+      create(:version, rubygem: @existing, number: "8.0.0", created_at: 1.day.ago)
+
+      assert_predicate @gem_typo, :protected_typo?
     end
 
     should "return true when most recent release was less than GemTypo::LAST_RELEASE_TIME ago" do
