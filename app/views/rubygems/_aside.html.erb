@@ -4,6 +4,9 @@
     <h1 class="text-h3 font-semibold break-words text-neutral-900 dark:text-white"><%= @rubygem.name %></h1>
     <div class="flex flex-wrap items-center gap-2 mt-1">
       <%= version_number(@latest_version) %>
+      <% if @latest_version.platformed? %>
+        <span data-testid="version-platform" class="text-b3 text-neutral-700 dark:text-neutral-400"><%= @latest_version.platform %></span>
+      <% end %>
       <%= version_date_component(@latest_version) %>
     </div>
   </div>
