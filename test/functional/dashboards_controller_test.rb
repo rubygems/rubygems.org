@@ -3,6 +3,52 @@
 require "test_helper"
 
 class DashboardsControllerTest < ActionController::TestCase
+  context "AppSec API key tracking" do
+    setup do
+      @api_key = create(:api_key, key: "dashboard-key", scopes: [:show_dashboard])
+      version = create(:version)
+      create(:subscription, rubygem: version.rubygem, user: @api_key.user)
+    end
+
+    should "identify the user from an Authorization header" do
+      @request.env["HTTP_AUTHORIZATION"] = "dashboard-key"
+      assert_appsec_user(@api_key.user) { get :show, format: :atom }
+      assert_response :success
+      assert_select "entry", count: 1
+    end
+
+    %w[invalid expired].each do |kind|
+      should "track an #{kind} key without exposing the feed" do
+        @api_key.update_column(:expires_at, 1.minute.ago) if kind == "expired"
+        key = kind == "invalid" ? "unknown-key" : "dashboard-key"
+        assert_no_changes -> { @api_key.reload.attributes } do
+          assert_appsec_event("api_key.authentication.failure", metadata: { reason: "invalid_or_expired" }) do
+            get :show, params: { api_key: key }, format: :atom
+          end
+        end
+        assert_redirected_to sign_in_path
+        assert_select "entry", count: 0
+      end
+    end
+
+    should "track a revoked key without exposing the feed" do
+      @api_key.soft_delete!
+      @request.env["HTTP_AUTHORIZATION"] = "dashboard-key"
+      assert_no_changes -> { @api_key.reload.attributes } do
+        assert_appsec_event("api_key.authentication.failure", user: @api_key.user, metadata: { reason: "revoked", "api_key.id": @api_key.id }) do
+          get :show, format: :atom
+        end
+      end
+      assert_response :forbidden
+      assert_select "entry", count: 0
+    end
+
+    should "not track an ordinary signed-out visit as a bad API key" do
+      refute_appsec_event("api_key.authentication.failure") { get :show }
+      assert_redirected_to sign_in_path
+    end
+  end
+
   context "When not logged in" do
     context "with show dashboard api key scope" do
       setup do
@@ -10,7 +56,7 @@ class DashboardsControllerTest < ActionController::TestCase
         @subscribed_version = create(:version, created_at: 1.hour.ago)
         create(:subscription, rubygem: @subscribed_version.rubygem, user: api_key.user)
 
-        get :show, params: { api_key: "12345" }, format: "atom"
+        assert_appsec_user(api_key.user) { get :show, params: { api_key: "12345" }, format: "atom" }
       end
 
       context "On GET to show as an atom feed with a working api_key" do

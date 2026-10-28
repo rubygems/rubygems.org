@@ -10,23 +10,30 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
 
     %i[create update].each do |action|
       should "track #{action} password failures without changing keys or sending mail" do
+        key = create(:api_key, owner: @user, key: "test-key", scopes: [:push_rubygem])
+        params = { index_rubygems: "true", mfa: "true" }
+        params[action == :create ? :name : :api_key] = "test-key"
         authorize_with("#{@user.email}:wrong-password")
-        assert_no_difference [-> { ApiKey.count }, -> { ActionMailer::Base.deliveries.count }, -> { GoodJob::Job.count }] do
-          assert_appsec_event("users.login.failure", user: @user, metadata: { "authentication_method" => "password" }) do
-            process action, method: action == :create ? :post : :put
+        assert_no_changes -> { [key.reload.attributes, ApiKey.count, ActionMailer::Base.deliveries.count, enqueued_jobs.size] } do
+          span = assert_appsec_event("users.login.failure", user: @user, metadata: { "authentication_method" => "password" }) do
+            process action, method: action == :create ? :post : :put, params:
           end
+          refute_appsec_event("users.login.success", span:)
+          refute_appsec_event("api_key.#{action}", span:)
         end
         assert_response :unauthorized
-        assert_empty @user.reload.api_keys
       end
 
       should "track #{action} OTP failures after a valid password" do
+        key = create(:api_key, owner: @user, key: "test-key", scopes: [:push_rubygem])
+        params = { index_rubygems: "true", mfa: "true" }
+        params[action == :create ? :name : :api_key] = "test-key"
         @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
         authorize_with("#{@user.email}:#{@user.password}")
         @request.env["HTTP_OTP"] = "invalid"
-        assert_no_difference -> { ApiKey.count } do
+        assert_no_changes -> { [key.reload.attributes, ApiKey.count, ActionMailer::Base.deliveries.count, enqueued_jobs.size] } do
           span = assert_appsec_event("users.login.failure", user: @user, metadata: { "reason" => "invalid_otp" }) do
-            process action, method: action == :create ? :post : :put
+            process action, method: action == :create ? :post : :put, params:
           end
           refute_appsec_event("users.login.success", span:)
           refute_appsec_event("api_key.#{action}", span:)

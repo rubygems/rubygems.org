@@ -41,6 +41,10 @@ class Api::V1::WebauthnVerificationsController < Api::BaseController
     hashed_key = Digest::SHA256.hexdigest(params_key)
     api_key = ApiKey.unexpired.find_by_hashed_key(hashed_key)
 
+    if api_key.nil? && params_key.present? && !ActionController::HttpAuthentication::Basic.has_basic_credentials?(request)
+      track_appsec_event("api_key.authentication.failure", user: nil, reason: "invalid_or_expired")
+    end
+
     @user = authenticated_user(api_key)
   end
 
