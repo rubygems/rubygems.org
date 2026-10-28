@@ -11,7 +11,8 @@ class WebauthnVerificationsController < ApplicationController
   before_action :check_show_verification_status, only: %i[successful_verification failed_verification]
 
   def prompt
-    redirect_to root_path, alert: t(".no_port") unless (port = params[:port])
+    port = params[:port]
+    redirect_to root_path, alert: t(".no_port") unless port
     redirect_to root_path, alert: t(".no_webauthn_devices") if @user.webauthn_credentials.blank?
 
     setup_webauthn_authentication(form_url: authenticate_webauthn_verification_path, session_options: { "port" => port })
@@ -25,7 +26,10 @@ class WebauthnVerificationsController < ApplicationController
       return
     end
 
-    return render plain: @webauthn_error, status: :unauthorized unless webauthn_credential_verified?
+    unless webauthn_credential_verified?
+      track_appsec_login_failure(actor: @user, authentication_method: "webauthn", reason: "invalid_webauthn")
+      return render plain: @webauthn_error, status: :unauthorized
+    end
 
     @verification.generate_otp
     @verification.expire_path_token
@@ -65,6 +69,7 @@ class WebauthnVerificationsController < ApplicationController
   end
 
   def render_expired
+    track_appsec_login_failure(actor: @verification.user, authentication_method: "webauthn", reason: "mfa_session_expired")
     respond_to do |format|
       format.html { redirect_to root_path, alert: t("webauthn_verifications.expired_or_already_used") }
       format.text { render plain: t("webauthn_verifications.expired_or_already_used"), status: :unauthorized }

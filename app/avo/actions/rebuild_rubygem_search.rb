@@ -31,7 +31,8 @@ class Avo::Actions::RebuildRubygemSearch < Avo::Actions::ApplicationAction
     def handle_standalone
       # Serialize the enqueue check and insert across simultaneous Avo requests.
       ApplicationRecord.advisory_xact_lock!(RebuildRubygemSearchJob.name, 0)
-      if (job = RebuildRubygemSearchJob.perform_later)
+      job = RebuildRubygemSearchJob.perform_later
+      if job
         succeed("Search rebuild #{job.job_id} queued on maintenance. Monitor /admin/good_job before resuming writers.")
       else
         error "Search rebuild was not queued. Another rebuild may already be queued or running."

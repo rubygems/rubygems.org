@@ -5,6 +5,111 @@ require "test_helper"
 class Api::V1::ApiKeysControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
 
+  context "AppSec tracking" do
+    setup { @user = create(:user) }
+
+    %i[create update].each do |action|
+      should "track #{action} password failures without changing keys or sending mail" do
+        key = create(:api_key, owner: @user, key: "test-key", scopes: [:push_rubygem])
+        params = { index_rubygems: "true", mfa: "true" }
+        params[action == :create ? :name : :api_key] = "test-key"
+        authorize_with("#{@user.email}:wrong-password")
+        assert_no_changes -> { [key.reload.attributes, ApiKey.count, ActionMailer::Base.deliveries.count, enqueued_jobs.size] } do
+          span = assert_appsec_event("users.login.failure", user: @user, metadata: { "authentication_method" => "password" }) do
+            process action, method: action == :create ? :post : :put, params:
+          end
+          refute_appsec_event("users.login.success", span:)
+          refute_appsec_event("api_key.#{action}", span:)
+        end
+        assert_response :unauthorized
+      end
+
+      should "track #{action} OTP failures after a valid password" do
+        key = create(:api_key, owner: @user, key: "test-key", scopes: [:push_rubygem])
+        params = { index_rubygems: "true", mfa: "true" }
+        params[action == :create ? :name : :api_key] = "test-key"
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+        authorize_with("#{@user.email}:#{@user.password}")
+        @request.env["HTTP_OTP"] = "invalid"
+        assert_no_changes -> { [key.reload.attributes, ApiKey.count, ActionMailer::Base.deliveries.count, enqueued_jobs.size] } do
+          span = assert_appsec_event("users.login.failure", user: @user, metadata: { "reason" => "invalid_otp" }) do
+            process action, method: action == :create ? :post : :put, params:
+          end
+          refute_appsec_event("users.login.success", span:)
+          refute_appsec_event("api_key.#{action}", span:)
+        end
+        assert_response :unauthorized
+      end
+    end
+
+    should "track an unknown password login" do
+      authorize_with("unknown:wrong-password")
+      assert_appsec_event("users.login.failure", login: "unknown") { post :create }
+      assert_response :unauthorized
+    end
+
+    should "track a non-UTF-8 password login without changing keys or sending mail" do
+      login = "\xFF".b
+      key = create(:api_key, owner: @user, scopes: [:push_rubygem])
+      authorize_with("#{login}:wrong-password")
+
+      assert_no_changes -> { [key.reload.attributes, ApiKey.count, ActionMailer::Base.deliveries.count, enqueued_jobs.size] } do
+        span = assert_appsec_event("users.login.failure", login:, metadata: { "authentication_method" => "password" }) do
+          post :create, params: { name: "test", index_rubygems: "true" }
+        end
+        refute_appsec_event("users.login.success", span:)
+        refute_appsec_event("api_key.create", span:)
+      end
+      assert_response :unauthorized
+    end
+
+    should "track a completed password login and key creation" do
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+      authorize_with("#{@user.email}:#{@user.password}")
+      @request.env["HTTP_OTP"] = ROTP::TOTP.new(@user.totp_seed).now
+      span = assert_appsec_event("users.login.success", user: @user) do
+        post :create, params: { name: "test", index_rubygems: "true" }
+      end
+      assert_appsec_event("api_key.create", user: @user, metadata: { "api_key.scopes" => "index_rubygems", "api_key.mfa" => "false" }, span:)
+      assert_response :success
+      assert_equal [:index_rubygems], @user.api_keys.sole.scopes
+    end
+
+    should "track a completed password login and scope update" do
+      key = create(:api_key, owner: @user, key: "test-key", scopes: [:push_rubygem])
+      authorize_with("#{@user.email}:#{@user.password}")
+      span = assert_appsec_event("users.login.success", user: @user) do
+        put :update, params: { api_key: "test-key", index_rubygems: "true" }
+      end
+      assert_appsec_event("api_key.update", user: @user, span:,
+        metadata: { "api_key.id" => key.id, "api_key.scopes" => "index_rubygems,push_rubygem" })
+      assert_response :success
+      assert_equal %i[index_rubygems push_rubygem], key.reload.scopes.sort
+    end
+
+    should "not track key creation when validation fails" do
+      authorize_with("#{@user.email}:#{@user.password}")
+      assert_no_difference -> { ApiKey.count } do
+        refute_appsec_event("api_key.create") { post :create, params: { name: "test" } }
+      end
+      assert_response :unprocessable_content
+    end
+
+    should "not track login success or key creation for an unconfirmed account" do
+      @user.update!(email_confirmed: false)
+      authorize_with("#{@user.email}:#{@user.password}")
+      assert_no_difference -> { ApiKey.count } do
+        span = with_appsec_trace do
+          post :create, params: { name: "test", index_rubygems: "true" }
+        end
+
+        refute_appsec_event("users.login.success", span:)
+        refute_appsec_event("api_key.create", span:)
+      end
+      assert_response :forbidden
+    end
+  end
+
   should "route new paths to new controller" do
     route = { controller: "api/v1/api_keys", action: "show" }
 

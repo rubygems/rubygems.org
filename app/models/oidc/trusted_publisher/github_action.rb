@@ -46,7 +46,8 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
              base.where(workflow_repository_owner: workflow_repo_owner, workflow_repository_name: workflow_repo_name)
            end
 
-    if (env = claims[:environment])
+    env = claims[:environment]
+    if env
       base.where(environment: env).or(base.where(environment: nil)).order(environment: :asc) # NULLS LAST by default for asc
     else
       base.where(environment: nil)
@@ -208,7 +209,8 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
   def job_workflow_refs(jwt)
     if workflow_repository_owner.present?
       refs = []
-      if (jwf_ref = jwt[:job_workflow_ref])
+      jwf_ref = jwt[:job_workflow_ref]
+      if jwf_ref
         expected_prefix = "#{workflow_repository}/#{workflow_slug}@"
         unless jwf_ref.start_with?(expected_prefix)
           raise OIDC::AccessPolicy::AccessError,

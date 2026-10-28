@@ -47,7 +47,8 @@ class LinkVerification < ApplicationRecord
   end
 
   def verified?
-    return false unless (verified_at = last_verified_at.presence)
+    verified_at = last_verified_at.presence
+    return false unless verified_at
 
     verified_at > VALIDITY.ago
   end

@@ -30,7 +30,8 @@ namespace :importmap do
       vendor_path: vendor_pathname.relative_path_from(Rails.root)
     )
 
-    if (imports = packager.import(*packages, **options))
+    imports = packager.import(*packages, **options)
+    if imports
       actual_imports = imports.is_a?(Hash) && imports.key?(:imports) ? imports[:imports] : imports
       actual_imports.each do |package, url|
         package_name = package.to_s
@@ -71,7 +72,8 @@ namespace :importmap do
 
     packager = ImportmapHelper::Packager.new
 
-    if (imports = packager.import(*packages, env: options[:env], from: options[:from]))
+    imports = packager.import(*packages, env: options[:env], from: options[:from])
+    if imports
       imports.each do |package, url|
         puts %(Downloading pinned "#{package}" to #{packager.vendor_path}/#{package}.js from #{url})
         packager.download(package, url)

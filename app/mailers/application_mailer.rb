@@ -13,7 +13,8 @@ class ApplicationMailer < ActionMailer::Base
 
   def record_delivery
     message.to_addrs&.each do |address|
-      next unless (user = User.find_by_email(address))
+      user = User.find_by_email(address)
+      next unless user
 
       user.record_event!(Events::UserEvent::EMAIL_SENT,
         to: address,

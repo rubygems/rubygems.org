@@ -47,14 +47,18 @@ class Api::V1::GitHubSecretScanningController < Api::BaseController
   private
 
   def find_secret_scanning_key
-    if (key_id = request.headers.fetch("GITHUB-PUBLIC-KEY-IDENTIFIER", "").presence) &&
-        (@signature = request.headers.fetch("GITHUB-PUBLIC-KEY-SIGNATURE", "").presence)
+    key_id = request.headers.fetch("GITHUB-PUBLIC-KEY-IDENTIFIER", "").presence
+    @signature = request.headers.fetch("GITHUB-PUBLIC-KEY-SIGNATURE", "").presence if key_id
+    if key_id && @signature
       @key = GitHubSecretScanning.new(key_id)
-    elsif (key_id = request.headers.fetch("DepsDev-Public-Key-Identifier", "").presence) &&
-        (@signature = request.headers.fetch("DepsDev-Public-Key-Signature", "").presence)
-      @key = GitHubSecretScanning::DepsDev.new(key_id)
     else
-      render plain: "Missing GitHub Signature", status: :unauthorized
+      key_id = request.headers.fetch("DepsDev-Public-Key-Identifier", "").presence
+      @signature = request.headers.fetch("DepsDev-Public-Key-Signature", "").presence if key_id
+      if key_id && @signature
+        @key = GitHubSecretScanning::DepsDev.new(key_id)
+      else
+        render plain: "Missing GitHub Signature", status: :unauthorized
+      end
     end
   end
 

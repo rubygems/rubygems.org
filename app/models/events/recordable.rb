@@ -7,7 +7,8 @@ module Events::Recordable
     ip_address = request&.ip_address
     geoip_info = ip_address&.geoip_info
 
-    if (user_agent = request&.user_agent.presence)
+    user_agent = request&.user_agent.presence
+    if user_agent
       begin
         user_agent_info = Gemcutter::UserAgentParser.call(user_agent)
         additional[:user_agent_info] = user_agent_info

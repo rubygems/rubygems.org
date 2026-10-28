@@ -39,7 +39,8 @@ module GitHubOAuthable
     end
 
     def find_admin_user
-      return unless (cookie = cookies.encrypted[admin_cookie_name].presence)
+      cookie = cookies.encrypted[admin_cookie_name].presence
+      return unless cookie
       Admin::GitHubUser.admins.find_by(id: cookie)
     end
 
@@ -93,9 +94,8 @@ module GitHubOAuthable
         "/graphql",
         { query: INFO_QUERY, variables: { organization_name: "rubygems" } }.to_json
       )
-      if (errors = graphql.errors.presence)
-        logger.warn("GitHub graphql errors", errors:)
-      end
+      errors = graphql.errors.presence
+      logger.warn("GitHub graphql errors", errors:) if errors
       graphql.data.to_h.deep_symbolize_keys
     end
 

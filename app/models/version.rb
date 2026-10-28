@@ -314,7 +314,8 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   end
 
   def signature_expired?
-    return false unless (expiration_time = cert_chain_valid_not_after)
+    expiration_time = cert_chain_valid_not_after
+    return false unless expiration_time
     expiration_time < Time.now.utc
   end
 
