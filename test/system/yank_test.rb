@@ -42,7 +42,7 @@ class YankTest < ApplicationSystemTestCase
     click_link "2.2.2"
 
     assert_text "This version has been yanked"
-    assert page.has_css? 'meta[name="robots"][content="noindex"]', visible: false
+    assert page.has_css? 'meta[name="robots"][content="noindex"]', visible: :all
 
     assert_text("Yanked by")
 

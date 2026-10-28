@@ -74,11 +74,11 @@ class SearchTest < ApplicationSystemTestCase
 
       visit "/search?query=ruby"
 
-      assert_text "DISPLAYING GEM 1 - 1 OF 3 IN TOTAL"
+      assert_text "DISPLAYING GEM 1–1 OF 3 IN TOTAL"
 
       find(".last-page-button").click
 
-      assert_text "DISPLAYING GEM 2 - 2 OF 3 IN TOTAL"
+      assert_text "DISPLAYING GEM 2–2 OF 3 IN TOTAL"
 
       Gemcutter::SEARCH_MAX_PAGES = orignal_val
       Kaminari.configure { |c| c.default_per_page = 30 }

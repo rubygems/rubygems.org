@@ -123,12 +123,12 @@ class NavigationTest < ApplicationSystemTestCase
     use_device_profile :mobile
     visit stats_path
 
-    assert_no_selector "[data-reveal-search-target='item']", visible: true
+    assert_no_selector "[data-reveal-search-target='item']", visible: :visible
     assert_selector "button[aria-label='Open search'][aria-expanded='false']"
 
     find("body").send_keys("/")
 
-    assert_selector "[data-reveal-search-target='item']", visible: true
+    assert_selector "[data-reveal-search-target='item']", visible: :visible
     assert_selector "#query:focus"
     assert_selector "button[aria-label='Open search'][aria-expanded='true']"
     assert_no_selector "dialog[open]"
@@ -136,7 +136,7 @@ class NavigationTest < ApplicationSystemTestCase
 
     find("button[aria-label='Open search']").click
 
-    assert_no_selector "[data-reveal-search-target='item']", visible: true
+    assert_no_selector "[data-reveal-search-target='item']", visible: :visible
     assert_selector "button[aria-label='Open search'][aria-expanded='false']"
   end
 
@@ -147,12 +147,12 @@ class NavigationTest < ApplicationSystemTestCase
     find("button[aria-label='Open menu']").click
 
     assert_selector "dialog[open]"
-    assert_no_selector "[data-reveal-search-target='item']", visible: true
+    assert_no_selector "[data-reveal-search-target='item']", visible: :visible
 
     find("body").send_keys("/")
 
     assert_selector "dialog[open]"
-    assert_no_selector "[data-reveal-search-target='item']", visible: true
+    assert_no_selector "[data-reveal-search-target='item']", visible: :visible
     assert_no_selector "#query:focus"
     assert_selector "button[aria-label='Open menu'][aria-expanded='true']"
   end
