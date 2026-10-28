@@ -48,6 +48,21 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       assert_response :unauthorized
     end
 
+    should "track a non-UTF-8 password login without changing keys or sending mail" do
+      login = "\xFF".b
+      key = create(:api_key, owner: @user, scopes: [:push_rubygem])
+      authorize_with("#{login}:wrong-password")
+
+      assert_no_changes -> { [key.reload.attributes, ApiKey.count, ActionMailer::Base.deliveries.count, enqueued_jobs.size] } do
+        span = assert_appsec_event("users.login.failure", login:, metadata: { "authentication_method" => "password" }) do
+          post :create, params: { name: "test", index_rubygems: "true" }
+        end
+        refute_appsec_event("users.login.success", span:)
+        refute_appsec_event("api_key.create", span:)
+      end
+      assert_response :unauthorized
+    end
+
     should "track a completed password login and key creation" do
       @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
       authorize_with("#{@user.email}:#{@user.password}")

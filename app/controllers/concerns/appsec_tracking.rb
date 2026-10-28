@@ -18,6 +18,7 @@ module AppsecTracking
 
   def track_appsec_login_failure(actor:, login: nil, **metadata)
     actor ||= begin
+      login = login.encode(Encoding::UTF_8) if login.present?
       User.find_by_email(login) || User.find_by(handle: login) if login.present?
     rescue Encoding::UndefinedConversionError
       nil
