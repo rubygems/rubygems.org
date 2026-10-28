@@ -625,6 +625,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
     t.index ["user_id", "rubygem_id"], name: "index_ownerships_on_user_id_and_rubygem_id", unique: true
   end
 
+  create_table "prefix_reservations", force: :cascade do |t|
+    t.string "prefix", null: false
+    t.bigint "organization_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_prefix_reservations_on_organization_id"
+    t.index ["prefix"], name: "index_prefix_reservations_on_prefix", unique: true
+  end
+
   create_table "rubygem_transfers", force: :cascade do |t|
     t.datetime "completed_at"
     t.datetime "created_at", null: false
@@ -852,6 +861,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
   add_foreign_key "ownership_requests", "users", column: "approver_id", name: "ownership_requests_approver_id_fk"
   add_foreign_key "ownership_requests", "users", name: "ownership_requests_user_id_fk"
   add_foreign_key "ownerships", "users", on_delete: :cascade
+  add_foreign_key "prefix_reservations", "organizations"
   add_foreign_key "rubygem_transfers", "organizations"
   add_foreign_key "rubygem_transfers", "users", column: "created_by_id"
   add_foreign_key "rubygems", "organizations", on_delete: :nullify

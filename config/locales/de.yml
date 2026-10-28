@@ -169,6 +169,7 @@ de:
             rubygem_name:
               unavailable: wird bereits verwendet
               reserved:
+              reserved_prefix:
     models:
       user: Benutzer
       api_key:
