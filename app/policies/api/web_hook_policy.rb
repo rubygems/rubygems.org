@@ -7,15 +7,17 @@ class Api::WebHookPolicy < Api::ApplicationPolicy
   delegate :rubygem, to: :record
 
   def index?
-    can_access_webhooks?
+    account_wide_api_key_scope?(:access_webhooks)
   end
 
   def create?
     can_access_webhooks?(rubygem)
   end
 
+  # Firing sends a test request and leaves no account state behind, so unlike the
+  # other actions a key restricted to a gem is still allowed to do it.
   def fire?
-    can_access_webhooks?(rubygem)
+    api_key_scope?(:access_webhooks, rubygem)
   end
 
   def remove?
@@ -24,7 +26,8 @@ class Api::WebHookPolicy < Api::ApplicationPolicy
 
   private
 
-  def can_access_webhooks?(rubygem = nil)
+  def can_access_webhooks?(rubygem)
+    return account_wide_api_key_scope?(:access_webhooks) if rubygem.nil?
     api_key_scope?(:access_webhooks, rubygem)
   end
 end

@@ -35,6 +35,19 @@ module ApiPolicyHelpers
       end
     end
 
+    def should_require_account_wide_scope(scope, action)
+      context "requires #{scope} not restricted to a gem" do
+        should "deny ApiKey with scope but restricted to a gem" do
+          # a gem restriction is only valid on a key that also has a gem-applicable scope
+          refute_authorized key_with_scope([scope, :push_rubygem], rubygem: @rubygem), action
+        end
+
+        should "allow ApiKey with scope and no gem restriction" do
+          assert_authorized key_with_scope(scope), action
+        end
+      end
+    end
+
     def should_require_user_key(scope, action)
       context "requires ApiKey owned by a user" do
         should "deny ApiKey not owned by a user" do

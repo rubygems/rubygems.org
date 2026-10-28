@@ -55,6 +55,14 @@ class Api::ApplicationPolicy
     api_key.scope?(scope, rubygem) || deny(t(:api_key_insufficient_scope))
   end
 
+  # ApiKey#scope? only enforces a key's gem restriction when it is handed a gem, so
+  # an account-wide action, having no gem to pass, must refuse a gem-scoped key here
+  # before scope? accepts it and marks the key as used.
+  def account_wide_api_key_scope?(scope)
+    return deny(t(:api_key_insufficient_scope)) if api_key.rubygem_id
+    api_key_scope?(scope)
+  end
+
   def mfa_requirement_satisfied?(rubygem = nil)
     if rubygem && !rubygem.mfa_requirement_satisfied_for?(user)
       deny t("multifactor_auths.api.mfa_required")

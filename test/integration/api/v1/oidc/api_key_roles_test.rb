@@ -5,12 +5,56 @@ require "test_helper"
 class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
   make_my_diffs_pretty!
 
+  def self.should_forbid_keys_without_account_wide_scope(&request)
+    should "forbid an api key with only the index_rubygems scope" do
+      forbidden_key = create(:api_key, owner: @user, key: "forbidden", scopes: %w[index_rubygems])
+
+      assert_forbidden_without_leaking(forbidden_key, &request)
+    end
+
+    should "forbid an api key with only the show_dashboard scope" do
+      forbidden_key = create(:api_key, owner: @user, key: "forbidden", scopes: %w[show_dashboard])
+
+      assert_forbidden_without_leaking(forbidden_key, &request)
+    end
+
+    should "forbid an api key with only the configure_trusted_publishers scope" do
+      forbidden_key = create(:api_key, owner: @user, key: "forbidden", scopes: %w[configure_trusted_publishers])
+
+      assert_forbidden_without_leaking(forbidden_key, &request)
+    end
+
+    should "forbid an access_oidc_api_key_roles api key restricted to a gem" do
+      rubygem = create(:rubygem, owners: [@user])
+      forbidden_key = create(:api_key, owner: @user, key: "forbidden",
+                             scopes: %w[access_oidc_api_key_roles push_rubygem], rubygem:)
+
+      assert_forbidden_without_leaking(forbidden_key, &request)
+    end
+  end
+
+  def assert_forbidden_without_leaking(forbidden_key, &request)
+    instance_exec("forbidden", &request)
+
+    assert_response :forbidden
+    assert_equal({ "error" => I18n.t(:api_key_insufficient_scope) }, response.parsed_body)
+    refute_includes response.body, @role.token
+    refute_includes response.body, @role.name
+    assert_nil forbidden_key.reload.last_accessed_at, "a refused key must not be marked as used"
+  end
+
   context "on GET to index" do
     setup do
       @role = create(:oidc_api_key_role)
       @user = @role.user
       @user_api_key = "12323"
-      @api_key = create(:api_key, owner: @user, key: @user_api_key)
+      @api_key = create(:api_key, owner: @user, key: @user_api_key, scopes: %w[access_oidc_api_key_roles])
+    end
+
+    should_forbid_keys_without_account_wide_scope do |raw_key|
+      get api_v1_oidc_api_key_roles_path,
+              params: {},
+              headers: { "HTTP_AUTHORIZATION" => raw_key }
     end
 
     should "return the user's roles" do
@@ -49,7 +93,23 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
       @role = create(:oidc_api_key_role)
       @user = @role.user
       @user_api_key = "12323"
-      @api_key = create(:api_key, owner: @user, key: @user_api_key)
+      @api_key = create(:api_key, owner: @user, key: @user_api_key, scopes: %w[access_oidc_api_key_roles])
+    end
+
+    should_forbid_keys_without_account_wide_scope do |raw_key|
+      get api_v1_oidc_api_key_role_path(@role.token),
+              params: {},
+              headers: { "HTTP_AUTHORIZATION" => raw_key }
+    end
+
+    should "forbid before resolving the token, so a refused key cannot probe for one" do
+      create(:api_key, owner: @user, key: "forbidden", scopes: %w[index_rubygems])
+
+      get api_v1_oidc_api_key_role_path("rg_oidc_akr_00000000000000000000"),
+              params: {},
+              headers: { "HTTP_AUTHORIZATION" => "forbidden" }
+
+      assert_response :forbidden
     end
 
     should "return the user's roles" do

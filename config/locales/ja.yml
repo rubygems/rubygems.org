@@ -213,6 +213,7 @@ ja:
       access_webhooks: webhookにアクセスする
       show_dashboard: ダッシュボードを表示
       configure_trusted_publishers: 信頼できる発行元を構成
+      access_oidc_api_key_roles:
       reset: リセット
       save_key: キーを二度と表示できなくなるためご注意ください。新しいAPIキー：
       mfa: MFA

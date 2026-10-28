@@ -375,4 +375,47 @@ class Api::V1::WebHooksControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "with a webhook actions api key restricted to a gem" do
+    setup do
+      @url = "http://example.org"
+      @user = create(:user)
+      @rubygem = create(:rubygem, owners: [@user])
+      create(:api_key, owner: @user, key: "12343", scopes: %i[access_webhooks push_rubygem], rubygem: @rubygem)
+      @global_hook = create(:global_web_hook, user: @user, url: @url)
+      @other_hook = create(:web_hook, user: @user, rubygem: create(:rubygem, owners: [@user]), url: "http://example.net")
+
+      @request.env["HTTP_AUTHORIZATION"] = "12343"
+    end
+
+    should "forbid listing the account's hooks, without leaking them" do
+      get :index
+
+      assert_response :forbidden
+      refute_includes @response.body, @url
+      refute_includes @response.body, @other_hook.url
+    end
+
+    should "forbid creating a global hook" do
+      assert_no_difference "WebHook.count" do
+        post :create, params: { gem_name: WebHook::GLOBAL_PATTERN, url: "http://example.com/new" }
+      end
+
+      assert_response :forbidden
+    end
+
+    should "forbid removing a global hook" do
+      delete :remove, params: { gem_name: WebHook::GLOBAL_PATTERN, url: @url }
+
+      assert_response :forbidden
+      assert_predicate @global_hook.reload, :persisted?
+    end
+
+    should "allow creating a hook for the gem it is restricted to" do
+      post :create, params: { gem_name: @rubygem.name, url: "http://example.com/gem" }
+
+      assert_response :created
+      assert_equal @rubygem, WebHook.last.rubygem
+    end
+  end
 end

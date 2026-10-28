@@ -213,6 +213,7 @@ zh-CN:
       access_webhooks: 访问后 (Access) Webhook
       show_dashboard: 显示仪表盘
       configure_trusted_publishers:
+      access_oidc_api_key_roles:
       reset: 重置
       save_key: 请注意在此之后我们不会再次向您显示该密钥，新的 API 密钥为：
       mfa: 多因素验证（MFA）

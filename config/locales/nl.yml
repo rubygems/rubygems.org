@@ -212,6 +212,7 @@ nl:
       access_webhooks:
       show_dashboard:
       configure_trusted_publishers:
+      access_oidc_api_key_roles:
       reset:
       save_key:
       mfa:

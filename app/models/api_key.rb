@@ -4,7 +4,7 @@ class ApiKey < ApplicationRecord
   class ScopeError < RuntimeError; end
 
   API_SCOPES = %i[show_dashboard index_rubygems push_rubygem yank_rubygem add_owner update_owner remove_owner access_webhooks
-                  configure_trusted_publishers].freeze
+                  configure_trusted_publishers access_oidc_api_key_roles].freeze
   APPLICABLE_GEM_API_SCOPES = %i[push_rubygem yank_rubygem add_owner update_owner remove_owner configure_trusted_publishers].freeze
   EXCLUSIVE_SCOPES = %i[show_dashboard].freeze
   LEGACY_KEY_NAME = "legacy-key"

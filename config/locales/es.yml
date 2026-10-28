@@ -222,6 +222,7 @@ es:
       access_webhooks: Acceso a webhooks
       show_dashboard: Mostrar dashboard
       configure_trusted_publishers:
+      access_oidc_api_key_roles:
       reset: Restablecer
       save_key: 'Ten en cuenta que no se volverá a mostrar la clave de API. Nueva
         clave de API:'

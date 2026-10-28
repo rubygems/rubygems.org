@@ -212,6 +212,7 @@ zh-TW:
       access_webhooks: 存取 Webhooks
       show_dashboard: 顯示儀表板
       configure_trusted_publishers:
+      access_oidc_api_key_roles:
       reset: 重設
       save_key: 請注意，我們無法再次顯示您的 API 金鑰。新 API 金鑰：
       mfa: MFA

@@ -25,10 +25,13 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   end
 
   def index
+    authorize OIDC::ApiKeyRole, :index?
     render json: @api_key.user.oidc_api_key_roles
   end
 
   def show
+    # Authorize before the lookup so an unscoped key cannot tell a real token from an unknown one.
+    authorize OIDC::ApiKeyRole, :show?
     render json: @api_key.user.oidc_api_key_roles.find_by!(token: params.expect(:token))
   end
 
