@@ -6,6 +6,9 @@
 - `script/load-pg-dump` drops and recreates its target database without
   confirmation. Ensure Rails targets the same database, host,
   and port before running it.
+- Create migrations in `db/migrate` with `bin/rails generate migration`,
+  and regenerate `db/schema.rb` with `bin/rails db:migrate` against a
+  disposable local database.
 - For backfills and other updates to existing data, prefer
   `MaintenanceTasks::Task` over migrations or ad hoc scripts; follow
   [Maintenance tasks](doc/maintenance-tasks.md) for design and rollout principles.
