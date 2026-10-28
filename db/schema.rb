@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_25_000003) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_25_000004) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -548,7 +548,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_000003) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["invitable_type", "invitable_id"], name: "index_organization_invites_on_invitable"
-    t.index ["invitable_type", "invitable_id"], name: "index_organization_invites_on_invitable_type_and_invitable_id"
     t.index ["user_id"], name: "index_organization_invites_on_user_id"
   end
 
