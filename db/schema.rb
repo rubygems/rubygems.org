@@ -186,7 +186,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_25_000004) do
     t.datetime "updated_at", precision: nil
     t.integer "version_id"
     t.index ["rubygem_id"], name: "index_dependencies_on_rubygem_id"
-    t.index ["unresolved_name"], name: "index_dependencies_on_unresolved_name"
+    t.index ["unresolved_name", "id"], name: "index_dependencies_on_unresolved_name_and_id_nonnull", where: "(unresolved_name IS NOT NULL)"
     t.index ["version_id"], name: "index_dependencies_on_version_id"
   end
 
