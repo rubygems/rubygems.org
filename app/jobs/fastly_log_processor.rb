@@ -62,9 +62,8 @@ class FastlyLogProcessor
       # Only count successful downloads
       # NB: we consider a 304 response a download attempt
       when ok_status, not_modified_status
-        if (match = PATH_PATTERN.match(path))
-          accum[match[:path]] += 1
-        end
+        match = PATH_PATTERN.match(path)
+        accum[match[:path]] += 1 if match
       end
     end
   end

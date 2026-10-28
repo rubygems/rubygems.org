@@ -55,7 +55,8 @@ module AttestationBundleRepair
   end
 
   def double_encoded_certificate?(verification)
-    return false unless (raw_bytes = verification.dig("certificate", "rawBytes"))
+    raw_bytes = verification.dig("certificate", "rawBytes")
+    return false unless raw_bytes
 
     decoded = Base64.strict_decode64(raw_bytes)
     decoded.start_with?("-----BEGIN CERTIFICATE-----")

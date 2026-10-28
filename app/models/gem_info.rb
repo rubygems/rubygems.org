@@ -20,7 +20,8 @@ class GemInfo
     cache_key = "#{config[:cache_prefix]}/#{@rubygem_name}"
     stats_key = config[:stats_prefix]
 
-    if @cached && (info = read_cache(cache_key))
+    info = read_cache(cache_key) if @cached
+    if info
       StatsD.increment "#{stats_key}.hit"
       info
     else
@@ -37,7 +38,8 @@ class GemInfo
   end
 
   def self.ordered_names(cached: true)
-    if cached && (names = Rails.cache.read("names"))
+    names = Rails.cache.read("names") if cached
+    if names
       StatsD.increment "compact_index.memcached.names.hit"
     else
       StatsD.increment "compact_index.memcached.names.miss"

@@ -47,9 +47,8 @@ class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
   end
 
   def find_trusted_publisher
-    unless (trusted_publisher_class = @provider.trusted_publisher_class)
-      raise UnsupportedIssuer, "Unsuported issuer for trusted publishing"
-    end
+    trusted_publisher_class = @provider.trusted_publisher_class
+    raise UnsupportedIssuer, "Unsuported issuer for trusted publishing" unless trusted_publisher_class
     @trusted_publisher = trusted_publisher_class.for_claims(@jwt)
     Current.api_key_owner = @trusted_publisher
   end

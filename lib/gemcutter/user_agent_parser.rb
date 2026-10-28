@@ -54,13 +54,15 @@ class Gemcutter::UserAgentParser
 
     def call(user_agent)
       @regexes.each do |regex|
-        next unless (match = regex.match(user_agent))
+        match = regex.match(user_agent)
+        next unless match
         group_to_name = match.regexp.named_captures.transform_values(&:sole).invert.transform_values(&:to_sym)
         args = []
         kwargs = {}
         match.to_a.each_with_index do |value, group|
           next if group.zero?
-          if (name = group_to_name[group])
+          name = group_to_name[group]
+          if name
             kwargs[name] = value
           else
             args << value

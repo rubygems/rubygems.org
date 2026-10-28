@@ -29,7 +29,8 @@ class DashboardsController < ApplicationController
   def authenticate_with_api_key
     params_key = request.headers["Authorization"] || params.permit(:api_key).fetch(:api_key, "")
     hashed_key = Digest::SHA256.hexdigest(params_key)
-    unless (@api_key = ApiKey.unexpired.find_by_hashed_key(hashed_key))
+    @api_key = ApiKey.unexpired.find_by_hashed_key(hashed_key)
+    unless @api_key
       track_appsec_event("api_key.authentication.failure", user: nil, reason: "invalid_or_expired") if params_key.present?
       return
     end

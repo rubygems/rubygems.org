@@ -89,7 +89,8 @@ class VerifyUserEmailDomainsJob < ApplicationJob
   def domain_status_available?(body, email_domain)
     json_body = JSON.parse(body)
 
-    if (errors = json_body["errors"])
+    errors = json_body["errors"]
+    if errors
       notify "Fastly Domain Research API error for domain: #{email_domain} errors: #{errors}"
       return false
     end
