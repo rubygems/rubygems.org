@@ -38,9 +38,9 @@ class GemsTest < ActionDispatch::IntegrationTest
     get rubygem_path(@rubygem.slug)
     css = %(link[rel="canonical"][href="#{base_url}"])
 
-    assert page.has_css?(css, visible: false)
+    assert page.has_css?(css, visible: :all)
     css = %(link[rel="alternate"][hreflang])
-    alternates = page.all(:css, css, visible: false)
+    alternates = page.all(:css, css, visible: :all)
     # I18n.available_locales.length + 1 (x-default)
     assert_equal (I18n.available_locales.length + 1), alternates.length
     exp = I18n.available_locales.map { "#{base_url}?locale=#{it}" } << base_url
@@ -54,7 +54,7 @@ class GemsTest < ActionDispatch::IntegrationTest
     get rubygem_path(@rubygem.slug, locale: "en")
     css = %(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.1.1"])
 
-    assert page.has_css?(css, visible: false)
+    assert page.has_css?(css, visible: :all)
   end
 
   test "canonical url for an old version" do
@@ -62,7 +62,7 @@ class GemsTest < ActionDispatch::IntegrationTest
     get rubygem_version_path(@rubygem.slug, "1.0.0")
     css = %(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"])
 
-    assert page.has_css?(css, visible: false)
+    assert page.has_css?(css, visible: :all)
   end
 
   test "letter param is not string" do

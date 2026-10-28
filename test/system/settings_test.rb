@@ -42,7 +42,7 @@ class SettingsTest < ApplicationSystemTestCase
     assert_text "You have enabled multi-factor authentication."
     css = %(a[href="https://guides.rubygems.org/setting-up-multifactor-authentication"])
 
-    assert page.has_css?(css, visible: true)
+    assert page.has_css?(css, visible: :visible)
   end
 
   test "enabling multi-factor authentication with invalid otp" do
