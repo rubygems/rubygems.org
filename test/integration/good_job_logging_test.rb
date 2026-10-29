@@ -11,17 +11,23 @@ class GoodJobLoggingTest < ActiveSupport::TestCase
   end
 
   setup do
+    # CI silences logs; these tests need to exercise the actual logging path.
+    @original_log_level = ActiveJob::Base.logger.level
+    ActiveJob::Base.logger.level = :info
     @logs = []
     @subscriber = ->(log) { @logs << log }
     SemanticLogger::Logger.subscribe(@subscriber)
-    @job_log_subscriber = ActiveSupport::Notifications.subscribe(
-      "enqueue.active_job", RailsSemanticLogger::ActiveJob::LogSubscriber.new
-    )
+    unless ActiveSupport::LogSubscriber.log_subscribers.any?(RailsSemanticLogger::ActiveJob::LogSubscriber)
+      @job_log_subscriber = ActiveSupport::Notifications.subscribe(
+        "enqueue.active_job", RailsSemanticLogger::ActiveJob::LogSubscriber.new
+      )
+    end
   end
 
   teardown do
-    ActiveSupport::Notifications.unsubscribe(@job_log_subscriber)
+    ActiveSupport::Notifications.unsubscribe(@job_log_subscriber) if @job_log_subscriber
     SemanticLogger::Logger.subscribers.delete(@subscriber)
+    ActiveJob::Base.logger.level = @original_log_level
   end
 
   test "duplicate cron enqueues stay quiet without hiding the successful enqueue" do
