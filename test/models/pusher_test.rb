@@ -597,6 +597,22 @@ class PusherTest < ActiveSupport::TestCase
     refute_predicate rubygem.reload, :indexed?
   end
 
+  test "rejects a push to an ownerless fully yanked gem when the api key has an unexpected owner type" do
+    rubygem = create(:rubygem, name: "test")
+    create(:version, :yanked, rubygem: rubygem, number: "0.1.0")
+
+    # Authorized by a binding, but neither a user nor a trusted publisher: nothing could take ownership.
+    owner = stub("owner", to_gid: nil, as_json: nil, owns_gem?: true)
+    @api_key.update_columns(owner_id: 0, owner_type: "stub")
+    @cutter.stubs(:owner).returns owner
+
+    assert @cutter.pull_spec && @cutter.find && @cutter.authorize
+
+    assert_push_rejected(@cutter)
+    assert_equal "You are not allowed to push this gem.", @cutter.message
+    assert_empty rubygem.reload.owners
+  end
+
   context "when a fully yanked gem changes after a push is authorized" do
     setup do
       @previous_owner = create(:user)

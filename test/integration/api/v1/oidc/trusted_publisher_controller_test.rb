@@ -299,6 +299,29 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       assert_equal 1, OIDC::TrustedPublisher::IdToken.count
     end
 
+    should "reject a token whose jti was recorded by a concurrent exchange" do
+      trusted_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "oidc-test",
+        repository_owner_id: "1946610",
+        workflow_filename: "token.yml")
+      trusted_publisher.repository_owner = "segiddins"
+      trusted_publisher.save!
+
+      # A concurrent exchange of the same token committed its row after this request's
+      # uniqueness validation ran, leaving the unique index on (provider, jti) to catch it.
+      concurrent_exchange = create(:oidc_trusted_publisher_id_token, provider: OIDC::Provider.github_actions, jti: @claims["jti"])
+      OIDC::TrustedPublisher::IdToken.any_instance.stubs(:valid?).returns(true)
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s }
+
+      assert_response :unprocessable_content
+      assert_equal({ "errors" => { "jti" => ["must be unique"] } }, response.parsed_body)
+      # the whole exchange rolls back: no key is minted for a token that was already spent
+      assert_empty trusted_publisher.api_keys
+      assert_equal concurrent_exchange, OIDC::TrustedPublisher::IdToken.sole
+    end
+
     should "succeed with an asserted owner" do
       user = create(:user, handle: "gem-owner")
       trusted_publisher = build(:oidc_trusted_publisher_github_action,
