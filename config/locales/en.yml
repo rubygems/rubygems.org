@@ -1184,6 +1184,12 @@ en:
       index:
         title: Pending Trusted Publishers
         valid_for_html: "Valid for %{time_html}"
+        owner_html: |
+          Your release workflow must declare this account as the gem's owner by passing
+          <code>owner: %{owner}</code> (this account's immutable ID) when exchanging the OIDC token.
+          With <code>rubygems/configure-rubygems-credentials</code> or <code>rubygems/release-gem</code>,
+          use a release that supports the <code>owner</code> input.
+          A first push that does not name this account is rejected.
         delete: Delete
         create: Create
         description_html: |

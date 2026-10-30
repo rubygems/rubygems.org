@@ -12,7 +12,20 @@ class OIDC::PendingTrustedPublisherTest < ActiveSupport::TestCase
   should belong_to(:user)
 
   should validate_presence_of(:rubygem_name)
-  should validate_uniqueness_of(:rubygem_name).scoped_to(:trusted_publisher_id, :trusted_publisher_type).case_insensitive
+  should validate_uniqueness_of(:rubygem_name).scoped_to(:trusted_publisher_id, :trusted_publisher_type, :user_id).case_insensitive
+
+  test "allows different users to register the same gem name for the same trusted publisher" do
+    existing = create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm")
+    other_user = build(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", trusted_publisher: existing.trusted_publisher)
+
+    assert_predicate other_user, :valid?
+
+    same_user = build(:oidc_pending_trusted_publisher, rubygem_name: "SANDWORM",
+      trusted_publisher: existing.trusted_publisher, user: existing.user)
+
+    refute_predicate same_user, :valid?
+    assert_includes same_user.errors[:rubygem_name], "has already been taken"
+  end
 
   test "validates rubygem name is available" do
     publisher = build(:oidc_pending_trusted_publisher, rubygem_name: "foo")

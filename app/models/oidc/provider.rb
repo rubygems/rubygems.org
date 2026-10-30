@@ -10,6 +10,8 @@ class OIDC::Provider < ApplicationRecord
   has_many :api_key_roles, class_name: "OIDC::ApiKeyRole", inverse_of: :provider, foreign_key: :oidc_provider_id, dependent: :restrict_with_exception
   has_many :users, through: :api_key_roles, inverse_of: :oidc_providers
   has_many :id_tokens, through: :api_key_roles, inverse_of: :provider
+  has_many :trusted_publisher_id_tokens, class_name: "OIDC::TrustedPublisher::IdToken", inverse_of: :provider,
+    foreign_key: :oidc_provider_id, dependent: :restrict_with_exception
 
   has_many :audits, as: :auditable, dependent: :nullify
 

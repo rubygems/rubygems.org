@@ -194,7 +194,24 @@ class OIDC::TrustedPublisher::GitHubAction < ApplicationRecord
     { gid: to_gid.to_s, type: "trusted_publisher", repository:, workflow: workflow_slug, repository_owner_id: }
   end
 
-  def owns_gem?(rubygem) = rubygem_trusted_publishers.exists?(rubygem: rubygem)
+  # An environment-specific token also satisfied the environment-less policy, never the
+  # reverse; without this fallback a stranger's environment-specific record could lock
+  # the maintainer's workflow out.
+  def environment_less_publisher
+    return if environment.nil?
+
+    self.class.find_by(
+      repository_owner:, repository_name:, repository_owner_id:, workflow_filename:,
+      workflow_repository_owner:, workflow_repository_name:, environment: nil
+    )
+  end
+
+  # Publishers whose bindings and claims this key may use, most specific first.
+  def authorizing_publishers
+    [self, environment_less_publisher].compact
+  end
+
+  def owns_gem?(rubygem) = OIDC::RubygemTrustedPublisher.exists?(rubygem:, trusted_publisher: authorizing_publishers)
 
   private
 

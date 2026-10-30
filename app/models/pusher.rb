@@ -3,7 +3,8 @@
 require "digest/sha2"
 require "gem_validator"
 
-class Pusher
+# The whole push pipeline in one class; splitting it would separate authorization from the mutations it guards.
+class Pusher # rubocop:disable Metrics/ClassLength
   include TraceTagger
   include SemanticLogger::Loggable
 
@@ -44,6 +45,7 @@ class Pusher
     end
 
     return true if owner.owns_gem?(rubygem)
+    return notify_missing_pending_owner if missing_pending_owner?
 
     notify_unauthorized
   end
@@ -240,37 +242,57 @@ class Pusher
     false
   end
 
-  def update # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+  # One transaction: a rejected or failed push must not commit partial state.
+  def update
     rubygem.transaction do
       rubygem.lock_version_writes!
+      # Pushes are serialized from here; re-read the claim and re-check authorization.
+      remove_instance_variable(:@pending_trusted_publisher) if defined?(@pending_trusted_publisher)
       raise ActiveRecord::Rollback unless authorize
 
-      rubygem.disown if rubygem.versions.indexed.none? && !owner.owns_gem?(rubygem)
+      rubygem.disown if reset_ownership?
       persist_version
 
-      if rubygem.unowned?
-        claimed_organization.add_new_rubygem!(rubygem, actor: @organization_claimed_by) if @organization_claimed_by
-
-        if api_key.user?
-          rubygem.create_ownership(owner)
-        elsif api_key.trusted_publisher?
-          pending_publisher = pending_trusted_publisher
-          raise ActiveRecord::Rollback unless pending_publisher || notify("No pending publisher found", 404)
-
-          logger.info { "Reifying pending publisher" }
-          rubygem.create_ownership(pending_publisher.user)
-          owner.rubygem_trusted_publishers.create!(rubygem: rubygem)
-        else
-          notify_unauthorized
-          raise ActiveRecord::Rollback
-        end
-      end
+      raise ActiveRecord::Rollback if rubygem.unowned? && !reestablish_ownership
 
       true
     end
   rescue ActiveRecord::RecordInvalid, ActiveRecord::Rollback, ActiveRecord::RecordNotUnique => e
     logger.info { { message: "Error updating rubygem", exception: e } }
     false
+  end
+
+  # Only disown an all-yanked gem when the pusher is not an owner and ownership is
+  # re-established in this push; a claim only reclaims a released (pushable) name.
+  def reset_ownership?
+    rubygem.versions.indexed.none? && !owner.owns_gem?(rubygem) && (api_key.user? || (rubygem.pushable? && pending_trusted_publisher))
+  end
+
+  def missing_pending_owner?
+    rubygem.pushable? && api_key.trusted_publisher? && pending_owner.nil?
+  end
+
+  # Rejections are reachable only for gems already ownerless: authorize requires ownership or a claim for pushable gems.
+  def reestablish_ownership
+    claimed_organization.add_new_rubygem!(rubygem, actor: @organization_claimed_by) if @organization_claimed_by
+
+    if api_key.user?
+      rubygem.create_ownership(owner)
+    elsif pending_trusted_publisher
+      logger.info { "Reifying pending publisher" }
+      rubygem.create_ownership(pending_trusted_publisher.user)
+      # Reuse an existing binding (an ownerless gem may still be bound); the claim's publisher
+      # is never a record someone else created for the same repository.
+      pending_trusted_publisher.trusted_publisher.rubygem_trusted_publishers.find_or_create_by!(rubygem: rubygem)
+    elsif !api_key.trusted_publisher?
+      return notify_unauthorized
+    elsif pending_owner.nil?
+      return notify_missing_pending_owner
+    else
+      return notify("No pending publisher found", 404)
+    end
+
+    true
   end
 
   def persist_version
@@ -312,6 +334,13 @@ class Pusher
 
   def notify_reserved
     notify("This gem name is reserved. You are not allowed to push this gem.", 403)
+  end
+
+  def notify_missing_pending_owner
+    notify("Trusted publishing can only create a new gem when the workflow declares which RubyGems.org account will own it. " \
+           "Pass that account's ID (shown on its Pending Trusted Publishers page) as the `owner` parameter when exchanging the " \
+           "OIDC token for an API key - with rubygems/configure-rubygems-credentials or rubygems/release-gem, use a release that " \
+           "supports the `owner` input - and make sure the account has an unexpired pending trusted publisher for #{rubygem.name}.", 403)
   end
 
   def notify_unauthorized
@@ -444,10 +473,38 @@ class Pusher
     true
   end
 
-  def pending_trusted_publisher
-    return unless api_key.trusted_publisher?
+  # The trusted publisher record is shared by everyone naming the same repository and
+  # workflow, so only a claim registered by the workflow-asserted owner counts; otherwise
+  # anyone could pre-register a gem name and be granted ownership on its first push.
+  # The claim may also live on the environment-less publisher (see
+  # OIDC::TrustedPublisher::GitHubAction#authorizing_publishers); the key's own wins.
+  def find_pending_trusted_publisher
+    return unless api_key.trusted_publisher? && pending_owner
 
-    owner.pending_trusted_publishers.unexpired.rubygem_name_is(rubygem.name).first
+    publishers = owner.authorizing_publishers
+    name = rubygem.name.strip
+    claims = OIDC::PendingTrustedPublisher.unexpired
+      .where(user: pending_owner, trusted_publisher: publishers)
+      .where("UPPER(rubygem_name) = UPPER(?)", name).to_a
+
+    publishers.filter_map do |publisher|
+      matches = claims.select do |claim|
+        claim.trusted_publisher_id == publisher.id && claim.trusted_publisher_type == publisher.class.polymorphic_name
+      end
+      matches.find { |claim| claim.rubygem_name == name } || matches.first
+    end.first
+  end
+
+  def pending_trusted_publisher
+    @pending_trusted_publisher = find_pending_trusted_publisher unless defined?(@pending_trusted_publisher)
+    @pending_trusted_publisher
+  end
+
+  # The account asserted by the workflow at token exchange (see OIDC::TrustedPublisher::IdToken)
+  def pending_owner
+    return @pending_owner if defined?(@pending_owner)
+
+    @pending_owner = api_key.trusted_publisher? ? api_key.oidc_trusted_publisher_id_token&.asserted_owner : nil
   end
 
   def organization_handle_from_spec

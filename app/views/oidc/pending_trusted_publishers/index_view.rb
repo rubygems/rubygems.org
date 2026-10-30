@@ -62,7 +62,16 @@ class OIDC::PendingTrustedPublishers::IndexView < ApplicationView
             view_context.distance_of_time_in_words_to_now(pending_trusted_publisher.expires_at)))
       end
 
+      p(class: "mt-1 text-b3 text-neutral-700 dark:text-neutral-300 [&_code]:font-mono") do
+        raw t(".owner_html", owner: owner_reference(pending_trusted_publisher.user))
+      end
+
       render pending_trusted_publisher.trusted_publisher
     end
+  end
+
+  # The immutable ID, never the handle: a handle can be renamed and re-registered by someone else.
+  def owner_reference(user)
+    user.id.to_s
   end
 end

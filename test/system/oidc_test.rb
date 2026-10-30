@@ -463,6 +463,7 @@ class OIDCTest < ApplicationSystemTestCase
     page.assert_text "Delete"
     page.assert_text "GitHub Actions"
     page.assert_text "Valid for about 12 hours"
+    page.assert_text "owner: #{@user.id}"
     page.assert_text "GitHub Repository"
     page.assert_text "example/rubygem1"
     page.assert_text "Workflow Filename"

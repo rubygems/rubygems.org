@@ -9,7 +9,7 @@ class OIDC::PendingTrustedPublishersController < ApplicationController
 
   def index
     trusted_publishers = policy_scope(OIDC::PendingTrustedPublisher)
-      .unexpired.includes(:trusted_publisher)
+      .unexpired.includes(:trusted_publisher, :user)
       .order(:rubygem_name, :created_at).page(@page).strict_loading
     add_breadcrumb(t("breadcrumbs.settings"), edit_settings_path)
     add_breadcrumb(t(".title"))

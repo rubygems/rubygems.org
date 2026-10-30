@@ -10,7 +10,7 @@ class OIDC::PendingTrustedPublisher < ApplicationRecord
     length: { maximum: Gemcutter::MAX_FIELD_LENGTH },
     presence: true,
     name_format: true,
-    uniqueness: { case_sensitive: false, scope: %i[trusted_publisher_id trusted_publisher_type], conditions: -> { unexpired } }
+    uniqueness: { case_sensitive: false, scope: %i[trusted_publisher_id trusted_publisher_type user_id], conditions: -> { unexpired } }
 
   validate :available_rubygem_name, on: :create
   validate :protected_gem_typo, on: :create

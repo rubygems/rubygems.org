@@ -270,6 +270,157 @@ class Api::V1::OIDC::TrustedPublisherControllerTest < ActionDispatch::Integratio
       assert_equal api_key.owner, trusted_publisher
     end
 
+    should "record the exchanged token so it can only be exchanged once" do
+      trusted_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "oidc-test",
+        repository_owner_id: "1946610",
+        workflow_filename: "token.yml")
+      trusted_publisher.repository_owner = "segiddins"
+      trusted_publisher.save!
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s }
+
+      assert_response :success
+
+      id_token = OIDC::TrustedPublisher::IdToken.sole
+
+      assert_equal @claims["jti"], id_token.jti
+      assert_equal trusted_publisher.api_keys.sole, id_token.api_key
+      assert_equal OIDC::Provider.find_by!(issuer: @claims["iss"]), id_token.provider
+      assert_nil id_token.asserted_owner
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s }
+
+      assert_response :unprocessable_content
+      assert_equal({ "errors" => { "jti" => ["has already been taken"] } }, response.parsed_body)
+      assert_equal 1, trusted_publisher.api_keys.count
+      assert_equal 1, OIDC::TrustedPublisher::IdToken.count
+    end
+
+    should "succeed with an asserted owner" do
+      user = create(:user, handle: "gem-owner")
+      trusted_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "oidc-test",
+        repository_owner_id: "1946610",
+        workflow_filename: "token.yml")
+      trusted_publisher.repository_owner = "segiddins"
+      trusted_publisher.save!
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s, owner: "Gem-Owner" }
+
+      assert_response :success
+      assert_equal "gem-owner", response.parsed_body["owner"]
+
+      api_key = trusted_publisher.api_keys.sole
+
+      assert_equal user, api_key.oidc_trusted_publisher_id_token.asserted_owner
+    end
+
+    should "succeed with an asserted owner given by id" do
+      user = create(:user, handle: nil)
+      trusted_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "oidc-test",
+        repository_owner_id: "1946610",
+        workflow_filename: "token.yml")
+      trusted_publisher.repository_owner = "segiddins"
+      trusted_publisher.save!
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s, owner: user.id.to_s }
+
+      assert_response :success
+      # the response echoes the owner's handle; a handle-less account has none to echo
+      assert_nil response.parsed_body["owner"]
+
+      api_key = trusted_publisher.api_keys.sole
+
+      assert_equal user, api_key.oidc_trusted_publisher_id_token.asserted_owner
+    end
+
+    should "return bad request with an out of range numeric asserted owner" do
+      trusted_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "oidc-test",
+        repository_owner_id: "1946610",
+        workflow_filename: "token.yml")
+      trusted_publisher.repository_owner = "segiddins"
+      trusted_publisher.save!
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s, owner: "99999999999999999999" }
+
+      assert_response :bad_request
+      assert_equal({ "error" => 'Unknown owner "99999999999999999999"' }, response.parsed_body)
+      assert_empty trusted_publisher.api_keys
+    end
+
+    should "not resolve an all-digit asserted owner against handles" do
+      user = create(:user)
+      missing_id = User.maximum(:id) + 1_000_000
+      # a stale ID reference must fail instead of resolving to whoever holds those digits
+      user.update_column(:handle, missing_id.to_s)
+
+      trusted_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "oidc-test",
+        repository_owner_id: "1946610",
+        workflow_filename: "token.yml")
+      trusted_publisher.repository_owner = "segiddins"
+      trusted_publisher.save!
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s, owner: missing_id.to_s }
+
+      assert_response :bad_request
+      assert_equal({ "error" => "Unknown owner #{missing_id.to_s.inspect}" }, response.parsed_body)
+      assert_empty trusted_publisher.api_keys
+      assert_empty OIDC::TrustedPublisher::IdToken.all
+    end
+
+    should "return bad request with an unknown asserted owner" do
+      trusted_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "oidc-test",
+        repository_owner_id: "1946610",
+        workflow_filename: "token.yml")
+      trusted_publisher.repository_owner = "segiddins"
+      trusted_publisher.save!
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s, owner: "nobody" }
+
+      assert_response :bad_request
+      assert_equal({ "error" => 'Unknown owner "nobody"' }, response.parsed_body)
+      assert_empty trusted_publisher.api_keys
+      assert_empty OIDC::TrustedPublisher::IdToken.all
+    end
+
+    should "return bad request with a non-string asserted owner" do
+      trusted_publisher = build(:oidc_trusted_publisher_github_action,
+        repository_name: "oidc-test",
+        repository_owner_id: "1946610",
+        workflow_filename: "token.yml")
+      trusted_publisher.repository_owner = "segiddins"
+      trusted_publisher.save!
+
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s, owner: ["gem-owner"] }
+
+      assert_response :bad_request
+      assert_equal({ "error" => "Invalid owner" }, response.parsed_body)
+
+      # a JSON number is not accepted either; ids must be passed as strings
+      post api_v1_oidc_trusted_publisher_exchange_token_path,
+        params: { jwt: jwt.to_s, owner: 1 },
+        as: :json
+
+      assert_response :bad_request
+      assert_equal({ "error" => "Invalid owner" }, response.parsed_body)
+
+      assert_empty trusted_publisher.api_keys
+      assert_empty OIDC::TrustedPublisher::IdToken.all
+    end
+
     should "succeed with matching trusted publisher using reusable workflow" do
       @claims["repository"] = "cseeman/my-gem"
       @claims["repository_owner"] = "cseeman"

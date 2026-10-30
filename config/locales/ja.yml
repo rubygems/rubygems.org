@@ -1198,6 +1198,7 @@ ja:
       index:
         title: 待機中の信頼できる発行元
         valid_for_html: "%{time_html}まで有効"
+        owner_html:
         delete: 削除
         create: 作成
         description_html: |

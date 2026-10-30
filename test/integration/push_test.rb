@@ -348,7 +348,8 @@ class PushTest < ActionDispatch::IntegrationTest
     pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: @user)
 
     @key = "543321"
-    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    api_key = create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: @user)
 
     push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
 
@@ -370,7 +371,8 @@ class PushTest < ActionDispatch::IntegrationTest
     organization = create(:organization, handle: "org-example", owners: [@user])
     pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "org-trusted-gem", user: @user)
     @key = "trusted-org-key"
-    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    api_key = create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: @user)
     spec = new_gemspec("org-trusted-gem", "1.0.0", "Gemcutter", "ruby") do |s|
       s.metadata["rubygems_organization"] = organization.handle
     end
@@ -390,7 +392,8 @@ class PushTest < ActionDispatch::IntegrationTest
     pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "SaNdWoRm", user: @user)
 
     @key = "543321"
-    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    api_key = create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: @user)
 
     push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
 
@@ -406,6 +409,411 @@ class PushTest < ActionDispatch::IntegrationTest
 
     assert rubygem.owned_by?(@user)
     assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: pending_trusted_publisher.trusted_publisher)
+  end
+
+  test "pushing a new gem with a pending trusted publisher but no asserted owner is rejected" do
+    pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: @user)
+
+    @key = "543321"
+    create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :forbidden
+    assert_match(/declares which RubyGems.org account will own it/, response.body)
+    assert_nil Rubygem.find_by(name: "sandworm")
+  end
+
+  test "pushing a new gem ignores a pending trusted publisher registered by another account" do
+    attacker = create(:user)
+    trusted_publisher = create(:oidc_trusted_publisher_github_action)
+    create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: attacker, trusted_publisher: trusted_publisher)
+
+    @key = "543321"
+    api_key = create(:api_key, owner: trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: @user)
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :forbidden
+    assert_nil Rubygem.find_by(name: "sandworm")
+    assert_empty attacker.rubygems
+  end
+
+  test "pushing a new gem with an expired pending trusted publisher is rejected" do
+    pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: @user, expires_at: 5.minutes.ago)
+
+    @key = "543321"
+    api_key = create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: @user)
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :forbidden
+    assert_match(/You are not allowed to push this gem/, response.body)
+    assert_nil Rubygem.find_by(name: "sandworm")
+  end
+
+  test "pushing a new gem uses the asserted owner's pending trusted publisher when several accounts claim the name" do
+    attacker = create(:user)
+    trusted_publisher = create(:oidc_trusted_publisher_github_action)
+    create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: attacker, trusted_publisher: trusted_publisher)
+    create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: @user, trusted_publisher: trusted_publisher)
+
+    @key = "543321"
+    api_key = create(:api_key, owner: trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: @user)
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :success
+
+    rubygem = Rubygem.find_by!(name: "sandworm")
+
+    assert rubygem.owned_by?(@user)
+    refute rubygem.owned_by?(attacker)
+    assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: trusted_publisher)
+  end
+
+  # Anyone can create the environment-specific publisher record (via a pending claim for an
+  # unrelated name, then deleting it), and token exchange prefers it over the environment-less one.
+  def squat_environment_publisher(trusted_publisher, environment:)
+    squatted = create(:oidc_trusted_publisher_github_action,
+      repository_owner: trusted_publisher.repository_owner, repository_name: trusted_publisher.repository_name,
+      repository_owner_id: trusted_publisher.repository_owner_id, workflow_filename: trusted_publisher.workflow_filename,
+      environment:)
+    create(:oidc_pending_trusted_publisher, rubygem_name: "unrelated", user: create(:user), trusted_publisher: squatted).destroy!
+
+    assert_equal squatted, OIDC::TrustedPublisher::GitHubAction.for_claims(
+      repository: trusted_publisher.repository, repository_owner_id: trusted_publisher.repository_owner_id,
+      job_workflow_ref: "#{trusted_publisher.repository}/#{trusted_publisher.workflow_slug}@refs/heads/main",
+      environment:
+    )
+    squatted
+  end
+
+  test "pushing a new version with a key issued to an environment-specific publisher another account created" do
+    rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
+    create(:ownership, rubygem: rubygem, user: @user)
+    trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: rubygem).trusted_publisher
+    squatted = squat_environment_publisher(trusted_publisher, environment: "production")
+
+    @key = "543321"
+    api_key = create(:api_key, owner: squatted, key: @key, scopes: %i[push_rubygem])
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :success, response.body
+
+    version = rubygem.versions.find_by!(number: "2.0.0")
+
+    assert_predicate version, :indexed?
+    assert_equal api_key, version.pusher_api_key
+    refute rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: squatted)
+  end
+
+  test "pushing a new gem with a key issued to an environment-specific publisher another account created" do
+    pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: @user)
+    trusted_publisher = pending_trusted_publisher.trusted_publisher
+    squatted = squat_environment_publisher(trusted_publisher, environment: "production")
+
+    @key = "543321"
+    api_key = create(:api_key, owner: squatted, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: @user)
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :success, response.body
+
+    rubygem = Rubygem.find_by!(name: "sandworm")
+
+    assert_equal [@user], rubygem.owners
+    # the gem is bound to the publisher the owner registered, not to the squatted record
+    assert_equal [trusted_publisher], rubygem.oidc_rubygem_trusted_publishers.map(&:trusted_publisher)
+  end
+
+  test "pushing a new gem prefers the pending trusted publisher on the key's own publisher" do
+    trusted_publisher = create(:oidc_trusted_publisher_github_action)
+    production = create(:oidc_trusted_publisher_github_action,
+      repository_owner: trusted_publisher.repository_owner, repository_name: trusted_publisher.repository_name,
+      repository_owner_id: trusted_publisher.repository_owner_id, workflow_filename: trusted_publisher.workflow_filename,
+      environment: "production")
+    create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: @user, trusted_publisher: trusted_publisher)
+    create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: @user, trusted_publisher: production)
+
+    @key = "543321"
+    api_key = create(:api_key, owner: production, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: @user)
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :success, response.body
+
+    rubygem = Rubygem.find_by!(name: "sandworm")
+
+    assert_equal [@user], rubygem.owners
+    assert_equal [production], rubygem.oidc_rubygem_trusted_publishers.map(&:trusted_publisher)
+  end
+
+  test "pushing a new version with a key issued to the environment-less publisher of a gem bound to an environment is rejected" do
+    rubygem = create(:rubygem, name: "sandworm", number: "1.0.0")
+    create(:ownership, rubygem: rubygem, user: @user)
+    production = create(:oidc_trusted_publisher_github_action, environment: "production")
+    create(:oidc_rubygem_trusted_publisher, rubygem: rubygem, trusted_publisher: production)
+    environment_less = create(:oidc_trusted_publisher_github_action,
+      repository_owner: production.repository_owner, repository_name: production.repository_name,
+      repository_owner_id: production.repository_owner_id, workflow_filename: production.workflow_filename)
+
+    @key = "543321"
+    create(:api_key, owner: environment_less, key: @key, scopes: %i[push_rubygem])
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :forbidden
+    assert_match(/You are not allowed to push this gem/, response.body)
+    assert_nil rubygem.versions.find_by(number: "2.0.0")
+  end
+
+  test "pushing a new gem with a key issued to the environment-less publisher ignores a claim on an environment-specific one" do
+    production = create(:oidc_trusted_publisher_github_action, environment: "production")
+    create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: @user, trusted_publisher: production)
+    environment_less = create(:oidc_trusted_publisher_github_action,
+      repository_owner: production.repository_owner, repository_name: production.repository_name,
+      repository_owner_id: production.repository_owner_id, workflow_filename: production.workflow_filename)
+
+    @key = "543321"
+    api_key = create(:api_key, owner: environment_less, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: @user)
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :forbidden
+    assert_nil Rubygem.find_by(name: "sandworm")
+  end
+
+  test "pushing a new version of an all-yanked gem with a bound trusted publisher keeps existing ownership when no owner is asserted" do
+    rubygem = create(:rubygem, name: "sandworm")
+    create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+    create(:ownership, rubygem: rubygem, user: @user)
+    rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: rubygem)
+    trusted_publisher = rubygem_trusted_publisher.trusted_publisher
+    create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: @user, trusted_publisher: trusted_publisher)
+
+    @key = "543321"
+    create(:api_key, owner: trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    # no id token record: the workflow did not assert an owner at token exchange
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :success, response.body
+
+    assert_equal [@user], rubygem.reload.owners
+    assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: trusted_publisher)
+    assert_predicate rubygem.versions.find_by!(number: "2.0.0"), :indexed?
+  end
+
+  test "pushing a new version of an all-yanked gem with a bound trusted publisher keeps existing ownership when the asserted owner has no claim" do
+    rubygem = create(:rubygem, name: "sandworm")
+    create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+    create(:ownership, rubygem: rubygem, user: @user)
+    rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: rubygem)
+    trusted_publisher = rubygem_trusted_publisher.trusted_publisher
+
+    @key = "543321"
+    api_key = create(:api_key, owner: trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: create(:user))
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :success, response.body
+
+    assert_equal [@user], rubygem.reload.owners
+    assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: trusted_publisher)
+  end
+
+  test "pushing a new version of an all-yanked gem with a bound trusted publisher keeps existing ownership despite a pending claim" do
+    rubygem = create(:rubygem, name: "sandworm")
+    create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+    create(:ownership, rubygem: rubygem, user: @user)
+    rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: rubygem)
+    trusted_publisher = rubygem_trusted_publisher.trusted_publisher
+    claimant = create(:user)
+    create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: claimant, trusted_publisher: trusted_publisher)
+
+    @key = "543321"
+    api_key = create(:api_key, owner: trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: claimant)
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :success, response.body
+
+    rubygem.reload
+
+    assert_equal [@user], rubygem.owners
+    refute rubygem.owned_by?(claimant)
+    assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: trusted_publisher)
+    assert_predicate rubygem.versions.find_by!(number: "2.0.0"), :indexed?
+  end
+
+  test "a bound trusted publisher cannot replace owners of a protected all-yanked gem" do
+    rubygem = create(:rubygem, name: "sandworm")
+    create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+    create(:ownership, rubygem: rubygem, user: @user)
+    trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: rubygem).trusted_publisher
+    claimant = create(:user)
+    rubygem.update_columns(created_at: 30.days.ago + 1.hour, updated_at: 30.days.ago + 1.hour)
+
+    assert_predicate rubygem, :pushable?
+    claim = create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: claimant,
+      trusted_publisher: trusted_publisher, expires_at: 12.hours.from_now)
+    travel 2.hours
+
+    refute_predicate rubygem, :pushable?
+    assert OIDC::PendingTrustedPublisher.unexpired.exists?(id: claim.id)
+
+    @key = "543321"
+    api_key = create(:api_key, owner: trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: claimant)
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :success, response.body
+    assert_equal [@user], rubygem.reload.owners
+    refute rubygem.owned_by?(claimant)
+    assert_equal [trusted_publisher], rubygem.oidc_rubygem_trusted_publishers.map(&:trusted_publisher)
+    assert_predicate rubygem.versions.find_by!(number: "2.0.0"), :indexed?
+  end
+
+  test "a bound trusted publisher can re-establish ownership of a protected ownerless gem" do
+    rubygem = create(:rubygem, name: "sandworm")
+    create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+    create(:ownership, rubygem: rubygem, user: @user)
+    binding = create(:oidc_rubygem_trusted_publisher, rubygem: rubygem)
+    claimant = create(:user)
+    rubygem.update_columns(created_at: 30.days.ago + 1.hour, updated_at: 30.days.ago + 1.hour)
+
+    assert_predicate rubygem, :pushable?
+    claim = create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: claimant,
+      trusted_publisher: binding.trusted_publisher, expires_at: 12.hours.from_now)
+    @user.destroy!
+    travel 2.hours
+
+    refute_predicate rubygem, :pushable?
+    assert_predicate rubygem, :unowned?
+    assert OIDC::PendingTrustedPublisher.unexpired.exists?(id: claim.id)
+
+    @key = "543321"
+    api_key = create(:api_key, owner: binding.trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: claimant)
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :success, response.body
+    assert_equal [claimant], rubygem.reload.owners
+    assert_equal [binding], rubygem.oidc_rubygem_trusted_publishers.to_a
+    assert_predicate rubygem.versions.find_by!(number: "2.0.0"), :indexed?
+  end
+
+  test "pushing a new version of an all-yanked gem with an unbound trusted publisher transfers ownership to the asserted owner's claim" do
+    rubygem = create(:rubygem, name: "sandworm")
+    create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+    create(:ownership, rubygem: rubygem, user: @user)
+    trusted_publisher = create(:oidc_trusted_publisher_github_action)
+    claimant = create(:user)
+    create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: claimant, trusted_publisher: trusted_publisher)
+
+    @key = "543321"
+    api_key = create(:api_key, owner: trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: claimant)
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :success, response.body
+
+    rubygem.reload
+
+    assert_equal [claimant], rubygem.owners
+    refute rubygem.owned_by?(@user)
+    assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: trusted_publisher)
+  end
+
+  test "a trusted publisher push to an ownerless all-yanked gem without an asserted owner is rejected without side effects" do
+    rubygem = create(:rubygem, name: "sandworm")
+    create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+    rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: rubygem)
+    trusted_publisher = rubygem_trusted_publisher.trusted_publisher
+
+    @key = "543321"
+    create(:api_key, owner: trusted_publisher, key: @key, scopes: %i[push_rubygem])
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :forbidden
+    assert_match(/declares which RubyGems.org account will own it/, response.body)
+    rubygem.reload
+
+    assert_nil rubygem.versions.find_by(number: "2.0.0")
+    assert_empty rubygem.owners
+    assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: trusted_publisher)
+  end
+
+  test "a trusted publisher push to an ownerless all-yanked gem without a matching claim is rejected without side effects" do
+    rubygem = create(:rubygem, name: "sandworm")
+    create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+    rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: rubygem)
+    trusted_publisher = rubygem_trusted_publisher.trusted_publisher
+
+    @key = "543321"
+    api_key = create(:api_key, owner: trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: create(:user))
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :not_found
+    assert_match(/No pending publisher found/, response.body)
+    rubygem.reload
+
+    assert_nil rubygem.versions.find_by(number: "2.0.0")
+    assert_empty rubygem.owners
+    assert rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: trusted_publisher)
+  end
+
+  test "a push that fails while re-establishing ownership rolls back completely" do
+    rubygem = create(:rubygem, name: "sandworm")
+    create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+    create(:ownership, rubygem: rubygem, user: @user)
+    trusted_publisher = create(:oidc_trusted_publisher_github_action)
+    claimant = create(:user)
+    create(:oidc_pending_trusted_publisher, rubygem_name: "sandworm", user: claimant, trusted_publisher: trusted_publisher)
+
+    @key = "543321"
+    api_key = create(:api_key, owner: trusted_publisher, key: @key, scopes: %i[push_rubygem])
+    create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: claimant)
+
+    Rubygem.any_instance.stubs(:create_ownership).raises(ActiveRecord::RecordInvalid.new(Ownership.new))
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :forbidden
+    rubygem.reload
+
+    assert_equal [@user], rubygem.owners
+    refute rubygem.oidc_rubygem_trusted_publishers.exists?(trusted_publisher: trusted_publisher)
+    assert_nil rubygem.versions.find_by(number: "2.0.0")
+  end
+
+  test "pushing a new version of an all-yanked gem with a user key makes the pusher the owner" do
+    other_user = create(:user)
+    rubygem = create(:rubygem, name: "sandworm")
+    create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+    create(:ownership, rubygem: rubygem, user: other_user)
+
+    push_gem build_gem(new_gemspec("sandworm", "2.0.0", "Gemcutter", "ruby"))
+
+    assert_response :success, response.body
+
+    assert_equal [@user], rubygem.reload.owners
   end
 
   test "pushing a gem with a known dependency" do

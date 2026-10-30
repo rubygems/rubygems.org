@@ -698,6 +698,35 @@ class PusherTest < ActiveSupport::TestCase
     end
   end
 
+  context "updating with a content address collision" do
+    should "retry without aborting the surrounding push transaction" do
+      assert @cutter.pull_spec
+      assert @cutter.find
+
+      rubygem = @cutter.rubygem
+      original = rubygem.method(:update_attributes_from_gem_specification!)
+      attempts = 0
+      rubygem.define_singleton_method(:update_attributes_from_gem_specification!) do |version, spec|
+        attempts += 1
+        if attempts == 1
+          # Abort the innermost transaction for real, like a colliding content-address INSERT.
+          begin
+            Rubygem.connection.execute("SELECT 1/0")
+          rescue ActiveRecord::StatementInvalid
+            raise ActiveRecord::RecordNotUnique, 'duplicate key value violates unique constraint "index_versions_number_content_address"'
+          end
+        else
+          original.call(version, spec)
+        end
+      end
+
+      assert @cutter.send(:update), "update failed: #{@cutter.message}"
+      assert_equal 2, attempts
+      assert_predicate @cutter.rubygem, :persisted?
+      assert_predicate @cutter.version, :persisted?
+      assert_equal [@user], @cutter.rubygem.owners
+    end
+  end
   context "claiming a new gem for an organization" do
     setup do
       @organization = create(:organization, handle: "org-example", owners: [@user])
@@ -916,6 +945,7 @@ class PusherTest < ActiveSupport::TestCase
     should "assign the gem to the organization for a pending trusted publisher without creating ownership" do
       pending_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "trusted-org-gem", user: @user)
       api_key = create(:api_key, owner: pending_publisher.trusted_publisher, scopes: %i[push_rubygem])
+      create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: @user)
       cutter = push_gem_named("trusted-org-gem", organization_handle: @organization.handle, api_key: api_key)
 
       assert cutter.process
@@ -933,6 +963,7 @@ class PusherTest < ActiveSupport::TestCase
         name = "#{state}-#{ownership}-gem"
         pending_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: name, user: @user)
         api_key = create(:api_key, owner: pending_publisher.trusted_publisher, scopes: %i[push_rubygem])
+        create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: @user)
         organization_handle = @organization.handle if ownership == "organization"
         cutter = push_gem_named(name, organization_handle:, api_key:)
         change = state == "revoked" ? -> { pending_publisher.destroy! } : -> { travel_to(pending_publisher.expires_at + 1.second) }
@@ -950,6 +981,7 @@ class PusherTest < ActiveSupport::TestCase
       create(:membership, :maintainer, user: maintainer, organization: @organization)
       pending_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "trusted-maintainer-gem", user: maintainer)
       api_key = create(:api_key, owner: pending_publisher.trusted_publisher, scopes: %i[push_rubygem])
+      create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: maintainer)
       cutter = push_gem_named("trusted-maintainer-gem", organization_handle: @organization.handle, api_key: api_key)
 
       assert_new_gem_push_rejected cutter

@@ -540,6 +540,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
     t.index ["repository_owner", "repository_name", "repository_owner_id", "workflow_filename", "environment", "workflow_repository_owner", "workflow_repository_name"], name: "index_oidc_trusted_publisher_github_actions_claims", unique: true
   end
 
+  create_table "oidc_trusted_publisher_id_tokens", force: :cascade do |t|
+    t.bigint "api_key_id"
+    t.bigint "asserted_owner_id"
+    t.datetime "created_at", null: false
+    t.string "jti", null: false
+    t.bigint "oidc_provider_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["api_key_id"], name: "index_oidc_trusted_publisher_id_tokens_on_api_key_id"
+    t.index ["asserted_owner_id"], name: "index_oidc_trusted_publisher_id_tokens_on_asserted_owner_id"
+    t.index ["oidc_provider_id"], name: "index_oidc_trusted_publisher_id_tokens_on_oidc_provider_id"
+    t.index ["oidc_provider_id", "jti"], name: "index_oidc_trusted_publisher_id_tokens_on_provider_and_jti", unique: true
+  end
+
   create_table "organization_invites", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "invitable_id", null: false
@@ -842,6 +855,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
   add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
   add_foreign_key "oidc_pending_trusted_publishers", "users"
   add_foreign_key "oidc_rubygem_trusted_publishers", "rubygems"
+  add_foreign_key "oidc_trusted_publisher_id_tokens", "api_keys", on_delete: :nullify
+  add_foreign_key "oidc_trusted_publisher_id_tokens", "oidc_providers"
+  add_foreign_key "oidc_trusted_publisher_id_tokens", "users", column: "asserted_owner_id"
   add_foreign_key "organization_invites", "users"
   add_foreign_key "organization_onboarding_invites", "organization_onboardings"
   add_foreign_key "organization_onboarding_invites", "users"

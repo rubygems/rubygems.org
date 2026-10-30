@@ -1262,6 +1262,7 @@ de:
       index:
         title:
         valid_for_html:
+        owner_html:
         delete:
         create:
         description_html:

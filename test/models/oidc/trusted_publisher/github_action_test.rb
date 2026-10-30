@@ -124,6 +124,49 @@ class OIDC::TrustedPublisher::GitHubActionTest < ActiveSupport::TestCase
     refute publisher.owns_gem?(rubygem2)
   end
 
+  test "#environment_less_publisher" do
+    publisher = create(:oidc_trusted_publisher_github_action, repository_name: "bar")
+    production = create(:oidc_trusted_publisher_github_action, repository_name: "bar", environment: "production")
+    other_workflow = create(:oidc_trusted_publisher_github_action, repository_name: "bar", workflow_filename: "other.yml",
+      environment: "production")
+    reusable_workflow = create(:oidc_trusted_publisher_github_action, repository_name: "bar", environment: "production",
+      workflow_repository_owner: "shared", workflow_repository_name: "workflows")
+    other_owner_id = create(:oidc_trusted_publisher_github_action, repository_name: "bar", environment: "test")
+    other_owner_id.update!(repository_owner_id: "654321")
+
+    assert_equal publisher, production.environment_less_publisher
+    assert_equal [production, publisher], production.authorizing_publishers
+
+    assert_nil publisher.environment_less_publisher
+    assert_equal [publisher], publisher.authorizing_publishers
+
+    assert_nil other_workflow.environment_less_publisher
+    assert_nil reusable_workflow.environment_less_publisher
+    assert_nil other_owner_id.environment_less_publisher
+  end
+
+  test "#owns_gem? honours the environment-less publisher's bindings for an environment-specific publisher" do
+    rubygem = create(:rubygem)
+    publisher = create(:oidc_trusted_publisher_github_action, repository_name: "bar")
+    production = create(:oidc_trusted_publisher_github_action, repository_name: "bar", environment: "production")
+    create(:oidc_rubygem_trusted_publisher, trusted_publisher: publisher, rubygem: rubygem)
+
+    assert publisher.owns_gem?(rubygem)
+    assert production.owns_gem?(rubygem)
+  end
+
+  test "#owns_gem? never honours an environment-specific publisher's bindings for another publisher" do
+    rubygem = create(:rubygem)
+    publisher = create(:oidc_trusted_publisher_github_action, repository_name: "bar")
+    production = create(:oidc_trusted_publisher_github_action, repository_name: "bar", environment: "production")
+    staging = create(:oidc_trusted_publisher_github_action, repository_name: "bar", environment: "staging")
+    create(:oidc_rubygem_trusted_publisher, trusted_publisher: production, rubygem: rubygem)
+
+    assert production.owns_gem?(rubygem)
+    refute publisher.owns_gem?(rubygem)
+    refute staging.owns_gem?(rubygem)
+  end
+
   test "#to_access_policy" do
     publisher = create(:oidc_trusted_publisher_github_action, repository_name: "rubygem1")
 
