@@ -84,6 +84,7 @@ class Avo::UsersSystemTest < ApplicationSystemTestCase
     click_on "Filters"
     find("[data-controller='date-time-filter'] input").click
     within ".flatpickr-calendar.open" do
+      find(".flatpickr-prev-month").click if range_start.month != range_end.month
       find(".flatpickr-day[aria-label='#{range_start.strftime('%B %-d, %Y')}']").click
       find(".flatpickr-day[aria-label='#{range_end.strftime('%B %-d, %Y')}']").click
     end
