@@ -35,6 +35,7 @@ es:
   api_key_insufficient_scope:
   email_not_confirmed:
   please_sign_up: Acceso denegado. Por favor regístrate en https://rubygems.org
+  api_key_invalid:
   please_sign_in: Por favor, ingresa en tu cuenta para continuar.
   otp_incorrect: Tu código OTP es incorrecto. Por favor verifícalo y prueba nuevamente.
   otp_missing: Activaste autenticación con múltiples factores, pero no suministraste

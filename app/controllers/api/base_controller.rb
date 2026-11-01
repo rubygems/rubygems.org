@@ -79,7 +79,8 @@ class Api::BaseController < ApplicationController
   end
 
   def render_unauthorized
-    render plain: t(:please_sign_up), status: :unauthorized
+    message = request.headers["Authorization"].present? ? t(:api_key_invalid) : t(:please_sign_up)
+    render plain: message, status: :unauthorized
   end
 
   def render_forbidden(error = nil)

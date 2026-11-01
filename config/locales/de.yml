@@ -40,6 +40,7 @@ de:
     Prüfen Sie ihr Postfach nach einem Bestätigungs-Link.
   please_sign_up: Zugriff verweigert. Bitte melden Sie sich unter https://rubygems.org
     mit einem Konto an
+  api_key_invalid:
   please_sign_in: Bitte melden Sie sich an, um fortzufahren.
   otp_incorrect: Ihr OTP-Code ist falsch. Bitte überprüfen Sie ihn und versuchen Sie
     es erneut.
