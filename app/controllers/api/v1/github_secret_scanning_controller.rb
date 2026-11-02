@@ -25,8 +25,13 @@ class Api::V1::GitHubSecretScanningController < Api::BaseController
     api_keys = ApiKey.where(hashed_key: tokens.keys).index_by(&:hashed_key)
     resp = tokens.map do |hashed_key, t|
       api_key = api_keys[hashed_key]
-      label = if api_key&.expire!
-                schedule_revoke_email(api_key, t[:url])
+      label = if api_key
+                api_key.with_lock do
+                  unless api_key.expired?
+                    api_key.expire!
+                    schedule_revoke_email(api_key, t[:url])
+                  end
+                end
                 "true_positive"
               else
                 "false_positive"
