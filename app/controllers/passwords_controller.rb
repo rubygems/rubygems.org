@@ -43,7 +43,7 @@ class PasswordsController < ApplicationController
     case @user.update_password_with_token(reset_params[:password], token: session[:password_reset_token])
     when :updated
       @user.reset_api_key! if reset_params[:reset_api_key] == "true" # singular
-      @user.api_keys.expire_all! if reset_params[:reset_api_keys] == "true" # plural
+      track_appsec_event("api_key.reset", user: @user) if reset_params[:reset_api_keys] == "true" && @user.api_keys.expire_all!
       StatsD.increment "login.password_compromised.reset_completed" if session[:password_reset_reason] == "compromised"
       delete_password_reset_session
       flash[:notice] = t(".success")

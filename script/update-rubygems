@@ -9,7 +9,8 @@ end
 require "bundler"
 require "yaml"
 
-return unless (bundler_version = Bundler.self_manager.send(:resolve_update_version_from, ">= 0")&.version)
+bundler_version = Bundler.self_manager.send(:resolve_update_version_from, ">= 0")&.version
+return unless bundler_version
 rubygems_version = Gem::Version.new(bundler_version.segments.tap { |s| s[0] += 1 }.join("."))
 
 def order_nodes(nodes)

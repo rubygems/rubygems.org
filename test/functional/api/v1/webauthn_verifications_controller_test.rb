@@ -5,6 +5,56 @@ require "test_helper"
 # Not to be confused with WebauthnVerificationsControllerTest. This is for the API.
 
 class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
+  context "AppSec tracking" do
+    setup do
+      @user = create(:user)
+      create(:webauthn_credential, user: @user)
+    end
+
+    should "track a basic auth password login" do
+      authorize_with(" #{@user.email} :#{@user.password}")
+      span = assert_appsec_event("users.login.success", user: @user) { post :create }
+      refute_appsec_event("api_key.authentication.failure", span:)
+      assert_response :success
+    end
+
+    should "track a basic auth failure without issuing a verification" do
+      authorize_with("#{@user.email}:wrong-password")
+      assert_no_difference -> { WebauthnVerification.count } do
+        span = assert_appsec_event("users.login.failure", user: @user) { post :create }
+        refute_appsec_event("api_key.authentication.failure", span:)
+      end
+      assert_response :unauthorized
+    end
+
+    %i[create status].product(%w[unknown expired]).each do |action, kind|
+      should "track an #{kind} API key on #{action} without issuing or changing a verification" do
+        if kind == "expired"
+          key = create(:api_key, owner: @user, key: "expired-key")
+          key.update_column(:expires_at, 1.minute.ago)
+        end
+        @request.env["HTTP_AUTHORIZATION"] = "#{kind}-key"
+        verification = create(:webauthn_verification, user: @user)
+        assert_no_changes -> { [verification.reload.attributes, WebauthnVerification.count] } do
+          span = assert_appsec_event("api_key.authentication.failure", metadata: { reason: "invalid_or_expired", "usr.id": nil }) do
+            process action, method: action == :create ? :post : :get, params: { webauthn_token: verification.path_token }, format: :json
+          end
+          refute_appsec_event("users.login.failure", span:)
+          refute_appsec_event("users.login.success", span:)
+        end
+        assert_response :unauthorized
+        refute_includes response.body, verification.otp
+      end
+    end
+
+    should "not classify a credential-free request as an invalid API key" do
+      assert_no_difference -> { WebauthnVerification.count } do
+        refute_appsec_event("api_key.authentication.failure") { post :create }
+      end
+      assert_response :unauthorized
+    end
+  end
+
   should "route new paths to new controller" do
     route = { controller: "api/v1/webauthn_verifications", action: "create" }
 

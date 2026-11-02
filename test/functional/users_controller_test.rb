@@ -79,15 +79,9 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "track signup with Datadog AppSec" do
-        span = with_appsec_trace do
+        assert_appsec_event("users.signup", user: -> { User.find_by!(email: "foo@bar.com") }) do
           post :create, params: { user: { email: "foo@bar.com", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
         end
-
-        user = User.find_by!(email: "foo@bar.com")
-
-        assert_equal "true", span.get_tag("appsec.events.users.signup.track")
-        assert_equal user.id.to_s, span.get_tag("usr.id")
-        assert_match(/0c7e6a405862.*2e8a3b/, span.get_tag("appsec.events.users.signup.usr.login"))
       end
     end
 

@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   include Pundit::Authorization
   include ApplicationMultifactorMethods
   include TraceTagger
+  include AppsecTracking
 
   helper ActiveSupport::NumberHelper
 
@@ -54,14 +55,7 @@ class ApplicationController < ActionController::Base
   def set_user_tag
     return unless signed_in?
     set_tag "gemcutter.user.id", current_user.id
-
-    trace = Datadog::Tracing.active_trace
-    return unless trace
-    Datadog::Kit::Identity.set_user(
-      trace,
-      id: current_user.id.to_s,
-      login: Digest::SHA256.hexdigest(current_user.handle || current_user.email)
-    )
+    identify_appsec_user(actor: current_user)
   end
 
   rescue_from(ActionController::ParameterMissing) do |e|

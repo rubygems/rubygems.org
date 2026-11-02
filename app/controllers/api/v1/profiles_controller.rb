@@ -13,7 +13,8 @@ class Api::V1::ProfilesController < Api::BaseController
 
   def me
     authenticate_or_request_with_http_basic do |username, password|
-      if (user = User::WithPrivateFields.authenticate(username.strip, password))
+      user = User::WithPrivateFields.authenticate(username.strip, password)
+      if user
         Current.user = user
         respond_to do |format|
           format.json { render json: user }

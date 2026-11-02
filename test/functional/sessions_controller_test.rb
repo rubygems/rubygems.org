@@ -5,6 +5,49 @@ require "test_helper"
 class SessionsControllerTest < ActionController::TestCase
   include ActionMailer::TestHelper
 
+  context "AppSec MFA tracking" do
+    setup do
+      @user = create(:user)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+      post :create, params: { session: { who: @user.email, password: @user.password } }
+    end
+
+    should "track a bad OTP without signing in or consuming recovery codes" do
+      assert_no_changes -> { @user.reload.mfa_hashed_recovery_codes } do
+        assert_appsec_event("users.login.failure", user: @user, metadata: { "reason" => "invalid_otp" }) do
+          post :otp_create, params: { otp: "invalid" }
+        end
+      end
+      assert_response :unauthorized
+      refute_predicate @controller.request.env[:clearance], :signed_in?
+    end
+
+    should "track an expired MFA session with its user" do
+      travel 16.minutes do
+        assert_appsec_event("users.login.failure", user: @user, metadata: { "reason" => "mfa_session_expired" }) do
+          post :otp_create, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+        end
+      end
+      assert_response :unauthorized
+      refute_predicate @controller.request.env[:clearance], :signed_in?
+    end
+
+    should "track failed WebAuthn after a valid password without changing credentials" do
+      @webauthn_credential = create(:webauthn_credential, user: @user)
+      login_to_session_with_webauthn
+      credentials = WebauthnHelpers.get_result(client: @client, challenge: SecureRandom.hex)
+      credential = @webauthn_credential
+      assert_no_changes -> { credential.reload.sign_count } do
+        assert_appsec_event("users.login.failure", user: @user, metadata: { "reason" => "invalid_webauthn" }) do
+          post :webauthn_create, params: { credentials: }
+        end
+      end
+      assert_response :unauthorized
+      assert_equal "WebAuthn::ChallengeVerificationError", flash[:alert]
+      refute_predicate @controller.request.env[:clearance], :signed_in?
+    end
+  end
+
   context "when user has mfa enabled" do
     setup do
       @user = create(:user, email_confirmed: true, handle: "login")
@@ -219,13 +262,9 @@ class SessionsControllerTest < ActionController::TestCase
         end
 
         should "track login success with Datadog AppSec" do
-          span = with_appsec_trace do
+          assert_appsec_event("users.login.success", user: @user) do
             post :create, params: { session: { who: "login", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
           end
-
-          assert_equal "true", span.get_tag("appsec.events.users.login.success.track")
-          assert_match(/428821350e96.*665324/, span.get_tag("appsec.events.users.login.success.usr.login"))
-          assert_equal @user.id.to_s, span.get_tag("usr.id")
         end
 
         should "set security device notice" do
@@ -346,24 +385,15 @@ class SessionsControllerTest < ActionController::TestCase
 
       should "track login failure with Datadog AppSec for an existing user" do
         user = create(:user, handle: "existinglogin")
-        span = with_appsec_trace do
+        assert_appsec_event("users.login.failure", user:) do
           post :create, params: { session: { who: "existinglogin", password: "wrongpassword" } }
         end
-
-        assert_equal "true", span.get_tag("appsec.events.users.login.failure.track")
-        assert_match(/4041d06f2aec.*fb5368/, span.get_tag("appsec.events.users.login.failure.usr.login"))
-        assert_equal "true", span.get_tag("appsec.events.users.login.failure.usr.exists")
-        assert_equal user.id.to_s, span.get_tag("appsec.events.users.login.failure.usr.id")
       end
 
       should "track login failure with Datadog AppSec for an unknown user" do
-        span = with_appsec_trace do
+        assert_appsec_event("users.login.failure", login: "nobody") do
           post :create, params: { session: { who: "nobody", password: "wrongpassword" } }
         end
-
-        assert_equal "true", span.get_tag("appsec.events.users.login.failure.track")
-        assert_match(/6382b3cc8814.*51462a/, span.get_tag("appsec.events.users.login.failure.usr.login"))
-        assert_equal "false", span.get_tag("appsec.events.users.login.failure.usr.exists")
       end
     end
 

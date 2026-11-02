@@ -143,8 +143,10 @@ class OIDC::ApiKeyRolesController < ApplicationController
     condition.value = Gemcutter::HOST
 
     return unless rubygem
-    return unless (gh = helpers.link_to_github(rubygem)).presence
-    return unless (@api_key_role.provider = OIDC::Provider.github_actions)
+    gh = helpers.link_to_github(rubygem)
+    return unless gh.presence
+    @api_key_role.provider = OIDC::Provider.github_actions
+    return unless @api_key_role.provider
 
     repo_condition = OIDC::AccessPolicy::Statement::Condition.new(
       claim: "repository",

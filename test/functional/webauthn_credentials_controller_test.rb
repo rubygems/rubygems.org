@@ -4,6 +4,31 @@ require "test_helper"
 
 class WebauthnCredentialsControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
+  include ActionMailer::TestHelper
+
+  context "AppSec tracking" do
+    should "track WebAuthn credential removal" do
+      user = create(:user)
+      credential = create(:webauthn_credential, user:)
+      sign_in_as(user)
+      assert_appsec_event("mfa.webauthn.remove", user:, metadata: { "credential.id" => credential.id }) do
+        delete :destroy, params: { id: credential.id }
+      end
+      assert_response :redirect
+      refute WebauthnCredential.exists?(credential.id)
+    end
+
+    should "not track or remove another user's credential or send mail" do
+      credential = create(:webauthn_credential)
+      sign_in_as(create(:user))
+      assert_no_changes -> { credential.reload.attributes } do
+        assert_no_enqueued_emails do
+          refute_appsec_event("mfa.webauthn.remove") { delete :destroy, params: { id: credential.id } }
+        end
+      end
+      assert_response :not_found
+    end
+  end
 
   context "#create" do
     context "when logged out" do

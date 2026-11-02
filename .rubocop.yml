@@ -183,6 +183,9 @@ Rails/Present:
 Rails/ThreeStateBooleanColumn:
   Enabled: false
 
+Lint/AssignmentInCondition:
+  AllowSafeAssignment: false
+
 Lint/UselessConstantScoping:
   Enabled: false
 

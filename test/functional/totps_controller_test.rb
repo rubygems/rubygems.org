@@ -5,6 +5,32 @@ require "test_helper"
 class TotpsControllerTest < ActionController::TestCase
   include ActionMailer::TestHelper
 
+  context "AppSec tracking" do
+    setup do
+      @user = create(:user)
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+      sign_in_as(@user)
+    end
+
+    should "track TOTP removal" do
+      assert_appsec_event("mfa.totp.disable", user: @user) do
+        delete :destroy, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+      end
+      assert_response :redirect
+      assert_predicate @user.reload, :totp_disabled?
+    end
+
+    should "not track removal or change MFA or send mail for a wrong OTP" do
+      assert_no_changes -> { @user.reload.attributes } do
+        assert_no_enqueued_emails do
+          refute_appsec_event("mfa.totp.disable") { delete :destroy, params: { otp: "invalid" } }
+        end
+      end
+      assert_response :redirect
+      assert_equal I18n.t("totps.incorrect_otp"), flash[:error]
+    end
+  end
+
   context "when logged in" do
     setup do
       @user = create(:user)

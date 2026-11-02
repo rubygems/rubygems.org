@@ -21,7 +21,9 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
       setup do
         @user = create(:user)
         @token = create(:webauthn_verification, user: @user, path_token_expires_at: 1.second.ago).path_token
-        get :prompt, params: { webauthn_token: @token }
+        assert_appsec_event("users.login.failure", user: @user, metadata: { reason: "mfa_session_expired", authentication_method: "webauthn" }) do
+          get :prompt, params: { webauthn_token: @token }
+        end
       end
 
       should respond_with :redirect
@@ -121,7 +123,7 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
           client: @client
         )
         @generated_time = Time.utc(2023, 1, 1, 0, 0, 3)
-        authenticate_request(time: @generated_time)
+        refute_appsec_event("users.login.failure") { authenticate_request(time: @generated_time) }
         @verification.reload
       end
 
@@ -168,14 +170,18 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
 
     context "when not providing credentials" do
       setup do
-        travel_to Time.utc(2023, 1, 1, 0, 0, 3) do
-          post(
-            :authenticate,
-            params: {
-              webauthn_token: @token
-            },
-            format: :json
-          )
+        assert_no_changes -> { @verification.reload.attributes } do
+          assert_appsec_event("users.login.failure", user: @user, metadata: { reason: "invalid_webauthn", authentication_method: "webauthn" }) do
+            travel_to Time.utc(2023, 1, 1, 0, 0, 3) do
+              post(
+                :authenticate,
+                params: {
+                  webauthn_token: @token
+                },
+                format: :json
+              )
+            end
+          end
         end
         @verification.reload
       end
@@ -212,7 +218,11 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
           webauthn_credential: @webauthn_credential,
           client: @client
         )
-        authenticate_request(challenge: @wrong_challenge)
+        assert_no_changes -> { [@verification.reload.attributes, @webauthn_credential.reload.attributes] } do
+          assert_appsec_event("users.login.failure", user: @user, metadata: { reason: "invalid_webauthn", authentication_method: "webauthn" }) do
+            authenticate_request(challenge: @wrong_challenge)
+          end
+        end
         @verification.reload
       end
 
@@ -267,7 +277,11 @@ class WebauthnVerificationsControllerTest < ActionController::TestCase
           webauthn_credential: @webauthn_credential,
           client: @client
         )
-        authenticate_request(time: Time.utc(2023, 1, 1, 0, 3, 0))
+        assert_no_changes -> { [@verification.reload.attributes, @webauthn_credential.reload.attributes] } do
+          assert_appsec_event("users.login.failure", user: @user, metadata: { reason: "mfa_session_expired", authentication_method: "webauthn" }) do
+            authenticate_request(time: Time.utc(2023, 1, 1, 0, 3, 0))
+          end
+        end
       end
 
       should respond_with :unauthorized

@@ -125,6 +125,25 @@ class OAuthTest < ActionDispatch::IntegrationTest
     assert_empty Admin::GitHubUser.all
   end
 
+  test "denies admin access when GitHub returns organization lookup errors" do
+    stub_request(:post, "https://api.github.com/graphql").to_return(
+      status: 200,
+      headers: { "Content-Type" => "application/json" },
+      body: JSON.generate(
+        data: { viewer: { login: "jackson-keeling", id: "95144751", organization: nil } },
+        errors: [message: "Resource not accessible by integration", path: %w[viewer organization]]
+      )
+    )
+
+    assert_no_changes -> { [Admin::GitHubUser.count, ActionMailer::Base.deliveries.count, enqueued_jobs.size] } do
+      do_login
+    end
+
+    assert_response :forbidden
+    assert_match "not a member of the rubygems org", response.body
+    assert_nil cookies["rubygems_admin_oauth_github_user"]
+  end
+
   context "with an existing user for the github_id" do
     setup do
       @existing = create(

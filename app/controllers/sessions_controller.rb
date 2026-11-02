@@ -105,29 +105,18 @@ class SessionsController < Clearance::SessionsController
         StatsD.increment "login.success"
         current_user.record_event!(Events::UserEvent::LOGIN_SUCCESS, request:,
           two_factor_method:, two_factor_label:, authentication_method:)
-        Datadog::Kit::AppSec::Events::V2.track_user_login_success(
-          Digest::SHA256.hexdigest(current_user.handle || current_user.email),
-          current_user.id.to_s
-        )
+        track_appsec_login_success(actor: current_user)
         set_login_flash
         redirect_to(url_after_create)
       else
-        attempted_user = begin
-          User.find_by_email(who) || User.find_by(handle: who)
-        rescue Encoding::UndefinedConversionError
-          nil
-        end
-        login = attempted_user ? (attempted_user.handle || attempted_user.email) : who.to_s
-        metadata = attempted_user ? { "usr.id": attempted_user.id.to_s } : {}
-        Datadog::Kit::AppSec::Events::V2.track_user_login_failure(
-          Digest::SHA256.hexdigest(login), attempted_user.present?, metadata
-        )
         login_failure(status.failure_message)
       end
     end
   end
 
-  def login_failure(message)
+  def login_failure(message, reason: "invalid_credentials")
+    track_appsec_login_failure(actor: @user, login: action_name == "create" ? who : nil,
+      reason:, authentication_method: action_name == "webauthn_full_create" ? "webauthn" : "password")
     StatsD.increment "login.failure"
     flash.now.alert = message
     webauthn_new_setup
@@ -135,11 +124,12 @@ class SessionsController < Clearance::SessionsController
   end
 
   def webauthn_failure
-    invalidate_mfa_session(@webauthn_error)
+    delete_mfa_session
+    mfa_failure(@webauthn_error)
   end
 
   def mfa_failure(message)
-    login_failure(message)
+    login_failure(message, reason: action_name == "otp_create" ? "invalid_otp" : "invalid_webauthn")
   end
 
   def find_user
@@ -148,10 +138,10 @@ class SessionsController < Clearance::SessionsController
   end
 
   def find_mfa_user
-    @user = User.find_by(id: session[:mfa_user]) if mfa_session_active? && session[:mfa_user] && session[:mfa_flow] == controller_path
-    return if @user
+    @user = User.find_by(id: session[:mfa_user]) if session[:mfa_user] && session[:mfa_flow] == controller_path
+    return if mfa_session_active? && @user
     delete_mfa_session
-    login_failure t("multifactor_auths.session_expired")
+    login_failure t("multifactor_auths.session_expired"), reason: "mfa_session_expired"
   end
 
   def who

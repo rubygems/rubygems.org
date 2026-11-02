@@ -6,7 +6,8 @@ class Maintenance::BackfillLinksetLinksToVersionMetadataTask < MaintenanceTasks:
   end
 
   def process(version)
-    return unless (linkset = version.rubygem.linkset)
+    linkset = version.rubygem.linkset
+    return unless linkset
 
     if version.metadata_uri_set?
       # only the homepage does not respect #metadata_uri_set?
@@ -27,7 +28,8 @@ class Maintenance::BackfillLinksetLinksToVersionMetadataTask < MaintenanceTasks:
     links.each do |short, long|
       next if version.metadata[long].present?
 
-      next unless (value = linkset[short.to_sym])
+      value = linkset[short.to_sym]
+      next unless value
 
       version.metadata[long] = value
       changes = true

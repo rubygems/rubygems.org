@@ -453,10 +453,14 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     context "when not verified for password reset" do
       should "redirect to the sign in page" do
-        put password_path, params: {
-          password_reset: { reset_api_key: "true", reset_api_keys: "true",
-                            password: PasswordHelpers::SECURE_TEST_PASSWORD }
-        }
+        assert_no_enqueued_emails do
+          refute_appsec_event("api_key.reset") do
+            put password_path, params: {
+              password_reset: { reset_api_key: "true", reset_api_keys: "true",
+                                password: PasswordHelpers::SECURE_TEST_PASSWORD }
+            }
+          end
+        end
 
         assert_redirected_to sign_in_path
         assert_equal "Please double check the URL or try submitting a new password reset.", flash[:alert]
@@ -465,6 +469,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
         assert_equal @user.api_key, @api_key
         assert_equal @user.encrypted_password, @old_encrypted_password
+        refute_predicate @new_api_key.reload, :expired?
         refute_signed_in
       end
     end
@@ -527,9 +532,15 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     context "with invalid password" do
       should "redisplay edit form and not change password" do
         begin_password_reset
-        put password_path, params: {
-          password_reset: { reset_api_key: "true", password: "pass" }
-        }
+        assert_no_changes -> { @new_api_key.reload.attributes } do
+          assert_no_enqueued_emails do
+            refute_appsec_event("api_key.reset") do
+              put password_path, params: {
+                password_reset: { reset_api_key: "true", reset_api_keys: "true", password: "pass" }
+              }
+            end
+          end
+        end
 
         assert_response :unprocessable_content
         assert page.has_content?("Your password could not be changed. Please try again.")
@@ -549,9 +560,11 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     context "with valid password without reset_api_key" do
       should "change password but not change api_key" do
         begin_password_reset
-        put password_path, params: {
-          password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
-        }
+        refute_appsec_event("api_key.reset") do
+          put password_path, params: {
+            password_reset: { password: PasswordHelpers::SECURE_TEST_PASSWORD }
+          }
+        end
 
         assert_redirected_to sign_in_path
         assert_equal "Your password has been changed.", flash[:notice]
@@ -560,6 +573,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
         assert_equal @user.api_key, @api_key
         refute_equal @user.encrypted_password, @old_encrypted_password
+        refute_predicate @new_api_key.reload, :expired?
       end
     end
 
@@ -602,11 +616,14 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
     context "with valid password with reset_api_key and reset_api_keys" do
       should "change password, reset legacy api_key, and expire all api_keys" do
+        other_key = create(:api_key)
         begin_password_reset
-        put password_path, params: {
-          password_reset: { reset_api_key: "true", reset_api_keys: "true",
-                            password: PasswordHelpers::SECURE_TEST_PASSWORD }
-        }
+        assert_appsec_event("api_key.reset", user: @user) do
+          put password_path, params: {
+            password_reset: { reset_api_key: "true", reset_api_keys: "true",
+                              password: PasswordHelpers::SECURE_TEST_PASSWORD }
+          }
+        end
 
         assert_redirected_to sign_in_path
         # assert_equal "Your password has been changed.", flash[:notice]
@@ -617,6 +634,8 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         refute_equal @user.encrypted_password, @old_encrypted_password
         assert_empty @user.api_keys.unexpired
         refute_empty @user.api_keys.expired
+        refute_predicate other_key.reload, :expired?
+        refute_signed_in
       end
     end
   end

@@ -43,6 +43,7 @@ class TotpsController < ApplicationController
     if current_user.ui_mfa_verified?(otp_param)
       flash[:success] = t(".success")
       current_user.disable_totp!
+      track_appsec_event("mfa.totp.disable")
       redirect_to session.fetch("mfa_redirect_uri", edit_settings_path)
       session.delete("mfa_redirect_uri")
     else

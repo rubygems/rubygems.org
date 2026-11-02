@@ -5,6 +5,70 @@ require "test_helper"
 class ApiKeysControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
 
+  context "AppSec tracking" do
+    setup do
+      @user = create(:user)
+      verified_sign_in_as(@user)
+    end
+
+    should "track key creation" do
+      assert_appsec_event("api_key.create", user: @user, metadata: { "api_key.scopes" => "push_rubygem" }) do
+        post :create, params: { api_key: { name: "test", push_rubygem: true } }
+      end
+      assert_response :redirect
+      assert_equal [:push_rubygem], @user.api_keys.sole.scopes
+    end
+
+    should "track scope changes" do
+      key = create(:api_key, owner: @user, scopes: [:push_rubygem])
+      assert_appsec_event("api_key.update", user: @user, metadata: { "api_key.id" => key.id, "api_key.scopes" => "yank_rubygem" }) do
+        patch :update, params: { id: key.id, api_key: { push_rubygem: false, yank_rubygem: true } }
+      end
+      assert_response :redirect
+      assert_equal [:yank_rubygem], key.reload.scopes
+    end
+
+    should "track reset only after expiring the user's keys" do
+      keys = create_list(:api_key, 2, owner: @user)
+      other_key = create(:api_key)
+      assert_appsec_event("api_key.reset", user: @user) { delete :reset }
+      assert_response :redirect
+      assert(keys.all? { |key| key.reload.expired? })
+      refute_predicate other_key.reload, :expired?
+    end
+
+    should "track individual key expiration" do
+      key = create(:api_key, owner: @user)
+      assert_appsec_event("api_key.expire", user: @user, metadata: { "api_key.id" => key.id }) do
+        delete :destroy, params: { id: key.id }
+      end
+      assert_response :redirect
+      assert_predicate key.reload, :expired?
+    end
+
+    should "not track rejected scope changes" do
+      key = create(:api_key, owner: @user, scopes: [:push_rubygem])
+      assert_no_changes -> { [key.reload.scopes, key.mfa, key.rubygem_id] } do
+        refute_appsec_event("api_key.update") do
+          patch :update, params: { id: key.id, api_key: { show_dashboard: true } }
+        end
+      end
+      assert_response :success
+      refute_empty flash[:error]
+    end
+
+    should "not track or apply scope changes without session verification" do
+      key = create(:api_key, owner: @user, scopes: [:push_rubygem])
+      session.delete(:verification)
+      assert_no_changes -> { key.reload.attributes } do
+        refute_appsec_event("api_key.update") do
+          patch :update, params: { id: key.id, api_key: { push_rubygem: false, yank_rubygem: true } }
+        end
+      end
+      assert_response :redirect
+    end
+  end
+
   context "when not logged in" do
     context "on GET to index" do
       setup { get :index }
