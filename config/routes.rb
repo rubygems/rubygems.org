@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resource :api_key, only: %i[show create update] do
         collection do
-          post :revoke, to: "github_secret_scanning#revoke", defaults: { format: :json }
+          post :revoke, to: "api_key_revocations#revoke", defaults: { format: :json }
         end
       end
       resource :webauthn_verification, only: :create do

@@ -44,6 +44,7 @@ module Gemcutter
     config.action_controller.forgery_protection_origin_check = false
 
     config.rubygems = Application.config_for :rubygems
+    config.secret_scanning = Application.config_for :secret_scanning
 
     config.time_zone = "UTC"
     config.encoding  = "utf-8"
