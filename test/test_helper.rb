@@ -84,6 +84,7 @@ class ActiveSupport::TestCase
   include DatadogHelpers
 
   cattr_accessor :parallel_worker_number
+  cattr_accessor :search_index_initialized, default: false
 
   parallelize_setup do |worker|
     self.parallel_worker_number = worker
@@ -92,7 +93,6 @@ class ActiveSupport::TestCase
     Version.reset_column_information
     SemanticLogger.reopen
     Searchkick.index_suffix = "_#{worker}"
-    Rubygem.reindex(import: false)
     Searchkick.disable_callbacks
     Rails.cache.options[:namespace] = "test_#{worker}"
 
@@ -108,6 +108,12 @@ class ActiveSupport::TestCase
   parallelize(workers: :number_of_processors)
 
   setup do
+    # Initialize once per process, after parallel workers have set their index suffix.
+    unless search_index_initialized
+      Rubygem.reindex(import: false)
+      self.class.search_index_initialized = true
+    end
+
     I18n.locale = :en
     Rack::Attack.cache.store.clear
 

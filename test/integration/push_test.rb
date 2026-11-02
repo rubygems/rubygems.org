@@ -84,6 +84,8 @@ class PushTest < ActionDispatch::IntegrationTest
     assert_response :success
     perform_enqueued_jobs
 
+    assert_equal "green", Searchkick.client.cluster.health(index: Rubygem.searchkick_index.name).fetch("status")
+
     get rubygem_path("sandworm")
 
     assert_response :success
