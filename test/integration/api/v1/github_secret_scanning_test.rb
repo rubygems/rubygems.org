@@ -89,15 +89,25 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
 
         context "with invalid signature" do
           setup do
+            key = "rubygems_#{SecureRandom.hex(24)}"
+            @api_key = create(:api_key, key: key)
+            @tokens << { "token" => key, "type" => "rubygems", "url" => "some_url" }
             signature = sign_body("Hello world!")
-            post revoke_api_v1_api_key_path(@rubygem),
-              params: {},
-              headers: { header_keyid => "test_key_id", header_signature => Base64.encode64(signature) }
+
+            assert_no_enqueued_emails do
+              assert_no_difference -> { @api_key.user.events.count } do
+                post revoke_api_v1_api_key_path(@rubygem),
+                  params: @tokens,
+                  headers: { header_keyid => "test_key_id", header_signature => Base64.encode64(signature) },
+                  as: :json
+              end
+            end
           end
 
           should "deny access" do
             assert_response :unauthorized
             assert_match "Invalid GitHub Signature", @response.body
+            assert_nil @api_key.reload.expires_at
           end
         end
 
@@ -154,6 +164,27 @@ class Api::V1::GitHubSecretScanningTest < ActionDispatch::IntegrationTest
             assert_equal ["no-reply@mailer.rubygems.org"], email.from
             assert_equal "One of your API keys was revoked on rubygems.org", email.subject
             assert_match "some_url", email.body.to_s
+          end
+
+          should "not revoke or notify again when the token is reported at another URL" do
+            expires_at = @api_key.reload.expires_at
+            event_count = @api_key.user.events.count
+            @tokens.last["url"] = "another_url"
+            signature = sign_body(JSON.dump(@tokens))
+
+            travel 1.hour do
+              assert_no_enqueued_emails do
+                post revoke_api_v1_api_key_path,
+                  params: @tokens,
+                  headers: { header_keyid => "test_key_id", header_signature => Base64.encode64(signature) },
+                  as: :json
+              end
+            end
+
+            assert_response :success
+            assert_equal "true_positive", response.parsed_body.last["label"]
+            assert_equal expires_at, @api_key.reload.expires_at
+            assert_equal event_count, @api_key.user.events.count
           end
         end
       end

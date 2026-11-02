@@ -810,8 +810,9 @@ GEM
     searchkick (6.1.2)
       activemodel (>= 7.2)
     securerandom (0.4.1)
-    semantic_logger (5.1.0)
+    semantic_logger (5.2.0)
       concurrent-ruby (~> 1.0)
+      logger (~> 1.5)
     shoryuken (7.0.4)
       aws-sdk-sqs (>= 1.66.0)
       concurrent-ruby
@@ -1030,6 +1031,7 @@ DEPENDENCIES
   ruby-magic (~> 0.6)
   rubyzip (~> 3.7)
   searchkick (~> 6.1)
+  semantic_logger (~> 5.2)
   shoryuken (~> 7.0)
   shoulda-context (~> 3.0.0.rc1)
   shoulda-matchers (~> 8.0)
@@ -1349,7 +1351,7 @@ CHECKSUMS
   sawyer (0.9.3) sha256=0d0f19298408047037638639fe62f4794483fb04320269169bd41af2bdcf5e41
   searchkick (6.1.2) sha256=4074acde796b9a9628f8d5564b98ee35b901e718a6a0d0111f5eeb7d65d301ae
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
-  semantic_logger (5.1.0) sha256=9a8170fc0212ad47ef29e0760219cf416cb5b9973061981733234f7148b6d6ea
+  semantic_logger (5.2.0) sha256=603fb25c6c216b0ec468eb19897f7b06e6fd54d41fd8974765ae03048a736fd9
   shoryuken (7.0.4) sha256=576fcf514d7776fa930108efa04f69c3b5c596d5223dfc54ebe8ee852c228c25
   shoulda-context (3.0.0.rc1) sha256=6e0d9d52ab798c13bc2b490c8537d4bf30cfd318a1ea839c39a66d1d293c6a1a
   shoulda-matchers (8.0.1) sha256=5dbb46e5765b9da225111b085e0819e8c8a121ff94bba430a153eb1ea2c60288

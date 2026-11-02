@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+# Assumes Docker is running; no installs on resume.
+docker compose up --detach --wait db cache search
