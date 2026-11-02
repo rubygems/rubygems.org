@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+# Assumes mise is on PATH and Docker is running.
+echo "Installing Ruby from .ruby-version"
+mise trust mise.toml
+mise install
+
+echo "Starting PostgreSQL, Memcached, and OpenSearch"
+.agents/resume
+
+echo "Setting up the development environment"
+mise exec -- bin/setup
+echo "RubyGems.org setup finished in ${SECONDS}s"
