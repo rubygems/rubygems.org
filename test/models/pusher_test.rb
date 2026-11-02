@@ -958,6 +958,35 @@ class PusherTest < ActiveSupport::TestCase
       assert_empty @organization.rubygems
     end
 
+    should "give a reclaimed organization gem to the new publisher, not the former organization" do
+      rubygem = create(:rubygem, name: "reclaimed-org-gem", organization: @organization)
+      create(:version, :yanked, rubygem: rubygem, number: "1.0.0")
+      rubygem.update_columns(created_at: 200.days.ago, updated_at: 101.days.ago)
+      new_owner = create(:user)
+      api_key = create(:api_key, owner: new_owner)
+
+      cutter = push_gem_named(rubygem.name, version: "2.0.0", api_key:)
+
+      assert cutter.process
+      assert_nil rubygem.reload.organization
+      assert_equal [new_owner], rubygem.owners
+      refute rubygem.owned_by?(@user)
+      assert rubygem.versions.indexed.exists?(number: "2.0.0")
+
+      old_owner_key = create(:api_key, owner: @user)
+      denied = push_gem_named(rubygem.name, version: "3.0.0", organization_handle: @organization.handle, api_key: old_owner_key)
+
+      assert_no_changes -> { @organization.events.ids } do
+        assert_no_changes -> { gem_state(rubygem) } do
+          assert_no_changes -> { RubygemFs.instance.each_key.to_a.sort } do
+            assert_no_enqueued_jobs { refute denied.process }
+          end
+        end
+      end
+      assert_equal 403, denied.code
+      assert_nil rubygem.reload.organization
+    end
+
     should "assign the gem to the organization for a pending trusted publisher without creating ownership" do
       pending_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "trusted-org-gem", user: @user)
       api_key = create(:api_key, owner: pending_publisher.trusted_publisher, scopes: %i[push_rubygem])

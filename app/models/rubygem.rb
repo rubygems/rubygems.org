@@ -396,6 +396,7 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
     oidc_rubygem_trusted_publishers.find_each(&:delete)
     oidc_rubygem_trusted_publishers.clear
+    update!(organization: nil) if organization_id
   end
 
   def find_or_initialize_version_from_spec(spec)
