@@ -1131,6 +1131,9 @@ ja:
       index:
         api_key_roles: OIDC APIキーのロール
         new_role: APIキーのロールを作成
+        action:
+        delete:
+        confirm_delete:
       show:
         api_key_role_name: APIキーのロール%{name}
         automate_gh_actions_publishing: GitHub Actionsでgemの発表を自動化

@@ -1120,6 +1120,9 @@ en:
       index:
         api_key_roles: OIDC API Key Roles
         new_role: Create API Key Role
+        action: Action
+        delete: Delete
+        confirm_delete: Are you sure you want to delete the role "%{name}"?
       show:
         api_key_role_name: "API Key Role %{name}"
         automate_gh_actions_publishing: "Automate Gem Publishing with GitHub Actions"

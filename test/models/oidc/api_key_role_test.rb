@@ -143,6 +143,284 @@ class OIDC::ApiKeyRoleTest < ActiveSupport::TestCase
     end
   end
 
+  def github_actions_role(conditions:, scopes: ["push_rubygem"], effect: "allow")
+    provider = build(:oidc_provider, issuer: OIDC::Provider::GITHUB_ACTIONS_ISSUER)
+    build(:oidc_api_key_role, provider:,
+      api_key_permissions: { scopes: },
+      access_policy: { statements: [effect:, principal: { oidc: provider.issuer }, conditions:] })
+  end
+
+  test "a GitHub Actions gem role whose policy only checks aud is invalid" do
+    role = github_actions_role(conditions: [operator: "string_equals", claim: "aud", value: Gemcutter::HOST])
+
+    refute_predicate role, :valid?
+    assert_match "must bind the token to a repository", role.errors.messages[:access_policy].join
+  end
+
+  test "a GitHub Actions gem role bound by repository is valid" do
+    role = github_actions_role(
+      conditions: [
+        { operator: "string_equals", claim: "aud", value: Gemcutter::HOST },
+        { operator: "string_equals", claim: "repository", value: "example/repo" }
+      ]
+    )
+
+    assert_predicate role, :valid?
+  end
+
+  test "a GitHub Actions gem role bound by an exact repo-scoped sub is valid" do
+    role = github_actions_role(
+      conditions: [operator: "string_equals", claim: "sub", value: "repo:example/repo:ref:refs/heads/main"]
+    )
+
+    assert_predicate role, :valid?
+  end
+
+  test "a GitHub Actions gem role bound by an immutable (repo:owner@id/repo@id) sub is valid" do
+    role = github_actions_role(
+      conditions: [operator: "string_equals", claim: "sub", value: "repo:example@123/repo@456:ref:refs/heads/main"]
+    )
+
+    assert_predicate role, :valid?
+  end
+
+  test "a GitHub Actions gem role bound only by workflow metadata is invalid" do
+    %w[job_workflow_ref job_workflow_sha workflow_ref].each do |claim|
+      role = github_actions_role(
+        conditions: [operator: "string_equals", claim:, value: "example/repo/.github/workflows/release.yml@refs/heads/main"]
+      )
+
+      refute_predicate role, :valid?, "#{claim} identifies workflow metadata, not a trusted caller"
+    end
+  end
+
+  test "a GitHub Actions gem role bound only by a pattern-matched sub is invalid" do
+    # `sub` is caller-customizable, so a pattern match is not a reliable binding.
+    role = github_actions_role(
+      conditions: [operator: "string_matches", claim: "sub", value: "repo:example/.*"]
+    )
+
+    refute_predicate role, :valid?
+  end
+
+  test "a GitHub Actions gem role bound only by a customized repo-less sub is invalid" do
+    # A subject customized to drop the repository (e.g. just the environment)
+    # does not tie the token to a repository.
+    role = github_actions_role(
+      conditions: [operator: "string_equals", claim: "sub", value: "environment:production"]
+    )
+
+    refute_predicate role, :valid?
+  end
+
+  test "a GitHub Actions gem role bound only by a blank repository value is invalid" do
+    role = github_actions_role(
+      conditions: [
+        { operator: "string_equals", claim: "aud", value: Gemcutter::HOST },
+        { operator: "string_equals", claim: "repository", value: "" }
+      ]
+    )
+
+    refute_predicate role, :valid?
+  end
+
+  test "a GitHub Actions gem role bound only by a deny statement is invalid" do
+    provider = build(:oidc_provider, issuer: OIDC::Provider::GITHUB_ACTIONS_ISSUER)
+    role = build(:oidc_api_key_role, provider:,
+      api_key_permissions: { scopes: ["push_rubygem"] },
+      access_policy: { statements: [
+        { effect: "allow", principal: { oidc: provider.issuer },
+          conditions: [operator: "string_equals", claim: "aud", value: Gemcutter::HOST] },
+        { effect: "deny", principal: { oidc: provider.issuer },
+          conditions: [operator: "string_equals", claim: "repository", value: "example/repo"] }
+      ] })
+
+    refute_predicate role, :valid?
+  end
+
+  test "a GitHub Actions role without gem-applicable scopes need not bind a repository" do
+    role = github_actions_role(
+      scopes: ["index_rubygems"],
+      conditions: [operator: "string_equals", claim: "aud", value: Gemcutter::HOST]
+    )
+
+    assert_predicate role, :valid?
+  end
+
+  def buildkite_role(conditions:, scopes: ["push_rubygem"], effect: "allow")
+    provider = build(:oidc_provider_buildkite, issuer: OIDC::Provider::BUILDKITE_ISSUER)
+    build(:oidc_api_key_role, provider:,
+      api_key_permissions: { scopes: },
+      access_policy: { statements: [effect:, principal: { oidc: provider.issuer }, conditions:] })
+  end
+
+  test "a Buildkite gem role whose policy only checks aud is invalid" do
+    role = buildkite_role(conditions: [operator: "string_equals", claim: "aud", value: Gemcutter::HOST])
+
+    refute_predicate role, :valid?
+    assert_match "constrain one of organization_id, organization_slug, pipeline_id", role.errors.messages[:access_policy].join
+  end
+
+  test "a Buildkite gem role bound by organization_slug is valid" do
+    role = buildkite_role(
+      conditions: [
+        { operator: "string_equals", claim: "aud", value: Gemcutter::HOST },
+        { operator: "string_equals", claim: "organization_slug", value: "example-org" }
+      ]
+    )
+
+    assert_predicate role, :valid?
+  end
+
+  test "a Buildkite gem role bound by organization_id is valid" do
+    role = buildkite_role(
+      conditions: [operator: "string_equals", claim: "organization_id", value: "0191e39d-8a93-77be-a1fe-934a3d9e1bc8"]
+    )
+
+    assert_predicate role, :valid?
+  end
+
+  test "a Buildkite gem role bound by pipeline_id is valid" do
+    role = buildkite_role(
+      conditions: [operator: "string_equals", claim: "pipeline_id", value: "0191e39d-c89c-7c33-a1db-f16e1cfa229f"]
+    )
+
+    assert_predicate role, :valid?
+  end
+
+  test "a Buildkite gem role bound only by an organization-scoped sub is invalid" do
+    # Unlike GitHub, Buildkite bindings must use the organization/pipeline
+    # claims; a sub is not accepted even when it pins the organization.
+    role = buildkite_role(
+      conditions: [
+        operator: "string_equals", claim: "sub",
+        value: "organization:example-org:pipeline:example-pipeline:ref:refs/heads/main:commit:b5ffe3aeea51cec6c41aef16e45ee6bce47d8810:step:"
+      ]
+    )
+
+    refute_predicate role, :valid?
+  end
+
+  test "a Buildkite gem role bound only by pipeline_slug is invalid" do
+    # Any Buildkite organization can name a pipeline to match, so a pipeline
+    # slug does not bind the token without an organization claim.
+    role = buildkite_role(
+      conditions: [
+        { operator: "string_equals", claim: "aud", value: Gemcutter::HOST },
+        { operator: "string_equals", claim: "pipeline_slug", value: "example-pipeline" }
+      ]
+    )
+
+    refute_predicate role, :valid?
+  end
+
+  test "a Buildkite gem role bound only by build_branch is invalid" do
+    role = buildkite_role(
+      conditions: [operator: "string_equals", claim: "build_branch", value: "main"]
+    )
+
+    refute_predicate role, :valid?
+  end
+
+  test "a Buildkite gem role bound only by a pattern-matched sub is invalid" do
+    role = buildkite_role(
+      conditions: [operator: "string_matches", claim: "sub", value: "organization:example-org:.*"]
+    )
+
+    refute_predicate role, :valid?
+  end
+
+  test "a Buildkite gem role bound only by a sub that does not pin an organization is invalid" do
+    role = buildkite_role(
+      conditions: [operator: "string_equals", claim: "sub", value: "pipeline:example-pipeline:ref:refs/heads/main"]
+    )
+
+    refute_predicate role, :valid?
+  end
+
+  test "a Buildkite role without gem-applicable scopes need not bind an organization" do
+    role = buildkite_role(
+      scopes: ["index_rubygems"],
+      conditions: [operator: "string_equals", claim: "aud", value: Gemcutter::HOST]
+    )
+
+    assert_predicate role, :valid?
+  end
+
+  def unknown_provider_role(conditions:, scopes: ["push_rubygem"], effect: "allow")
+    provider = build(:oidc_provider, issuer: "https://oidc.example.com")
+    build(:oidc_api_key_role, provider:,
+      api_key_permissions: { scopes: },
+      access_policy: { statements: [effect:, principal: { oidc: provider.issuer }, conditions:] })
+  end
+
+  test "an unknown-provider gem role bound by an exact sub is valid" do
+    role = unknown_provider_role(
+      conditions: [operator: "string_equals", claim: "sub", value: "service-account:releases"]
+    )
+
+    assert_predicate role, :valid?
+  end
+
+  test "an unknown-provider gem role bound only by claims other than sub is invalid" do
+    role = unknown_provider_role(
+      conditions: [
+        { operator: "string_equals", claim: "aud", value: Gemcutter::HOST },
+        { operator: "string_equals", claim: "actor", value: "releaser" }
+      ]
+    )
+
+    refute_predicate role, :valid?
+    assert_match "constrain an exact `sub` claim", role.errors.messages[:access_policy].join
+  end
+
+  test "a non-GitHub gem role bound by a provider-specific claim is valid" do
+    # The buildkite factory's default policy binds organization_slug (a non-boilerplate claim).
+    assert_predicate build(:oidc_api_key_role_buildkite), :valid?
+  end
+
+  test "a non-GitHub gem role whose policy only checks aud is invalid" do
+    role = build(:oidc_api_key_role_buildkite,
+      access_policy: { statements: [
+        effect: "allow",
+        conditions: [operator: "string_equals", claim: "aud", value: Gemcutter::HOST]
+      ] })
+
+    refute_predicate role, :valid?
+    assert_match "must bind the token to a specific workload", role.errors.messages[:access_policy].join
+  end
+
+  test "a non-GitHub gem role cannot bind only a wildcard claim" do
+    role = build(:oidc_api_key_role_buildkite,
+      access_policy: { statements: [
+        effect: "allow",
+        conditions: [operator: "string_matches", claim: "organization_slug", value: ".*"]
+      ] })
+
+    refute_predicate role, :valid?
+  end
+
+  test "a non-GitHub role without gem-applicable scopes need not bind a workload" do
+    role = build(:oidc_api_key_role_buildkite,
+      api_key_permissions: { scopes: ["index_rubygems"] },
+      access_policy: { statements: [
+        effect: "allow",
+        conditions: [operator: "string_equals", claim: "aud", value: Gemcutter::HOST]
+      ] })
+
+    assert_predicate role, :valid?
+  end
+
+  test "a Buildkite role bound only by a branch cannot authorize another organization" do
+    role = build(:oidc_api_key_role_buildkite,
+      access_policy: { statements: [
+        effect: "allow",
+        conditions: [operator: "string_equals", claim: "build_branch", value: "main"]
+      ] })
+
+    refute_predicate role, :valid?
+  end
+
   private
 
   def request_with_ip

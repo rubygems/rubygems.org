@@ -18,7 +18,7 @@ class OIDC::ApiKeyRole::TableComponent < ApplicationComponent
       tbody do
         api_key_roles.each do |api_key_role|
           tr(class: "text-sm") do
-            cell(title: "Name") { link_to api_key_role.name, profile_oidc_api_key_role_path(api_key_role.token), class: "hover:underline" }
+            cell(title: "Name") { link_to api_key_role.name, profile_oidc_api_key_role_path(api_key_role.token), class: LINK_CLASSES }
             cell(title: "Role Token") { code { api_key_role.token } }
             cell(title: "Provider") { link_to api_key_role.provider.issuer, api_key_role.provider.issuer, class: LINK_CLASSES }
           end
@@ -29,7 +29,7 @@ class OIDC::ApiKeyRole::TableComponent < ApplicationComponent
 
   private
 
-  LINK_CLASSES = "text-orange-500 hover:underline dark:text-orange-400"
+  LINK_CLASSES = "text-orange-500 underline dark:text-orange-400"
 
   def header(&)
     th(&)

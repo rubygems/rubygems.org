@@ -1134,6 +1134,9 @@ pt-BR:
       index:
         api_key_roles:
         new_role:
+        action:
+        delete:
+        confirm_delete:
       show:
         api_key_role_name:
         automate_gh_actions_publishing:

@@ -34,6 +34,67 @@ class OIDC::ApiKeyRole < ApplicationRecord
     provider.github_actions? && api_key_permissions.scopes.include?("push_rubygem")
   end
 
+  # job_workflow_ref names the called reusable workflow, not the caller; a public
+  # reusable workflow may be invoked from a different repository.
+  GITHUB_ACTIONS_BINDING_CLAIMS = %w[
+    repository repository_id repository_owner repository_owner_id
+  ].freeze
+
+  GITHUB_ACTIONS_SUBJECT_PREFIX = "repo:"
+
+  BUILDKITE_BINDING_CLAIMS = %w[organization_id organization_slug pipeline_id].freeze
+
+  def workload_binding_required?
+    return false unless provider
+
+    Array(api_key_permissions&.scopes).map(&:to_s).intersect?(
+      (ApiKey::APPLICABLE_GEM_API_SCOPES + %i[access_webhooks access_oidc_api_key_roles show_dashboard]).map(&:to_s)
+    )
+  end
+
+  def condition_binds_workload?(condition)
+    return false unless condition.operator == "string_equals" && condition.value.present?
+
+    if github_actions_issuer?
+      if condition.claim == "sub"
+        condition.value.to_s.start_with?(GITHUB_ACTIONS_SUBJECT_PREFIX)
+      else
+        GITHUB_ACTIONS_BINDING_CLAIMS.include?(condition.claim)
+      end
+    elsif buildkite_issuer?
+      BUILDKITE_BINDING_CLAIMS.include?(condition.claim)
+    else
+      condition.claim == "sub"
+    end
+  end
+
+  def github_actions_issuer?
+    provider&.github_actions? || provider&.issuer&.end_with?(".token.actions.githubusercontent.com")
+  end
+
+  def buildkite_issuer?
+    provider&.buildkite? || provider&.issuer&.end_with?(".agent.buildkite.com")
+  end
+
+  def access_policy_binds_workload?
+    return true unless workload_binding_required?
+
+    allow_statements = Array(access_policy&.statements).select { it.effect == "allow" }
+    return false if allow_statements.empty?
+
+    allow_statements.all? do |statement|
+      Array(statement.conditions).any? { |condition| condition_binds_workload?(condition) }
+    end
+  end
+
+  def verify_access!(jwt)
+    unless access_policy_binds_workload?
+      raise OIDC::AccessPolicy::AccessError,
+        "refusing to issue an API key: access policy #{workload_binding_error}"
+    end
+    access_policy.verify_access!(jwt)
+  end
+
   def gems_belong_to_user
     Array.wrap(api_key_permissions&.gems).each_with_index do |name, idx|
       errors.add("api_key_permissions.gems[#{idx}]", "(#{name}) does not belong to user #{user.display_handle}") if user.rubygems.where(name:).empty?
@@ -64,6 +125,7 @@ class OIDC::ApiKeyRole < ApplicationRecord
   attribute :access_policy, Types::JsonDeserializable.new(OIDC::AccessPolicy)
   validates :access_policy, presence: true, nested: true
   validate :all_condition_claims_are_known
+  validate :access_policy_binds_workload
 
   # Since the only current value of this is the provider's issuer, we can set it automatically.
   def set_statement_principals
@@ -86,6 +148,29 @@ class OIDC::ApiKeyRole < ApplicationRecord
         c.errors.add(:claim,
                    "unknown for the provider")
       end
+    end
+  end
+
+  def access_policy_binds_workload
+    return if access_policy_binds_workload?
+
+    errors.add(:access_policy, workload_binding_error)
+  end
+
+  def workload_binding_error
+    if github_actions_issuer?
+      "must bind the token to a repository for a GitHub Actions role with account access: " \
+        "constrain one of #{GITHUB_ACTIONS_BINDING_CLAIMS.join(', ')}, or a `sub` pinned to a " \
+        "repository (an exact `repo:...` subject). A policy that only checks `aud` - or only a " \
+        "customized/pattern-matched `sub` - can be assumed by any repository on GitHub."
+    elsif buildkite_issuer?
+      "must bind the token to a specific workload for an OIDC role with account access: " \
+        "constrain one of #{BUILDKITE_BINDING_CLAIMS.join(', ')}. A policy that only checks " \
+        "`aud` or `build_branch` can be assumed by another Buildkite organization."
+    else
+      "must bind the token to a specific workload for an OIDC role with account access: " \
+        "constrain an exact `sub` claim. A policy that only checks `aud` can be assumed by " \
+        "any workload the provider issues a token to."
     end
   end
 

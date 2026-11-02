@@ -38,6 +38,12 @@ class OIDCTest < ApplicationSystemTestCase
 
     page.assert_selector "h3", text: "OIDC API Key Roles"
     page.assert_text(/displaying 1 api key role/i)
+
+    # Each row carries explicit actions, so scoping down an over-privileged role
+    # does not depend on discovering that the name is a link.
+    assert_selector "form[action='#{edit_profile_oidc_api_key_role_path(@id_token.api_key_role.token)}'] button", text: "Edit"
+    assert_selector "form[action='#{profile_oidc_api_key_role_path(@id_token.api_key_role.token)}'] button", text: "Delete"
+
     page.click_link @id_token.api_key_role.name
 
     page.assert_selector "h3", text: "API Key Role #{@id_token.api_key_role.name}"
@@ -167,9 +173,11 @@ class OIDCTest < ApplicationSystemTestCase
     new_condition.fill_in "Claim", with: "fudge"
     new_condition.select "String Equals", from: "Operator"
 
-    statements.first.find_all("button", text: "Remove condition").last.click
-
-    page.assert_selector("button.form__remove_nested_button", text: "Remove condition", count: 3)
+    # Previously this removed statement 1's `repository` condition, leaving an
+    # `allow` statement bound only by `aud`. A GitHub Actions role that can act
+    # on gems must now keep a repository binding on its allow statement, so the
+    # condition is retained (and the expected policy below still includes it).
+    page.assert_selector("button.form__remove_nested_button", text: "Remove condition", count: 4)
 
     click_button "Edit API Key Role"
 
@@ -199,7 +207,8 @@ class OIDCTest < ApplicationSystemTestCase
             "effect" => "allow",
             "principal" => { "oidc" => "https://token.actions.githubusercontent.com" },
             "conditions" => [
-              "operator" => "string_equals", "claim" => "aud", "value" => "localhost"
+              { "operator" => "string_equals", "claim" => "aud", "value" => "localhost" },
+              { "operator" => "string_equals", "claim" => "repository", "value" => "example/repo" }
             ]
           },
           {

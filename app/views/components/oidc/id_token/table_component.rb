@@ -27,7 +27,7 @@ class OIDC::IdToken::TableComponent < ApplicationComponent
 
   private
 
-  LINK_CLASSES = "text-orange-500 hover:underline dark:text-orange-400"
+  LINK_CLASSES = "text-orange-500 underline dark:text-orange-400"
 
   def row(token)
     row_classes = ["text-sm"]

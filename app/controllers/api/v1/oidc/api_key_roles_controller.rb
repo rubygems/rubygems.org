@@ -79,7 +79,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
   end
 
   def verify_access
-    @api_key_role.access_policy.verify_access!(@jwt)
+    @api_key_role.verify_access!(@jwt)
     Current.user = @api_key_role.user
   end
 end

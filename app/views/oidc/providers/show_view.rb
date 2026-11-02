@@ -44,7 +44,7 @@ class OIDC::Providers::ShowView < ApplicationView
   private
 
   HEADING = "text-sm text-neutral-600 dark:text-neutral-400 uppercase tracking-wide"
-  LINK_CLASSES = "text-orange-500 hover:underline dark:text-orange-400"
+  LINK_CLASSES = "text-orange-500 underline dark:text-orange-400"
   TAG_CLASSES = "rounded bg-neutral-100 dark:bg-neutral-900 px-2 py-1 text-c4"
 
   def subject_sidebar

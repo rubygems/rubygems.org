@@ -1230,6 +1230,9 @@ es:
       index:
         api_key_roles: Roles de clave API OIDC
         new_role: Crear rol de clave API
+        action:
+        delete:
+        confirm_delete:
       show:
         api_key_role_name: Rol de clave API %{name}
         automate_gh_actions_publishing: Automatizar publicación de gemas con GitHub

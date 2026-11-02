@@ -134,7 +134,25 @@ class OIDC::ApiKeyRolesController < ApplicationController
   ].freeze
 
   def api_key_role_params
-    params.expect(oidc_api_key_role: PERMITTED_API_KEY_ROLE_PARAMS)
+    params.expect(oidc_api_key_role: PERMITTED_API_KEY_ROLE_PARAMS).tap do |attributes|
+      # Only new roles have a seeded placeholder. Removing one from a saved
+      # policy during an unrelated edit could make that policy match more tokens.
+      next unless action_name == "create"
+
+      statements = attributes.dig(:access_policy, :statements_attributes)
+      next unless statements.respond_to?(:each_value)
+
+      statements.each_value do |statement|
+        next unless statement[:effect] == "allow"
+
+        conditions = statement[:conditions_attributes]
+        next unless conditions.respond_to?(:each_value)
+
+        conditions.delete_if do |_index, condition|
+          condition[:claim] == "repository" && condition[:value].blank?
+        end
+      end
+    end
   end
 
   def add_default_params(rubygem, statement, condition)
@@ -142,15 +160,17 @@ class OIDC::ApiKeyRolesController < ApplicationController
     condition.operator = "string_equals"
     condition.value = Gemcutter::HOST
 
-    return unless rubygem
-    return unless (gh = helpers.link_to_github(rubygem)).presence
-    return unless (@api_key_role.provider = OIDC::Provider.github_actions)
+    gh = rubygem && helpers.link_to_github(rubygem).presence
+    @api_key_role.provider = OIDC::Provider.github_actions if gh
 
-    repo_condition = OIDC::AccessPolicy::Statement::Condition.new(
+    # Always seed a repository binding so the New Role form never defaults to an
+    # aud-only policy (which #access_policy_binds_workload? rejects). Pre-fill it
+    # from the gem's GitHub link when available, otherwise leave it blank for the
+    # user to complete.
+    statement.conditions << OIDC::AccessPolicy::Statement::Condition.new(
       claim: "repository",
       operator: "string_equals",
-      value: gh.path.split("/")[1, 2].join("/")
+      value: gh ? gh.path.split("/")[1, 2].join("/") : ""
     )
-    statement.conditions << repo_condition
   end
 end

@@ -146,15 +146,35 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
     JSON::JWT.new(claims).sign(key.to_jwk)
   end
 
+  def set_foreign_caller_claims
+    @claims.merge!(
+      "repository" => "attacker/repo",
+      "repository_id" => "123456",
+      "repository_owner" => "attacker",
+      "repository_owner_id" => "7890",
+      "sub" => "repo:attacker/repo:ref:refs/heads/main",
+      "actor" => "attacker",
+      "workflow_ref" => "attacker/repo/.github/workflows/dispatch.yml@refs/heads/main"
+    )
+  end
+
+  # A policy with exactly `condition_count` conditions, used to sit right at (or
+  # one over) OIDC::AccessPolicy::MAX_TOTAL_CONDITIONS. The first condition binds
+  # the token to the repository, since a pattern-matched `sub` does not bind one
+  # on its own; the rest pad the policy out to the requested size.
   def access_policy_with_conditions(condition_count)
     {
       statements: [
 
         effect: "allow",
         principal: { oidc: @role.provider.issuer },
-        conditions: Array.new(condition_count) do
-          { operator: "string_matches", claim: "sub", value: "\\A#{Regexp.escape(@claims.fetch('sub'))}\\z" }
-        end
+        conditions: [
+          { operator: "string_equals", claim: "repository", value: @claims.fetch("repository") },
+          # -1 because the repository condition above is already one of the `condition_count`.
+          *Array.new(condition_count - 1) do
+            { operator: "string_matches", claim: "sub", value: "\\A#{Regexp.escape(@claims.fetch('sub'))}\\z" }
+          end
+        ]
 
       ]
     }
@@ -201,6 +221,194 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
       }
 
       travel_to Time.zone.at(1_680_020_830) # after the JWT iat, before the exp
+    end
+
+    context "with a role whose policy does not bind a repository" do
+      # A role saved before repository binding was required (e.g. one whose
+      # generated workflow - and token - is committed in a public repo). The
+      # policy still *matches* the foreign token on aud, but the role must be
+      # denied anyway. update_column bypasses the save-time validation that now
+      # forbids persisting such a policy.
+      should "deny and mint no api key" do
+        unbound_policy = {
+          statements: [
+            effect: "allow",
+            principal: { oidc: @role.provider.issuer },
+            conditions: [operator: "string_equals", claim: "aud", value: @claims["aud"]]
+          ]
+        }
+
+        @role.update_column(:access_policy, unbound_policy)
+
+        assert_no_difference ["ApiKey.count", "OIDC::IdToken.count"] do
+          assert_no_enqueued_emails do
+            post assume_role_api_v1_oidc_api_key_role_path(@role.token),
+                params: { jwt: jwt.to_s },
+                headers: {}
+          end
+        end
+
+        assert_response :not_found
+        assert_empty @user.api_keys
+      end
+    end
+
+    %w[access_webhooks access_oidc_api_key_roles show_dashboard].each do |scope|
+      should "deny a foreign caller of a legacy #{scope} role with an aud-only policy" do
+        @role.update_column(:api_key_permissions,
+                            { scopes: [scope], valid_for: 1800, gems: nil })
+        @role.update_column(:access_policy, { statements: [
+                              effect: "allow", principal: { oidc: @role.provider.issuer },
+                              conditions: [operator: "string_equals", claim: "aud", value: @claims.fetch("aud")]
+                            ] })
+        set_foreign_caller_claims
+
+        assert_no_difference ["ApiKey.count", "OIDC::IdToken.count"] do
+          assert_no_enqueued_emails do
+            post assume_role_api_v1_oidc_api_key_role_path(@role.token), params: { jwt: jwt.to_s }
+          end
+        end
+
+        assert_response :not_found
+        refute_predicate @role.reload, :valid?
+      end
+    end
+
+    context "with only a called reusable workflow binding" do
+      should "reject a foreign caller even when its signed token names the expected workflow" do
+        workflow = "owner/releases/.github/workflows/push.yml@refs/heads/main"
+        policy = { statements: [
+          effect: "allow", principal: { oidc: @role.provider.issuer },
+          conditions: [
+            { operator: "string_equals", claim: "aud", value: @claims.fetch("aud") },
+            { operator: "string_equals", claim: "job_workflow_ref", value: workflow }
+          ]
+        ] }
+        @role.update_column(:access_policy, policy)
+        set_foreign_caller_claims
+        @claims["job_workflow_ref"] = workflow
+
+        assert_no_difference ["ApiKey.count", "OIDC::IdToken.count"] do
+          assert_no_enqueued_emails do
+            post assume_role_api_v1_oidc_api_key_role_path(@role.token), params: { jwt: jwt.to_s }
+          end
+        end
+
+        assert_response :not_found
+        refute @role.update(access_policy: policy)
+      end
+
+      should "allow the intended caller when its repository is also pinned" do
+        workflow = "owner/releases/.github/workflows/push.yml@refs/heads/main"
+        @role.update!(access_policy: { statements: [
+                        effect: "allow", principal: { oidc: @role.provider.issuer },
+                        conditions: [
+                          { operator: "string_equals", claim: "repository", value: @claims.fetch("repository") },
+                          { operator: "string_equals", claim: "job_workflow_ref", value: workflow }
+                        ]
+                      ] })
+        @claims["job_workflow_ref"] = workflow
+
+        post assume_role_api_v1_oidc_api_key_role_path(@role.token), params: { jwt: jwt.to_s }
+
+        assert_response :created
+        assert_equal 1, @user.api_keys.count
+        assert_equal 1, @role.id_tokens.count
+      end
+
+      should "deny a foreign caller of a saved repository-and-workflow policy" do
+        workflow = "owner/releases/.github/workflows/push.yml@refs/heads/main"
+        @role.update!(access_policy: { statements: [
+                        effect: "allow", principal: { oidc: @role.provider.issuer },
+                        conditions: [
+                          { operator: "string_equals", claim: "repository", value: @claims.fetch("repository") },
+                          { operator: "string_equals", claim: "job_workflow_ref", value: workflow }
+                        ]
+                      ] })
+        set_foreign_caller_claims
+        @claims["job_workflow_ref"] = workflow
+
+        assert_no_difference ["ApiKey.count", "OIDC::IdToken.count"] do
+          assert_no_enqueued_emails do
+            post assume_role_api_v1_oidc_api_key_role_path(@role.token), params: { jwt: jwt.to_s }
+          end
+        end
+
+        assert_response :not_found
+      end
+    end
+
+    context "with a repository-bound allow and a separate aud-only allow" do
+      should "reject the policy on save and deny legacy roles without side effects" do
+        policy = { statements: [
+          { effect: "allow", principal: { oidc: @role.provider.issuer },
+            conditions: [operator: "string_equals", claim: "repository", value: "other/repo"] },
+          { effect: "allow", principal: { oidc: @role.provider.issuer },
+            conditions: [operator: "string_equals", claim: "aud", value: @claims.fetch("aud")] }
+        ] }
+
+        @role.update_column(:access_policy, policy)
+        api_key_count = ApiKey.count
+        id_token_count = OIDC::IdToken.count
+
+        assert_no_enqueued_emails do
+          post assume_role_api_v1_oidc_api_key_role_path(@role.token), params: { jwt: jwt.to_s }
+
+          assert_response :not_found
+        end
+        assert_equal api_key_count, ApiKey.count
+        assert_equal id_token_count, OIDC::IdToken.count
+        refute @role.update(access_policy: policy)
+      end
+    end
+
+    context "with an aud-only allow followed by a repository-bound allow" do
+      should "reject the policy on save and deny legacy roles without side effects" do
+        policy = { statements: [
+          { effect: "allow", principal: { oidc: @role.provider.issuer },
+            conditions: [operator: "string_equals", claim: "aud", value: @claims.fetch("aud")] },
+          { effect: "allow", principal: { oidc: @role.provider.issuer },
+            conditions: [operator: "string_equals", claim: "repository", value: "other/repo"] }
+        ] }
+
+        @role.update_column(:access_policy, policy)
+        api_key_count = ApiKey.count
+        id_token_count = OIDC::IdToken.count
+
+        assert_no_enqueued_emails do
+          post assume_role_api_v1_oidc_api_key_role_path(@role.token), params: { jwt: jwt.to_s }
+
+          assert_response :not_found
+        end
+        assert_equal api_key_count, ApiKey.count
+        assert_equal id_token_count, OIDC::IdToken.count
+        refute @role.update(access_policy: policy)
+      end
+    end
+
+    context "with a wildcard repository condition" do
+      should "reject the policy on save and deny legacy roles without side effects" do
+        policy = { statements: [
+          effect: "allow", principal: { oidc: @role.provider.issuer },
+          conditions: [
+            { operator: "string_equals", claim: "aud", value: @claims.fetch("aud") },
+            { operator: "string_matches", claim: "repository", value: ".*" }
+          ]
+        ] }
+
+        @role.update_column(:access_policy, policy)
+        api_key_count = ApiKey.count
+        id_token_count = OIDC::IdToken.count
+
+        assert_no_enqueued_emails do
+          post assume_role_api_v1_oidc_api_key_role_path(@role.token), params: { jwt: jwt.to_s }
+
+          assert_response :not_found
+        end
+        assert_equal api_key_count, ApiKey.count
+        assert_equal id_token_count, OIDC::IdToken.count
+        refute @role.update(access_policy: policy)
+      end
     end
 
     context "with an unknown id" do
@@ -542,6 +750,57 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           hashed_key = @user.api_keys.sole.hashed_key
 
           assert_equal hashed_key, Digest::SHA256.hexdigest(resp["rubygems_api_key"])
+        end
+      end
+
+      should "deny a foreign organization when a legacy role checks only build_branch" do
+        @role.update_column(:access_policy, { statements: [
+                              effect: "allow", principal: { oidc: @role.provider.issuer },
+                              conditions: [
+                                { operator: "string_equals", claim: "aud", value: @claims.fetch("aud") },
+                                { operator: "string_equals", claim: "build_branch", value: "main" }
+                              ]
+                            ] })
+        @claims["organization_slug"] = "other-org"
+        @claims["pipeline_slug"] = "other-pipeline"
+        @claims["sub"] = "organization:other-org:pipeline:other-pipeline:ref:refs/heads/main:commit:b5ffe3aeea51cec6c41aef16e45ee6bce47d8810:step:"
+
+        assert_no_difference ["ApiKey.count", "OIDC::IdToken.count"] do
+          assert_no_enqueued_emails do
+            post assume_role_api_v1_oidc_api_key_role_path(@role.token), params: { jwt: jwt.to_s }
+          end
+        end
+
+        assert_response :not_found
+      end
+
+      context "with a legacy policy bound only by pipeline_slug" do
+        should "reject the policy on save and deny a foreign organization without side effects" do
+          policy = { statements: [
+            effect: "allow", principal: { oidc: @role.provider.issuer },
+            conditions: [
+              { operator: "string_equals", claim: "aud", value: @claims.fetch("aud") },
+              { operator: "string_equals", claim: "pipeline_slug", value: @claims.fetch("pipeline_slug") }
+            ]
+          ] }
+
+          @role.update_column(:access_policy, policy)
+          foreign_claims = @claims.merge(
+            "organization_slug" => "attacker-org",
+            "sub" => "organization:attacker-org:pipeline:example-pipeline:ref:refs/heads/main:" \
+                     "commit:b5ffe3aeea51cec6c41aef16e45ee6bce47d8810:step:"
+          )
+          api_key_count = ApiKey.count
+          id_token_count = OIDC::IdToken.count
+
+          assert_no_enqueued_emails do
+            post assume_role_api_v1_oidc_api_key_role_path(@role.token), params: { jwt: jwt(foreign_claims).to_s }
+
+            assert_response :not_found
+          end
+          assert_equal api_key_count, ApiKey.count
+          assert_equal id_token_count, OIDC::IdToken.count
+          refute @role.update(access_policy: policy)
         end
       end
     end

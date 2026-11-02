@@ -25,6 +25,12 @@ class OIDC::Provider < ApplicationRecord
     issuer == GITHUB_ACTIONS_ISSUER
   end
 
+  BUILDKITE_ISSUER = "https://agent.buildkite.com"
+
+  def buildkite?
+    issuer == BUILDKITE_ISSUER
+  end
+
   class Configuration < ::OpenIDConnect::Discovery::Provider::Config::Response
     attr_optional required_attributes.delete(:authorization_endpoint)
 

@@ -41,6 +41,19 @@ class OIDC::ApiKeyRolesControllerTest < ActionController::TestCase
         setup { get :show, params: { token: "DNE" } }
         should respond_with :not_found
       end
+
+      context "on GET to new" do
+        setup { get :new }
+
+        should respond_with :success
+
+        should "seed a repository binding in the default policy, not an aud-only default" do
+          claims = assigns(:api_key_role).access_policy.statements.first.conditions.map(&:claim)
+
+          assert_includes claims, "aud"
+          assert_includes claims, "repository"
+        end
+      end
     end
 
     context "without a password session" do
