@@ -1,29 +1,29 @@
 GEM
   remote: https://packager.dev/avo-hq/
   specs:
-    avo-advanced (3.33.2)
-      avo (= 3.33.2)
-      avo-dynamic_filters (= 3.33.2)
-      avo-pro (= 3.33.2)
+    avo-advanced (3.33.4)
+      avo (= 3.33.4)
+      avo-dynamic_filters (= 3.33.4)
+      avo-pro (= 3.33.4)
       zeitwerk (>= 2.6.12)
-    avo-dashboards (3.33.2)
-      avo (= 3.33.2)
+    avo-dashboards (3.33.4)
+      avo (= 3.33.4)
       turbo-rails
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-dynamic_filters (3.33.2)
-      avo (= 3.33.2)
+    avo-dynamic_filters (3.33.4)
+      avo (= 3.33.4)
       ransack (>= 4.2.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-menu (3.33.2)
-      avo (= 3.33.2)
+    avo-menu (3.33.4)
+      avo (= 3.33.4)
       docile
       zeitwerk (>= 2.6.12)
-    avo-pro (3.33.2)
-      avo (= 3.33.2)
-      avo-dashboards (= 3.33.2)
-      avo-menu (= 3.33.2)
+    avo-pro (3.33.4)
+      avo (= 3.33.4)
+      avo-dashboards (= 3.33.4)
+      avo-menu (= 3.33.4)
       zeitwerk (>= 2.6.12)
 
 GEM
@@ -106,7 +106,7 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
-    addressable (2.9.0)
+    addressable (2.9.2)
       public_suffix (>= 2.0.2, < 8.0)
     aes_key_wrap (1.1.0)
     aggregate_assertions (0.3.0)
@@ -121,7 +121,7 @@ GEM
     attr_required (1.0.2)
     auth-sanitizer (0.2.3)
       version_gem (~> 1.1, >= 1.1.14)
-    avo (3.33.2)
+    avo (3.33.4)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
@@ -136,7 +136,7 @@ GEM
       turbo_power (>= 0.6.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-icons (0.2.4)
+    avo-icons (0.2.5)
       inline_svg
     avo_upgrade (0.1.1)
       rails (>= 6.0.0)
@@ -385,7 +385,7 @@ GEM
     inline_svg (1.10.0)
       activesupport (>= 3.0)
       nokogiri (>= 1.6)
-    io-console (0.9.4)
+    io-console (0.9.5)
     irb (1.18.0)
       pp (>= 0.6.0)
       prism (>= 1.3.0)
@@ -451,9 +451,9 @@ GEM
       rb-inotify (~> 0.9, >= 0.9.10)
     local_time (3.0.3)
     logger (1.7.0)
-    loofah (2.25.2)
+    loofah (2.25.3)
       crass (~> 1.0.2)
-      nokogiri (>= 1.12.0)
+      nokogiri (>= 1.19.5)
     lookbook (2.3.15)
       activemodel
       css_parser
@@ -523,24 +523,24 @@ GEM
     net-smtp (0.5.2)
       net-protocol
     nio4r (2.7.5)
-    nokogiri (1.19.4)
+    nokogiri (1.19.7)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    nokogiri (1.19.4-aarch64-linux-gnu)
+    nokogiri (1.19.7-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.4-aarch64-linux-musl)
+    nokogiri (1.19.7-aarch64-linux-musl)
       racc (~> 1.4)
-    nokogiri (1.19.4-arm-linux-gnu)
+    nokogiri (1.19.7-arm-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.4-arm-linux-musl)
+    nokogiri (1.19.7-arm-linux-musl)
       racc (~> 1.4)
-    nokogiri (1.19.4-arm64-darwin)
+    nokogiri (1.19.7-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.19.4-x86_64-darwin)
+    nokogiri (1.19.7-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.19.4-x86_64-linux-gnu)
+    nokogiri (1.19.7-x86_64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.4-x86_64-linux-musl)
+    nokogiri (1.19.7-x86_64-linux-musl)
       racc (~> 1.4)
     oauth2 (2.0.22)
       auth-sanitizer (~> 0.2, >= 0.2.1)
@@ -696,8 +696,8 @@ GEM
       activerecord (>= 7.0)
       activesupport (>= 7.0)
       choice (~> 0.2.0)
-    rails-html-sanitizer (1.7.1)
-      loofah (~> 2.25, >= 2.25.2)
+    rails-html-sanitizer (1.7.2)
+      loofah (~> 2.25, >= 2.25.3)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
     rails-i18n (8.1.0)
       i18n (>= 0.7, < 2)
@@ -1065,7 +1065,7 @@ CHECKSUMS
   activerecord (8.1.4) sha256=3b4957ea7f246c9231bd7faa909312eac03a9101aaf87977b6c52733ff00b04f
   activestorage (8.1.4) sha256=f4956f3ec9ee63e5e0b332b57c877cb627f82b56f4cc902279310d2aa285c7a8
   activesupport (8.1.4) sha256=891dd3fe43c4fc8391934b237b1189bb1f661c932a84a840043db9d46a4e80df
-  addressable (2.9.0) sha256=7fdf6ac3660f7f4e867a0838be3f6cf722ace541dd97767fa42bc6cfa980c7af
+  addressable (2.9.2) sha256=9117c7e7d6ee07230e75ce41fb9401ae55354dc654fcd0e862ba41d539e9a610
   aes_key_wrap (1.1.0) sha256=b935f4756b37375895db45669e79dfcdc0f7901e12d4e08974d5540c8e0776a5
   aggregate_assertions (0.3.0) sha256=a5ad621c4b0c451bbd8cf520d5f98caa56882043114954a8725aedd3cba1db11
   amazing_print (3.0.0) sha256=2ceb5886e9b3593a7af357eb819b198fe65c982a30cda37914ccef30ba346bbe
@@ -1075,13 +1075,13 @@ CHECKSUMS
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
   auth-sanitizer (0.2.3) sha256=db10aac92cfbe4c64ab637eebcbe1d67395d1694798041362173370f59933e3c
-  avo (3.33.2) sha256=fe5751764800726a3095d9c9341bff33834a0eaeef9ffc27ab3663b0e34993ad
-  avo-advanced (3.33.2) sha256=dc72750b654ad25ea5d91ae2bf20861c950b8c610ca29d1a6deb70d29629b0a8
-  avo-dashboards (3.33.2) sha256=bf491be7a29762df3027293542171a4cf269798adb19cea7fa854590194e7d8c
-  avo-dynamic_filters (3.33.2) sha256=d1fc3fa7bc62692b00756fbb1c739a331c1dd439ba8f085ce060849586f4cb1e
-  avo-icons (0.2.4) sha256=d6225a5da0ae55c4dcf1c6c51c3e5d5f23bd8fc48bc714a763259d3e1c26bb35
-  avo-menu (3.33.2) sha256=0748b84c620363f47add1c9540ef5aa10ef54ad864e7205ccd8effa1fbfbf05a
-  avo-pro (3.33.2) sha256=d4050c9e8b479f45c5aab1508652689aacb8572e900c24018a1bbda6f49ba56a
+  avo (3.33.4) sha256=cdbf969830dff55609bc541848d5be841cd0f3d4479978d1da5b214ca1763cf5
+  avo-advanced (3.33.4) sha256=aaed26070b1083b15097706b6978bedeae57cc849746bbdec924427655b201d2
+  avo-dashboards (3.33.4) sha256=1a3cc9bf501fb85aaf78a0eef5782a586b952db7e54ad4a35391e8c1fd6437cc
+  avo-dynamic_filters (3.33.4) sha256=3b60ff664161d702892a860c154083f25859ad6b6fd6ac8e4d56dd4098d62cb8
+  avo-icons (0.2.5) sha256=095e2a3286ef40afc910ea65ae15accaa669775a8fa14cd6d0df71f3dd03f0e6
+  avo-menu (3.33.4) sha256=74e50bec738d6f6a1a28485468f89fa3c3cc15bc9ee57ade01d785b079814875
+  avo-pro (3.33.4) sha256=c0e11e925c8fe4604715f2935b459da71af10fd0343cf7f20e5c651f08b3c4cb
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   aws-eventstream (1.4.1) sha256=ceb6a99c61df4bb00344e54aed0351574beca24f87a0d1487d1d2ed80929ce96
   aws-partitions (1.1299.0) sha256=de8a9cf51f505a57343cb81a79279b4ae91e7acc09647f692416be85788ffce9
@@ -1187,7 +1187,7 @@ CHECKSUMS
   i18n (1.15.2) sha256=00f9eb62412fe593b2a65a97daa75300d37abb8f7202ec748e94b6d46a9dd1b5
   importmap-rails (2.2.3) sha256=7101be2a4dc97cf1558fb8f573a718404c5f6bcfe94f304bf1f39e444feeb16a
   inline_svg (1.10.0) sha256=5b652934236fd9f8adc61f3fd6e208b7ca3282698b19f28659971da84bf9a10f
-  io-console (0.9.4) sha256=a403304f32928ee85e56d457b4612ca43f2703b561a3258844992bd24085fbb1
+  io-console (0.9.5) sha256=83dd9bbf4c4680416629245b39cd4212eb5f4d9a4ea91804870c1f6b846414d5
   irb (1.18.0) sha256=de9454a0703a54704b9811a5ef31a60c86949fbf4013fcf244fabc7c775248e3
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   job-iteration (1.14.0) sha256=f154f978109acc838c0359ecde2fdd4dccc3382f95a22e03a58ac561a3615224
@@ -1216,7 +1216,7 @@ CHECKSUMS
   listen (3.10.1) sha256=4c3f32855657f348747da4dd2372ff3790d90a6b1d3e4f21a3706adb2d04783c
   local_time (3.0.3) sha256=c69a8974d993fdf6e60db02977ed23c070f203dcb3a1ff0de52ad3d2393f8303
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
-  loofah (2.25.2) sha256=2007f746959ac65552456e04b433e83deb22759ab38c838b4445c70e43425918
+  loofah (2.25.3) sha256=545f14eef0cc2a7de80df560530d593232b7c07e515c5c4e37532d9cb5b0185c
   lookbook (2.3.15) sha256=e635123d16a4da30f10952fe93b399b5049bf3338670a9768dfc0f66da915f73
   mail (2.9.1) sha256=06574eca475253d6c18145dd70af80d0eb970182d55053497c5f4d797ea160e8
   maintenance_tasks (2.17.0) sha256=061267305fc37e0e7df8057372bfca2add125d46a502dda420fdd09782fc009e
@@ -1244,15 +1244,15 @@ CHECKSUMS
   net-protocol (0.4.0) sha256=f9f90c8c6f64794a45160bf422177a336db12809de3beeeaa26b88fcd2e8c853
   net-smtp (0.5.2) sha256=35103cc04d6b2d94632f9928ede07483c24b70b9c0db1f231fea43909b678f3c
   nio4r (2.7.5) sha256=6c90168e48fb5f8e768419c93abb94ba2b892a1d0602cb06eef16d8b7df1dca1
-  nokogiri (1.19.4) sha256=50c951611c92bca05c51411aef45f1cbc50f2821c4802758c5c6d34696533ab5
-  nokogiri (1.19.4-aarch64-linux-gnu) sha256=1269fb644a6de405057a53dd5c762b1209b43ca7424f839454d3dbc677c31a8f
-  nokogiri (1.19.4-aarch64-linux-musl) sha256=35c65b9ce72b3bb03207bdbe7067915019dc18c1b9b59139684bd6690fdd01af
-  nokogiri (1.19.4-arm-linux-gnu) sha256=a301313e38bb065d68239e79734bcd6f56fb6efaacebde29e9abf2a4735340ca
-  nokogiri (1.19.4-arm-linux-musl) sha256=588923c101bcfa78869734d247d25b598674323e7f22474fc468f6e5647311eb
-  nokogiri (1.19.4-arm64-darwin) sha256=a46db9853286e6597b36ebc6953817d15acf3a299583eb3f89fdc6f91dd63527
-  nokogiri (1.19.4-x86_64-darwin) sha256=7fd17057d3e1f00e9954a74b3cd76595d3d4a5ef233b7ed9599047c204f70551
-  nokogiri (1.19.4-x86_64-linux-gnu) sha256=379fae440b28915e3f19d752ce2dcf8465ed2b2fbefd2a7ca0dd497bc981a06a
-  nokogiri (1.19.4-x86_64-linux-musl) sha256=17dfb7c1fa194ae02fbf7c51a7afc8d278045ab3fdacfd86f91d02d7b274470b
+  nokogiri (1.19.7) sha256=abe94507c54cb18f872777b16bdca4aad32b1abdc4c52fe843f1c80fbdf992b8
+  nokogiri (1.19.7-aarch64-linux-gnu) sha256=8f5e15d299602456406e1f03a9f3456cceb33a0722811e818d2ee2214eb4c84a
+  nokogiri (1.19.7-aarch64-linux-musl) sha256=efe0c3602e6e54521bc21c681930ce5568e2d11203de17400710b2b3ca2e4cb4
+  nokogiri (1.19.7-arm-linux-gnu) sha256=7fd1907125691aa89e838cc91161761c758b4e17bb32f0dd9b5515a82cc759af
+  nokogiri (1.19.7-arm-linux-musl) sha256=28d0ff0c87b6bb2e56580323a6fb049d5d4a02b94f0958fdd47e9ac146991c77
+  nokogiri (1.19.7-arm64-darwin) sha256=f27d7f25f4873fbc3aa35a2cc2fb680c98555fec1925348da439d0869d541142
+  nokogiri (1.19.7-x86_64-darwin) sha256=508e81e8c5f84aaa240dce981bf1c43faae60808726f0ce7024ee92effc5cafe
+  nokogiri (1.19.7-x86_64-linux-gnu) sha256=25865ccb462f714e712fdf8906fde07849cb6704a808e3d629d75baa5af5dd3b
+  nokogiri (1.19.7-x86_64-linux-musl) sha256=464d1f3dfb0d53cf54c0c6a7e23e8e91cf68ec3cafc2b27dc4a7682f2d9bf546
   oauth2 (2.0.22) sha256=8f4669f0c8de69f6db7ed786bda20996eaf0003966b886f1c519efb1a5682fa6
   observer (0.1.2) sha256=d8a3107131ba661138d748e7be3dbafc0d82e732fffba9fccb3d7829880950ac
   octokit (10.0.0) sha256=82e99a539b7637b7e905e6d277bb0c1a4bed56735935cc33db6da7eae49a24e8
@@ -1310,7 +1310,7 @@ CHECKSUMS
   rails-controller-testing (1.0.5) sha256=741448db59366073e86fc965ba403f881c636b79a2c39a48d0486f2607182e94
   rails-dom-testing (2.3.0) sha256=8acc7953a7b911ca44588bf08737bc16719f431a1cc3091a292bca7317925c1d
   rails-erd (2.2.0) sha256=75151701bc65f7cbad77ed31fdf8b98601a1d5ae09d050b5f2095cf4394a71f5
-  rails-html-sanitizer (1.7.1) sha256=e797a7c9b01e567307e317c576b49ab4168017e63eea4dba9ce3cb587e2f22c2
+  rails-html-sanitizer (1.7.2) sha256=a21ef45b7a6639fc8e2282473c547514cb86ae271616162a946bf89148fa2424
   rails-i18n (8.1.0) sha256=52d5fd6c0abef28d84223cc05647f6ae0fd552637a1ede92deee9545755b6cf3
   rails_semantic_logger (5.2.0) sha256=c02dcc300bbfc520beb48e997305652d3b6f1d87fb1ca5325af75f55d4568350
   railties (8.1.4) sha256=b5e7a8e8984e33114d68af62227971960aae1e6c02bd7c9d826ffad97fff583c
