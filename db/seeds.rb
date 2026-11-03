@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Keep seed storage isolated in local environments, including database tasks.
+RubygemFs.mock! if Rails.env.local?
+
 password = "super-secret-password"
 
 # "rubygems" is a reserved handle (see Organization::Handle), so the seed
