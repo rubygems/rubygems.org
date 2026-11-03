@@ -4,6 +4,19 @@ class Avo::Resources::OIDCApiKeyRole < Avo::BaseResource
   self.title = :token
   self.includes = %i[provider user]
   self.model_class = ::OIDC::ApiKeyRole
+  self.search = {
+    help: "by id or token",
+    query: lambda {
+      search_term = params[:q].to_s.strip
+      if search_term.blank?
+        query.none
+      elsif search_term.match?(/\A\d+\z/)
+        query.where(id: search_term)
+      else
+        query.where("token LIKE ?", "#{ActiveRecord::Base.sanitize_sql_like(search_term)}%")
+      end
+    }
+  }
 
   def fields
     # `disabled` keeps a top level field out of the permitted params; `readonly`
