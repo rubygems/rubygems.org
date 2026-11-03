@@ -256,6 +256,33 @@ class Avo::OIDCApiKeyRolesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  # The admin form can only change conditions, but trading the one that binds the
+  # role to a repository for a pattern-matched `sub` would let any repository
+  # assume the role. The model refuses it here just as it does on the owner's form.
+  test "not updating an api key role as admin to a policy that no longer binds it to a repository" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+    oidc_api_key_role = create(:oidc_api_key_role)
+    attributes = oidc_api_key_role.reload.attributes
+
+    patch avo.resources_oidc_api_key_role_path(oidc_api_key_role), params: {
+      "oidc/api_key_role" => {
+        comment: "Allow pushes from every branch of the repository",
+        access_policy: {
+          statements: {
+            "0" => { conditions: { "0" => { operator: "string_matches", claim: "sub", value: "repo:fakeuser/oidc-test:ref:refs/heads/.*" } } }
+          }
+        }
+      }
+    }
+
+    assert_response :unprocessable_entity
+    page.assert_text "must bind the token to a repository"
+
+    assert_empty Audit.all
+    assert_empty oidc_api_key_role.user.events.where(tag: Events::UserEvent::OIDC_API_KEY_ROLE_ACCESS_POLICY_CHANGED)
+    assert_equal attributes, OIDC::ApiKeyRole.find(oidc_api_key_role.id).attributes
+  end
+
   # Statements are matched by position, so a form rendered against a policy that
   # has since changed would write onto a statement the admin never looked at.
   test "not updating an api key role as admin from a form rendered against a different policy" do
