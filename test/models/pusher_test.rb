@@ -499,6 +499,67 @@ class PusherTest < ActiveSupport::TestCase
       assert push_gem_named("acme-legacy", version: "0.0.2").process
     end
 
+    context "with an existing gem owned outside the reserving organization" do
+      setup do
+        @organization.prefix_reservations.destroy_all
+        @outside_owner = create(:user)
+        @existing = create(:rubygem, name: "acme-existing", owners: [@outside_owner])
+        create(:version, rubygem: @existing, number: "0.0.1")
+        create(:prefix_reservation, organization: @organization, prefix: "acme")
+      end
+
+      should "let its owner push a new version" do
+        cutter = push_gem_named("acme-existing", version: "0.0.2", api_key: create(:api_key, owner: @outside_owner))
+
+        assert_difference -> { @existing.versions.count } do
+          assert_predicate cutter, :process, -> { cutter.message }
+        end
+        assert_nil @existing.reload.organization
+        assert_equal [@outside_owner], @existing.owners
+      end
+
+      should "let its owner push a new version when the reservation has no organization" do
+        PrefixReservation.destroy_all
+        create(:prefix_reservation, organization: nil, prefix: "acme")
+        cutter = push_gem_named("acme-existing", version: "0.0.2", api_key: create(:api_key, owner: @outside_owner))
+
+        assert_difference -> { @existing.versions.count } do
+          assert_predicate cutter, :process, -> { cutter.message }
+        end
+      end
+
+      should "let its owner push a new version when the reserving organization was deleted" do
+        @organization.update!(deleted_at: Time.zone.now)
+        cutter = push_gem_named("acme-existing", version: "0.0.2", api_key: create(:api_key, owner: @outside_owner))
+
+        assert_difference -> { @existing.versions.count } do
+          assert_predicate cutter, :process, -> { cutter.message }
+        end
+      end
+
+      should "let its trusted publisher push a new version" do
+        rubygem_trusted_publisher = create(:oidc_rubygem_trusted_publisher, rubygem: @existing)
+        api_key = create(:api_key, owner: rubygem_trusted_publisher.trusted_publisher, scopes: %i[push_rubygem])
+        cutter = push_gem_named("acme-existing", version: "0.0.2", api_key:)
+
+        assert_difference -> { @existing.versions.count } do
+          assert_predicate cutter, :process, -> { cutter.message }
+        end
+        assert_nil @existing.reload.organization
+      end
+
+      should "let its owner push a new version after yanking every version" do
+        @existing.versions.each { |version| version.update!(indexed: false, yanked_at: Time.zone.now) }
+        @existing.update_columns(created_at: 1.year.ago, updated_at: 1.year.ago)
+        cutter = push_gem_named("acme-existing", version: "0.0.2", api_key: create(:api_key, owner: @outside_owner))
+
+        assert_difference -> { @existing.versions.count } do
+          assert_predicate cutter, :process, -> { cutter.message }
+        end
+        assert_equal [@outside_owner], @existing.reload.owners
+      end
+    end
+
     context "with an abandoned gem that predates the reservation" do
       setup do
         @organization.prefix_reservations.destroy_all
