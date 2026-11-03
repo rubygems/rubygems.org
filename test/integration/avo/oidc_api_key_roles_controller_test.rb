@@ -35,16 +35,13 @@ class Avo::OIDCApiKeyRolesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "[data-controller='search'] [data-search-resource='oidc_api_key_roles']"
 
-    # The id, as it appears in audits, events and the admin URLs
     assert_equal [oidc_api_key_role.to_param], search_api_key_roles(" #{oidc_api_key_role.id} ").pluck("_id")
 
-    # The token, as it appears on the owner's profile and in the API
     assert_equal [oidc_api_key_role.to_param], search_api_key_roles(oidc_api_key_role.token).pluck("_id")
 
-    # The start of a token, as it appears in a truncated log line
     assert_equal [oidc_api_key_role.to_param], search_api_key_roles(oidc_api_key_role.token.first(20)).pluck("_id")
 
-    # Neither the `_` in the token nor the `%` are wildcards
+    assert_empty search_api_key_roles("rg__idc_akr_")
     assert_empty search_api_key_roles("rg_oidc_akr_%")
 
     assert_empty search_api_key_roles("")
@@ -53,19 +50,19 @@ class Avo::OIDCApiKeyRolesControllerTest < ActionDispatch::IntegrationTest
   test "not searching api key roles as an operator outside the rubygems.org team" do
     requires_avo_pro
 
-    admin = create(:admin_github_user, :is_admin)
-    info_data = admin.info_data.deep_dup
-    info_data[:viewer][:organization][:teams][:edges].reject! { |edge| edge.dig(:node, :slug) == "rubygems-org" }
-    admin.update!(info_data:)
-    admin_sign_in_as admin
+    sign_in_as_admin_outside_rubygems_org_team
     oidc_api_key_role = create(:oidc_api_key_role)
+    attributes = oidc_api_key_role.attributes
 
     [oidc_api_key_role.id.to_s, oidc_api_key_role.token].each do |q|
-      get avo.avo_api_path(resource_name: "oidc_api_key_roles"), params: { q: }
+      assert_no_difference ["OIDC::ApiKeyRole.count", "Audit.count", "Events::UserEvent.count"] do
+        get avo.avo_api_path(resource_name: "oidc_api_key_roles"), params: { q: }
+      end
 
       assert_response :success
       assert_empty response.parsed_body
       refute_match oidc_api_key_role.token, response.body
+      assert_equal attributes, oidc_api_key_role.reload.attributes
     end
   end
 
@@ -426,11 +423,7 @@ conditions: [operator: "string_equals", claim: "sub", value: "repo:fakeuser/secr
   test "not updating an api key role as an operator outside the rubygems.org team" do
     requires_avo_pro
 
-    admin = create(:admin_github_user, :is_admin)
-    info_data = admin.info_data.deep_dup
-    info_data[:viewer][:organization][:teams][:edges].reject! { |edge| edge.dig(:node, :slug) == "rubygems-org" }
-    admin.update!(info_data:)
-    admin_sign_in_as admin
+    sign_in_as_admin_outside_rubygems_org_team
     oidc_api_key_role = create(:oidc_api_key_role)
     attributes = oidc_api_key_role.reload.attributes
 
@@ -479,7 +472,14 @@ conditions: [operator: "string_equals", claim: "sub", value: "repo:fakeuser/secr
 
   private
 
-  # The results the index page's search box, and the global search, show for +term+
+  def sign_in_as_admin_outside_rubygems_org_team
+    admin = create(:admin_github_user, :is_admin)
+    info_data = admin.info_data.deep_dup
+    info_data[:viewer][:organization][:teams][:edges].reject! { |edge| edge.dig(:node, :slug) == "rubygems-org" }
+    admin.update!(info_data:)
+    admin_sign_in_as admin
+  end
+
   def search_api_key_roles(term)
     get avo.avo_api_path(resource_name: "oidc_api_key_roles"), params: { q: term }
 

@@ -4,8 +4,6 @@ class Avo::Resources::OIDCApiKeyRole < Avo::BaseResource
   self.title = :token
   self.includes = %i[provider user]
   self.model_class = ::OIDC::ApiKeyRole
-  # Roles are identified by their numeric id in audits, events and the admin
-  # URLs, and by their token on the owner's profile and in the API.
   self.search = {
     help: "by id or token",
     query: lambda {
