@@ -479,9 +479,9 @@ conditions: [operator: "string_equals", claim: "sub", value: "repo:fakeuser/secr
 
   private
 
-  # The results the index page's search box, and the global search, show for +q+
-  def search_api_key_roles(q)
-    get avo.avo_api_path(resource_name: "oidc_api_key_roles"), params: { q: }
+  # The results the index page's search box, and the global search, show for +term+
+  def search_api_key_roles(term)
+    get avo.avo_api_path(resource_name: "oidc_api_key_roles"), params: { q: term }
 
     assert_response :success
 
