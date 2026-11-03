@@ -7,7 +7,7 @@ class SecretScanning
 
   def self.authenticate!(request)
     headers = request.headers
-    provider = [GitHub, DepsDev].find do |candidate|
+    provider = [GitHub, DepsDev, Truffle].find do |candidate|
       headers[candidate::IDENTIFIER_HEADER].present? && headers[candidate::SIGNATURE_HEADER].present?
     end
 
@@ -18,7 +18,7 @@ class SecretScanning
 
     signature = headers[provider::SIGNATURE_HEADER]
     body = request.body.read
-    return if key.valid_signature?(signature, body)
+    return provider if key.valid_signature?(signature, body)
 
     logger.warn "Invalid secret scanning signature", provider: provider.name, key: key, signature: signature, body: body
     raise AuthenticationError, "Invalid secret scanning signature"
@@ -32,6 +32,8 @@ class SecretScanning
     return false if @public_key.blank?
     openssl_key = OpenSSL::PKey::EC.new(@public_key)
     openssl_key.verify(OpenSSL::Digest.new("SHA256"), Base64.decode64(signature), body)
+  rescue OpenSSL::PKey::PKeyError
+    false
   end
 
   def empty_public_key?
@@ -66,5 +68,15 @@ class SecretScanning
     SIGNATURE_HEADER = CONFIG.fetch(:signature_header).freeze
     KEYS_URI = CONFIG.fetch(:keys_uri).freeze
     CACHE_NAMESPACE = CONFIG.fetch(:cache_namespace).freeze
+  end
+
+  class Truffle
+    CONFIG = Rails.configuration.secret_scanning.fetch(:truffle)
+    IDENTIFIER_HEADER = CONFIG.fetch(:identifier_header).freeze
+    SIGNATURE_HEADER = CONFIG.fetch(:signature_header).freeze
+
+    def self.public_key(identifier)
+      CONFIG.fetch(:public_key) if identifier == CONFIG.fetch(:key_identifier)
+    end
   end
 end
