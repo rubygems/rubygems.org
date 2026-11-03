@@ -598,7 +598,10 @@ class PusherTest < ActiveSupport::TestCase
   end
 
   test "rejects a push to an ownerless fully yanked gem when the api key has an unexpected owner type" do
-    rubygem = create(:rubygem, name: "test")
+    @gem.close
+    @gem = build_gem(new_gemspec("ownerless-unexpected-owner", "0.0.0", "Gemcutter", "ruby"))
+    @cutter = Pusher.new(@api_key, @gem)
+    rubygem = create(:rubygem, name: "ownerless-unexpected-owner")
     create(:version, :yanked, rubygem: rubygem, number: "0.1.0")
 
     # Authorized by a binding, but neither a user nor a trusted publisher: nothing could take ownership.
