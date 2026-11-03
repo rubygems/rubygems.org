@@ -64,21 +64,24 @@ class Avo::OIDCApiKeyRolesSystemTest < ApplicationSystemTestCase
       %w[string_equals repository fakeuser/oidc-test]
     ], conditions
 
-    # Conditions can be removed too
+    # Conditions can be removed too. A GitHub Actions role that can push gems has
+    # to keep a condition binding it to a repository, and a pattern-matched `sub`
+    # does not count as one, so it is the `sub` pattern that goes and the
+    # `repository` condition that stays.
     visit avo.resources_oidc_api_key_role_path(role)
     click_on "Edit"
 
     assert_css CONDITIONS, count: 2
-    within all(CONDITIONS).last do
+    within first(CONDITIONS) do
       click_on "Remove Condition"
     end
 
     assert_css CONDITIONS, count: 1
 
-    fill_in "Comment", with: "The repository condition is redundant"
+    fill_in "Comment", with: "The subject pattern is redundant with the repository condition"
     click_on "Save"
 
-    page.assert_text "The repository condition is redundant"
+    page.assert_text "The subject pattern is redundant with the repository condition"
 
     assert_equal 2, Audit.count
 
@@ -87,6 +90,6 @@ class Avo::OIDCApiKeyRolesSystemTest < ApplicationSystemTestCase
 
     assert_equal "allow", statement.effect
     assert_equal provider.issuer, statement.principal.oidc
-    assert_equal [%w[string_matches sub repo:fakeuser/oidc-test:ref:refs/heads/.*]], conditions
+    assert_equal [%w[string_equals repository fakeuser/oidc-test]], conditions
   end
 end
