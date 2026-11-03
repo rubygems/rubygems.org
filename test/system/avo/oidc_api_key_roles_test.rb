@@ -72,7 +72,7 @@ class Avo::OIDCApiKeyRolesSystemTest < ApplicationSystemTestCase
     click_on "Edit"
 
     assert_css CONDITIONS, count: 2
-    within all(CONDITIONS).first do
+    within first(CONDITIONS) do
       click_on "Remove Condition"
     end
 
