@@ -92,6 +92,39 @@ class Avo::PrefixReservationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Reserving widget for Acme Corp", audits.first.comment
   end
 
+  test "not creating a prefix reservation as an admin outside the rubygems.org team" do
+    requires_avo_pro
+
+    admin_sign_in_as admin_outside_rubygems_org_team
+
+    get avo.new_resources_prefix_reservation_path
+
+    assert_redirected_to avo.root_path
+
+    assert_no_difference [-> { PrefixReservation.count }, -> { Audit.count }] do
+      post avo.resources_prefix_reservations_path, params: {
+        prefix_reservation: { prefix: "widget", organization_id: @organization.to_param, comment: "Reserving widget without permission" }
+      }
+    end
+
+    assert_redirected_to avo.root_path
+    refute PrefixReservation.exists?(prefix: "widget")
+  end
+
+  test "not destroying a prefix reservation as an admin outside the rubygems.org team" do
+    requires_avo_pro
+
+    admin_sign_in_as admin_outside_rubygems_org_team
+    attributes = @prefix_reservation.reload.attributes
+
+    assert_no_difference [-> { PrefixReservation.count }, -> { Audit.count }] do
+      delete avo.resources_prefix_reservation_path(@prefix_reservation)
+    end
+
+    assert_redirected_to avo.root_path
+    assert_equal attributes, PrefixReservation.find(@prefix_reservation.id).attributes
+  end
+
   test "resource search_query scope" do
     requires_avo_pro
 
@@ -100,5 +133,15 @@ class Avo::PrefixReservationsControllerTest < ActionDispatch::IntegrationTest
     get avo.avo_api_search_path(q: "acme")
 
     assert_response :success
+  end
+
+  private
+
+  def admin_outside_rubygems_org_team
+    admin = create(:admin_github_user, :is_admin)
+    info_data = admin.info_data.deep_dup
+    info_data[:viewer][:organization][:teams][:edges].reject! { |edge| edge.dig(:node, :slug) == "rubygems-org" }
+    admin.update!(info_data:)
+    admin
   end
 end
