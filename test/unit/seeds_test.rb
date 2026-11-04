@@ -16,10 +16,17 @@ class SeedsTest < ActiveSupport::TestCase
   end
 
   test "can load seeds idempotently" do
+    s3_config = Aws.config.fetch(:s3, {})
+    Aws.config[:s3] = { stub_responses: { delete_objects: "AccessDenied" } }
+    RubygemFs.s3!("https://s3.invalid")
+
     load_seed
 
     assert_no_changes "all_records" do
       load_seed
     end
+  ensure
+    Aws.config[:s3] = s3_config
+    RubygemFs.mock!
   end
 end
