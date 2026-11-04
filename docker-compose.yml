@@ -26,7 +26,7 @@ services:
       timeout: 5s
       retries: 12
   search:
-    image: index.docker.io/opensearchproject/opensearch@sha256:2e954ff0e8c9d0f4868b4818150b3aecc92fbb0cc4a24d00dace38ada227291d # 2.13.0
+    image: index.docker.io/opensearchproject/opensearch@sha256:3bfa1ec74d56928c2e018033d45c460ce2c0ea65a5cedd577de3102326c31b89 # 2.19.7
     environment:
       - discovery.type=single-node
       - DISABLE_SECURITY_PLUGIN=true
@@ -47,7 +47,7 @@ services:
       retries: 12
       start_period: 60s
   search-console:
-    image: index.docker.io/opensearchproject/opensearch-dashboards@sha256:d8f4442da4d0cb44865a5eab01c9eb9f00769e2d5f053d21e3ff3c64a50fc6ec # 2.13.0
+    image: index.docker.io/opensearchproject/opensearch-dashboards@sha256:d3ad52a0e8721c815b11a96121ecce6432d2c7345c198dea8e07709cfc4e01fc # 2.19.7
     ports:
       - "127.0.0.1:5601:5601"
     environment:
