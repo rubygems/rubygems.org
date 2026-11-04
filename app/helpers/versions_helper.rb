@@ -15,7 +15,7 @@ module VersionsHelper
   def version_number(version)
     tag.code(
       version.number,
-      class: "px-2 text-c3 bg-green-200 dark:bg-green-800 rounded-sm text-neutral-900 dark:text-white"
+      class: "px-2 text-c3 bg-green-800 rounded-sm text-white"
     )
   end
 

@@ -23,9 +23,7 @@ class RubygemComponent < ApplicationComponent
           plain @rubygem.name
         end
         version = @version&.number || latest_version_number(@rubygem)
-        if version
-          code(class: "ml-2 shrink-0 px-2 text-c3 bg-green-200 dark:bg-green-800 rounded-sm text-neutral-900 dark:text-white") { plain version }
-        end
+        code(class: "ml-2 shrink-0 px-2 text-c3 bg-green-800 rounded-sm text-white") { plain version } if version
       end
 
       div(class: "flex flex-row w-full items-center justify-between mt-1") do
