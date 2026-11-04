@@ -3,7 +3,7 @@
 module GemValidator::NodeInfo
   IGNORED_TAGS = Set[
     "!", "!binary", "!str", "tag:yaml.org,2002:null",
-    "!ruby/regexp", "!timestamp", "!int:Fixnum"
+    "!timestamp", "!int:Fixnum"
   ].freeze
 
   TAG_ALIASES = {

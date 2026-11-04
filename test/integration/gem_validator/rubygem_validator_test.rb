@@ -62,6 +62,17 @@ class GemValidator::RubygemValidatorTest < Minitest::Test
 
   # Invalid Rubygem tests
 
+  def test_reject_regexp_tagged_summary_before_deserialization
+    yaml = @spec.to_yaml.sub(/^summary:.*$/, "summary: !ruby/regexp /harmless/")
+    gem_io = build_gem(yaml)
+
+    error = assert_raises GemValidator::Package::InvalidGemspec do
+      GemValidator::Package.validate gem_io
+    end
+    assert_kind_of YAMLSchema::Validator::Exception, error.cause
+    assert_includes error.message, 'got "!ruby/regexp" path: /summary'
+  end
+
   def test_reject_multiple_signatures_with_same_name
     spec_yaml = @spec.to_yaml
     tar = gem_tar_builder do
