@@ -8,12 +8,12 @@ gem "rails", "~> 8.1.4"
 gem "rails-i18n", "~> 8.1.0"
 
 gem "aws-sdk-s3", "~> 1.235"
-gem "aws-sdk-sqs", "~> 1.121"
+gem "aws-sdk-sqs", "~> 1.122"
 gem "aws_advanced_ruby_driver_wrapper", "~> 1.0.1", require: "aws_advanced_ruby_driver_wrapper/postgresql"
 gem "bootsnap", "~> 1.26"
 gem "clearance", "~> 2.12"
 gem "dalli", "~> 4.3", ">= 4.3.7"
-gem "datadog", "~> 2.46"
+gem "datadog", "~> 2.47"
 gem "dogstatsd-ruby", "~> 5.7"
 gem "google-protobuf", "~> 4.36"
 gem "faraday", "~> 2.15"
@@ -24,13 +24,13 @@ gem "flipper-active_record", "~> 1.4"
 gem "flipper-ui", "~> 1.4"
 gem "good_job", "~> 3.99"
 gem "gravtastic", "~> 3.2"
-gem "honeybadger", "~> 6.9.3", require: false
+gem "honeybadger", "~> 6.10.0", require: false
 gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.3"
 gem "mail", "~> 2.9"
 gem "octokit", "~> 10.0"
 gem "omniauth-github", "~> 2.0"
-gem "omniauth", "~> 2.1"
+gem "omniauth", "~> 2.3"
 gem "omniauth-rails_csrf_protection", "~> 2.0"
 gem "openid_connect", "~> 2.5"
 gem "pg", "~> 1.7"
@@ -55,7 +55,7 @@ gem "rack-attack", "~> 6.8"
 gem "rqrcode", "~> 3.2"
 gem "rotp", "~> 6.2"
 gem "pwned", "~> 2.4"
-gem "webauthn", "~> 3.4"
+gem "webauthn", "~> 3.5"
 gem "browser", "~> 6.2"
 gem "bcrypt", "~> 3.1"
 gem "blazer", "~> 3.5.2"
@@ -64,7 +64,7 @@ gem "strong_migrations", "~> 2.8"
 gem "phlex-rails", "~> 2.4"
 gem "discard", "~> 2.0"
 gem "user_agent_parser", "~> 2.21"
-gem "pghero", "~> 4.0"
+gem "pghero", "~> 4.1"
 gem "faraday-multipart", "~> 1.2"
 gem "sigstore", "~> 0.2.3"
 gem "kramdown", "~> 2.5"
@@ -75,15 +75,15 @@ gem "yaml-schema", "~> 1.2"
 # Admin dashboard
 gem "avo", "~> 3.33"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 4.17.0"
+gem "view_component", "~> 4.19.0"
 gem "pundit", "~> 2.5"
-gem "chartkick", "~> 5.2"
+gem "chartkick", "~> 5.3"
 gem "groupdate", "~> 6.8"
 gem "prop_initializer", "~> 0.4"
 
 group :avo, optional: true do
   source "https://packager.dev/avo-hq/" do
-    gem "avo-advanced", "~> 3.32"
+    gem "avo-advanced", "~> 3.33"
   end
 end
 
@@ -111,7 +111,7 @@ gem "local_time", "~> 3.0"
 gem "herb", "~> 0.11"
 
 group :assets, :development do
-  gem "tailwindcss-rails", "~> 4.6"
+  gem "tailwindcss-rails", "~> 4.7"
 end
 
 group :development, :test do
@@ -123,7 +123,7 @@ group :development, :test do
   gem "brakeman", "~> 8.1", require: false
 
   # used to find n+1 queries
-  gem "prosopite", "~> 2.2"
+  gem "prosopite", "~> 2.5"
   gem "pg_query", "~> 6.2"
 
   # bundle show | rg rubocop | cut -d' ' -f4 | xargs bundle update
@@ -148,7 +148,7 @@ group :test do
   gem "minitest", "~> 6.0", require: false
   gem "capybara", "~> 3.40"
   gem "launchy", "~> 3.1"
-  gem "rack-test", "~> 2.2", require: "rack/test"
+  gem "rack-test", "~> 2.3", require: "rack/test"
   gem "rails-controller-testing", "~> 1.0"
   gem "mocha", "~> 3.1", require: false
   gem "shoulda-context", "~> 3.0.0.rc1"
