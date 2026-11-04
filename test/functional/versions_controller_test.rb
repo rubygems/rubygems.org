@@ -151,6 +151,19 @@ class VersionsControllerTest < ActionController::TestCase
         assert_select "[data-testid='versions-count']", text: /2 versions since January 01, 2010/, count: 1
       end
     end
+
+    should "list the most recently created version first" do
+      create(:version, number: "4.3.1", rubygem: @rubygem, position: 0, created_at: 2.days.ago)
+      create(:version, number: "3.3.1", rubygem: @rubygem, position: 1, created_at: 1.day.ago)
+      create(:version, number: "4.3.0", rubygem: @rubygem, position: 2, created_at: 3.days.ago)
+
+      get :index, params: { rubygem_id: @rubygem.name }
+
+      assert_response :success
+      page_versions = css_select("[data-testid='gem-versions'] > li > div > span").map(&:text)
+
+      assert_equal %w[1.1.2 3.3.1 4.3.1 4.3.0 1.1.1], page_versions
+    end
   end
 
   context "On GET to show" do
@@ -251,11 +264,11 @@ class VersionsControllerTest < ActionController::TestCase
       @x86 = create_content_addressable_version(number: "0.1.0", platform: "x86_64-linux", ruby_abi: "3.3")
     end
 
-    should "use display order" do
+    should "keep display order within each version number" do
       get :index, params: { rubygem_id: @rubygem.name }
 
       assert_response :success
-      assert_equal [@newest, @source, @fat, @arm64, @x86].map { |version| rubygem_version_path(@rubygem.slug, version.slug) }, version_link_paths
+      assert_equal [@source, @fat, @arm64, @x86, @newest].map { |version| rubygem_version_path(@rubygem.slug, version.slug) }, version_link_paths
     end
 
     should "link previous and next versions by slug in display order" do
