@@ -8,6 +8,17 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
   # existing owner bypass the typo protection for their own gems. Not persisted.
   attr_accessor :pushed_by
 
+  # The organization a new gem's spec claims via rubygems_organization metadata
+  # and the user claiming it on that organization's behalf (set by Pusher once
+  # the claim is authorized). The gem is only assigned to the organization
+  # after it saves, so reserved prefix validation reads these. Not persisted.
+  attr_reader :claimed_organization, :claimed_by
+
+  def claim_for_organization(organization, by:)
+    @claimed_organization = organization
+    @claimed_by = by
+  end
+
   has_many :ownerships, -> { confirmed }, dependent: :destroy, inverse_of: :rubygem
   has_many :ownerships_including_unconfirmed, dependent: :destroy, class_name: "Ownership"
   has_many :owners, through: :ownerships, source: :user
@@ -79,6 +90,7 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
     presence: true,
     uniqueness: { case_sensitive: false },
     name_format: true,
+    reserved_prefix: true,
     if: :needs_name_validation?
   validate :reserved_names_exclusion, if: :needs_name_validation?
   validate :protected_gem_typo, on: :create, unless: -> { Array(validation_context).include?(:typo_exception) }
@@ -340,12 +352,18 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
     name.remove(/[^#{Patterns::ALLOWED_CHARACTERS}]/o)
   end
 
+  # An existing gem under a reserved prefix can't be taken over, even by the
+  # reserving organization, because takeover pushes ignore organization metadata.
   def pushable?
-    new_record? || (versions.indexed.none? && versions.pushing.none? && not_protected? && !reserved_name?)
+    new_record? || (versions.indexed.none? && versions.pushing.none? && not_protected? && !reserved_name? && !reserved_prefix?)
   end
 
   def reserved_name?
     GemNameReservation.reserved?(name) if name.present?
+  end
+
+  def reserved_prefix?
+    PrefixReservation.reserved?(name) if name.present?
   end
 
   def create_ownership(user)

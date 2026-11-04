@@ -18,6 +18,7 @@ class Organization < ApplicationRecord
   has_many :push_notifiable_members, ->(org) { org.users.push_notifiable_members }, through: :memberships, source: :user
   has_many :rubygems, dependent: :nullify
   has_many :gem_name_reservations, dependent: :destroy
+  has_many :prefix_reservations, dependent: :destroy
   has_many :audits, as: :auditable, dependent: :nullify
   has_one :organization_onboarding, foreign_key: :onboarded_organization_id, inverse_of: :organization, dependent: :destroy
 

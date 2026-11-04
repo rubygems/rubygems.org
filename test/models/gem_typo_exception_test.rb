@@ -25,4 +25,42 @@ class GemTypoExceptionTest < ActiveSupport::TestCase
       refute_predicate exception, :valid?
     end
   end
+
+  context "with a prefix reservation" do
+    setup do
+      @organization = create(:organization, handle: "acme-corp")
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+    end
+
+    should "be invalid for a name under the reserved prefix" do
+      exception = build(:gem_typo_exception, name: "acme-widgetz")
+
+      assert_no_difference -> { GemTypoException.count } do
+        refute exception.save
+      end
+      assert_match(/'acme-widgetz' starts with 'acme', a prefix reserved by the acme-corp organization/,
+        exception.errors[:name].join)
+    end
+
+    should "be invalid for a name under the reserved prefix in a different case" do
+      exception = build(:gem_typo_exception, name: "Acme_Widgetz")
+
+      refute_predicate exception, :valid?
+    end
+
+    should "be invalid for a name under a prefix reserved without an organization" do
+      PrefixReservation.destroy_all
+      create(:prefix_reservation, organization: nil, prefix: "acme")
+      exception = build(:gem_typo_exception, name: "acme-widgetz")
+
+      refute_predicate exception, :valid?
+      assert_match(/'acme-widgetz' starts with 'acme', a reserved prefix\./, exception.errors[:name].join)
+    end
+
+    should "be valid for a name outside the reserved prefix" do
+      exception = build(:gem_typo_exception, name: "acm-widgetz")
+
+      assert_predicate exception, :valid?
+    end
+  end
 end

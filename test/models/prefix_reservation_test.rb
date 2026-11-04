@@ -1,0 +1,275 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class PrefixReservationTest < ActiveSupport::TestCase
+  context "with a saved prefix reservation" do
+    setup do
+      @prefix_reservation = build(:prefix_reservation)
+    end
+
+    subject { @prefix_reservation }
+
+    should_not allow_value(nil).for(:prefix)
+    should_not allow_value("").for(:prefix)
+    should_not allow_value("a").for(:prefix)
+
+    should validate_length_of(:prefix).is_at_most(Gemcutter::MAX_FIELD_LENGTH)
+    should validate_length_of(:prefix).is_at_least(3)
+
+    should belong_to(:organization).optional
+
+    should "save without an organization" do
+      assert_predicate create(:prefix_reservation, organization: nil), :persisted?
+    end
+
+    should "reject an organization_id that doesn't exist" do
+      assert_raises(ActiveRecord::InvalidForeignKey) do
+        create(:prefix_reservation, organization_id: Organization.maximum(:id).to_i + 1)
+      end
+    end
+
+    should "reject characters a gem name can't contain" do
+      ["acme ", "acme*", "acme/widgets", "ac me"].each do |prefix|
+        prefix_reservation = build(:prefix_reservation, prefix:)
+
+        refute_predicate prefix_reservation, :valid?, "expected #{prefix.inspect} to be invalid"
+        assert_includes prefix_reservation.errors[:prefix], "can only include letters, numbers, periods, dashes, and underscores"
+      end
+    end
+
+    should "reject a prefix that begins with a period, dash, or underscore" do
+      prefix_reservation = build(:prefix_reservation, prefix: "-acme")
+
+      refute_predicate prefix_reservation, :valid?
+      assert_includes prefix_reservation.errors[:prefix], "can not begin with a period, dash, or underscore"
+    end
+
+    should "allow a prefix that ends with a period, dash, or underscore" do
+      assert_predicate build(:prefix_reservation, prefix: "acme-"), :valid?
+      assert_predicate build(:prefix_reservation, prefix: "acme.rb"), :valid?
+    end
+
+    should "validate downcase" do
+      prefix_reservation = build(:prefix_reservation, prefix: "ABX")
+
+      refute_predicate prefix_reservation, :valid?
+      assert_includes prefix_reservation.errors[:prefix], "must be all lowercase"
+    end
+  end
+
+  context "with an existing prefix reservation" do
+    setup do
+      @organization = create(:organization, handle: "acme-corp")
+      create(:prefix_reservation, organization: @organization, prefix: "acme")
+    end
+
+    should "reject the same prefix" do
+      prefix_reservation = build(:prefix_reservation, prefix: "acme")
+
+      refute_predicate prefix_reservation, :valid?
+      assert_includes prefix_reservation.errors[:prefix], "overlaps the existing 'acme' reservation for the acme-corp organization"
+    end
+
+    should "reject a longer prefix that starts with the existing prefix" do
+      prefix_reservation = build(:prefix_reservation, prefix: "acme-corp")
+
+      refute_predicate prefix_reservation, :valid?
+      assert_includes prefix_reservation.errors[:prefix], "overlaps the existing 'acme' reservation for the acme-corp organization"
+    end
+
+    should "reject a shorter prefix that the existing prefix starts with" do
+      prefix_reservation = build(:prefix_reservation, prefix: "acm")
+
+      refute_predicate prefix_reservation, :valid?
+      assert_includes prefix_reservation.errors[:prefix], "overlaps the existing 'acme' reservation for the acme-corp organization"
+    end
+
+    should "reject an overlapping prefix for the same organization" do
+      refute_predicate build(:prefix_reservation, organization: @organization, prefix: "acme-widgets"), :valid?
+    end
+
+    should "allow a prefix that only shares leading characters" do
+      assert_predicate build(:prefix_reservation, prefix: "acne"), :valid?
+    end
+
+    should "not treat an underscore as a wildcard when checking overlap" do
+      create(:prefix_reservation, prefix: "down_town")
+
+      assert_predicate build(:prefix_reservation, prefix: "downtown"), :valid?
+    end
+
+    should "not report an existing reservation as overlapping itself" do
+      assert_predicate PrefixReservation.find_by!(prefix: "acme"), :valid?
+    end
+
+    should "still reject an overlap after the existing reservation's organization is deleted" do
+      @organization.update!(deleted_at: Time.zone.now)
+      prefix_reservation = build(:prefix_reservation, prefix: "acme-corp")
+
+      refute_predicate prefix_reservation, :valid?
+      assert_includes prefix_reservation.errors[:prefix], "overlaps the existing 'acme' reservation"
+    end
+  end
+
+  context "#reserved?" do
+    should "return true if the input is a match to an existing prefix" do
+      create(:prefix_reservation, prefix: "downtown")
+
+      assert PrefixReservation.reserved?("downtown-mainstreet")
+      assert PrefixReservation.reserved?("downtown_mainstreet")
+      assert PrefixReservation.reserved?("downtownmainstreet")
+      assert PrefixReservation.reserved?("DOWNTOWN-mainstreet")
+
+      refute PrefixReservation.reserved?("downtow-mainstreet") # misspelling
+    end
+
+    should "not treat an underscore in the prefix as a LIKE wildcard" do
+      create(:prefix_reservation, prefix: "down_town")
+
+      refute PrefixReservation.reserved?("downtown-mainstreet")
+      assert PrefixReservation.reserved?("down_town-mainstreet")
+    end
+  end
+
+  context "#permitted?" do
+    setup do
+      @organization = create(:organization)
+      @admin = create(:user)
+      create(:membership, :admin, user: @admin, organization: @organization)
+      @prefix_reservation = create(:prefix_reservation, organization: @organization, prefix: "acme")
+    end
+
+    should "permit a new gem an admin claims for the organization" do
+      assert @prefix_reservation.permitted?(claimed_rubygem(organization: @organization, by: @admin))
+    end
+
+    should "not permit a new gem an admin claims for another organization" do
+      refute @prefix_reservation.permitted?(claimed_rubygem(organization: create(:organization), by: @admin))
+    end
+
+    should "not permit a new gem an admin pushes without claiming the organization" do
+      rubygem = build(:rubygem, name: "acme-widgets")
+      rubygem.pushed_by = @admin
+
+      refute @prefix_reservation.permitted?(rubygem)
+    end
+
+    should "not permit a new gem a non-member claims for the organization" do
+      refute @prefix_reservation.permitted?(claimed_rubygem(organization: @organization, by: create(:user)))
+    end
+
+    should "not permit a new gem claimed by an unconfirmed admin" do
+      pending_admin = create(:user)
+      create(:membership, :admin, :pending, user: pending_admin, organization: @organization)
+
+      refute @prefix_reservation.permitted?(claimed_rubygem(organization: @organization, by: pending_admin))
+    end
+
+    should "not permit a new gem a maintainer claims for the organization" do
+      maintainer = create(:user)
+      create(:membership, :maintainer, user: maintainer, organization: @organization)
+
+      refute @prefix_reservation.permitted?(claimed_rubygem(organization: @organization, by: maintainer))
+    end
+
+    should "not permit a new gem that only sets the organization without a claiming member" do
+      refute @prefix_reservation.permitted?(build(:rubygem, name: "acme-widgets", organization: @organization))
+    end
+
+    should "permit renaming a gem that already belongs to the organization" do
+      assert @prefix_reservation.permitted?(create(:rubygem, name: "widgets", organization: @organization))
+    end
+
+    should "not permit renaming a gem owned by an admin outside the organization" do
+      refute @prefix_reservation.permitted?(create(:rubygem, name: "widgets", owners: [@admin]))
+    end
+
+    should "not permit anything once the organization is deleted" do
+      rubygem = claimed_rubygem(organization: @organization, by: @admin)
+      @organization.update!(deleted_at: Time.zone.now)
+
+      refute @prefix_reservation.reload.permitted?(rubygem)
+    end
+  end
+
+  context "#claimable_by?" do
+    setup do
+      @organization = create(:organization)
+      @prefix_reservation = create(:prefix_reservation, organization: @organization, prefix: "acme")
+    end
+
+    should "be claimable by an admin of the organization" do
+      admin = create(:user)
+      create(:membership, :admin, user: admin, organization: @organization)
+
+      assert @prefix_reservation.claimable_by?(admin)
+    end
+
+    should "be claimable by an owner of the organization" do
+      owner = create(:user)
+      create(:membership, :owner, user: owner, organization: @organization)
+
+      assert @prefix_reservation.claimable_by?(owner)
+    end
+
+    should "not be claimable by a maintainer of the organization" do
+      maintainer = create(:user)
+      create(:membership, :maintainer, user: maintainer, organization: @organization)
+
+      refute @prefix_reservation.claimable_by?(maintainer)
+    end
+
+    should "not be claimable by an unconfirmed admin of the organization" do
+      pending_admin = create(:user)
+      create(:membership, :admin, :pending, user: pending_admin, organization: @organization)
+
+      refute @prefix_reservation.claimable_by?(pending_admin)
+    end
+
+    should "not be claimable by a non-member" do
+      refute @prefix_reservation.claimable_by?(create(:user))
+    end
+
+    should "not be claimable once the organization is deleted" do
+      admin = create(:user)
+      create(:membership, :admin, user: admin, organization: @organization)
+      @organization.update!(deleted_at: Time.zone.now)
+
+      refute @prefix_reservation.reload.claimable_by?(admin)
+    end
+
+    should "not be claimable without an organization" do
+      refute create(:prefix_reservation, organization: nil, prefix: "widget").claimable_by?(create(:user))
+    end
+  end
+
+  context "#conflict_message" do
+    setup do
+      @organization = create(:organization, handle: "acme-corp")
+      @prefix_reservation = create(:prefix_reservation, organization: @organization, prefix: "acme")
+    end
+
+    should "name the organization and tell its admins how to claim the gem" do
+      assert_equal "'acme-widgets' starts with 'acme', a prefix reserved by the acme-corp organization. " \
+                   "If you are an admin of acme-corp, add `spec.metadata[\"rubygems_organization\"] = \"acme-corp\"` " \
+                   "to your gemspec to push it to the organization.",
+                   @prefix_reservation.conflict_message("acme-widgets")
+    end
+
+    should "omit the organization once it is deleted" do
+      @organization.update!(deleted_at: Time.zone.now)
+
+      assert_equal "'acme-widgets' starts with 'acme', a reserved prefix.",
+                   @prefix_reservation.reload.conflict_message("acme-widgets")
+    end
+  end
+
+  private
+
+  def claimed_rubygem(organization:, by:)
+    build(:rubygem, name: "acme-widgets").tap do |rubygem|
+      rubygem.claim_for_organization(organization, by:)
+    end
+  end
+end
