@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 ruby file: ".ruby-version"
 
-gem "rails", "~> 8.1.4"
+gem "rails", "~> 8.1.4.1"
 gem "rails-i18n", "~> 8.1.0"
 
 gem "aws-sdk-s3", "~> 1.235"
