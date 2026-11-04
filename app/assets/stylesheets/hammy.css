@@ -69,8 +69,12 @@ dialog::backdrop {
   }
 }
 
+:root[data-theme="dark"] dialog::backdrop {
+  background-color: rgb(0, 0, 0, 0.2);
+}
+
 @media (prefers-color-scheme: dark) {
-  dialog::backdrop {
+  :root:not([data-theme="light"]) dialog::backdrop {
     background-color: rgb(0, 0, 0, 0.2);
   }
 }

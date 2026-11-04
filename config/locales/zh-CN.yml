@@ -347,6 +347,9 @@ zh-CN:
         close_menu:
         search_gem_html: 搜索 Gem &hellip;&hellip;
         members:
+        theme_auto:
+        theme_light:
+        theme_dark:
       mfa_banner_html:
   breadcrumbs:
     home: 首页
