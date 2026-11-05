@@ -1,0 +1,23 @@
+<template data-autocomplete-target="template">
+  <li role="presentation">
+    <a class="block px-4 py-2.5 hover:bg-neutral-100 dark:hover:bg-neutral-800" role="option" aria-selected="false" data-autocomplete-target="item" data-action="mousedown->autocomplete#keepFocus mouseover->autocomplete#highlight">
+      <span class="flex items-baseline justify-between gap-3">
+        <span class="truncate text-b2 font-semibold" data-autocomplete-field="name"></span>
+        <span class="shrink-0 font-mono text-c4 text-neutral-600 dark:text-neutral-400" data-autocomplete-field="version"></span>
+      </span>
+      <span class="flex items-baseline justify-between gap-3 text-b3 text-neutral-600 dark:text-neutral-400">
+        <span class="truncate" data-autocomplete-field="summary"></span>
+        <span class="shrink-0 text-b4"><%= t(".downloads_html", downloads: tag.span(data: { autocomplete_field: "downloads" })) %></span>
+      </span>
+    </a>
+  </li>
+</template>
+
+<template data-autocomplete-target="ctaTemplate">
+  <li role="presentation" class="p-3">
+    <a class="text-nowrap no-underline flex justify-center items-center gap-2 hover:shadow-md transition duration-200 ease-in-out focus:outline-2 focus:outline-offset-2 focus:outline-orange-500 text-white bg-orange-500 hover:bg-orange-600 active:bg-orange-600 dark:bg-orange-500 dark:hover:bg-orange-700 dark:active:bg-orange-700 aria-selected:bg-orange-600 aria-selected:outline-2 aria-selected:outline-offset-2 aria-selected:outline-orange-500 px-4 py-3 h-12 min-h-12 text-b2 rounded" role="option" aria-selected="false" data-autocomplete-target="item" data-action="mousedown->autocomplete#keepFocus mouseover->autocomplete#highlight">
+      <span class="truncate"><%= t(".see_all_html", query: tag.span(data: { autocomplete_field: "query" })) %></span>
+      <%= icon_tag "arrow-forward" %>
+    </a>
+  </li>
+</template>

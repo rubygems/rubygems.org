@@ -6,8 +6,8 @@ class AutocompletesTest < ApplicationSystemTestCase
   include SearchKickHelper
 
   setup do
-    rubygem = create(:rubygem, name: "rubocop")
-    create(:version, :reindex, rubygem: rubygem, indexed: true)
+    rubygem = create(:rubygem, name: "rubocop", downloads: 612_345_678)
+    create(:version, :reindex, rubygem: rubygem, indexed: true, number: "1.81.7", summary: "Automatic Ruby code style checking tool.")
     rubygem = create(:rubygem, name: "rubocop-performance")
     create(:version, :reindex, rubygem: rubygem, indexed: true)
 
@@ -17,7 +17,8 @@ class AutocompletesTest < ApplicationSystemTestCase
     @fill_field.set "rubo"
     # Wait for the autocomplete request to populate the listbox before each test.
     assert_selector "#homepage_gem_query.autocomplete-done"
-    @form.assert_selector "[role='option']", count: 2
+    # Two gems and the "see all results" link.
+    @form.assert_selector "[role='option']", count: 3
   end
 
   test "submitting the field runs a search" do
@@ -111,20 +112,21 @@ class AutocompletesTest < ApplicationSystemTestCase
   end
 
   test "up arrow key fills the field with a suggestion" do
-    @fill_field.send_keys :up
+    # The first up highlights the "see all results" link at the bottom.
+    @fill_field.send_keys :up, :up
 
     assert_no_field "homepage_gem_query", with: "rubo"
   end
 
   test "down arrow key should loop" do
-    @fill_field.send_keys :down, :down, :down, :down
+    @fill_field.send_keys :down, :down, :down
     @form.assert_selector "[data-autocomplete-target='query'][aria-activedescendant]"
 
     assert_equal suggestion_options.last["id"], active_descendant
   end
 
   test "up arrow key should loop" do
-    @fill_field.send_keys :up, :up, :up, :up
+    @fill_field.send_keys :up, :up, :up
     @form.assert_selector "[data-autocomplete-target='query'][aria-activedescendant]"
 
     assert_equal suggestion_options.first["id"], active_descendant
@@ -146,7 +148,7 @@ class AutocompletesTest < ApplicationSystemTestCase
     @fill_field = find_by_id "homepage_gem_query"
     @form = @fill_field.ancestor("form")
     @fill_field.set "rubo"
-    @form.assert_selector "[role='option']", count: 2
+    @form.assert_selector "[role='option']", count: 3
 
     @fill_field.send_keys :down
     @form.assert_selector "[data-autocomplete-target='query'][aria-activedescendant='suggest-0']"
@@ -157,16 +159,65 @@ class AutocompletesTest < ApplicationSystemTestCase
     assert_equal "suggest-0", active_descendant
   end
 
-  test "clicking a suggestion submits the search" do
-    @form.first("[role='option']", text: "rubocop").click
+  test "suggestions show the gem's latest version, summary and downloads" do
+    option = @form.find("a[role='option'][href='/gems/rubocop']")
 
-    assert_current_path search_path, ignore_query: true
-    assert_text "rubocop"
+    assert_equal "rubocop", option.find("[data-autocomplete-field='name']").text
+    assert_equal "1.81.7", option.find("[data-autocomplete-field='version']").text
+    assert_equal "Automatic Ruby code style checking tool.", option.find("[data-autocomplete-field='summary']").text
+    assert_includes option.text, "612.3M downloads"
   end
 
-  test "holding the pointer down on a suggestion still submits the search" do
+  test "suggestions are capped at five gems followed by a link to all results" do
+    5.times { |i| create(:version, :reindex, rubygem: create(:rubygem, name: "rubocop-extra#{i}")) }
+    @fill_field.set "rubocop"
+
+    @form.assert_selector "a[role='option'][href^='/gems/']", count: 5
+    cta = suggestion_options.last
+
+    assert_equal "See all results for “rubocop”", cta.text
+    assert_equal search_path(query: "rubocop"), URI(cta[:href]).request_uri
+  end
+
+  test "highlighting the see all link restores the typed query" do
+    @fill_field.send_keys :down, :down, :down
+
+    assert_equal "suggest-all", active_descendant
+    assert_field "homepage_gem_query", with: "rubo"
+  end
+
+  test "enter on a highlighted suggestion opens the gem page" do
+    @fill_field.send_keys :down
+    @form.assert_selector "[data-autocomplete-target='query'][aria-activedescendant='suggest-0']"
+    @fill_field.send_keys :enter
+
+    assert_current_path rubygem_path("rubocop")
+  end
+
+  test "enter on the highlighted see all link runs a search" do
+    @fill_field.send_keys :up
+    @form.assert_selector "[data-autocomplete-target='query'][aria-activedescendant='suggest-all']"
+    @fill_field.send_keys :enter
+
+    assert_current_path search_path(query: "rubo")
+  end
+
+  test "enter without a highlighted suggestion runs a search" do
+    @fill_field.send_keys :enter
+
+    assert_current_path search_path, ignore_query: true
+    assert_field "query", with: "rubo"
+  end
+
+  test "clicking a suggestion opens the gem page" do
+    @form.first("[role='option']", text: "rubocop").click
+
+    assert_current_path rubygem_path("rubocop")
+  end
+
+  test "holding the pointer down on a suggestion still opens the gem page" do
     page.driver.with_playwright_page do |playwright_page|
-      option = playwright_page.get_by_role("option", name: "rubocop", exact: true)
+      option = playwright_page.locator("#homepage_gem_query_suggestions a[href='/gems/rubocop']")
       box = option.bounding_box
       playwright_page.mouse.move(box.fetch("x") + 1, box.fetch("y") + 1)
       playwright_page.mouse.down
@@ -174,8 +225,7 @@ class AutocompletesTest < ApplicationSystemTestCase
       playwright_page.mouse.up
     end
 
-    assert_current_path search_path, ignore_query: true
-    assert_field "query", with: "rubocop"
+    assert_current_path rubygem_path("rubocop")
   end
 
   test "opening a prefilled search on a narrow layout loads suggestions" do
@@ -185,7 +235,7 @@ class AutocompletesTest < ApplicationSystemTestCase
     find("button[aria-label='Open search']").click
 
     assert_selector "#query.autocomplete-done"
-    assert_selector "#query_suggestions [role='option']", count: 2
+    assert_selector "#query_suggestions [role='option']", count: 3
   end
 
   private

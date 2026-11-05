@@ -19,6 +19,9 @@ class Api::V1::SearchesController < Api::BaseController
 
   def autocomplete
     results = ElasticSearcher.new(query_params, page: @page).suggestions
+    # Plain name strings by default for existing API consumers; details=true opts in to
+    # name, version, downloads and summary per suggestion (used by the search dropdown).
+    results = results.pluck("name") unless params[:details] == "true"
     render json: results
   end
 
