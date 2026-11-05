@@ -30,6 +30,7 @@ nl:
   api_key_insufficient_scope:
   email_not_confirmed:
   please_sign_up: Toegang geweigerd. Schrijf je in voor een account op https://rubygems.org
+  api_key_invalid:
   please_sign_in:
   otp_incorrect:
   otp_missing:

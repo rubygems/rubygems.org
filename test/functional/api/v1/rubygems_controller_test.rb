@@ -874,6 +874,45 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "on GET to index with an empty api key" do
+      setup do
+        @request.env["HTTP_AUTHORIZATION"] = ""
+        get :index, format: "json"
+      end
+      should "deny access with the sign up message" do
+        assert_response :unauthorized
+        assert_equal "Access Denied. Please sign up for an account at https://rubygems.org",
+                     @response.body
+      end
+    end
+
+    context "on POST to create with an unknown api key" do
+      setup do
+        create(:api_key, key: "12345", scopes: %i[push_rubygem])
+        @request.env["HTTP_AUTHORIZATION"] = "unknown"
+        post :create, body: gem_file("test-1.0.0.gem", &:read)
+      end
+      should "deny access with the invalid key message" do
+        assert_response :unauthorized
+        assert_equal "Access Denied. Your key is invalid. Check your keys at https://rubygems.org/profile/api_keys " \
+                     "or sign in with `gem signin`", @response.body
+        assert_equal 0, Rubygem.count
+      end
+    end
+
+    context "on POST to create with an expired api key" do
+      setup do
+        create(:api_key, key: "12345", scopes: %i[push_rubygem]).expire!
+        @request.env["HTTP_AUTHORIZATION"] = "12345"
+        post :create, body: gem_file("test-1.0.0.gem", &:read)
+      end
+      should "deny access with the invalid key message" do
+        assert_response :unauthorized
+        assert_includes @response.body, "Your key is invalid"
+        assert_equal 0, Rubygem.count
+      end
+    end
+
     context "on GET to index without index rubygem scope" do
       setup do
         create(:api_key, key: "12345", scopes: %i[push_rubygem])

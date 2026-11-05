@@ -31,6 +31,7 @@ ja:
   api_key_insufficient_scope: このAPIキーはこのgemに対して指定された動作を実行できません。
   email_not_confirmed:
   please_sign_up: アクセスが拒否されました。https://rubygems.org でアカウント登録を行ってください。
+  api_key_invalid:
   please_sign_in: サインインしてお進みください。
   otp_incorrect: OTPのコードが正しくありません。ご確認の上再試行してください。
   otp_missing: 多要素認証が有効化済みですがOTPのコードが与えられませんでした。入力の上再試行してください。
