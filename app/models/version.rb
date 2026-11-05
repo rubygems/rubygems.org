@@ -165,6 +165,11 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
       .order(created_at: :desc, id: :desc)
   end
 
+  def self.by_newest_release
+    display_order = by_display_order
+    display_order.reorder(Arel.sql("MAX(created_at) OVER (PARTITION BY number) DESC"), *display_order.order_values)
+  end
+
   def self.by_created_at
     order(created_at: :desc)
   end
