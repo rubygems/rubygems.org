@@ -328,6 +328,96 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal ruby, @rubygem.reload.most_recent_version
     end
 
+    should "preserve the latest indexed artifact for equivalent historical releases on the same platform" do
+      original = create(:version, rubygem: @rubygem, number: "1.0.0.0")
+      duplicate = create(:version, rubygem: @rubygem, number: "0.9")
+      duplicate.update_columns(number: "1.0.0", canonical_number: "1.dedup",
+        full_name: "#{@rubygem.name}-1.0.0", gem_full_name: "#{@rubygem.name}-1.0.0")
+
+      [original, duplicate].each do |preferred|
+        @rubygem.versions.update_all(latest: false)
+        preferred.update_columns(latest: true)
+        original.update_columns(position: 1)
+        duplicate.update_columns(position: 0)
+
+        2.times do
+          @rubygem.reorder_versions
+
+          assert_equal [[@rubygem.name, preferred.number, "ruby"]], @rubygem.versions.rows_for_latest_index
+          assert_equal [preferred.id], @rubygem.versions.latest.pluck(:id)
+        end
+      end
+
+      newer = create(:version, rubygem: @rubygem, number: "2.0")
+
+      assert_equal [newer.id], @rubygem.versions.latest.pluck(:id)
+    end
+
+    should "prefer ruby for equivalent versions with legacy positions without reordering" do
+      ruby = create(:version, rubygem: @rubygem, number: "1.0", platform: "ruby")
+      java = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "java")
+      ruby.update_columns(position: 1)
+      java.update_columns(position: 0)
+      other = create(:rubygem, number: "1.0")
+      other_java = create(:version, rubygem: other, number: "2.0", platform: "java")
+
+      assert_equal ruby, @rubygem.reload.most_recent_version
+      preloaded = Rubygem.where(id: [@rubygem.id, other.id]).preload(:most_recent_version).index_by(&:id)
+
+      assert_equal ruby, preloaded.fetch(@rubygem.id).most_recent_version
+      assert_equal other_java, preloaded.fetch(other.id).most_recent_version
+      assert_equal [ruby.id, other_java.id], Version.latest.where(rubygem_id: [@rubygem.id, other.id]).order(:rubygem_id).most_recent_first
+        .pluck(Arel.sql("DISTINCT ON (versions.rubygem_id) versions.id"))
+      assert_equal [1, 0], [ruby.reload.position, java.reload.position]
+    end
+
+    should "keep distinct versions ordered when canonical numbers are missing" do
+      ruby = create(:version, rubygem: @rubygem, number: "1.0")
+      java = create(:version, rubygem: @rubygem, number: "2.0", platform: "java")
+      @rubygem.versions.update_all(canonical_number: nil)
+
+      assert_equal java, @rubygem.reload.most_recent_version
+      assert_equal java, Rubygem.preload(:most_recent_version).find(@rubygem.id).most_recent_version
+      assert_equal [java.id], Version.latest.where(rubygem_id: @rubygem.id).most_recent_first.limit(1).pluck(:id)
+      assert_equal [1, 0], [ruby.reload.position, java.reload.position]
+    end
+
+    should "prefer ruby for legacy equivalent releases with missing or uniquified canonical numbers" do
+      ruby = create(:version, rubygem: @rubygem, number: "1.0")
+      java = create(:version, rubygem: @rubygem, number: "1.0.0", platform: "java")
+      java.update_columns(position: 0)
+
+      [nil, "1.dedup"].each do |canonical_number|
+        ruby.update_columns(canonical_number: canonical_number, position: 1)
+
+        assert_equal ruby, @rubygem.reload.most_recent_version
+        assert_equal ruby, Rubygem.preload(:most_recent_version).find(@rubygem.id).most_recent_version
+        assert_equal [ruby.id], Version.latest.where(rubygem_id: @rubygem.id).most_recent_first.limit(1).pluck(:id)
+      end
+    end
+
+    should "keep literal dedup prerelease suffixes distinct" do
+      create(:version, rubygem: @rubygem, number: "1.pre.dedup")
+      newer = create(:version, rubygem: @rubygem, number: "1.pre", platform: "java")
+      @rubygem.versions.update_all(canonical_number: nil)
+
+      assert_equal newer, @rubygem.reload.most_recent_version
+    end
+
+    should "publish and yank releases with zero-prefixed prereleases in their history" do
+      create(:version, :yanked, rubygem: @rubygem, number: "0.0.0.pre")
+      prerelease = create(:version, rubygem: @rubygem, number: "0.rc1")
+      stable = create(:version, rubygem: @rubygem, number: "1.0")
+
+      assert_equal stable, @rubygem.reload.most_recent_version
+      assert_equal %w[1.0 0.rc1 0.0.0.pre], @rubygem.versions.by_position.pluck(:number)
+
+      create(:deletion, version: stable, user: create(:user))
+
+      refute_predicate stable.reload, :indexed?
+      assert_equal [prerelease], @rubygem.versions.indexed.to_a
+    end
+
     should "not have a most recent version if no versions exist" do
       assert_nil @rubygem.most_recent_version
     end

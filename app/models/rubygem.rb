@@ -389,10 +389,14 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
   def reorder_versions
     transaction do
       lock_version_writes!
-      bulk_reorder_versions
 
       versions_of_platforms = versions.release.indexed.group_by { |version| [version.platform, version.ruby_abi] }
-      Version.default_scoped.where(id: versions_of_platforms.values.map! { |v| v.max.id }).update_all(latest: true)
+      latest_version_ids = versions_of_platforms.values.map do |platform_versions|
+        platform_versions.max_by { |version| [version.to_gem_version, version.latest? ? 1 : 0] }.id
+      end
+
+      bulk_reorder_versions
+      Version.default_scoped.where(id: latest_version_ids).update_all(latest: true)
     end
   end
 
@@ -499,15 +503,15 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
     version_numbers = reload.versions.pluck(:id, :number)
     # Equal versions spelled differently, such as 1.0 and 1.0.0 on different
     # platforms, share a position, like builds of the same number do.
-    segments = version_numbers.to_h { |_, number| [number, Gem::Version.new(number).canonical_segments] }
-    ranked = segments.values.uniq.sort_by { |canonical| Gem::Version.new(canonical.join(".")) }.reverse
+    numbers = version_numbers.to_h { |_, number| [number, Gem::Version.new(number)] }
+    ranked = numbers.values.sort.reverse.map(&:canonical_segments).uniq
     position_by_segments = ranked.each_with_index.to_h
 
     ids = []
     positions = []
     version_numbers.each do |version_id, number|
       ids << version_id
-      positions << position_by_segments.fetch(segments.fetch(number))
+      positions << position_by_segments.fetch(numbers.fetch(number).canonical_segments)
     end
 
     update_query = ["update versions set position = positions_data.position, latest = false
