@@ -5,19 +5,19 @@
 <div class="@container">
   <ol data-testid="gem-versions" class="flex flex-col @xl:grid @xl:grid-cols-[repeat(3,max-content)_minmax(0,1fr)_repeat(2,max-content)] @xl:gap-x-4">
     <% versions.to_a.group_by(&:number).each_value do |version_group| %>
-      <li class="flex flex-col gap-y-1 py-1.5 border-t border-neutral-200 dark:border-neutral-800 first:border-t-0 @xl:col-span-full <%= subgrid_class %>">
+      <li class="flex flex-col gap-y-1 py-2.5 border-t border-neutral-200 dark:border-neutral-800 first:border-t-0 @xl:col-span-full <%= subgrid_class %>">
         <div class="text-c4">
           <span class="font-mono px-1.5 rounded-sm bg-green-200 dark:bg-green-800 text-neutral-900 dark:text-white"><%= version_group.first.number %></span>
         </div>
 
-        <ol class="flex flex-col gap-y-1 @xl:gap-y-0.5 @xl:col-span-5 <%= subgrid_class %>">
+        <ol class="flex flex-col gap-y-2.5 @xl:col-span-5 <%= subgrid_class %>">
           <% version_group.group_by(&:platform).each do |platform, platform_versions| %>
             <li class="flex flex-col @xl:col-span-full <%= subgrid_class %>">
               <% unless platform == "ruby" %>
                 <p class="text-b4 text-neutral-900 dark:text-white @xl:col-start-2 @xl:row-start-1"><%= platform %></p>
               <% end %>
 
-              <ol class="flex flex-col gap-y-1 @xl:gap-y-0.5 @xl:col-span-full @xl:col-start-1 @xl:row-start-1 <%= subgrid_class %>">
+              <ol class="flex flex-col gap-y-2.5 @xl:col-span-full @xl:col-start-1 @xl:row-start-1 <%= subgrid_class %>">
                 <% platform_versions.each do |version| %>
                   <% advisory_warning = version_advisory_warning(@advisories, version) %>
                   <li class="flex flex-wrap items-center gap-x-3 gap-y-1 @xl:col-span-full @xl:gap-x-4 @xl:gap-y-0 <%= subgrid_class %>">
