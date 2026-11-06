@@ -139,6 +139,20 @@ class GemDownloadTest < ActiveSupport::TestCase
       end
     end
 
+    context "with a platform version newer than its ruby version" do
+      setup do
+        @rubygem = create(:rubygem)
+        ruby = create(:version, rubygem: @rubygem, number: "1.0.0")
+        @java = create(:version, rubygem: @rubygem, number: "2.0.0", platform: "java")
+        @rubygem.reindex(refresh: true)
+        GemDownload.bulk_update([[ruby.full_name, 7], [@java.full_name, 40]])
+      end
+
+      should "set version_downloads of ES record with the newest version's downloads" do
+        assert_equal 40, es_version_downloads(@rubygem.id)
+      end
+    end
+
     context "with no ruby platform versions" do
       setup do
         @version = create(:version, platform: "java")

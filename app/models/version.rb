@@ -127,6 +127,23 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
     where(latest: true)
   end
 
+  # The newest release on any platform first. Each platform's newest release
+  # is marked latest, and a Ruby release wins a tie with a platform release of
+  # the same number.
+  def self.most_recent_first
+    release_number = "CASE WHEN #{quoted_table_name}.number ~ '^[0-9]+(\\.[0-9]+)*$' " \
+                     "THEN string_to_array(regexp_replace(#{quoted_table_name}.number, '(\\.0+)+$', ''), '.')::numeric[]::text " \
+                     "ELSE #{quoted_table_name}.number END"
+    canonical_position = Arel.sql("MIN(#{quoted_table_name}.position) OVER " \
+                                  "(PARTITION BY #{quoted_table_name}.rubygem_id, #{release_number})")
+    order(
+      Arel.sql("CASE WHEN #{quoted_table_name}.latest THEN 0 ELSE 1 END"),
+      canonical_position,
+      Arel.sql("CASE WHEN #{quoted_table_name}.platform = 'ruby' THEN 0 ELSE 1 END"),
+      id: :desc
+    )
+  end
+
   def self.with_provenance
     where(id: Attestation.select(:version_id))
   end

@@ -152,7 +152,9 @@ class GemDownload < ApplicationRecord
     end
 
     def most_recent_version_downloads(rubygem_ids)
-      latest_downloads = joins(:version).merge(Version.latest.where(platform: "ruby")).where(rubygem_id: rubygem_ids)
+      latest_version_ids = Version.latest.where(rubygem_id: rubygem_ids).order(:rubygem_id).most_recent_first
+        .pluck(Arel.sql("DISTINCT ON (versions.rubygem_id) versions.id"))
+      latest_downloads = where(version_id: latest_version_ids)
 
       updates_by_version = latest_downloads.to_h { |download| [download.rubygem_id, download.count] }
       # use most_recent_version to get downloads count missing in latest_downloads

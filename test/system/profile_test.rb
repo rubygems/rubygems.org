@@ -195,12 +195,13 @@ class ProfileTest < ApplicationSystemTestCase
 
   test "seeing owned gems ordered by downloads with their most recent versions" do
     platform_gem = create(:rubygem, name: "platform-gem", owners: [@user], downloads: 7)
+    create(:version, rubygem: platform_gem, number: "2.0.0")
     platform_release = create(:version,
       rubygem: platform_gem,
-      number: "2.0.0",
+      number: "3.0.0",
+      platform: "java",
       description: "Current platform gem release",
       created_at: Time.zone.parse("2026-01-03"))
-    create(:version, rubygem: platform_gem, number: "3.0.0", platform: "java")
 
     prerelease_gem = create(:rubygem, name: "prerelease-gem", owners: [@user], downloads: 5)
     stable_release = create(:version,
