@@ -102,11 +102,11 @@ you can use this repository's DevContainer configuration.
 
 * Install OpenSearch:
 
-  * Pull OpenSearch `2.19.7` : `docker pull opensearchproject/opensearch:2.19.7`
+  * Pull OpenSearch `3.7.0` : `docker pull opensearchproject/opensearch:3.7.0`
   * Running OpenSearch from the command line:
 
   ```
-  docker run -p 9200:9200 -e "discovery.type=single-node" -e "DISABLE_SECURITY_PLUGIN=true" -e "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" opensearchproject/opensearch:2.19.7
+  docker run -p 9200:9200 -e "discovery.type=single-node" -e "DISABLE_SECURITY_PLUGIN=true" -e "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" opensearchproject/opensearch:3.7.0
   ```
 
   * Note that `-e "DISABLE_SECURITY_PLUGIN=true"` disables authentication.
@@ -120,10 +120,10 @@ you can use this repository's DevContainer configuration.
 #### Environment (Linux - Debian/Ubuntu)
 
 * Install OpenSearch (see the docker installation instructions above):
-  * Pull OpenSearch `2.19.7` : `docker pull opensearchproject/opensearch:2.19.7`
+  * Pull OpenSearch `3.7.0` : `docker pull opensearchproject/opensearch:3.7.0`
   * Running OpenSearch from the command line:
   ```
-  docker run -p 9200:9200 -e "discovery.type=single-node" -e "DISABLE_SECURITY_PLUGIN=true" -e "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" opensearchproject/opensearch:2.19.7
+  docker run -p 9200:9200 -e "discovery.type=single-node" -e "DISABLE_SECURITY_PLUGIN=true" -e "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" opensearchproject/opensearch:3.7.0
   ```
 * Install PostgreSQL: `apt-get install postgresql postgresql-server-dev-all`
   * Help to setup database <https://wiki.debian.org/PostgreSql>
