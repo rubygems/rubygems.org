@@ -74,16 +74,7 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
   # will create an event
   include Events::Recordable
 
-  has_one :most_recent_version,
-    lambda {
-      order(
-        Arel.sql("case when #{quoted_table_name}.latest AND #{quoted_table_name}.platform = 'ruby' then 0 " \
-                 "when #{quoted_table_name}.latest then 1 else 2 end"),
-        :position,
-        id: :desc
-      )
-    },
-    class_name: "Version", inverse_of: :rubygem
+  has_one :most_recent_version, -> { most_recent_first }, class_name: "Version", inverse_of: :rubygem
 
   validates :name,
     length: { maximum: Gemcutter::MAX_FIELD_LENGTH },
@@ -398,10 +389,14 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
   def reorder_versions
     transaction do
       lock_version_writes!
-      bulk_reorder_versions
 
       versions_of_platforms = versions.release.indexed.group_by { |version| [version.platform, version.ruby_abi] }
-      Version.default_scoped.where(id: versions_of_platforms.values.map! { |v| v.max.id }).update_all(latest: true)
+      latest_version_ids = versions_of_platforms.values.map do |platform_versions|
+        platform_versions.max_by { |version| [version.to_gem_version, version.latest? ? 1 : 0] }.id
+      end
+
+      bulk_reorder_versions
+      Version.default_scoped.where(id: latest_version_ids).update_all(latest: true)
     end
   end
 
@@ -506,14 +501,17 @@ class Rubygem < ApplicationRecord # rubocop:disable Metrics/ClassLength
 
   def bulk_reorder_versions
     version_numbers = reload.versions.pluck(:id, :number)
-    numbers = version_numbers.map(&:last).uniq.sort_by { |n| Gem::Version.new(n) }.reverse
-    position_by_number = numbers.each_with_index.to_h
+    # Equal versions spelled differently, such as 1.0 and 1.0.0 on different
+    # platforms, share a position, like builds of the same number do.
+    numbers = version_numbers.to_h { |_, number| [number, Gem::Version.new(number)] }
+    ranked = numbers.values.sort.reverse.map(&:canonical_segments).uniq
+    position_by_segments = ranked.each_with_index.to_h
 
     ids = []
     positions = []
     version_numbers.each do |version_id, number|
       ids << version_id
-      positions << position_by_number.fetch(number)
+      positions << position_by_segments.fetch(numbers.fetch(number).canonical_segments)
     end
 
     update_query = ["update versions set position = positions_data.position, latest = false

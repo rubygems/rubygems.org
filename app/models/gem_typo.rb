@@ -52,6 +52,12 @@ class GemTypo
 
   def not_protected?(rubygem)
     return true unless rubygem
-    rubygem.downloads < DOWNLOADS_THRESHOLD && rubygem.most_recent_version.created_at < LAST_RELEASE_TIME
+    rubygem.downloads < DOWNLOADS_THRESHOLD && latest_release_for(rubygem) < LAST_RELEASE_TIME
+  end
+
+  # The newest release by publication date, which can be older than the
+  # release with the highest number.
+  def latest_release_for(rubygem)
+    rubygem.versions.indexed.maximum(:created_at)
   end
 end

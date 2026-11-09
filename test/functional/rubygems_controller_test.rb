@@ -227,14 +227,18 @@ class RubygemsControllerTest < ActionController::TestCase
   end
 
   context "On GET to explore with mixed-platform provenance" do
-    should "require provenance on the displayed preferred release and order qualifying releases newest first" do
-      mismatched = create(:rubygem, name: "unattested-ruby")
-      create(:attestation, version: create(:version, rubygem: mismatched, number: "1.0.0", platform: "java", created_at: 3.days.ago))
-      create(:version, rubygem: mismatched, number: "2.0.0", created_at: 2.days.ago)
+    should "require provenance on the displayed newest release and order qualifying releases newest first" do
+      mismatched = create(:rubygem, name: "unattested-java")
+      create(:attestation, version: create(:version, rubygem: mismatched, number: "1.0.0", created_at: 3.days.ago))
+      create(:version, rubygem: mismatched, number: "2.0.0", platform: "java", created_at: 2.days.ago)
 
-      preferred = create(:rubygem, name: "attested-ruby")
-      create(:attestation, version: create(:version, rubygem: preferred, number: "1.0.0", created_at: 3.days.ago))
-      create(:version, rubygem: preferred, number: "2.0.0", platform: "java", created_at: 2.days.ago)
+      preferred = create(:rubygem, name: "attested-newer-java")
+      create(:version, rubygem: preferred, number: "1.0.0", created_at: 3.days.ago)
+      create(:attestation, version: create(:version, rubygem: preferred, number: "2.0.0", platform: "java", created_at: 2.days.ago))
+
+      tied = create(:rubygem, name: "attested-ruby-tie")
+      create(:attestation, version: create(:version, rubygem: tied, number: "1.5.0", created_at: 60.hours.ago))
+      create(:version, rubygem: tied, number: "1.5.0", platform: "java", created_at: 60.hours.ago)
 
       platform_only = create(:rubygem, name: "attested-java")
       java_release = create(:version, rubygem: platform_only, number: "3.0.0", platform: "java", created_at: 1.day.ago)
@@ -252,8 +256,9 @@ class RubygemsControllerTest < ActionController::TestCase
       get :explore
 
       assert_response :success
-      assert_equal [rubygem_path(platform_only.name), rubygem_path(preferred.name)], page.all("#provenance a[href^='/gems/']").pluck(:href)
-      assert_equal %w[3.0.0 1.0.0], page.all("#provenance code").map(&:text)
+      assert_equal [rubygem_path(platform_only.name), rubygem_path(preferred.name), rubygem_path(tied.name)],
+        page.all("#provenance a[href^='/gems/']").pluck(:href)
+      assert_equal %w[3.0.0 2.0.0 1.5.0], page.all("#provenance code").map(&:text)
       assert page.find_by_id("provenance").has_selector?("span[title='Downloads for attested-java-3.0.0-java: 321']")
     end
   end
@@ -412,6 +417,29 @@ class RubygemsControllerTest < ActionController::TestCase
     end
   end
 
+  context "On GET to show with a platform release newer than its ruby release" do
+    setup do
+      @rubygem = create(:rubygem, name: "jrjackson")
+      create(:version, rubygem: @rubygem, number: "0.3.8", description: "The old ruby release")
+      @java = create(:version, rubygem: @rubygem, number: "0.5.4", platform: "java",
+        description: "A mostly native JRuby wrapper for the java jackson json processor jar")
+      @java.gem_download.update!(count: 1234)
+      get :show, params: { id: @rubygem.slug }
+    end
+
+    should "show the newest release on any platform" do
+      assert page.has_content?("0.5.4 (latest)")
+      assert page.has_css?("input[value=\"#{@java.to_bundler}\"]")
+      assert page.has_content?("1,234")
+      assert page.has_content?("A mostly native JRuby wrapper")
+      refute page.has_content?("The old ruby release")
+    end
+
+    should "label the newest release with its platform" do
+      assert page.has_css?("[data-testid='version-platform']", text: "java")
+    end
+  end
+
   context "On GET to show with a gem that has multiple versions" do
     setup do
       @rubygem = create(:rubygem)
@@ -428,6 +456,7 @@ class RubygemsControllerTest < ActionController::TestCase
       assert page.has_content?(@rubygem.name)
       assert page.has_content?(@versions[0].number)
       assert page.has_css?("[data-testid='version-date']", text: @versions[0].built_at.to_date.to_fs(:long))
+      refute page.has_css?("[data-testid='version-platform']")
 
       assert page.has_content?("Versions")
       assert page.has_content?(@versions[2].number)

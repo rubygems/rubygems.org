@@ -66,6 +66,23 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
 
+    context "On GET to show for a gem whose newest release is for another platform" do
+      setup do
+        @rubygem = create(:rubygem)
+        create(:version, rubygem: @rubygem, number: "0.3.8", description: "The old ruby release")
+        java = create(:version, rubygem: @rubygem, number: "0.5.4", platform: "java", description: "The newest java release")
+        java.gem_download.update!(count: 1234)
+        get :show, params: { id: @rubygem.slug }, format: "json"
+      end
+
+      should "describe the newest version on any platform" do
+        body = JSON.load(@response.body)
+
+        assert_equal ["0.5.4", "java", "The newest java release", 1234],
+          body.values_at("version", "platform", "info", "version_downloads")
+      end
+    end
+
     context "On GET to show for a gem that not hosted" do
       setup do
         @rubygem = create(:rubygem)
@@ -524,6 +541,36 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       should "not register new gem" do
         assert_equal 1, Rubygem.count
         assert_equal "There was a problem saving your gem: Name 'test' is too similar to an existing gem named 't_es-t'", @response.body
+      end
+    end
+
+    context "On POST to create with a variant of a gem whose only recent release has a lower number" do
+      setup do
+        existing = create(:rubygem, name: "t_es-t", downloads: 3002)
+        create(:version, rubygem: existing, number: "2.0.0", platform: "java", created_at: 6.years.ago)
+        create(:version, rubygem: existing, number: "1.0.0", created_at: 1.day.ago)
+        post :create, body: gem_file("test-1.0.0.gem", &:read)
+      end
+
+      should respond_with :forbidden
+      should "not register the new gem" do
+        assert_nil Rubygem.find_by(name: "test")
+        assert_equal "There was a problem saving your gem: Name 'test' is too similar to an existing gem named 't_es-t'", @response.body
+      end
+    end
+
+    context "On POST to create with a variant of a gem with no recent release" do
+      setup do
+        existing = create(:rubygem, name: "t_es-t", downloads: 3002)
+        create(:version, rubygem: existing, number: "2.0.0", platform: "java", created_at: 6.years.ago)
+        create(:version, rubygem: existing, number: "1.0.0", created_at: 6.years.ago)
+        post :create, body: gem_file("test-1.0.0.gem", &:read)
+      end
+
+      should respond_with :success
+
+      should "register the new gem" do
+        assert_equal ["1.0.0"], Rubygem.find_by!(name: "test").versions.pluck(:number)
       end
     end
 
