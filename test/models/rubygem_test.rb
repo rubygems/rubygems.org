@@ -454,6 +454,16 @@ class RubygemTest < ActiveSupport::TestCase
       assert_equal version1pre, @rubygem.reload.most_recent_version
     end
 
+    should "keep the newer platform prerelease as most_recent after the ruby prerelease is yanked" do
+      ruby = create(:version, rubygem: @rubygem, number: "1.0.pre")
+      java = create(:version, rubygem: @rubygem, number: "1.0.pre", platform: "java")
+
+      create(:deletion, version: ruby)
+
+      assert_equal java, @rubygem.reload.most_recent_version
+      assert_equal java, Rubygem.preload(:most_recent_version).find(@rubygem.id).most_recent_version
+    end
+
     should "return the most recent non-ruby platform version when multiple non-ruby platform versions exist" do
       create(:version, rubygem: @rubygem, number: "0.3.8", platform: "universal-darwin")
       version2 = create(:version, rubygem: @rubygem, number: "0.3.9", platform: "universal-darwin")
