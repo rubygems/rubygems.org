@@ -45,6 +45,12 @@ Rails.application.configure do # rubocop:disable Metrics/BlockLength
       class: "SyncAdvisoriesJob",
       set: { priority: 10 },
       description: "Syncing security advisories every hour"
+    },
+    delete_processed_log_tickets: {
+      cron: "0 5 1 * *",
+      class: "DeleteProcessedLogTicketsJob",
+      set: { priority: 10 },
+      description: "Deleting processed log tickets older than the previous month on the 1st of each month at 05:00 UTC"
     }
   }
 
