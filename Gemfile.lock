@@ -1,29 +1,29 @@
 GEM
   remote: https://packager.dev/avo-hq/
   specs:
-    avo-advanced (3.33.4)
-      avo (= 3.33.4)
-      avo-dynamic_filters (= 3.33.4)
-      avo-pro (= 3.33.4)
+    avo-advanced (3.34.1)
+      avo (= 3.34.1)
+      avo-dynamic_filters (= 3.34.1)
+      avo-pro (= 3.34.1)
       zeitwerk (>= 2.6.12)
-    avo-dashboards (3.33.4)
-      avo (= 3.33.4)
+    avo-dashboards (3.34.1)
+      avo (= 3.34.1)
       turbo-rails
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-dynamic_filters (3.33.4)
-      avo (= 3.33.4)
+    avo-dynamic_filters (3.34.1)
+      avo (= 3.34.1)
       ransack (>= 4.2.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-menu (3.33.4)
-      avo (= 3.33.4)
+    avo-menu (3.34.1)
+      avo (= 3.34.1)
       docile
       zeitwerk (>= 2.6.12)
-    avo-pro (3.33.4)
-      avo (= 3.33.4)
-      avo-dashboards (= 3.33.4)
-      avo-menu (= 3.33.4)
+    avo-pro (3.34.1)
+      avo (= 3.34.1)
+      avo-dashboards (= 3.34.1)
+      avo-menu (= 3.34.1)
       zeitwerk (>= 2.6.12)
 
 GEM
@@ -121,7 +121,7 @@ GEM
     attr_required (1.0.2)
     auth-sanitizer (0.2.3)
       version_gem (~> 1.1, >= 1.1.14)
-    avo (3.33.4)
+    avo (3.34.1)
       actionview (>= 6.1)
       active_link_to
       activerecord (>= 6.1)
@@ -130,13 +130,13 @@ GEM
       avo-icons (>= 0.1.2)
       docile
       meta-tags
-      pagy (>= 7.0.0, < 43)
+      pagy (>= 7.0.0)
       prop_initializer (>= 0.3.0)
       turbo-rails (>= 2.0.0)
       turbo_power (>= 0.6.0)
       view_component (>= 3.7.0)
       zeitwerk (>= 2.6.12)
-    avo-icons (0.2.5)
+    avo-icons (0.2.6)
       inline_svg
     avo_upgrade (0.1.1)
       rails (>= 6.0.0)
@@ -386,7 +386,7 @@ GEM
       activesupport (>= 3.0)
       nokogiri (>= 1.6)
     io-console (0.9.5)
-    irb (1.18.0)
+    irb (1.19.0)
       pp (>= 0.6.0)
       prism (>= 1.3.0)
       rdoc (>= 4.0.0)
@@ -931,7 +931,7 @@ PLATFORMS
 DEPENDENCIES
   aggregate_assertions (~> 0.3.0)
   amazing_print (~> 3.0)
-  avo (~> 3.33)
+  avo (~> 3.34)
   avo-advanced (~> 3.33)!
   avo_upgrade (~> 0.1.1)
   aws-sdk-s3 (~> 1.235)
@@ -1076,13 +1076,13 @@ CHECKSUMS
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   attr_required (1.0.2) sha256=f0ebfc56b35e874f4d0ae799066dbc1f81efefe2364ca3803dc9ea6a4de6cb99
   auth-sanitizer (0.2.3) sha256=db10aac92cfbe4c64ab637eebcbe1d67395d1694798041362173370f59933e3c
-  avo (3.33.4) sha256=cdbf969830dff55609bc541848d5be841cd0f3d4479978d1da5b214ca1763cf5
-  avo-advanced (3.33.4) sha256=aaed26070b1083b15097706b6978bedeae57cc849746bbdec924427655b201d2
-  avo-dashboards (3.33.4) sha256=1a3cc9bf501fb85aaf78a0eef5782a586b952db7e54ad4a35391e8c1fd6437cc
-  avo-dynamic_filters (3.33.4) sha256=3b60ff664161d702892a860c154083f25859ad6b6fd6ac8e4d56dd4098d62cb8
-  avo-icons (0.2.5) sha256=095e2a3286ef40afc910ea65ae15accaa669775a8fa14cd6d0df71f3dd03f0e6
-  avo-menu (3.33.4) sha256=74e50bec738d6f6a1a28485468f89fa3c3cc15bc9ee57ade01d785b079814875
-  avo-pro (3.33.4) sha256=c0e11e925c8fe4604715f2935b459da71af10fd0343cf7f20e5c651f08b3c4cb
+  avo (3.34.1) sha256=b0046f54486d3a55b2f84246083c00294e062c28d5a9e0fa8545a285b978dd4e
+  avo-advanced (3.34.1) sha256=1cc81ae5f4f60f84ec0e7f26606f97c451c18bce93412f52f0e5fe1a37a57091
+  avo-dashboards (3.34.1) sha256=8091cefaa28892ea00b8b8242020acd018b5a15b7399aedc2733c0c6bae25c58
+  avo-dynamic_filters (3.34.1) sha256=b103359b549cd1ec177cd71dad7b3023d8cc5dbcfc0f22cfa4e60ea61ad0fc12
+  avo-icons (0.2.6) sha256=abed348850816baacf9576dc1dd9dc3a95a250318adffab75ab20f94d96fd357
+  avo-menu (3.34.1) sha256=0889f1013eb902d4fa75d666b3ac7575581273b1848bfe0281c8ddf694cd2a35
+  avo-pro (3.34.1) sha256=42f992baf80fddc83a211b2a06b0345f65c29589535057b6c67062cdd11d6a6a
   avo_upgrade (0.1.1) sha256=8d841083b9956392f5c8fe195f25bec0d139e3646d276f8a59e66b7d2e9ebf30
   aws-eventstream (1.4.1) sha256=ceb6a99c61df4bb00344e54aed0351574beca24f87a0d1487d1d2ed80929ce96
   aws-partitions (1.1300.0) sha256=e3cc87a4ffe875d7326e6b9f5fe696ff9a59632227f3252061dcba1782664924
@@ -1190,7 +1190,7 @@ CHECKSUMS
   importmap-rails (2.2.3) sha256=7101be2a4dc97cf1558fb8f573a718404c5f6bcfe94f304bf1f39e444feeb16a
   inline_svg (1.10.0) sha256=5b652934236fd9f8adc61f3fd6e208b7ca3282698b19f28659971da84bf9a10f
   io-console (0.9.5) sha256=83dd9bbf4c4680416629245b39cd4212eb5f4d9a4ea91804870c1f6b846414d5
-  irb (1.18.0) sha256=de9454a0703a54704b9811a5ef31a60c86949fbf4013fcf244fabc7c775248e3
+  irb (1.19.0) sha256=55ee56acbdd6c9fe06a2e6909f46a24e5c41f45f16906bab04e8049cf46f1d27
   jmespath (1.6.2) sha256=238d774a58723d6c090494c8879b5e9918c19485f7e840f2c1c7532cf84ebcb1
   job-iteration (1.14.0) sha256=f154f978109acc838c0359ecde2fdd4dccc3382f95a22e03a58ac561a3615224
   json (2.21.2) sha256=1f1d3b7cf2b3ba1a69beca0bb6db13d5438b80bff3cd54cdaaa620b9b07c1c6a
