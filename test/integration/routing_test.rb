@@ -22,26 +22,25 @@ class RoutingTest < ActionDispatch::IntegrationTest
 
   test "non html format route don't exist for UI" do
     @ui_paths_verb.each do |path, verb|
-      next if path == "/" # adding random format after root (/) gives 404
+      concrete_path = concrete_ui_path(path)
+      next if root_route_path?(concrete_path) # adding random format after root (/) gives 404
+
+      formatted_path = concrete_path.gsub("(.:format)", ".something")
+      next if extension_is_path_parameter?(formatted_path, verb)
 
       assert_raises(ActionController::RoutingError, "#{verb} #{path} should raise") do
         # ex: get(/password/new.json)
-        send(verb.downcase, path.gsub("(.:format)", ".something"))
+        send(verb.downcase, formatted_path)
       end
     end
   end
 
   test "adding format param to UI routes doesn't break the app" do
     @ui_paths_verb.each do |path, verb|
-      next if path == "/"
+      format_path = concrete_ui_path(path)
+      next if root_route_path?(format_path)
 
-      format_path = path.gsub("(.:format)", "?format=something")
-      format_path.gsub!(":rubygem_id", "someid")
-      format_path.gsub!(":id", "someid")
-      format_path.gsub!("*id", "about") # used in high voltage route
-      format_path.gsub!(":version_id", "someid")
-      format_path.gsub!(":organization_id", "someid")
-      format_path.gsub!(":policy", "privacy")
+      format_path.gsub!("(.:format)", "?format=something")
 
       assert_nothing_raised do
         # ex: get(/password/new?format=json)
@@ -73,6 +72,30 @@ class RoutingTest < ActionDispatch::IntegrationTest
     assert_nothing_raised do
       get "/releases?page=2&params=thing"
     end
+  end
+
+  def concrete_ui_path(path)
+    path = path.dup
+    path.gsub!("/(:locale)", "")
+    path.gsub!("(/:locale)", "")
+    path.gsub!(":rubygem_id", "someid")
+    path.gsub!(":id", "someid")
+    path.gsub!("*id", "about") # used in high voltage route
+    path.gsub!(":version_id", "someid")
+    path.gsub!(":organization_id", "someid")
+    path.gsub!(":policy", "privacy")
+    path
+  end
+
+  def root_route_path?(path)
+    ["/", "(.:format)", "/(.:format)"].include?(path)
+  end
+
+  def extension_is_path_parameter?(path, verb)
+    parameters = Rails.application.routes.recognize_path(path, method: verb.downcase)
+    parameters.except(:controller, :action, :format).value?("someid.something")
+  rescue ActionController::RoutingError
+    false
   end
 
   teardown do
