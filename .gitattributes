@@ -1,0 +1,2 @@
+# Action downloads must not contain the dangling link to local-only agent skills.
+.claude/skills export-ignore

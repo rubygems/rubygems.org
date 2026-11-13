@@ -16,3 +16,5 @@
   keys to `config/locales/en.yml`, then run `bin/fill-locales`. API-only
   messages, Avo admin strings, and logs should stay plain English.
 - For Rails previews, add the hostname to `RAILS_DEVELOPMENT_HOSTS`.
+- After workflow or action changes, run `gh actions-lock --no-narrow` and `gh actions-lock --verify`.
+- Update the `gh-actions-lock` CLI pin manually; Dependabot only maintains action dependencies.

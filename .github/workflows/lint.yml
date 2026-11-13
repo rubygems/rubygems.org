@@ -12,6 +12,21 @@ concurrency:
 permissions: {}
 
 jobs:
+  lockfile:
+    name: Actions lockfile
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - run: gh extension install github/gh-actions-lock --pin v0.4.1
+      - run: gh actions-lock --verify
+
   rubocop:
     name: Rubocop
     runs-on: ubuntu-26.04
@@ -19,10 +34,10 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+      - uses: ruby/setup-ruby@v1.336.0
         with:
           bundler-cache: true
       - name: Rubocop
@@ -34,10 +49,10 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+      - uses: ruby/setup-ruby@v1.336.0
         with:
           bundler-cache: true
       - name: Herb Analyze
@@ -49,10 +64,10 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+      - uses: ruby/setup-ruby@v1.336.0
         with:
           bundler-cache: true
       - name: Brakeman
@@ -64,10 +79,10 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+      - uses: ruby/setup-ruby@v1.336.0
         with:
           bundler-cache: true
       - name: Importmap Verify
@@ -79,10 +94,10 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: '20'
       - name: Check JavaScript formatting
@@ -104,10 +119,10 @@ jobs:
         run: printf '%s\n' "$GHCR_TOKEN" | docker login https://ghcr.io --username "$GITHUB_ACTOR" --password-stdin
         env:
           GHCR_TOKEN: ${{ github.token }}
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1.336.0
+      - uses: ruby/setup-ruby@v1.336.0
         with:
           bundler-cache: true
       - name: krane render
@@ -116,7 +131,7 @@ jobs:
         env:
           ENVIRONMENT: "${{ matrix.environment }}"
           REVISION: "${{ github.sha }}"
-      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      - uses: actions/upload-artifact@v7.0.2
         with:
           name: "${{ matrix.environment }}.rendered.yaml"
           path: "config/deploy/${{ matrix.environment }}.rendered.yaml"
@@ -132,14 +147,16 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: stacklok/frizbee-action@7fb0f7cb0d136c932680249f65eb347c489d3106 # v0.0.6
+      - uses: stacklok/frizbee-action@v0.0.6
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          # Frizbee reads ACTIONS_PATHS, not the advertised action_paths input.
+          # The lockfile job verifies actions; Frizbee only checks containers.
+          INPUT_ACTIONS_PATHS: '[]'
         with:
-          action_paths: '[".github/workflows", ".github/actions"]'
           dockerfiles: '["./Dockerfile", ".devcontainer/Dockerfile"]'
           docker_compose: '["./docker-compose.yml", ".devcontainer/docker-compose.yml"]'
           fail_on_unpinned: true
@@ -155,9 +172,9 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
 
       - name: Run zizmor 🌈
-        uses: zizmorcore/zizmor-action@45d7276c9ca790aabd705e31ca99c6185c3e76dd # v0.8.1
+        uses: zizmorcore/zizmor-action@v0.8.1
