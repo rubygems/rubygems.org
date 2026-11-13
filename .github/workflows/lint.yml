@@ -153,9 +153,10 @@ jobs:
       - uses: stacklok/frizbee-action@v0.0.6
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          # Frizbee reads ACTIONS_PATHS, not the advertised action_paths input.
+          # The lockfile job verifies actions; Frizbee only checks containers.
+          INPUT_ACTIONS_PATHS: '[]'
         with:
-          # Actions are pinned and verified by the lockfile job above.
-          action_paths: '[]'
           dockerfiles: '["./Dockerfile", ".devcontainer/Dockerfile"]'
           docker_compose: '["./docker-compose.yml", ".devcontainer/docker-compose.yml"]'
           fail_on_unpinned: true
