@@ -25,6 +25,18 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
     assert_equal expected_error, too_many_conditions.errors.messages[:statements]
   end
 
+  test "does not validate the conditions of a policy over the complexity limits" do
+    # "[" does not compile, so a condition that gets validated reports its value.
+    at_limit = access_policy_with_conditions([10], operator: "string_matches", value: "[")
+    over_limit = access_policy_with_conditions([11], operator: "string_matches", value: "[")
+
+    refute_predicate at_limit, :valid?
+    refute_predicate over_limit, :valid?
+
+    assert_equal Array.new(10) { |index| :"statements[0].conditions[#{index}].value" }, at_limit.errors.attribute_names
+    assert_equal({ statements: ["must contain at most 5 statements and 10 conditions in total"] }, over_limit.errors.messages)
+  end
+
   context "#verify_access!" do
     should "allow a policy at the complexity limits" do
       policy = access_policy_with_conditions([2, 2, 2, 2, 2])
@@ -213,7 +225,7 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
         refute_predicate @access_policy, :valid?
 
         %w[fooXYZ evil/bar].each do |claim|
-          assert_raise(RegexpError) do
+          assert_raise(OIDC::AccessPolicy::AccessError) do
             @access_policy.verify_access!(JSON::JWT.new(iss: "iss", sub: claim))
           end
         end
@@ -278,6 +290,45 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
       end
     end
 
+    context "with a string_matches condition longer than the limit" do
+      setup do
+        # Not a valid pattern either: had it reached Regexp.new, the error
+        # would be about the unterminated class and not about the length.
+        @access_policy = OIDC::AccessPolicy.new(statements: [
+                                                  effect: "allow",
+          principal: { oidc: "iss" },
+          conditions: [
+            operator: "string_matches",
+            claim: "sub",
+            value: "[" * (OIDC::AccessPolicy::MAX_PATTERN_LENGTH + 1)
+          ]
+                                                ])
+      end
+
+      should "fail to validate without compiling the pattern" do
+        @access_policy.validate
+
+        assert_equal ["is not a valid regular expression: longer than 255 characters"],
+          @access_policy.errors.messages[:"statements[0].conditions[0].value"]
+      end
+
+      should "deny without compiling a persisted pattern when a token is exchanged" do
+        error = assert_raises(OIDC::AccessPolicy::AccessError) do
+          @access_policy.verify_access!(JSON::JWT.new({ iss: "iss", sub: "[" }))
+        end
+
+        assert_equal "denying due to invalid policy pattern", error.message
+      end
+
+      should "allow a pattern at the limit" do
+        value = "a" * OIDC::AccessPolicy::MAX_PATTERN_LENGTH
+        @access_policy.statements.sole.conditions.sole.value = value
+
+        assert_predicate @access_policy, :valid?
+        assert_nil @access_policy.verify_access!(JSON::JWT.new({ iss: "iss", sub: value }))
+      end
+    end
+
     context "with condition with unknown operator" do
       setup do
         @access_policy = OIDC::AccessPolicy.new(statements: [
@@ -331,14 +382,14 @@ class OIDC::AccessPolicyTest < ActiveSupport::TestCase
 
   private
 
-  def access_policy_with_conditions(condition_counts)
+  def access_policy_with_conditions(condition_counts, operator: "string_equals", value: "value")
     OIDC::AccessPolicy.new(
       statements: condition_counts.map do |condition_count|
         {
           effect: "allow",
           principal: { oidc: "iss" },
           conditions: Array.new(condition_count) do
-            { operator: "string_equals", claim: "c", value: "value" }
+            { operator:, claim: "c", value: }
           end
         }
       end

@@ -73,6 +73,45 @@ class GemValidator::RubygemValidatorTest < Minitest::Test
     assert_includes error.message, 'got "!ruby/regexp" path: /summary'
   end
 
+  def test_reject_checksums_containing_yaml_aliases
+    spec_yaml = @spec.to_yaml
+    raw_checksums = <<~YAML
+      SHA256: &sums
+        metadata.gz: abc123
+        data.tar.gz: abc123
+      SHA512: *sums
+    YAML
+    tar = gem_tar_builder do
+      metadata spec_yaml
+      data
+      checksums(raw: raw_checksums)
+    end
+
+    error = assert_raises GemValidator::Package::InvalidChecksums do
+      GemValidator::Package.validate tar
+    end
+    assert_kind_of YAMLSchema::Validator::UnexpectedAlias, error.cause
+  end
+
+  def test_reject_checksums_containing_ruby_tagged_value
+    spec_yaml = @spec.to_yaml
+    raw_checksums = <<~YAML
+      SHA256:
+        metadata.gz: !ruby/object:Gem::Version
+          version: '1'
+    YAML
+    tar = gem_tar_builder do
+      metadata spec_yaml
+      data
+      checksums(raw: raw_checksums)
+    end
+
+    error = assert_raises GemValidator::Package::InvalidChecksums do
+      GemValidator::Package.validate tar
+    end
+    assert_includes error.message, 'expected no tag, but got "!ruby/object:Gem::Version"'
+  end
+
   def test_reject_multiple_signatures_with_same_name
     spec_yaml = @spec.to_yaml
     tar = gem_tar_builder do

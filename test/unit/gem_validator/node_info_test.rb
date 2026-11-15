@@ -62,4 +62,11 @@ class GemValidator::NodeInfoTest < Minitest::Test
 
     assert_equal "!ruby/object:Gem::Specification", GemValidator::NodeInfo.read_tag(node)
   end
+
+  def test_read_tag_never_launders_ruby_namespace_tag_to_nil
+    node = Psych::Nodes::Scalar.new("/x/", nil, "!ruby/regexp", false)
+
+    refute_nil GemValidator::NodeInfo.read_tag(node)
+    assert_equal "!ruby/regexp", GemValidator::NodeInfo.read_tag(node)
+  end
 end

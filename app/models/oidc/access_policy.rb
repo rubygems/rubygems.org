@@ -3,6 +3,7 @@
 class OIDC::AccessPolicy < ApplicationModel
   MAX_STATEMENTS = 5
   MAX_TOTAL_CONDITIONS = 10
+  MAX_PATTERN_LENGTH = 255
 
   class Statement < ApplicationModel
     def match_jwt?(jwt)
@@ -42,6 +43,9 @@ class OIDC::AccessPolicy < ApplicationModel
       # Compile independently before wrapping so unmatched parentheses cannot
       # escape the group and turn the anchors into separate alternatives.
       def matcher
+        # Regexp.timeout covers matching only; nothing else bounds compilation.
+        raise RegexpError, "longer than #{MAX_PATTERN_LENGTH} characters" if value.to_s.length > MAX_PATTERN_LENGTH
+
         Regexp.new(value)
         Regexp.new("\\A(?:#{value})\\z")
       end
@@ -99,7 +103,7 @@ class OIDC::AccessPolicy < ApplicationModel
 
   attribute :statements, Types::ArrayOf.new(Types::JsonDeserializable.new(Statement))
 
-  validates :statements, presence: true, nested: true
+  validates :statements, presence: true, nested: { if: :complexity_within_limits? }
   validate :validate_complexity
 
   def statements_attributes=(attributes)
@@ -124,6 +128,8 @@ class OIDC::AccessPolicy < ApplicationModel
     else
       raise "Unhandled effect #{effect}"
     end
+  rescue RegexpError
+    raise AccessError, "denying due to invalid policy pattern"
   end
 
   private

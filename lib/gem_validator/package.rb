@@ -61,10 +61,19 @@ class GemValidator::Package
 
   NO_POLICY = NullSecurityPolicy.new.freeze
 
+  # Classes a valid gemspec materializes; the loader in safe_to_ruby allows no others.
+  PERMITTED_SPEC_CLASSES = %w[
+    Gem::Specification Gem::Version Gem::Requirement Gem::Dependency
+    Gem::Version::Requirement Symbol Time Date
+  ].freeze
+
+  # A valid checksums.yaml materializes nothing but plain YAML scalars and collections.
+  PERMITTED_CHECKSUMS_CLASSES = [].freeze
+
   # Value object for validation result
   ValidationResult = Data.define(:gemspec_ast, :files) do
     def spec
-      gemspec_ast.to_ruby.tap do |s|
+      GemValidator::Package.safe_to_ruby(gemspec_ast).tap do |s|
         s.reset_nil_attributes_to_default
         s.flatten_require_paths
       end
@@ -304,8 +313,8 @@ class GemValidator::Package
     node = ast.children.first
 
     begin
-      YAMLSchema::Validator.validate(GemValidator::Schema::CHECKSUMS, node)
-      [ast.to_ruby, checksum_io.checksum]
+      YAMLSchema::Validator.validate(GemValidator::Schema::CHECKSUMS, node, aliases: false)
+      [self.class.safe_to_ruby(ast, permitted_classes: PERMITTED_CHECKSUMS_CLASSES), checksum_io.checksum]
     rescue YAMLSchema::Validator::Exception => e
       raise InvalidChecksums, "checksums validation failed: #{e.message}"
     end
@@ -314,6 +323,16 @@ class GemValidator::Package
   end
 
   class << self
+    # Restricted-class-loader to_ruby: a tag outside permitted_classes raises
+    # Psych::DisallowedClass instead of instantiating, and NoAliasRuby refuses aliases
+    # so this matches the schema validations' `aliases: false` rather than relying on
+    # the schema having run first. Both are handled by Pusher#pull_spec.
+    def safe_to_ruby(ast, permitted_classes: PERMITTED_SPEC_CLASSES)
+      class_loader = Psych::ClassLoader::Restricted.new(permitted_classes, [])
+      scanner = Psych::ScalarScanner.new(class_loader)
+      Psych::Visitors::NoAliasRuby.new(scanner, class_loader).accept(ast)
+    end
+
     def limit_read(io, name, limit, exception:)
       bytes = io.read(limit + 1) || "".b
       raise exception, "#{name} is too big (over #{limit} bytes)" if bytes.bytesize > limit

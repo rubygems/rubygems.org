@@ -13,6 +13,73 @@ class GemValidator::InvalidGemspecTest < Minitest::Test
 
   # Valid Gemspec tests
 
+  def test_safe_to_ruby_materializes_a_realistic_gemspec
+    dep = <<~DEP.chomp
+      - !ruby/object:Gem::Dependency
+        name: rake
+        requirement: !ruby/object:Gem::Requirement
+          requirements:
+          - - ">="
+            - !ruby/object:Gem::Version
+              version: '0'
+        type: :runtime
+    DEP
+    ast = Psych.parse(gemspec_yaml_template(dependencies: [dep]))
+
+    spec = GemValidator::Package.safe_to_ruby(ast)
+
+    assert_instance_of Gem::Specification, spec
+    assert_instance_of Time, spec.date
+    assert_equal :runtime, spec.dependencies.first.type
+    assert_instance_of Gem::Requirement, spec.dependencies.first.requirement
+  end
+
+  def test_safe_to_ruby_permits_legacy_requirement_tag_and_bare_date
+    yaml = gemspec_yaml_template
+      .sub("required_ruby_version: !ruby/object:Gem::Requirement", "required_ruby_version: !ruby/object:Gem::Version::Requirement")
+      .sub(/^date:.*$/, "date: 1980-01-02")
+
+    spec = GemValidator::Package.safe_to_ruby(GemValidator::Package.validate_gemspec_yaml(yaml))
+
+    assert_instance_of Gem::Requirement, spec.required_ruby_version
+    assert_equal Time.utc(1980, 1, 2), spec.date
+  end
+
+  def test_safe_to_ruby_refuses_regexp_tagged_value
+    ast = Psych.parse(gemspec_yaml_template.sub(/^summary:.*$/, "summary: !ruby/regexp /x/"))
+
+    assert_raises Psych::DisallowedClass do
+      GemValidator::Package.safe_to_ruby(ast)
+    end
+  end
+
+  # validate_gemspec_yaml rejects aliases first in every production path, so this
+  # has to hand safe_to_ruby an unvalidated AST to reach the loader's own guard.
+  def test_safe_to_ruby_refuses_yaml_aliases
+    ast = Psych.parse(gemspec_yaml_template(use_yaml_alias: true))
+
+    assert_raises Psych::AliasesNotEnabled do
+      GemValidator::Package.safe_to_ruby(ast)
+    end
+  end
+
+  def test_safe_to_ruby_honors_a_per_call_allowlist
+    ast = Psych.parse("--- !ruby/object:Gem::Version\nversion: '1.0'\n")
+
+    assert_instance_of Gem::Version, GemValidator::Package.safe_to_ruby(ast)
+    assert_raises Psych::DisallowedClass do
+      GemValidator::Package.safe_to_ruby(ast, permitted_classes: GemValidator::Package::PERMITTED_CHECKSUMS_CLASSES)
+    end
+  end
+
+  def test_safe_to_ruby_refuses_arbitrary_object_tagged_value
+    ast = Psych.parse(gemspec_yaml_template.sub(/^summary:.*$/, "summary: !ruby/object:Gem::Package {}"))
+
+    assert_raises Psych::DisallowedClass do
+      GemValidator::Package.safe_to_ruby(ast)
+    end
+  end
+
   def test_full_name_compatibility
     spec = Gem::Specification.new
     spec.name = "testname"

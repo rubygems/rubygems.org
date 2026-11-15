@@ -253,6 +253,27 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
       end
     end
 
+    should "deny a stored policy with an overlong regex without minting an api key" do
+      @role.update_column(:access_policy, { statements: [
+                            effect: "allow", principal: { oidc: @role.provider.issuer },
+                            conditions: [
+                              { operator: "string_equals", claim: "repository", value: @claims.fetch("repository") },
+                              { operator: "string_matches", claim: "sub", value: "[" * (OIDC::AccessPolicy::MAX_PATTERN_LENGTH + 1) }
+                            ]
+                          ] })
+
+      assert_no_difference ["ApiKey.count", "OIDC::IdToken.count"] do
+        assert_no_enqueued_jobs do
+          assert_no_enqueued_emails do
+            post assume_role_api_v1_oidc_api_key_role_path(@role.token), params: { jwt: jwt.to_s }
+          end
+        end
+      end
+
+      assert_response :not_found
+      assert_empty @user.api_keys
+    end
+
     %w[access_webhooks access_oidc_api_key_roles show_dashboard].each do |scope|
       should "deny a foreign caller of a legacy #{scope} role with an aud-only policy" do
         @role.update_column(:api_key_permissions,

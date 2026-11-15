@@ -141,6 +141,65 @@ class PusherTest < ActiveSupport::TestCase
     end
   end
 
+  test "push accepts a valid gemspec and plain checksums" do
+    spec = new_gemspec("review-allowed-push", "1.0.0", "Review gem", "ruby")
+    spec.add_runtime_dependency "rake", ">= 0"
+    cutter = Pusher.new(@api_key, build_gem(spec))
+
+    assert_difference ["Rubygem.count", "Version.count", "Ownership.count"], 1 do
+      assert cutter.process
+    end
+    assert_equal 200, cutter.code
+    assert_equal "rake", cutter.spec.dependencies.first.name
+    assert RubygemFs.instance.get("gems/#{cutter.version.gem_file_name}")
+  end
+
+  test "push refuses forbidden gemspec tags and checksum aliases or classes without side effects" do
+    spec = new_gemspec("review-denied-push", "1.0.0", "Review gem", "ruby")
+    spec.add_runtime_dependency "rake", ">= 0"
+    spec.required_rubygems_version = Gem::Requirement.new(">= 0")
+    spec.required_ruby_version = Gem::Requirement.new(">= 0")
+    spec_yaml = spec.to_yaml
+    entries = Gem::Package::TarReader.new(build_gem(spec)).each.to_h { |entry| [entry.full_name, entry.read] }
+    metadata_gz = entries.fetch("metadata.gz")
+    data_gz = entries.fetch("data.tar.gz")
+    aliased_checksums = <<~YAML
+      SHA256: &sums
+        metadata.gz: #{Digest::SHA256.hexdigest(metadata_gz)}
+        data.tar.gz: #{Digest::SHA256.hexdigest(data_gz)}
+      SHA512: *sums
+    YAML
+    aliased_spec_yaml = spec_yaml
+      .sub("required_ruby_version: !ruby/object:Gem::Requirement", "required_ruby_version: &req !ruby/object:Gem::Requirement")
+      .sub(/^required_rubygems_version:.*?(?=^\S|\z)/m, "required_rubygems_version: *req\n")
+    attempts = {
+      "regexp-tagged gemspec" => build_gem(spec_yaml.sub(/^summary:.*$/, "summary: !ruby/regexp /x/")),
+      "aliased gemspec" => build_gem(aliased_spec_yaml),
+      "aliased checksums" => gem_tar_builder do
+        file "metadata.gz", metadata_gz
+        file "data.tar.gz", data_gz
+        checksums(raw: aliased_checksums)
+      end,
+      "object-tagged checksums" => gem_tar_builder do
+        metadata spec_yaml
+        data
+        checksums(raw: "SHA256:\n  metadata.gz: !ruby/object:Gem::Version\n    version: '1'\n")
+      end
+    }
+
+    attempts.each do |case_name, gem_io|
+      cutter = Pusher.new(@api_key, gem_io)
+      assert_no_difference %w[Rubygem.count Version.count Ownership.count Events::RubygemEvent.count Events::OrganizationEvent.count], case_name do
+        assert_no_changes -> { RubygemFs.instance.each_key.to_a.sort }, case_name do
+          assert_no_enqueued_jobs { refute cutter.process, case_name }
+        end
+      end
+      assert_equal 422, cutter.code, case_name
+      assert_includes cutter.message, "RubyGems.org cannot process this gem", case_name
+      assert_includes cutter.message, "Pushing gems where there are aliases", case_name if case_name == "aliased gemspec"
+    end
+  end
+
   context "initialize new gem with find if one does not exist" do
     setup do
       spec = mock
