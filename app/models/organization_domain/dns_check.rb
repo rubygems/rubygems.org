@@ -138,19 +138,30 @@ class OrganizationDomain::DnsCheck
   def absolute(name) = "#{name}."
 
   IPV4 = /\b\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?\b/
-  IPV6_CANDIDATE = /(?<![\w:])\[?(?:\h{0,4}:){2,7}\h{0,4}\]?(?::\d+)?(?![\w:])/
+  # Any run of address-ish characters containing a colon; deliberately permissive.
+  COLON_TOKEN = /[\w:.%\[\]]*:[\w:.%\[\]]*/
+  CONSTANT_PATH = /\A[A-Z]\w*(?:::[A-Z]\w*)+\z/
+  CLOCK_TIME = /\A\d{1,2}:\d{2}(?::\d{2})?\z/
 
   # error_message is shown to owners: never store resolver addresses.
+  # Redaction fails closed: a colon-bearing token is redacted unless it clearly
+  # is a Ruby constant path or a clock time (and is not a valid IP address).
   def describe(error)
-    message = error.message.gsub(IPV6_CANDIDATE) { |candidate| ip_address?(candidate) ? "[redacted]" : candidate }
+    message = error.message.gsub(COLON_TOKEN) { |token| keep_token?(token) ? token : "[redacted]" }
       .gsub(IPV4, "[redacted]")
     truncate("#{error.class}: #{message}")
   end
 
-  # Candidate IPv6 matches are redacted only if they parse as real addresses,
-  # so class names like Errno::ECONNREFUSED and times like 12:30:45 survive.
-  def ip_address?(candidate)
-    address = candidate.sub(/\A\[(.*)\](?::\d+)?\z/, '\\1')
+  def keep_token?(token)
+    core = token.sub(/[.:]+\z/, "")
+    return true unless core.include?(":")
+    return false if ip_address?(core)
+
+    core.match?(CONSTANT_PATH) || core.match?(CLOCK_TIME)
+  end
+
+  def ip_address?(core)
+    address = core.sub(/\A\[(.*)\](?::\d+)?\z/, '\\1').sub(/%.*\z/, "")
     IPAddr.new(address)
     true
   rescue IPAddr::Error

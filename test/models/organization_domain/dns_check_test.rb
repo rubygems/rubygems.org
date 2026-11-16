@@ -192,20 +192,28 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
       assert_equal "RuntimeError: dial [redacted]", check.error_message
     end
 
-    should "only redact real IP addresses, leaving class names and times intact" do
+    should "redact every IP address shape, failing closed" do
       {
-        "Errno::ECONNREFUSED" => "Errno::ECONNREFUSED",
-        "Resolv::DNS::Resource::IN::TXT" => "Resolv::DNS::Resource::IN::TXT",
-        "at 12:30:45 today" => "at 12:30:45 today",
-        "10.0.0.2:53" => "[redacted]",
-        "[2001:db8::1]:53" => "[redacted]",
-        "fe80::1" => "[redacted]",
-        "192.168.1.1:53" => "[redacted]",
-        "to 2001:db8::1 failed" => "to [redacted] failed"
+        "read from fe80::1: timeout" => "read from [redacted] timeout",
+        "[2001:db8::1]:53: refused" => "[redacted] refused",
+        "[fe80::1%eth0]:53" => "[redacted]",
+        "fe80::1%eth0" => "[redacted]",
+        "connect(2) for 10.0.0.2:53" => "connect(2) for [redacted]",
+        "::1" => "[redacted]",
+        "2001:db8::1" => "[redacted]",
+        "[2001:db8::1]:53" => "[redacted]"
       }.each do |input, expected|
         check = verify({ [@name, TXT] => RuntimeError.new(input) })
 
         assert_equal "RuntimeError: #{expected}", check.error_message, input
+      end
+    end
+
+    should "keep class names and times that are not addresses" do
+      ["Errno::ECONNREFUSED", "Resolv::DNS::Resource::IN::TXT", "12:30:45", "at 09:15"].each do |input|
+        check = verify({ [@name, TXT] => RuntimeError.new(input) })
+
+        assert_equal "RuntimeError: #{input}", check.error_message, input
       end
     end
 
