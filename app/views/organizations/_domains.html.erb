@@ -1,0 +1,124 @@
+<%# locals: (organization:, new_domain: nil, domain_input: nil) %>
+<%
+  domains = organization.domains.includes(:checks).order(:created_at, :id).to_a
+  removed_names = organization.domains_including_deleted.deleted.distinct.pluck(:domain)
+  new_domain_errors = new_domain ? new_domain.errors.full_messages : []
+  input_classes = "w-full text-b2 rounded-lg dark:bg-neutral-950 focus:ring-inset focus:ring-1 focus:ring-orange-500"
+  action_classes = "px-4 py-2 rounded border text-b3 cursor-pointer"
+%>
+
+<div class="mt-10" data-testid="organization-domains">
+  <%= render CardComponent.new do |c| %>
+    <%= c.head do %>
+      <%= c.title t(".title"), icon: "language" %>
+    <% end %>
+
+    <p class="text-b3 text-neutral-600 dark:text-neutral-400 mb-6"><%= t(".description") %></p>
+
+    <%= form_with url: organization_domains_path(organization), method: :post, scope: :organization_domain, data: { testid: "organization-domain-form" } do |form| %>
+      <%= form.label :domain, t(".domain"), class: "block text-b2 font-semibold mb-2" %>
+      <% if new_domain_errors.any? %>
+        <ul class="mb-2 list-disc pl-5 text-b3 text-red-700 dark:text-red-300" data-testid="organization-domain-errors">
+          <% new_domain_errors.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      <% end %>
+      <div class="flex flex-col sm:flex-row gap-4">
+        <%= form.text_field :domain,
+          value: domain_input,
+          class: "#{input_classes} #{'border-red-500 dark:border-red-400' if new_domain_errors.any?}",
+          placeholder: "example.com",
+          required: true,
+          autocomplete: "off",
+          autocapitalize: "none",
+          spellcheck: false,
+          data: { testid: "organization-domain-input" } %>
+        <%= render ButtonComponent.new(t(".add"), type: :submit, style: :outline, class: "shrink-0", data: { testid: "organization-domain-add" }) %>
+      </div>
+      <p class="mt-2 text-b3 text-neutral-600 dark:text-neutral-400"><%= t(".domain_hint") %></p>
+    <% end %>
+
+    <% if domains.any? %>
+      <ul class="mt-8 divide-y divide-neutral-200 dark:divide-neutral-800 border-t border-neutral-200 dark:border-neutral-800">
+        <% domains.each do |domain| %>
+          <%
+            latest_check = domain.checks.first
+            failed = !domain.verified? && latest_check&.failure?
+            status = domain.verified? ? :verified : (failed ? :failed : :pending)
+            badge = {
+              verified: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
+              failed: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
+              pending: "bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
+            }.fetch(status)
+          %>
+          <li class="py-6" data-testid="organization-domain" data-domain="<%= domain.domain %>">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+              <div class="flex flex-wrap items-center gap-3 min-w-0">
+                <span class="text-b1 font-semibold break-all"><%= domain.domain %></span>
+                <span class="px-2 py-0.5 rounded-full text-b4 font-semibold <%= badge %>" data-testid="organization-domain-status" data-status="<%= status %>">
+                  <%= t(".status.#{status}") %>
+                </span>
+                <% if domain.verified? %>
+                  <time class="text-b4 text-neutral-600 dark:text-neutral-400" datetime="<%= domain.verified_at.iso8601 %>" title="<%= domain.verified_at.utc %>" data-testid="organization-domain-verified-at">
+                    <%= t(".verified_ago", time: time_ago_in_words(domain.verified_at)) %>
+                  </time>
+                <% end %>
+              </div>
+              <div class="flex items-center gap-3">
+                <% if failed %>
+                  <%= button_to t(".retry"), verify_organization_domain_path(organization, domain), method: :post,
+                    class: "#{action_classes} border-orange-500 text-orange-700 dark:text-orange-300 hover:bg-orange-50 dark:hover:bg-neutral-800",
+                    data: { testid: "organization-domain-retry", disable_with: t("form_disable_with") } %>
+                <% else %>
+                  <%= button_to (domain.verified? ? t(".recheck") : t(".verify")), verify_organization_domain_path(organization, domain), method: :post,
+                    class: "#{action_classes} border-orange-500 text-orange-700 dark:text-orange-300 hover:bg-orange-50 dark:hover:bg-neutral-800",
+                    data: { testid: "organization-domain-verify", disable_with: t("form_disable_with") } %>
+                <% end %>
+                <%= button_to t(".remove"), organization_domain_path(organization, domain), method: :delete,
+                  class: "#{action_classes} border-neutral-400 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800",
+                  form: { data: { turbo_confirm: t(".confirm_remove", domain: domain.domain) } },
+                  data: { testid: "organization-domain-remove" } %>
+              </div>
+            </div>
+
+            <% unless domain.verified? %>
+              <div class="mt-4 space-y-2">
+                <p class="text-b3 text-neutral-600 dark:text-neutral-400"><%= t(".publish") %></p>
+                <div data-testid="organization-domain-txt-name">
+                  <%= render CopyFieldComponent.new(value: domain.txt_record_name, label: t(".txt_name"), name: "txt_name_#{domain.id}") %>
+                </div>
+                <div data-testid="organization-domain-txt-value">
+                  <%= render CopyFieldComponent.new(value: domain.txt_record_value, label: t(".txt_value"), name: "txt_value_#{domain.id}") %>
+                </div>
+                <% if removed_names.include?(domain.domain) %>
+                  <p class="text-b3 text-orange-800 dark:text-orange-300" data-testid="organization-domain-readded-notice"><%= t(".readded_notice") %></p>
+                <% end %>
+              </div>
+            <% end %>
+
+            <% if failed %>
+              <% group = latest_check.error_group || :unknown %>
+              <div class="mt-4 p-4 rounded-md border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 space-y-2" data-testid="organization-domain-failure" data-error-code="<%= latest_check.error_code %>">
+                <h3 class="text-b2 font-semibold"><%= t(".error_groups.#{group}.heading") %></h3>
+                <p class="text-b3" data-testid="organization-domain-failure-detail">
+                  <%= t(".error_codes.#{latest_check.error_code || 'unknown_error'}", domain: domain.domain, name: domain.txt_record_name, value: domain.txt_record_value) %>
+                </p>
+                <p class="text-b3"><%= t(".error_groups.#{group}.hint") %></p>
+                <% if latest_check.error_message.present? %>
+                  <p class="text-b4 break-all" data-testid="organization-domain-failure-message">
+                    <span class="font-semibold"><%= t(".detail") %></span> <span class="font-mono"><%= latest_check.error_message %></span>
+                  </p>
+                <% end %>
+                <p class="text-b4 text-red-700 dark:text-red-300">
+                  <%= t(".checked_at") %>
+                  <time datetime="<%= latest_check.checked_at.iso8601 %>" title="<%= latest_check.checked_at.utc %>" data-testid="organization-domain-checked-at"><%= t(".checked_ago", time: time_ago_in_words(latest_check.checked_at)) %></time>
+                </p>
+              </div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  <% end %>
+</div>

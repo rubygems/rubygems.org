@@ -1,35 +1,11 @@
 # frozen_string_literal: true
 
 require "test_helper"
+require "helpers/fake_dns_resolver"
 
 class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
   TXT = Resolv::DNS::Resource::IN::TXT
   SOA = Resolv::DNS::Resource::IN::SOA
-
-  # Stands in for Resolv::DNS: answers from a hash of [absolute name, type] => records.
-  # An Exception instance or class as the answer is raised instead.
-  class FakeResolver
-    attr_reader :queries
-
-    def initialize(answers = {})
-      @answers = answers
-      @queries = []
-    end
-
-    def getresources(name, type)
-      @queries << [name, type]
-      answer = @answers.fetch([name, type], [])
-      raise answer if answer.is_a?(Exception) || (answer.is_a?(Class) && answer <= Exception)
-
-      answer
-    end
-
-    def timeouts=(_value)
-    end
-
-    def close
-    end
-  end
 
   setup do
     @domain = create(:organization_domain, domain: "example.com")
@@ -45,7 +21,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
   end
 
   def resolver(answers = {})
-    @resolver = FakeResolver.new({ ["example.com.", SOA] => [soa] }.merge(answers))
+    @resolver = FakeDnsResolver.new({ ["example.com.", SOA] => [soa] }.merge(answers))
   end
 
   def verify(answers = {}, domain: @domain)
@@ -153,7 +129,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
       OrganizationDomain.where(id: domain.id).update_all(domain: long)
       domain.reload
       OrganizationDomain::Name.stubs(:valid?).returns(true)
-      res = FakeResolver.new({ ["example.com.", SOA] => [soa] })
+      res = FakeDnsResolver.new({ ["example.com.", SOA] => [soa] })
 
       check = domain.verify!(resolver: res)
 
@@ -283,7 +259,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
   context "subdomains" do
     should "check the registrable domain's SOA, not the subdomain's" do
       domain = create(:organization_domain, domain: "eng.example.com")
-      res = FakeResolver.new({ ["example.com.", SOA] => [soa] })
+      res = FakeDnsResolver.new({ ["example.com.", SOA] => [soa] })
 
       check = domain.verify!(resolver: res)
 
@@ -294,7 +270,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
     should "record domain_not_found when the registrable domain has no SOA" do
       domain = create(:organization_domain, domain: "eng.example.com")
 
-      assert_failure domain.verify!(resolver: FakeResolver.new), :domain_not_found, domain: domain,
+      assert_failure domain.verify!(resolver: FakeDnsResolver.new), :domain_not_found, domain: domain,
         message: "No SOA record found for example.com"
     end
   end
@@ -302,7 +278,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
   context "time budget" do
     should "skip the SOA and probes once the budget is spent, still running the TXT lookup" do
       OrganizationDomain::DnsCheck.any_instance.stubs(:monotonic_now).returns(0, OrganizationDomain::DnsCheck::BUDGET + 1)
-      res = FakeResolver.new
+      res = FakeDnsResolver.new
 
       check = @domain.verify!(resolver: res)
 
@@ -313,7 +289,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
     should "skip remaining probes when the budget runs out mid-way" do
       budget = OrganizationDomain::DnsCheck::BUDGET
       OrganizationDomain::DnsCheck.any_instance.stubs(:monotonic_now).returns(0, 0, 0, budget)
-      res = FakeResolver.new({ ["example.com.", SOA] => [soa] })
+      res = FakeDnsResolver.new({ ["example.com.", SOA] => [soa] })
 
       check = @domain.verify!(resolver: res)
 
@@ -325,7 +301,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
   context "stored-row guards" do
     should "refuse a record with unsaved changes without querying or recording" do
       @domain.verified_at = Time.current
-      res = FakeResolver.new
+      res = FakeDnsResolver.new
 
       assert_no_difference "OrganizationDomainCheck.count" do
         assert_raises(OrganizationDomain::DnsCheck::InvalidDomain) { @domain.verify!(resolver: res) }
@@ -336,7 +312,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
 
     should "not verify a domain removed during the lookup" do
       value = @domain.txt_record_value
-      res = FakeResolver.new({ [@name, TXT] => [txt(value)] })
+      res = FakeDnsResolver.new({ [@name, TXT] => [txt(value)] })
       id = @domain.id
       res.define_singleton_method(:getresources) do |*args|
         OrganizationDomain.find(id).remove!
@@ -352,7 +328,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
 
   context "guards" do
     should "raise without querying or recording when the domain is invalid" do
-      res = FakeResolver.new
+      res = FakeDnsResolver.new
       OrganizationDomain::Name.stubs(:valid?).returns(false)
 
       assert_no_difference "OrganizationDomainCheck.count" do
@@ -363,7 +339,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
 
     should "raise without querying or recording for a deleted domain" do
       @domain.remove!
-      res = FakeResolver.new
+      res = FakeDnsResolver.new
 
       assert_no_difference "OrganizationDomainCheck.count" do
         assert_raises(OrganizationDomain::DnsCheck::DeletedDomain) { @domain.verify!(resolver: res) }
@@ -375,7 +351,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
   context "default resolver" do
     should "keep the system nameservers, raise timeout errors, close, and use absolute names" do
       config = nil
-      fake = FakeResolver.new({ ["example.com.", SOA] => [soa] })
+      fake = FakeDnsResolver.new({ ["example.com.", SOA] => [soa] })
       fake.expects(:close).at_least_once
       fake.expects(:timeouts=).with(OrganizationDomain::DnsCheck::TIMEOUT)
       fake.expects(:timeouts=).with(OrganizationDomain::DnsCheck::PROBE_TIMEOUT)
@@ -390,7 +366,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
     end
 
     should "close the resolver even when the lookup raises" do
-      fake = FakeResolver.new({ [@name, TXT] => Errno::ECONNREFUSED })
+      fake = FakeDnsResolver.new({ [@name, TXT] => Errno::ECONNREFUSED })
       fake.expects(:close)
       Resolv::DNS.stubs(:new).returns(fake)
 

@@ -618,6 +618,63 @@ de:
         limit_reached_html:
         unlimited:
         disclaimer:
+    domains:
+      title:
+      description:
+      domain:
+      domain_hint:
+      add:
+      status:
+        verified:
+        pending:
+        failed:
+      verified_ago:
+      verify:
+        verified:
+        failed:
+        unavailable:
+      recheck:
+      retry:
+      remove:
+      confirm_remove:
+      publish:
+      txt_name:
+      txt_value:
+      readded_notice:
+      detail:
+      checked_at:
+      checked_ago:
+      error_groups:
+        lookup_failed:
+          heading:
+          hint:
+        record_missing:
+          heading:
+          hint:
+        record_mismatch:
+          heading:
+          hint:
+        conflict:
+          heading:
+          hint:
+        unknown:
+          heading:
+          hint:
+      error_codes:
+        timeout:
+        resolver_unavailable:
+        domain_not_found:
+        record_not_found:
+        record_at_wrong_name:
+        value_quoted:
+        token_mismatch:
+        value_mismatch:
+        already_verified:
+        unknown_error:
+      create:
+        added:
+      destroy:
+        removed:
     invitation_expiry_title:
     invitations:
       expired:

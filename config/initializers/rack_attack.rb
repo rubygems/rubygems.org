@@ -204,6 +204,21 @@ class Rack::Attack
     api_key_owner_id(req) if protected_route?(protected_webhook_fire_action, req.path, req.request_method)
   end
 
+  # Throttle organization domain create/verify (verify runs a synchronous DNS lookup)
+  ORG_DOMAIN_LIMIT = 20
+  protected_org_domain_actions = [
+    { controller: "organizations/domains", action: "create" },
+    { controller: "organizations/domains", action: "verify" }
+  ]
+
+  throttle("org_domains/ip", limit: ORG_DOMAIN_LIMIT, period: LIMIT_PERIOD) do |req|
+    req.ip if protected_route?(protected_org_domain_actions, req.path, req.request_method)
+  end
+
+  throttle("org_domains/user", limit: ORG_DOMAIN_LIMIT, period: LIMIT_PERIOD) do |req|
+    remember_token_user_email(req) if protected_route?(protected_org_domain_actions, req.path, req.request_method)
+  end
+
   ############################# rate limit per handle ############################
   # Throttle POST requests to /login by email param
   #

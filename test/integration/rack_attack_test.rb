@@ -2,6 +2,7 @@
 
 require "test_helper"
 require "helpers/rate_limit_helpers"
+require "helpers/fake_dns_helpers"
 
 class RackAttackTest < ActionDispatch::IntegrationTest
   include RateLimitHelpers
@@ -554,6 +555,53 @@ class RackAttackTest < ActionDispatch::IntegrationTest
         post "/api/v1/web_hooks/fire", headers: { HTTP_AUTHORIZATION: "12334" }
 
         assert_response :too_many_requests
+      end
+    end
+
+    context "organization domains" do
+      setup do
+        @organization = create(:organization, owners: [@user])
+        @domain = create(:organization_domain, organization: @organization, domain: "example.com")
+        post "/session", params: { session: { who: @user.email, password: @user.password } }, headers: { REMOTE_ADDR: @ip_address }
+        Resolv::DNS.expects(:new).never
+      end
+
+      should "throttle verify by ip" do
+        update_limit_for("org_domains/ip:#{@ip_address}", Rack::Attack::ORG_DOMAIN_LIMIT)
+
+        post "/organizations/#{@organization.handle}/domains/#{@domain.id}/verify", headers: { REMOTE_ADDR: @ip_address }
+
+        assert_response :too_many_requests
+        assert_equal 0, OrganizationDomainCheck.count
+      end
+
+      should "throttle create by ip" do
+        update_limit_for("org_domains/ip:#{@ip_address}", Rack::Attack::ORG_DOMAIN_LIMIT)
+
+        post "/organizations/#{@organization.handle}/domains",
+          params: { organization_domain: { domain: "new.example.com" } }, headers: { REMOTE_ADDR: @ip_address }
+
+        assert_response :too_many_requests
+        assert_equal 1, OrganizationDomain.count
+      end
+
+      should "throttle verify by user across ips" do
+        update_limit_for("org_domains/user:#{@user.email}", Rack::Attack::ORG_DOMAIN_LIMIT)
+
+        post "/organizations/#{@organization.handle}/domains/#{@domain.id}/verify", headers: { REMOTE_ADDR: "9.9.9.9" }
+
+        assert_response :too_many_requests
+        assert_equal 0, OrganizationDomainCheck.count
+      end
+
+      should "allow verify under the limit" do
+        Resolv::DNS.unstub(:new)
+        Resolv::DNS.stubs(:new).returns(FakeDnsResolver.for_domain("example.com"))
+        update_limit_for("org_domains/ip:#{@ip_address}", Rack::Attack::ORG_DOMAIN_LIMIT - 2)
+
+        post "/organizations/#{@organization.handle}/domains/#{@domain.id}/verify", headers: { REMOTE_ADDR: @ip_address }
+
+        assert_redirected_to "/organizations/#{@organization.handle}/edit"
       end
     end
 

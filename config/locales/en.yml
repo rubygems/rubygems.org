@@ -574,6 +574,64 @@ en:
         limit_reached_html: Your organization has used all <b>%{limit}</b> of its gem name reservations. Email %{support_email} if you need more.
         unlimited: Your organization can reserve an unlimited number of gem names.
         disclaimer: The RubyGems.org team reserves the right to deny any requested name reservation.
+    domains:
+      title: Domains
+      description: Prove your organization controls a domain by publishing a DNS TXT record. Each domain has its own record and is verified separately.
+      domain: Domain
+      domain_hint: Enter just the domain, like example.com. Subdomains are verified separately. Domains can't be edited; remove one and add it again to change it.
+      add: Add domain
+      status:
+        verified: Verified
+        pending: Pending
+        failed: Failed
+      verified_ago: "%{time} ago"
+      verify: Verify
+      recheck: Verify again
+      retry: Retry
+      remove: Remove
+      confirm_remove: Remove %{domain}? Its verification record will stop working.
+      publish: "Publish this TXT record at your DNS provider, then click Verify. DNS changes can take a while to appear."
+      txt_name: Name
+      txt_value: Value
+      readded_notice: You removed this domain before. Replace the old TXT record with the new value above; the old value no longer works.
+      detail: "Details:"
+      checked_at: "Last checked:"
+      checked_ago: "%{time} ago"
+      error_groups:
+        lookup_failed:
+          heading: We couldn't reach DNS
+          hint: Try again in a moment.
+        record_missing:
+          heading: We couldn't find the record
+          hint: Check the exact record name above. DNS changes can take time to propagate, so it may help to wait a few minutes and retry.
+        record_mismatch:
+          heading: We found a record, but the value isn't right
+          hint: "The expected value is shown above; compare it with what we saw below."
+        conflict:
+          heading: This domain is already verified elsewhere
+          hint: Another organization already holds this domain as verified.
+        unknown:
+          heading: Verification failed
+          hint: Try again. If this keeps happening, contact support.
+      error_codes:
+        timeout: The DNS lookup timed out before we got an answer.
+        resolver_unavailable: Our DNS resolver couldn't be reached.
+        domain_not_found: The domain %{domain} doesn't exist in DNS. Check the spelling and that the domain is registered.
+        record_not_found: No TXT record was found at %{name}. Add it with the value shown.
+        record_at_wrong_name: We found the value at the wrong name. Move it to %{name}.
+        value_quoted: The TXT value includes quotation marks. Publish it as %{value} without adding your own quotes.
+        token_mismatch: A verification record exists at %{name}, but its token doesn't match this domain. Replace it with %{value}.
+        value_mismatch: A TXT record exists at %{name}, but its value isn't %{value}.
+        already_verified: Another organization has already verified %{domain}.
+        unknown_error: Something unexpected went wrong while checking %{domain}.
+      create:
+        added: "%{domain} added. Publish the TXT record shown below, then click Verify."
+      verify:
+        verified: "%{domain} is verified."
+        failed: "We couldn't verify %{domain}. See the details below."
+        unavailable: "%{domain} can't be checked right now."
+      destroy:
+        removed: "%{domain} removed."
     invitation_expiry_title: "%{time} UTC"
     invitations:
       expired: This invitation has expired. Ask an organization admin to resend it.
