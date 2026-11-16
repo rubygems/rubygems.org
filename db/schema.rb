@@ -590,7 +590,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_10_184402) do
   create_table "organization_teams", force: :cascade do |t|
     t.string "handle", null: false
     t.string "name", null: false
-    t.bigint "organization_id"
+    t.bigint "organization_id", null: false
     t.boolean "default", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
