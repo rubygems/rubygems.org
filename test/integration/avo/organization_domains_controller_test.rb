@@ -1,0 +1,117 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
+  include AdminHelpers
+
+  setup do
+    @organization = create(:organization, name: "Acme Corp")
+    @domain = create(:organization_domain, :verified, organization: @organization, domain: "acme.example.com")
+    @removed = create(:organization_domain, :deleted, organization: @organization, domain: "old.example.com")
+    create(:organization_domain_check, :failure, organization_domain: @domain,
+      error_code: "token_mismatch", error_message: "saw rubygems-verification=other")
+  end
+
+  test "listing domains" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+
+    get avo.resources_organization_domains_path
+
+    assert_response :success
+    page.assert_text "acme.example.com"
+  end
+
+  test "listing deleted domains with the filter" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+    filters = Base64.encode64({ "Avo::Resources::OrganizationDomain::DeletedFilter" => { "not_deleted" => false, "deleted" => true } }.to_json)
+
+    get avo.resources_organization_domains_path(encoded_filters: filters)
+
+    assert_response :success
+    page.assert_text "old.example.com"
+    page.assert_no_text "acme.example.com"
+  end
+
+  test "showing a domain with its token and the remove action" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+
+    get avo.resources_organization_domain_path(@domain)
+
+    assert_response :success
+    page.assert_text "acme.example.com"
+    page.assert_text "Acme Corp"
+    page.assert_text @domain.token
+    page.assert_text "Remove Organization Domain"
+  end
+
+  test "showing a removed domain" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+
+    get avo.resources_organization_domain_path(@removed)
+
+    assert_response :success
+    page.assert_text "old.example.com"
+  end
+
+  test "listing check history including error details" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+
+    get avo.resources_associations_index_path(
+      resource_name: "organization_domains", id: @domain.id, related_name: "checks"
+    )
+
+    assert_response :success
+    page.assert_text "token_mismatch"
+    page.assert_text "saw rubygems-verification=other"
+  end
+
+  test "listing an organization's domains" do
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+
+    get avo.resources_associations_index_path(
+      resource_name: "organizations", id: @organization.handle, related_name: "domains"
+    )
+
+    assert_response :success
+    page.assert_text "acme.example.com"
+  end
+
+  test "domains cannot be created, edited or destroyed" do
+    requires_avo_pro
+
+    admin_sign_in_as create(:admin_github_user, :is_admin)
+
+    assert_no_difference [-> { OrganizationDomain.count }, -> { Audit.count }] do
+      get avo.new_resources_organization_domain_path
+
+      assert_redirected_to avo.root_path
+
+      get avo.edit_resources_organization_domain_path(@domain)
+
+      assert_redirected_to avo.root_path
+
+      patch avo.resources_organization_domain_path(@domain), params: { organization_domain: { token: "forged" } }
+
+      assert_redirected_to avo.root_path
+
+      delete avo.resources_organization_domain_path(@domain)
+
+      assert_redirected_to avo.root_path
+    end
+
+    assert_nil @domain.reload.deleted_at
+    refute_equal "forged", @domain.token
+  end
+
+  test "admins outside the rubygems.org team cannot see domains" do
+    requires_avo_pro
+
+    admin_sign_in_as admin_outside_rubygems_org_team
+
+    get avo.resources_organization_domain_path(@domain)
+
+    assert_redirected_to avo.root_path
+    refute_match @domain.token, response.body
+  end
+end

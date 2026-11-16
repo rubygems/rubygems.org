@@ -9,11 +9,14 @@ class OrganizationDomain < ApplicationRecord
   has_many :checks, -> { order(checked_at: :desc, id: :desc) },
     class_name: "OrganizationDomainCheck", inverse_of: :organization_domain, dependent: :destroy
 
+  has_many :audits, as: :auditable, dependent: :nullify
+
   attr_readonly :domain, :token
 
   scope :not_deleted, -> { where(deleted_at: nil) }
   scope :verified, -> { not_deleted.where.not(verified_at: nil) }
   scope :pending, -> { not_deleted.where(verified_at: nil) }
+  scope :deleted, -> { where.not(deleted_at: nil) }
 
   before_validation :normalize_domain, on: :create
   before_validation :generate_token, on: :create
