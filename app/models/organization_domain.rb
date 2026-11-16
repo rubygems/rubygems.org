@@ -31,6 +31,12 @@ class OrganizationDomain < ApplicationRecord
     update!(deleted_at: Time.current, verified_at: nil)
   end
 
+  # Runs a synchronous DNS check and returns the recorded OrganizationDomainCheck.
+  # Raises (without querying DNS) for a removed or invalid domain.
+  def verify!(resolver: nil)
+    DnsCheck.call(self, resolver:)
+  end
+
   def txt_record_name
     "#{TXT_NAME_PREFIX}#{domain}"
   end
