@@ -572,6 +572,7 @@ en:
         verified: Verified
         pending: Pending
         failed: Failed
+        checking: Checking
       verified_ago: "%{time} ago"
       verify: Verify
       recheck: Verify again
@@ -582,42 +583,17 @@ en:
       keep_published: Keep this TXT record published. Verify again any time to re-check it.
       txt_name: Name
       txt_value: Value
-      detail: "Details:"
       checked_at: "Last checked:"
       checked_ago: "%{time} ago"
-      error_groups:
-        lookup_failed:
-          heading: We couldn't reach DNS
-          hint: Try again in a moment.
-        record_missing:
-          heading: We couldn't find the record
-          hint: Check the exact record name below. DNS changes can take time to propagate, so it may help to wait a few minutes and retry.
-        record_mismatch:
-          heading: The DNS value doesn't match
-          hint: Update the TXT record to the value shown below, then retry.
-        conflict:
-          heading: This domain is already verified elsewhere
-          hint: Another organization already holds this domain as verified.
-        unknown:
-          heading: Verification failed
-          hint: Try again. If this keeps happening, contact support.
-      error_codes:
-        timeout: The DNS lookup timed out before we got an answer.
-        resolver_unavailable: Our DNS resolver couldn't be reached.
-        domain_not_found: The domain %{domain} doesn't exist in DNS. Check the spelling and that the domain is registered.
-        record_not_found: No TXT record was found at %{name}. Add it with the value shown.
-        record_at_wrong_name: We found the value at the wrong name. Move it to %{name}.
-        value_quoted: The TXT record at %{name} doesn't match the value shown below.
-        token_mismatch: The TXT record at %{name} doesn't match the value shown below.
-        value_mismatch: The TXT record at %{name} doesn't match the value shown below.
-        already_verified: Another organization has already verified %{domain}.
-        unknown_error: Something unexpected went wrong while checking %{domain}.
+      checking: Verification is running in the background. Revisit this page later to see the result. DNS changes can take a while to propagate.
+      retry_hint: Retry runs in the background; revisit this page later. DNS changes can take a while to propagate.
+      failure:
+        record_not_found: We couldn't find a TXT record at %{name}.
+        record_mismatch: The TXT record at %{name} doesn't match the value shown below.
+        other_error: We couldn't complete the DNS lookup for %{name}. Please retry later.
       create:
         added: "%{domain} added. Publish the TXT record shown below, then click Verify."
-      verify_result:
-        verified: "%{domain} is verified."
-        failed: "We couldn't verify %{domain}. See the details below."
-        unavailable: "%{domain} can't be checked right now."
+      queued: We're verifying %{domain} in the background. Revisit this page later to see the result. DNS changes can take a while to propagate.
       destroy:
         removed: "%{domain} removed."
     invitation_expiry_title: "%{time} UTC"

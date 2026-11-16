@@ -16,11 +16,12 @@ FactoryBot.define do
     organization_domain
     checked_at { Time.zone.now }
     result { "success" }
+    outcome { "matched" }
 
     trait :failure do
       result { "failure" }
-      error_code { "record_not_found" }
-      error_message { "No TXT records found" }
+      outcome { "record_not_found" }
+      message { "No TXT record found at _rubygems-challenge.example.com." }
     end
   end
 end

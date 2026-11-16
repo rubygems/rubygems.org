@@ -557,8 +557,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_025535) do
     t.bigint "organization_domain_id", null: false
     t.datetime "checked_at", null: false
     t.string "result", null: false
-    t.string "error_code"
-    t.text "error_message"
+    t.string "outcome", null: false
+    t.text "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["organization_domain_id", "checked_at", "id"], name: "index_organization_domain_checks_on_domain_latest", order: { checked_at: :desc, id: :desc }
@@ -571,6 +571,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_025535) do
     t.datetime "verified_at"
     t.datetime "last_checked_at"
     t.string "last_check_result"
+    t.datetime "check_queued_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["domain"], name: "index_organization_domains_on_domain_verified", unique: true, where: "(verified_at IS NOT NULL)"

@@ -6,6 +6,8 @@ require "helpers/fake_dns_helpers"
 class Organizations::DomainsTest < ActionDispatch::IntegrationTest
   include FakeDnsHelpers
 
+  BUTTON_KEYS = %w[verify recheck retry remove].freeze
+
   setup do
     @owner = create(:user)
     @organization = create(:organization, owners: [@owner], handle: "arrakis", name: "Arrakis")
@@ -28,6 +30,8 @@ class Organizations::DomainsTest < ActionDispatch::IntegrationTest
     assert_includes expected, response.status
     assert_equal @counts, state_counts
     assert_empty @resolver.queries
+    assert_no_enqueued_jobs only: OrganizationDomainVerificationJob
+    assert_nil @domain.reload.check_queued_at
   end
 
   def attempt_all(expected)
@@ -116,11 +120,10 @@ text: "Verify again"
       assert_match(/DISTINCT ON/, queries.first)
     end
 
-    should "show a Retry button and the failure details after a failed check" do
+    should "show a Retry button and the failure text after a failed check" do
       domain = create(:organization_domain, organization: @organization, domain: "bad.example.com",
         last_check_result: "failure")
-      create(:organization_domain_check, :failure, organization_domain: domain, error_code: "record_not_found",
-        error_message: "No TXT records at _rubygems-challenge.bad.example.com.")
+      create(:organization_domain_check, :failure, organization_domain: domain)
       sign_in @owner
       get edit_organization_path(@organization)
 
@@ -128,9 +131,50 @@ text: "Verify again"
       testid "organization-domain-retry"
       testid "organization-domain-verify", count: 0
       testid "organization-domain-failure"
-      testid "organization-domain-failure-detail", text: /_rubygems-challenge\.bad\.example\.com/
-      testid "organization-domain-failure-message", text: /No TXT records/
       testid "organization-domain-checked-at"
+    end
+
+    {
+      "record_not_found" => "We couldn't find a TXT record at _rubygems-challenge.bad.example.com.",
+      "record_mismatch" => "The TXT record at _rubygems-challenge.bad.example.com doesn't match the value shown below.",
+      "other_error" => "We couldn't complete the DNS lookup for _rubygems-challenge.bad.example.com. Please retry later."
+    }.each do |outcome, text|
+      should "show the localized message for #{outcome}, the retry hint and never the stored message" do
+        domain = create(:organization_domain, organization: @organization, domain: "bad.example.com",
+          last_check_result: "failure")
+        create(:organization_domain_check, :failure, organization_domain: domain, outcome:,
+          message: "STORED-ADMIN-MESSAGE rubygems-verification=FOUND-VALUE-abc")
+        sign_in @owner
+        get edit_organization_path(@organization)
+
+        testid "organization-domain-failure" do
+          assert_select "[data-testid=?]", "organization-domain-failure-detail", text: text
+          assert_select "p", text: "Retry runs in the background; revisit this page later. DNS changes can take a while to propagate."
+        end
+        testid "organization-domain-retry"
+        testid "organization-domain-checked-at"
+
+        refute_includes response.body, "STORED-ADMIN-MESSAGE"
+        refute_includes response.body, "FOUND-VALUE-abc"
+      end
+    end
+
+    should "show the Checking state while a check is queued, hiding Verify and Retry but not Remove" do
+      create(:organization_domain, organization: @organization, domain: "wait.example.com", check_queued_at: Time.current)
+      failed = create(:organization_domain, organization: @organization, domain: "bad.example.com",
+        last_check_result: "failure", check_queued_at: Time.current)
+      create(:organization_domain_check, :failure, organization_domain: failed)
+      sign_in @owner
+      get edit_organization_path(@organization)
+
+      testid "organization-domain", count: 2
+      testid "organization-domain-status", text: "Checking", count: 2
+      testid "organization-domain-checking", count: 2,
+        text: "Verification is running in the background. Revisit this page later to see the result. DNS changes can take a while to propagate."
+      testid "organization-domain-verify", count: 0
+      testid "organization-domain-retry", count: 0
+      testid "organization-domain-failure", count: 0
+      testid "organization-domain-remove", count: 2
     end
 
     should "show a failed check above the domain it belongs to" do
@@ -148,29 +192,6 @@ text: "Verify again"
       assert failure_at, "failure box missing"
       assert_operator failure_at, :<, domain_at, "failure box should come before the domain name"
       assert_operator domain_at, :<, txt_at, "domain name should come before the TXT record"
-    end
-
-    %w[token_mismatch value_mismatch value_quoted].each do |code|
-      should "only say the DNS value does not match for #{code}, without showing what was found" do
-        domain = create(:organization_domain, organization: @organization, domain: "bad.example.com",
-          last_check_result: "failure")
-        create(:organization_domain_check, :failure, organization_domain: domain, error_code: code,
-          error_message: %(TXT values seen: ["rubygems-verification=FOUND-VALUE-abc"]))
-        sign_in @owner
-        get edit_organization_path(@organization)
-
-        testid "organization-domain-failure" do
-          assert_select "h3", text: "The DNS value doesn't match"
-        end
-        testid "organization-domain-failure-detail",
-          text: "The TXT record at _rubygems-challenge.bad.example.com doesn't match the value shown below."
-        testid "organization-domain-failure-message", count: 0
-        testid "organization-domain-retry"
-        testid "organization-domain-checked-at"
-
-        refute_includes response.body, "FOUND-VALUE-abc"
-        refute_match(/values seen|quotation marks|token doesn't match|what we saw/i, response.body)
-      end
     end
   end
 
@@ -263,21 +284,50 @@ text: "Verify again"
       sign_in @owner
     end
 
-    should "walk from a failed check to a verified domain" do
-      stub_dns(FakeDnsResolver.for_domain("example.com"))
-      post verify_organization_domain_path(@organization, @domain)
+    should "enqueue exactly one job, mark the domain as checking and show the background notice" do
+      assert_enqueued_jobs 1, only: OrganizationDomainVerificationJob do
+        post verify_organization_domain_path(@organization, @domain)
+      end
 
+      assert_enqueued_with(job: OrganizationDomainVerificationJob, args: [@domain.id])
       assert_redirected_to edit_organization_path(@organization)
+      refute_nil @domain.reload.check_queued_at
+      assert_empty @resolver.queries
+      assert_equal 0, OrganizationDomainCheck.count
       follow_redirect!
 
+      assert_includes response.body,
+        "We&#39;re verifying example.com in the background. Revisit this page later to see the result. DNS changes can take a while to propagate."
+      testid "organization-domain-status", text: "Checking"
+      testid "organization-domain-verify", count: 0
+    end
+
+    should "not enqueue a duplicate on a second click while one is queued" do
+      assert_enqueued_jobs 1, only: OrganizationDomainVerificationJob do
+        post verify_organization_domain_path(@organization, @domain)
+        post verify_organization_domain_path(@organization, @domain)
+      end
+
+      assert_redirected_to edit_organization_path(@organization)
+    end
+
+    should "walk from a failed check to a verified domain through the job" do
+      stub_dns(FakeDnsResolver.for_domain("example.com"))
+      perform_enqueued_jobs do
+        post verify_organization_domain_path(@organization, @domain)
+      end
+
+      assert_nil @domain.reload.check_queued_at
+      get edit_organization_path(@organization)
+
       testid "organization-domain-failure"
-      testid "organization-domain-failure-detail", text: /_rubygems-challenge\.example\.com/
-      testid "organization-domain-failure-message"
       testid "organization-domain-retry"
 
       stub_dns(FakeDnsResolver.for_domain("example.com", value: @domain.txt_record_value))
-      post verify_organization_domain_path(@organization, @domain)
-      follow_redirect!
+      perform_enqueued_jobs do
+        post verify_organization_domain_path(@organization, @domain)
+      end
+      get edit_organization_path(@organization)
 
       assert_predicate @domain.reload, :verified?
       testid "organization-domain-status", text: /verified/i
@@ -287,40 +337,29 @@ text: "Verify again"
     end
 
     should "let the owner re-check a verified domain, and a failing re-check un-verifies it" do
-      stub_dns(FakeDnsResolver.for_domain("example.com", value: @domain.txt_record_value))
-      post verify_organization_domain_path(@organization, @domain)
-
-      assert_predicate @domain.reload, :verified?
-
+      verified = create(:organization_domain, :verified, organization: @organization, domain: "ok.example.com")
       get edit_organization_path(@organization)
 
-      testid "organization-domain-verify", text: "Verify again"
+      assert_select "[data-domain=?] [data-testid=?]", "ok.example.com", "organization-domain-verify", text: "Verify again"
 
-      stub_dns(FakeDnsResolver.for_domain("example.com"))
-      assert_difference -> { @domain.checks.count }, 1 do
-        post verify_organization_domain_path(@organization, @domain)
+      stub_dns(FakeDnsResolver.new)
+      perform_enqueued_jobs do
+        post verify_organization_domain_path(@organization, verified)
       end
-      follow_redirect!
 
-      refute_predicate @domain.reload, :verified?
-      testid "organization-domain-retry"
+      refute_predicate verified.reload, :verified?
+      assert_equal 1, verified.checks.count
     end
 
-    should "404 for a removed domain and record no check" do
+    should "404 for a removed domain and enqueue nothing" do
       @domain.remove!(actor: @owner)
 
       assert_no_difference -> { OrganizationDomainCheck.count } do
         post verify_organization_domain_path(@organization, @domain)
       end
       assert_response :not_found
+      assert_no_enqueued_jobs only: OrganizationDomainVerificationJob
       assert_empty @resolver.queries
-    end
-
-    should "handle a DnsCheck error without a 500" do
-      OrganizationDomain.any_instance.stubs(:verify!).raises(OrganizationDomain::DnsCheck::DeletedDomain)
-      post verify_organization_domain_path(@organization, @domain)
-
-      assert_redirected_to edit_organization_path(@organization)
     end
   end
 
@@ -434,6 +473,8 @@ text: "Verify again"
       assert_response :not_found
       assert_equal counts, state_counts
       assert_empty resolver.queries
+      assert_no_enqueued_jobs only: OrganizationDomainVerificationJob
+      assert_nil victim.reload.check_queued_at
       assert OrganizationDomain.exists?(victim.id)
       refute_predicate victim, :verified?
     end
@@ -454,40 +495,36 @@ text: "Verify again"
     end
   end
 
-  context "error code locale keys" do
-    should "exist for every error code and group" do
-      OrganizationDomainCheck.error_codes.each_key do |code|
-        assert I18n.exists?("organizations.domains.error_codes.#{code}"), "missing code key #{code}"
+  context "locale keys" do
+    should "exist for every outcome and be gone for the old codes and groups" do
+      (OrganizationDomainCheck.outcomes.keys - ["matched"]).each do |outcome|
+        assert I18n.exists?("organizations.domains.failure.#{outcome}"), "missing #{outcome}"
       end
-      OrganizationDomainCheck::ERROR_GROUPS.each_key do |group|
-        assert I18n.exists?("organizations.domains.error_groups.#{group}.heading"), "missing group heading #{group}"
-        assert I18n.exists?("organizations.domains.error_groups.#{group}.hint"), "missing group hint #{group}"
+      %w[error_codes error_groups verify_result detail].each do |key|
+        refute I18n.exists?("organizations.domains.#{key}"), "stale key #{key}"
       end
     end
 
     should "keep button labels as strings in every locale file" do
-      buttons = %w[verify recheck retry remove]
-      results = %w[verified failed unavailable]
       I18n.available_locales.each do |locale|
-        buttons.each do |key|
+        BUTTON_KEYS.each do |key|
           assert_kind_of String, I18n.t("organizations.domains.#{key}", locale:), "#{locale} #{key}"
-        end
-        results.each do |key|
-          assert_kind_of String, I18n.t("organizations.domains.verify_result.#{key}", locale:, domain: "example.com"), "#{locale} #{key}"
         end
       end
     end
 
-    should "render for every code on the settings page" do
+    should "render for every outcome on the settings page" do
       sign_in @owner
-      OrganizationDomainCheck.error_codes.each_key do |code|
+      OrganizationDomainCheck.outcomes.each_key do |outcome|
+        next if outcome == "matched"
+
         domain = create(:organization_domain, organization: @organization, last_check_result: "failure")
-        create(:organization_domain_check, :failure, organization_domain: domain, error_code: code)
+        create(:organization_domain_check, :failure, organization_domain: domain, outcome:)
       end
       get edit_organization_path(@organization)
 
       assert_response :success
-      testid "organization-domain-failure", count: OrganizationDomainCheck.error_codes.size
+      testid "organization-domain-failure", count: 3
 
       refute_match(/translation missing|translation_missing/i, response.body)
     end

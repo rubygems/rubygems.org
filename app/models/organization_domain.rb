@@ -22,6 +22,29 @@ class OrganizationDomain < ApplicationRecord
   validate :domain_name_is_valid, on: :create
   validates :domain, uniqueness: { scope: :organization_id }, on: :create
 
+  # Adds a domain for an organization and returns the record: persisted, or with
+  # errors (invalid, or taken by a concurrent add). The unique index on token
+  # guarantees no duplicate token; on the near-impossible collision the save is
+  # retried (before_validation generates a fresh token) rather than pre-checked
+  # (racy). The added event is recorded by the record's own after_create, so it
+  # shares the insert's transaction and a failed or retried attempt leaves none.
+  def self.add(organization:, domain:)
+    record = new(organization:, domain:)
+    attempts = 0
+    begin
+      transaction(requires_new: true) { record.save }
+    rescue ActiveRecord::RecordNotUnique => e
+      if e.message.include?("index_organization_domains_on_organization_id_and_domain")
+        record.errors.add(:domain, :taken)
+      elsif e.message.include?("index_organization_domains_on_token") && (attempts += 1) < TOKEN_ATTEMPTS
+        retry
+      else
+        raise
+      end
+    end
+    record
+  end
+
   def verified?
     verified_at.present?
   end
@@ -38,7 +61,7 @@ class OrganizationDomain < ApplicationRecord
     end
   end
 
-  # Runs a synchronous DNS check and returns the recorded OrganizationDomainCheck.
+  # Runs a DNS check in the calling thread (the background job's work) and returns the recorded OrganizationDomainCheck.
   # Raises (without querying DNS) for a removed or invalid domain.
   def verify!(resolver: nil)
     DnsCheck.call(self, resolver:)
@@ -74,26 +97,5 @@ class OrganizationDomain < ApplicationRecord
   def domain_name_is_valid
     rules = Name.errors_for(domain)
     errors.add(:domain, :invalid_format, rules:) if rules.any?
-  end
-
-  # The unique index on token guarantees no duplicate; on the near-impossible
-  # collision, regenerate and retry the insert rather than pre-checking (racy).
-  def _create_record(*)
-    attempts = 0
-    begin
-      self.class.transaction(requires_new: true) { super }
-    rescue ActiveRecord::RecordNotUnique => e
-      # Lost a race with a concurrent add of the same domain: surface the usual
-      # validation error (returning false makes save fail rather than raise).
-      if e.message.include?("index_organization_domains_on_organization_id_and_domain")
-        errors.add(:domain, :taken)
-        return false
-      end
-      raise unless e.message.include?("index_organization_domains_on_token")
-      raise if (attempts += 1) >= TOKEN_ATTEMPTS
-
-      generate_token
-      retry
-    end
   end
 end

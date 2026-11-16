@@ -22,6 +22,7 @@ class Avo::Resources::OrganizationDomain < Avo::BaseResource
     field :verified_at, as: :date_time, readonly: true
     field :last_checked_at, as: :date_time, readonly: true
     field :last_check_result, as: :text, readonly: true
+    field :check_queued_at, as: :date_time, readonly: true
     field :created_at, as: :date_time, readonly: true, only_on: :show
 
     field :checks, as: :has_many

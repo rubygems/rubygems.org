@@ -606,6 +606,7 @@ es:
         verified:
         pending:
         failed:
+        checking:
       verified_ago:
       verify:
       recheck:
@@ -616,42 +617,17 @@ es:
       keep_published:
       txt_name:
       txt_value:
-      detail:
       checked_at:
       checked_ago:
-      error_groups:
-        lookup_failed:
-          heading:
-          hint:
-        record_missing:
-          heading:
-          hint:
-        record_mismatch:
-          heading:
-          hint:
-        conflict:
-          heading:
-          hint:
-        unknown:
-          heading:
-          hint:
-      error_codes:
-        timeout:
-        resolver_unavailable:
-        domain_not_found:
+      checking:
+      retry_hint:
+      failure:
         record_not_found:
-        record_at_wrong_name:
-        value_quoted:
-        token_mismatch:
-        value_mismatch:
-        already_verified:
-        unknown_error:
+        record_mismatch:
+        other_error:
       create:
         added:
-      verify_result:
-        verified:
-        failed:
-        unavailable:
+      queued:
       destroy:
         removed:
     invitation_expiry_title:

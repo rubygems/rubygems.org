@@ -6,8 +6,8 @@ class CreateOrganizationDomainChecks < ActiveRecord::Migration[8.1]
       t.references :organization_domain, null: false, foreign_key: true
       t.datetime :checked_at, null: false
       t.string :result, null: false
-      t.string :error_code
-      t.text :error_message
+      t.string :outcome, null: false
+      t.text :message
 
       t.timestamps
     end

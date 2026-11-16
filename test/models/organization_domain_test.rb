@@ -205,29 +205,55 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       fresh = "fresh-token"
       SecureRandom.stubs(:urlsafe_base64).with(32).returns(existing.token, fresh)
 
-      record = build_domain("other.example.com")
-      record.save!
+      record = OrganizationDomain.add(organization: @organization, domain: "other.example.com")
 
+      assert_predicate record, :persisted?
       assert_equal fresh, record.reload.token
+      assert_equal 1, domain_events(Events::OrganizationEvent::DOMAIN_ADDED).count
     end
 
     should "give up after bounded retries" do
       existing = create(:organization_domain)
       SecureRandom.stubs(:urlsafe_base64).with(32).returns(existing.token)
 
-      assert_raises(ActiveRecord::RecordNotUnique) { build_domain("other.example.com").save! }
+      assert_no_difference ["OrganizationDomain.count", "Events::OrganizationEvent.count"] do
+        assert_raises(ActiveRecord::RecordNotUnique) { OrganizationDomain.add(organization: @organization, domain: "other.example.com") }
+      end
     end
 
     should "report a lost add race as a taken error instead of raising" do
       create(:organization_domain, domain: "example.com", organization: @organization)
       # Simulate the race: the uniqueness pre-check passed before the competing row committed.
       ActiveRecord::Validations::UniquenessValidator.any_instance.stubs(:validate_each)
-      record = build_domain("example.com")
 
-      assert_no_difference "OrganizationDomain.count" do
-        refute record.save
+      assert_no_difference ["OrganizationDomain.count", "Events::OrganizationEvent.count"] do
+        record = OrganizationDomain.add(organization: @organization, domain: "example.com")
+
+        refute_predicate record, :persisted?
+        assert_equal [:taken], record.errors.details[:domain].pluck(:error)
       end
-      assert_equal [:taken], record.errors.details[:domain].pluck(:error)
+    end
+
+    should "return the record with errors for an invalid domain" do
+      assert_no_difference ["OrganizationDomain.count", "Events::OrganizationEvent.count"] do
+        record = OrganizationDomain.add(organization: @organization, domain: "https://bad")
+
+        refute_predicate record, :persisted?
+        assert_equal [:invalid_format], record.errors.details[:domain].pluck(:error)
+      end
+    end
+
+    should "return the persisted record and record exactly one added event" do
+      record = OrganizationDomain.add(organization: @organization, domain: " Example.COM ")
+
+      assert_predicate record, :persisted?
+      assert_equal "example.com", record.domain
+      assert_equal 1, domain_events(Events::OrganizationEvent::DOMAIN_ADDED).count
+    end
+
+    should "not override any ActiveRecord internals" do
+      refute_includes OrganizationDomain.private_instance_methods(false), :_create_record
+      refute_includes OrganizationDomain.instance_methods(false), :_create_record
     end
 
     should "differ when a removed domain is re-added, with the old row gone" do
@@ -302,7 +328,7 @@ class OrganizationDomainTest < ActiveSupport::TestCase
 
     should "record exactly one added event with domain and actor" do
       assert_difference -> { domain_events(Events::OrganizationEvent::DOMAIN_ADDED).count }, 1 do
-        build_domain("Example.com").save!
+        OrganizationDomain.add(organization: @organization, domain: "Example.com")
       end
 
       additional = domain_events(Events::OrganizationEvent::DOMAIN_ADDED).sole.additional
@@ -316,13 +342,13 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       SecureRandom.stubs(:urlsafe_base64).with(32).returns(existing.token, "fresh-token")
 
       assert_difference -> { domain_events(Events::OrganizationEvent::DOMAIN_ADDED).count }, 1 do
-        build_domain("other.example.com").save!
+        OrganizationDomain.add(organization: @organization, domain: "other.example.com")
       end
     end
 
     should "record no added event for a rejected add" do
       assert_no_difference -> { @organization.events.count } do
-        refute build_domain("localhost").save
+        refute_predicate OrganizationDomain.add(organization: @organization, domain: "localhost"), :persisted?
       end
     end
 
@@ -331,7 +357,7 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       ActiveRecord::Validations::UniquenessValidator.any_instance.stubs(:validate_each)
 
       assert_no_difference -> { domain_events(Events::OrganizationEvent::DOMAIN_ADDED).count } do
-        refute build_domain("example.com").save
+        refute_predicate OrganizationDomain.add(organization: @organization, domain: "example.com"), :persisted?
       end
     end
 

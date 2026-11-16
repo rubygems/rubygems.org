@@ -9,6 +9,7 @@ class CreateOrganizationDomains < ActiveRecord::Migration[8.1]
       t.datetime :verified_at
       t.datetime :last_checked_at
       t.string :last_check_result
+      t.datetime :check_queued_at
 
       t.timestamps
 

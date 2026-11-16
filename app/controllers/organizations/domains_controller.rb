@@ -5,9 +5,9 @@ class Organizations::DomainsController < Organizations::BaseController
 
   def create
     @domain_input = domain_params[:domain]
-    @new_domain = OrganizationDomain.new(organization: @organization, domain: @domain_input)
+    @new_domain = OrganizationDomain.add(organization: @organization, domain: @domain_input)
 
-    if @new_domain.save
+    if @new_domain.persisted?
       redirect_to edit_organization_path(@organization), notice: t(".added", domain: @new_domain.domain)
     else
       add_edit_breadcrumbs
@@ -19,14 +19,14 @@ class Organizations::DomainsController < Organizations::BaseController
   def verify
     domain = find_domain
 
-    check = domain.verify!
-    if check.success?
-      redirect_to edit_organization_path(@organization), notice: t("organizations.domains.verify_result.verified", domain: domain.domain)
-    else
-      redirect_to edit_organization_path(@organization), alert: t("organizations.domains.verify_result.failed", domain: domain.domain)
+    # Marks the domain as checking and enqueues the background check. The flag
+    # is only set when no check is already queued, so repeated clicks enqueue once.
+    OrganizationDomain.transaction do
+      queued = OrganizationDomain.where(id: domain.id, check_queued_at: nil).update_all(check_queued_at: Time.current)
+      OrganizationDomainVerificationJob.perform_later(domain.id) if queued == 1
     end
-  rescue OrganizationDomain::DnsCheck::Error
-    redirect_to edit_organization_path(@organization), alert: t("organizations.domains.verify_result.unavailable", domain: domain.domain)
+
+    redirect_to edit_organization_path(@organization), notice: t("organizations.domains.queued", domain: domain.domain)
   end
 
   def destroy

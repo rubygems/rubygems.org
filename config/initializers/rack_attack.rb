@@ -204,7 +204,7 @@ class Rack::Attack
     api_key_owner_id(req) if protected_route?(protected_webhook_fire_action, req.path, req.request_method)
   end
 
-  # Throttle organization domain create/verify (verify runs a synchronous DNS lookup)
+  # Throttle organization domain create/verify (verify enqueues a background DNS check)
   ORG_DOMAIN_LIMIT = 20
   protected_org_domain_actions = [
     { controller: "organizations/domains", action: "create" },

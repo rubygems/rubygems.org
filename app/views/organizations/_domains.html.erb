@@ -42,29 +42,24 @@
         <% domains.each do |domain| %>
           <%
             latest_check = latest_checks[domain.id]
-            failed = !domain.verified? && latest_check&.failure?
-            status = domain.verified? ? :verified : (failed ? :failed : :pending)
+            checking = domain.check_queued_at.present?
+            failed = !checking && !domain.verified? && latest_check&.failure?
+            status = checking ? :checking : (domain.verified? ? :verified : (failed ? :failed : :pending))
             badge = {
               verified: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
               failed: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
-              pending: "bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
+              pending: "bg-neutral-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200",
+              checking: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
             }.fetch(status)
           %>
           <li class="py-6" data-testid="organization-domain" data-domain="<%= domain.domain %>">
             <% if failed %>
-              <% group = latest_check.error_group || :unknown %>
-              <div class="mb-4 p-4 rounded-md border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 space-y-2" data-testid="organization-domain-failure" data-error-code="<%= latest_check.error_code %>">
-                <h3 class="text-b2 font-semibold"><%= t(".error_groups.#{group}.heading") %></h3>
-                <p class="text-b3" data-testid="organization-domain-failure-detail">
-                  <%= t(".error_codes.#{latest_check.error_code || 'unknown_error'}", domain: domain.domain, name: domain.txt_record_name, value: domain.txt_record_value) %>
+              <div class="mb-4 p-4 rounded-md border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 space-y-2" data-testid="organization-domain-failure" data-outcome="<%= latest_check.outcome %>">
+                <%# Only the outcome is shown; the stored message is for admins. %>
+                <p class="text-b3 font-semibold" data-testid="organization-domain-failure-detail">
+                  <%= t(".failure.#{latest_check.outcome}", name: domain.txt_record_name) %>
                 </p>
-                <p class="text-b3"><%= t(".error_groups.#{group}.hint") %></p>
-                <%# A mismatch only says the value doesn't match; never echo what was found in DNS. %>
-                <% if latest_check.error_message.present? && group.to_s != "record_mismatch" %>
-                  <p class="text-b4 break-all" data-testid="organization-domain-failure-message">
-                    <span class="font-semibold"><%= t(".detail") %></span> <span class="font-mono"><%= latest_check.error_message %></span>
-                  </p>
-                <% end %>
+                <p class="text-b3"><%= t(".retry_hint") %></p>
                 <p class="text-b4 text-red-700 dark:text-red-300">
                   <%= t(".checked_at") %>
                   <time datetime="<%= latest_check.checked_at.iso8601 %>" title="<%= latest_check.checked_at.utc %>" data-testid="organization-domain-checked-at"><%= t(".checked_ago", time: time_ago_in_words(latest_check.checked_at)) %></time>
@@ -84,7 +79,9 @@
                 <% end %>
               </div>
               <div class="flex items-center gap-3">
-                <% if failed %>
+                <% if checking %>
+                  <%# Verify and Retry are unavailable while a check is queued or running. %>
+                <% elsif failed %>
                   <%= button_to t(".retry"), verify_organization_domain_path(organization, domain), method: :post,
                     class: "#{action_classes} border-orange-500 text-orange-700 dark:text-orange-300 hover:bg-orange-50 dark:hover:bg-neutral-800",
                     data: { testid: "organization-domain-retry", disable_with: t("form_disable_with") } %>
@@ -99,6 +96,10 @@
                   data: { testid: "organization-domain-remove" } %>
               </div>
             </div>
+
+            <% if checking %>
+              <p class="mt-4 text-b3 text-neutral-600 dark:text-neutral-400" data-testid="organization-domain-checking"><%= t(".checking") %></p>
+            <% end %>
 
             <div class="mt-4 space-y-2">
               <p class="text-b3 text-neutral-600 dark:text-neutral-400"><%= domain.verified? ? t(".keep_published") : t(".publish") %></p>

@@ -573,6 +573,8 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         assert_response :too_many_requests
         assert_equal 0, OrganizationDomainCheck.count
+        assert_nil @domain.reload.check_queued_at
+        assert_no_enqueued_jobs only: OrganizationDomainVerificationJob
       end
 
       should "throttle create by ip" do
@@ -592,14 +594,15 @@ class RackAttackTest < ActionDispatch::IntegrationTest
 
         assert_response :too_many_requests
         assert_equal 0, OrganizationDomainCheck.count
+        assert_no_enqueued_jobs only: OrganizationDomainVerificationJob
       end
 
       should "allow verify under the limit" do
-        Resolv::DNS.unstub(:new)
-        Resolv::DNS.stubs(:new).returns(FakeDnsResolver.for_domain("example.com"))
         update_limit_for("org_domains/ip:#{@ip_address}", Rack::Attack::ORG_DOMAIN_LIMIT - 2)
 
-        post "/organizations/#{@organization.handle}/domains/#{@domain.id}/verify", headers: { REMOTE_ADDR: @ip_address }
+        assert_enqueued_with(job: OrganizationDomainVerificationJob, args: [@domain.id]) do
+          post "/organizations/#{@organization.handle}/domains/#{@domain.id}/verify", headers: { REMOTE_ADDR: @ip_address }
+        end
 
         assert_redirected_to "/organizations/#{@organization.handle}/edit"
       end

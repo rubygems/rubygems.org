@@ -9,7 +9,7 @@ class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
     @organization = create(:organization, name: "Acme Corp")
     @domain = create(:organization_domain, :verified, organization: @organization, domain: "acme.example.com")
     create(:organization_domain_check, :failure, organization_domain: @domain,
-      error_code: "token_mismatch", error_message: "saw rubygems-verification=other")
+      outcome: "record_mismatch", message: "A TXT record exists at x but its value does not match.")
   end
 
   test "listing domains" do
@@ -30,10 +30,11 @@ class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
     page.assert_text "acme.example.com"
     page.assert_text "Acme Corp"
     page.assert_text @domain.token
+    page.assert_text "Check queued at"
     page.assert_text "Remove Organization Domain"
   end
 
-  test "listing check history including error details" do
+  test "listing check history including outcome and message" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
 
     get avo.resources_associations_index_path(
@@ -41,8 +42,8 @@ class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
     )
 
     assert_response :success
-    page.assert_text "token_mismatch"
-    page.assert_text "saw rubygems-verification=other"
+    page.assert_text "record_mismatch"
+    page.assert_text "A TXT record exists at x but its value does not match."
   end
 
   test "listing an organization's domains" do
