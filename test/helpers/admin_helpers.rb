@@ -9,5 +9,13 @@ module AdminHelpers
       cookie_jar.encrypted["rubygems_admin_oauth_github_user"] = admin_user.id
       cookies["rubygems_admin_oauth_github_user"] = cookie_jar["rubygems_admin_oauth_github_user"]
     end
+
+    def admin_outside_rubygems_org_team
+      admin = create(:admin_github_user, :is_admin)
+      info_data = admin.info_data.deep_dup
+      info_data[:viewer][:organization][:teams][:edges].reject! { |edge| edge.dig(:node, :slug) == "rubygems-org" }
+      admin.update!(info_data:)
+      admin
+    end
   end
 end

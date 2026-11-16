@@ -114,4 +114,26 @@ class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to avo.root_path
     refute_match @domain.token, response.body
   end
+
+  test "removing a domain through the action as an admin outside the rubygems.org team is denied" do
+    requires_avo_pro
+
+    admin_sign_in_as admin_outside_rubygems_org_team
+    attributes = @domain.attributes
+
+    assert_no_difference -> { Audit.count } do
+      post "/admin/resources/organization_domains/actions",
+        params: {
+          action_id: "Avo::Actions::RemoveOrganizationDomain",
+          resource_view: "show",
+          fields: { comment: "Removing without permission" },
+          id: @domain.id
+        },
+        as: :turbo_stream
+    end
+
+    assert_redirected_to avo.root_path
+    assert_equal attributes, OrganizationDomain.find(@domain.id).attributes
+    assert_empty Audit.where(action: "Remove Organization Domain")
+  end
 end

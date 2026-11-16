@@ -6,6 +6,7 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
   setup do
     @organization = create(:organization)
     @current_user = create(:admin_github_user, :is_admin)
+    Avo::Current.stubs(:user).returns(@current_user)
     @resource = Avo::Resources::OrganizationDomain.new
     @action = Avo::Actions::RemoveOrganizationDomain.new(
       record: nil,
@@ -103,5 +104,19 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
     action_mock = Data.define(:record).new(record: domain)
 
     assert_includes action_mock.instance_exec(&Avo::Actions::RemoveOrganizationDomain.message), "acme.example.com"
+  end
+
+  should "not be visible or authorized for operators outside the rubygems.org team" do
+    info_data = @current_user.info_data.deep_dup
+    info_data[:viewer][:organization][:teams][:edges].reject! { |edge| edge.dig(:node, :slug) == "rubygems-org" }
+    @current_user.update!(info_data:)
+    action_mock = Data.define(:current_user, :view).new(current_user: @current_user, view: :show)
+
+    refute action_mock.instance_exec(&Avo::Actions::RemoveOrganizationDomain.visible)
+    refute_predicate @action, :authorized?
+  end
+
+  should "be authorized for rubygems.org operators" do
+    assert_predicate @action, :authorized?
   end
 end
