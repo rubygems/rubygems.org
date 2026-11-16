@@ -23,6 +23,13 @@ class OrganizationDomainVerificationJob < ApplicationJob
     Rails.error.report(error, handled: false)
   end
 
+  # Order matters: handlers declared later win. The concurrency extension's own
+  # retry_on for ConcurrencyExceededError (e.g. a second click while the first job
+  # is still finishing) was just overridden by discard_on StandardError above, so
+  # restore it here, after it.
+  retry_on GoodJob::ActiveJobExtensions::Concurrency::ConcurrencyExceededError,
+    attempts: Float::INFINITY, wait: :polynomially_longer
+
   # The domain was removed before or during the run: nothing to record or clear.
   discard_on ActiveRecord::RecordNotFound, OrganizationDomain::DnsCheck::DeletedDomain
 

@@ -593,6 +593,7 @@ en:
         other_error: We couldn't complete the DNS lookup for %{name}. Please retry later.
       create:
         added: "%{domain} added. Publish the TXT record shown below, then click Verify."
+      queue_failed: We couldn't start the verification for %{domain}. Please try again.
       queued: We're verifying %{domain} in the background. Revisit this page later to see the result. DNS changes can take a while to propagate.
       destroy:
         removed: "%{domain} removed."

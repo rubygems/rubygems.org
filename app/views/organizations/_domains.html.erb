@@ -42,7 +42,7 @@
         <% domains.each do |domain| %>
           <%
             latest_check = latest_checks[domain.id]
-            checking = domain.check_queued_at.present?
+            checking = domain.checking?
             failed = !checking && !domain.verified? && latest_check&.failure?
             status = checking ? :checking : (domain.verified? ? :verified : (failed ? :failed : :pending))
             badge = {

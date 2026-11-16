@@ -598,6 +598,7 @@ fr:
         other_error:
       create:
         added:
+      queue_failed:
       queued:
       destroy:
         removed:

@@ -278,6 +278,23 @@ class OrganizationDomainTest < ActiveSupport::TestCase
     end
   end
 
+  context "checking" do
+    should "be checking only while check_queued_at is fresh" do
+      record = create(:organization_domain)
+
+      refute_predicate record, :checking?
+      record.update!(check_queued_at: Time.current)
+
+      assert_predicate record, :checking?
+      assert_includes OrganizationDomain.checking, record
+      travel_to (OrganizationDomain::STALE_CHECK_AFTER + 1.minute).from_now do
+        refute_predicate record, :checking?
+        refute_includes OrganizationDomain.checking, record
+        assert_includes OrganizationDomain.not_checking, record
+      end
+    end
+  end
+
   context "verification state" do
     should "scope verified and pending" do
       verified = create(:organization_domain, :verified)

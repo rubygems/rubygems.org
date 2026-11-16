@@ -20,13 +20,19 @@ class Organizations::DomainsController < Organizations::BaseController
     domain = find_domain
 
     # Marks the domain as checking and enqueues the background check. The flag
-    # is only set when no check is already queued, so repeated clicks enqueue once.
-    OrganizationDomain.transaction do
-      queued = OrganizationDomain.where(id: domain.id, check_queued_at: nil).update_all(check_queued_at: Time.current)
-      OrganizationDomainVerificationJob.perform_later(domain.id) if queued == 1
+    # is only set when no fresh check is queued, so repeated clicks enqueue once.
+    enqueued = OrganizationDomain.transaction do
+      queued = OrganizationDomain.not_checking.where(id: domain.id).update_all(check_queued_at: Time.current)
+      next true if queued.zero?
+
+      OrganizationDomainVerificationJob.perform_later(domain.id) || raise(ActiveRecord::Rollback)
     end
 
-    redirect_to edit_organization_path(@organization), notice: t("organizations.domains.queued", domain: domain.domain)
+    if enqueued
+      redirect_to edit_organization_path(@organization), notice: t("organizations.domains.queued", domain: domain.domain)
+    else
+      redirect_to edit_organization_path(@organization), alert: t("organizations.domains.queue_failed", domain: domain.domain)
+    end
   end
 
   def destroy

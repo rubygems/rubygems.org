@@ -155,4 +155,14 @@ class OrganizationDomainVerificationJobTest < ActiveJob::TestCase
       OrganizationDomainVerificationJob.perform_later(@domain.id + 1)
     end
   end
+
+  test "a ConcurrencyExceededError is retried, not discarded" do
+    OrganizationDomain.any_instance.stubs(:verify!).raises(GoodJob::ActiveJobExtensions::Concurrency::ConcurrencyExceededError)
+    Rails.error.expects(:report).never
+
+    assert_enqueued_jobs 1, only: OrganizationDomainVerificationJob do
+      OrganizationDomainVerificationJob.perform_now(@domain.id)
+    end
+    refute_nil queued_at
+  end
 end

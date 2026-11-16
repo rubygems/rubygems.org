@@ -311,6 +311,31 @@ text: "Verify again"
       assert_redirected_to edit_organization_path(@organization)
     end
 
+    should "show Verify and allow a new enqueue when check_queued_at is stale" do
+      @domain.update!(check_queued_at: Time.current)
+      travel 11.minutes do
+        get edit_organization_path(@organization)
+
+        testid "organization-domain-status", text: "Pending"
+        testid "organization-domain-verify"
+        testid "organization-domain-checking", count: 0
+
+        assert_enqueued_jobs 1, only: OrganizationDomainVerificationJob do
+          post verify_organization_domain_path(@organization, @domain)
+        end
+        assert_operator @domain.reload.check_queued_at, :>, 1.minute.ago
+      end
+    end
+
+    should "roll back check_queued_at and tell the owner when the enqueue is aborted" do
+      OrganizationDomainVerificationJob.stubs(:perform_later).returns(false)
+      post verify_organization_domain_path(@organization, @domain)
+
+      assert_redirected_to edit_organization_path(@organization)
+      assert_nil @domain.reload.check_queued_at
+      assert_equal "We couldn't start the verification for example.com. Please try again.", flash[:alert]
+    end
+
     should "walk from a failed check to a verified domain through the job" do
       stub_dns(FakeDnsResolver.for_domain("example.com"))
       perform_enqueued_jobs do

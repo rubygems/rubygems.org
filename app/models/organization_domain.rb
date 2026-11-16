@@ -4,6 +4,8 @@ class OrganizationDomain < ApplicationRecord
   TXT_NAME_PREFIX = "_rubygems-challenge."
   TXT_VALUE_PREFIX = "rubygems-verification="
   TOKEN_ATTEMPTS = 3
+  # A check queued longer ago than this is treated as lost (so a row never stays "Checking" forever).
+  STALE_CHECK_AFTER = 10.minutes
 
   belongs_to :organization
   has_many :checks, -> { order(checked_at: :desc, id: :desc) },
@@ -15,6 +17,9 @@ class OrganizationDomain < ApplicationRecord
 
   scope :verified, -> { where.not(verified_at: nil) }
   scope :pending, -> { where(verified_at: nil) }
+
+  scope :checking, -> { where(check_queued_at: STALE_CHECK_AFTER.ago..) }
+  scope :not_checking, -> { where(check_queued_at: nil).or(where(check_queued_at: ...STALE_CHECK_AFTER.ago)) }
 
   before_validation :normalize_domain, on: :create
   before_validation :generate_token, on: :create
@@ -43,6 +48,10 @@ class OrganizationDomain < ApplicationRecord
       end
     end
     record
+  end
+
+  def checking?
+    check_queued_at.present? && check_queued_at > STALE_CHECK_AFTER.ago
   end
 
   def verified?
