@@ -25,7 +25,7 @@ class Organizations::TeamsController < Organizations::BaseController
     @team = @organization.organization_teams.build(team_params)
     authorize @team, :create?
 
-    if @team.save
+    if @team.save_with_creation_event(actor: current_user)
       redirect_to organization_teams_path(@organization), notice: t(".team_created")
     else
       render :new, status: :unprocessable_content

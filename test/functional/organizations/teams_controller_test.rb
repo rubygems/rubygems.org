@@ -129,6 +129,21 @@ class Organizations::TeamsControllerTest < ActionDispatch::IntegrationTest
       assert_equal "Core Team", team.name
     end
 
+    should "record a team created event on the organization" do
+      assert_difference -> { @organization.events.where(tag: Events::OrganizationEvent::TEAM_CREATED).count }, 1 do
+        post organization_teams_path(@organization), params: team_params
+      end
+
+      team = @organization.organization_teams.sole
+      event = @organization.events.where(tag: Events::OrganizationEvent::TEAM_CREATED).sole
+
+      assert_equal "core", event.additional.team
+      assert_equal team, event.additional.team_gid.find
+      assert_equal @user.display_handle, event.additional.created_by
+      assert_equal @user, event.additional.actor_gid.find
+      assert_equal "127.0.0.1", event.ip_address.ip_address.to_s
+    end
+
     should "create a team for an owner" do
       @membership.update!(role: :owner)
 
@@ -140,7 +155,7 @@ class Organizations::TeamsControllerTest < ActionDispatch::IntegrationTest
     end
 
     should "re-render the form with errors when invalid" do
-      assert_no_difference -> { OrganizationTeam.count } do
+      assert_no_difference [-> { OrganizationTeam.count }, -> { Events::OrganizationEvent.count }] do
         post organization_teams_path(@organization), params: team_params(handle: "has space")
       end
 
@@ -151,7 +166,7 @@ class Organizations::TeamsControllerTest < ActionDispatch::IntegrationTest
     should "reject a handle already used in the organization" do
       create(:organization_team, organization: @organization, handle: "core")
 
-      assert_no_difference -> { OrganizationTeam.count } do
+      assert_no_difference [-> { OrganizationTeam.count }, -> { Events::OrganizationEvent.count }] do
         post organization_teams_path(@organization), params: team_params(handle: "CORE")
       end
 
@@ -174,7 +189,7 @@ class Organizations::TeamsControllerTest < ActionDispatch::IntegrationTest
     should "not create a team for a maintainer" do
       @membership.update!(role: :maintainer)
 
-      assert_no_difference -> { OrganizationTeam.count } do
+      assert_no_difference [-> { OrganizationTeam.count }, -> { Events::OrganizationEvent.count }] do
         post organization_teams_path(@organization), params: team_params
       end
 
@@ -184,7 +199,7 @@ class Organizations::TeamsControllerTest < ActionDispatch::IntegrationTest
     should "not create a team for a non-member" do
       sign_in_as(create(:user))
 
-      assert_no_difference -> { OrganizationTeam.count } do
+      assert_no_difference [-> { OrganizationTeam.count }, -> { Events::OrganizationEvent.count }] do
         post organization_teams_path(@organization), params: team_params
       end
 
@@ -195,7 +210,7 @@ class Organizations::TeamsControllerTest < ActionDispatch::IntegrationTest
       other_organization = create(:organization)
       enable_feature(FeatureFlag::ORGANIZATION_TEAMS, actor: other_organization)
 
-      assert_no_difference -> { OrganizationTeam.count } do
+      assert_no_difference [-> { OrganizationTeam.count }, -> { Events::OrganizationEvent.count }] do
         post organization_teams_path(other_organization), params: team_params
       end
 
@@ -205,7 +220,7 @@ class Organizations::TeamsControllerTest < ActionDispatch::IntegrationTest
     should "not create a team when signed out" do
       delete sign_out_path
 
-      assert_no_difference -> { OrganizationTeam.count } do
+      assert_no_difference [-> { OrganizationTeam.count }, -> { Events::OrganizationEvent.count }] do
         post organization_teams_path(@organization), params: team_params
       end
 
@@ -215,7 +230,7 @@ class Organizations::TeamsControllerTest < ActionDispatch::IntegrationTest
     should "not create a team when the feature is disabled for the organization" do
       disable_feature(FeatureFlag::ORGANIZATION_TEAMS)
 
-      assert_no_difference -> { OrganizationTeam.count } do
+      assert_no_difference [-> { OrganizationTeam.count }, -> { Events::OrganizationEvent.count }] do
         post organization_teams_path(@organization), params: team_params
       end
 

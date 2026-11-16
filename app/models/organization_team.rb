@@ -11,6 +11,14 @@ class OrganizationTeam < ApplicationRecord
   validates :name, presence: true,
     length: { within: 2..255 }
 
+  def save_with_creation_event(actor:)
+    transaction do
+      save && organization.record_event!(Events::OrganizationEvent::TEAM_CREATED,
+        team: handle, team_gid: to_gid,
+        created_by: actor.display_handle, actor_gid: actor.to_gid)
+    end
+  end
+
   def self.find_by_handle!(handle)
     find_by!("lower(handle) = lower(?)", handle)
   end

@@ -88,6 +88,40 @@ class OrganizationTeamTest < ActiveSupport::TestCase
     end
   end
 
+  context "#save_with_creation_event" do
+    setup do
+      @organization = create(:organization)
+      @actor = create(:user)
+    end
+
+    should "save the team and record a team created event" do
+      team = @organization.organization_teams.build(handle: "core", name: "Core Team")
+
+      assert_difference -> { @organization.events.where(tag: Events::OrganizationEvent::TEAM_CREATED).count }, 1 do
+        assert team.save_with_creation_event(actor: @actor)
+      end
+
+      assert_predicate team, :persisted?
+    end
+
+    should "not record an event when the team is invalid" do
+      team = @organization.organization_teams.build(handle: "has space", name: "Core Team")
+
+      assert_no_difference [-> { OrganizationTeam.count }, -> { Events::OrganizationEvent.count }] do
+        refute team.save_with_creation_event(actor: @actor)
+      end
+    end
+
+    should "not save the team when the event cannot be recorded" do
+      team = @organization.organization_teams.build(handle: "core", name: "Core Team")
+      @organization.stubs(:record_event!).raises(ActiveRecord::RecordInvalid)
+
+      assert_no_difference -> { OrganizationTeam.count } do
+        assert_raises(ActiveRecord::RecordInvalid) { team.save_with_creation_event(actor: @actor) }
+      end
+    end
+  end
+
   should "have a valid factory" do
     assert_predicate build(:organization_team), :valid?
   end
