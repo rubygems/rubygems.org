@@ -57,6 +57,7 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
     additional = @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_REMOVED).sole.additional
 
     assert_equal "acme.example.com", additional.domain
+    assert_equal domain.txt_record_value, additional.txt_record_value
     assert_equal @current_user.to_gid, additional.actor_gid
   end
 
@@ -86,6 +87,7 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
     changes = audit.audited_changes["records"][domain.to_global_id.to_s]["changes"]
 
     assert_equal "acme.example.com", changes["domain"].first
+    assert_equal domain.token, changes["token"].first
     assert_equal [domain.to_global_id.uri.to_s], audit.audited_changes["models"]
   end
 

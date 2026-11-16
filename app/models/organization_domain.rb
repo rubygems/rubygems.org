@@ -68,9 +68,9 @@ class OrganizationDomain < ApplicationRecord
   def remove!(actor:)
     transaction do
       # Raises RecordNotFound if the row is already gone (so no event is recorded
-      # for a no-op) and serialises with DnsCheck, which locks the same row.
+      # for a no-op) and serialises with record_check!, which locks the same row.
       lock!
-      organization.record_event!(Events::OrganizationEvent::DOMAIN_REMOVED, domain:, actor_gid: actor.to_gid)
+      organization.record_event!(Events::OrganizationEvent::DOMAIN_REMOVED, domain:, txt_record_value:, actor_gid: actor.to_gid)
       destroy!
     end
   end
@@ -143,7 +143,7 @@ class OrganizationDomain < ApplicationRecord
   # failed add records no event and a retry never duplicates it.
   # actor_gid is nil outside a web request (console, jobs), where Current.user is unset.
   def record_added_event
-    organization.record_event!(Events::OrganizationEvent::DOMAIN_ADDED, domain:, actor_gid: Current.user&.to_gid)
+    organization.record_event!(Events::OrganizationEvent::DOMAIN_ADDED, domain:, txt_record_value:, actor_gid: Current.user&.to_gid)
   end
 
   def generate_token

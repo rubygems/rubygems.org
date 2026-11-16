@@ -344,13 +344,15 @@ class OrganizationDomainTest < ActiveSupport::TestCase
     teardown { Current.user = nil }
 
     should "record exactly one added event with domain and actor" do
+      record = nil
       assert_difference -> { domain_events(Events::OrganizationEvent::DOMAIN_ADDED).count }, 1 do
-        OrganizationDomain.add(organization: @organization, domain: "Example.com")
+        record = OrganizationDomain.add(organization: @organization, domain: "Example.com")
       end
 
       additional = domain_events(Events::OrganizationEvent::DOMAIN_ADDED).sole.additional
 
       assert_equal "example.com", additional.domain
+      assert_equal record.txt_record_value, additional.txt_record_value
       assert_equal @actor.to_gid, additional.actor_gid
     end
 
@@ -382,11 +384,14 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       record = create(:organization_domain, domain: "example.com", organization: @organization)
       remover = create(:user)
 
+      value = record.txt_record_value
       record.remove!(actor: remover)
 
+      refute OrganizationDomain.exists?(record.id)
       additional = domain_events(Events::OrganizationEvent::DOMAIN_REMOVED).sole.additional
 
       assert_equal "example.com", additional.domain
+      assert_equal value, additional.txt_record_value
       assert_equal remover.to_gid, additional.actor_gid
     end
 
