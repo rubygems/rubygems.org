@@ -113,6 +113,22 @@ es:
         public_suffix:
         protected_provider:
       models:
+        organization_domain:
+          hints:
+            url:
+            email:
+            wildcard:
+            port:
+            unicode:
+          attributes:
+            domain:
+              blank:
+              invalid_characters:
+              invalid_label:
+              single_label:
+              ip_address:
+              public_suffix:
+              too_long:
         api_key:
           attributes:
             expires_at:

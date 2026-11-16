@@ -1,0 +1,262 @@
+# frozen_string_literal: true
+
+require "test_helper"
+
+class OrganizationDomainTest < ActiveSupport::TestCase
+  setup { @organization = create(:organization) }
+
+  def build_domain(domain, organization: @organization)
+    OrganizationDomain.new(organization: organization, domain: domain)
+  end
+
+  context "accepted domains" do
+    {
+      "example.com" => "example.com",
+      "Example.COM" => "example.com",
+      "  example.com  " => "example.com",
+      "docs.example.com" => "docs.example.com",
+      "example.co.uk" => "example.co.uk",
+      "xn--bcher-kva.com" => "xn--bcher-kva.com"
+    }.each do |input, stored|
+      should "store #{input.inspect} as #{stored}" do
+        record = build_domain(input)
+
+        assert_predicate record, :valid?, record.errors.full_messages.to_sentence
+        record.save!
+
+        assert_equal stored, record.reload.domain
+      end
+    end
+  end
+
+  context "rejected domains" do
+    {
+      blank: [nil, "", "   "],
+      invalid_characters: ["exa_mple.com", "exa mple.com", "exämple.com", "ｅｘａｍｐｌｅ.com", "\"example.com\"",
+                           "example.com/path", "https://example.com", "user@example.com", "example.com:443", "*.example.com"],
+      invalid_label: ["-example.com", "example-.com", "a..b.com", ".example.com", "example.com.", "#{'a' * 64}.com"],
+      single_label: %w[localhost com],
+      ip_address: %w[127.0.0.1 10.0.0.1],
+      public_suffix: %w[co.uk github.io example.notarealtld],
+      too_long: ["#{(['a' * 60] * 4).join('.')}.com"]
+    }.each do |key, inputs|
+      inputs.each do |input|
+        should "reject #{input.inspect} with #{key} and save nothing" do
+          record = build_domain(input)
+
+          refute_predicate record, :valid?
+          assert_equal [key], record.errors.details[:domain].pluck(:error)
+          assert_no_difference "OrganizationDomain.count" do
+            refute record.save
+          end
+        end
+      end
+    end
+
+    should "name the offending characters once each" do
+      record = build_domain("ex_a_mple.com/path/")
+
+      refute_predicate record, :valid?
+      message = record.errors[:domain].first
+
+      assert_includes message, "`_`"
+      assert_includes message, "`/`"
+      assert_equal 1, message.scan("`_`").size
+    end
+
+    should "add a hint for common mistakes" do
+      {
+        "https://example.com" => "without `https://`",
+        "example.com/path" => "without `https://`",
+        "user@example.com" => "not an email address",
+        "*.example.com" => "Wildcards aren't supported",
+        "example.com:443" => "Remove the port",
+        "exämple.com" => "punycode"
+      }.each do |input, hint|
+        record = build_domain(input)
+        record.valid?
+
+        assert_includes record.errors[:domain].first, hint, input
+      end
+    end
+
+    should "stop at the first failing rule" do
+      record = build_domain("-bad_.com")
+      record.valid?
+
+      assert_equal 1, record.errors[:domain].size
+      assert_equal :invalid_characters, record.errors.details[:domain].first[:error]
+    end
+
+    should "not alter input beyond strip and downcase" do
+      record = build_domain("https://Example.com")
+
+      refute record.save
+      assert_equal "https://example.com", record.domain
+      assert_nil OrganizationDomain.find_by(domain: "example.com")
+    end
+  end
+
+  context "domain constraints" do
+    should "reject non-lowercase domains at the database" do
+      record = create(:organization_domain, domain: "example.com")
+
+      assert_raises(ActiveRecord::StatementInvalid) { OrganizationDomain.where(id: record.id).update_all(domain: "Example.com") }
+    end
+
+    should "reject non-lowercase domains in raw SQL" do
+      assert_raises(ActiveRecord::StatementInvalid) do
+        OrganizationDomain.connection.execute(<<~SQL.squish)
+          INSERT INTO organization_domains (organization_id, domain, token, created_at, updated_at)
+          VALUES (#{@organization.id}, 'Example.com', 'tok', now(), now())
+        SQL
+      end
+    end
+
+    should "not allow domain to change after create" do
+      record = create(:organization_domain, domain: "example.com")
+
+      assert_raises(ActiveRecord::ReadonlyAttributeError) { record.update(domain: "other.com") }
+      assert_equal "example.com", record.reload.domain
+    end
+
+    should "allow the same pending domain for two organizations with different tokens" do
+      first = create(:organization_domain, domain: "example.com")
+      second = create(:organization_domain, domain: "example.com", organization: create(:organization))
+
+      refute_equal first.token, second.token
+    end
+
+    should "not allow the same domain verified for two organizations" do
+      create(:organization_domain, :verified, domain: "example.com")
+      other = create(:organization_domain, domain: "example.com", organization: create(:organization))
+
+      assert_raises(ActiveRecord::RecordNotUnique) { other.update!(verified_at: Time.zone.now) }
+    end
+
+    should "not allow the same domain active twice in one organization, regardless of case" do
+      create(:organization_domain, domain: "example.com", organization: @organization)
+      duplicate = build_domain("Example.com")
+
+      refute_predicate duplicate, :valid?
+      assert_equal [:taken], duplicate.errors.details[:domain].pluck(:error)
+      assert_raises(ActiveRecord::RecordNotUnique) do
+        OrganizationDomain.insert!({ organization_id: @organization.id, domain: "example.com", token: "other-token" })
+      end
+    end
+  end
+
+  context "token" do
+    should "be generated on create, 256 bits and url-safe" do
+      record = create(:organization_domain)
+
+      assert_match(/\A[A-Za-z0-9_-]{43}\z/, record.token)
+      assert_equal 32, Base64.urlsafe_decode64(record.token).bytesize
+    end
+
+    should "ignore a token passed through mass assignment" do
+      record = OrganizationDomain.create!(organization: @organization, domain: "example.com", token: "attacker-chosen")
+
+      refute_equal "attacker-chosen", record.token
+    end
+
+    should "not change after create" do
+      record = create(:organization_domain)
+      original = record.token
+
+      assert_raises(ActiveRecord::ReadonlyAttributeError) { record.update(token: "other") }
+      assert_equal original, record.reload.token
+    end
+
+    should "be unique at the database" do
+      first = create(:organization_domain)
+
+      assert_raises(ActiveRecord::RecordNotUnique) do
+        OrganizationDomain.insert!({ organization_id: @organization.id, domain: "other.example.com", token: first.token })
+      end
+    end
+
+    should "retry with a fresh token on a duplicate token" do
+      existing = create(:organization_domain)
+      fresh = "fresh-token"
+      SecureRandom.stubs(:urlsafe_base64).with(32).returns(existing.token, fresh)
+
+      record = build_domain("other.example.com")
+      record.save!
+
+      assert_equal fresh, record.reload.token
+    end
+
+    should "give up after bounded retries" do
+      existing = create(:organization_domain)
+      SecureRandom.stubs(:urlsafe_base64).with(32).returns(existing.token)
+
+      assert_raises(ActiveRecord::RecordNotUnique) { build_domain("other.example.com").save! }
+    end
+
+    should "differ when a removed domain is re-added, keeping the old row" do
+      old = create(:organization_domain, domain: "example.com")
+      old.remove!
+      new_row = create(:organization_domain, domain: "example.com", organization: @organization)
+
+      refute_equal old.token, new_row.token
+      assert OrganizationDomain.exists?(old.id)
+      assert_equal old.token, old.reload.token
+    end
+  end
+
+  context "txt record" do
+    should "use the documented name and value without the organization" do
+      record = create(:organization_domain, domain: "docs.example.com")
+
+      assert_equal "_rubygems-challenge.docs.example.com", record.txt_record_name
+      assert_equal "rubygems-verification=#{record.token}", record.txt_record_value
+      assert_equal "rubygems-verification=", OrganizationDomain::TXT_VALUE_PREFIX
+      refute_includes record.txt_record_name, @organization.handle
+      refute_includes record.txt_record_value, @organization.handle
+    end
+  end
+
+  context "verification state" do
+    should "scope verified and pending, excluding deleted" do
+      verified = create(:organization_domain, :verified)
+      pending = create(:organization_domain)
+      create(:organization_domain, :verified, :deleted)
+      create(:organization_domain, :deleted)
+
+      assert_equal [verified], OrganizationDomain.verified.to_a
+      assert_equal [pending], OrganizationDomain.pending.to_a
+      assert_predicate verified, :verified?
+      refute_predicate pending, :verified?
+    end
+
+    should "remove softly, clearing verified_at and keeping checks" do
+      record = create(:organization_domain, :verified)
+      check = create(:organization_domain_check, organization_domain: record)
+
+      record.remove!
+
+      assert_nil record.reload.verified_at
+      refute_nil record.deleted_at
+      assert_equal [check], record.checks.to_a
+      assert_empty @organization.domains.where(id: record.id)
+    end
+
+    should "free a verified domain for another organization after removal" do
+      record = create(:organization_domain, :verified, domain: "example.com")
+      record.remove!
+
+      assert_nothing_raised do
+        create(:organization_domain, :verified, domain: "example.com", organization: create(:organization))
+      end
+    end
+
+    should "order checks newest first" do
+      record = create(:organization_domain)
+      old = create(:organization_domain_check, organization_domain: record, checked_at: 2.days.ago)
+      recent = create(:organization_domain_check, organization_domain: record, checked_at: 1.day.ago)
+
+      assert_equal [recent, old], record.checks.to_a
+    end
+  end
+end
