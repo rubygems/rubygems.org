@@ -365,6 +365,8 @@ en:
     invite_member: Invite Member
     reservations: Reserved Names
     reserve_gem_name: Reserve a Name
+    teams: Teams
+    create_team: Create a Team
   mailer:
     confirm_your_email: Please confirm your email address with the link sent to your email.
     confirmation_subject: Please confirm your email address with %{host}
@@ -508,6 +510,7 @@ en:
       invite: Invite
       transfer: Transfer
       reservations: Reserved Names
+      teams: Teams
     members:
       create:
         user_already_invited: User already invited to the organization.
@@ -557,6 +560,19 @@ en:
         limit_reached_html: Your organization has used all <b>%{limit}</b> of its gem name reservations. Email %{support_email} if you need more.
         unlimited: Your organization can reserve an unlimited number of gem names.
         disclaimer: The RubyGems.org team reserves the right to deny any requested name reservation.
+    teams:
+      create:
+        team_created: Team created.
+      index:
+        create: Create a Team
+        no_teams: No teams yet
+      new:
+        title: Create a Team
+        name: Name
+        name_placeholder: Core Team
+        handle: Handle
+        handle_hint: Letters, numbers, dashes and underscores only. Must be unique within the organization.
+        create: Create
     invitation_expiry_title: "%{time} UTC"
     invitations:
       expired: This invitation has expired. Ask an organization admin to resend it.

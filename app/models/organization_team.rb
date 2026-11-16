@@ -10,4 +10,12 @@ class OrganizationTeam < ApplicationRecord
 
   validates :name, presence: true,
     length: { within: 2..255 }
+
+  def self.find_by_handle!(handle)
+    find_by!("lower(handle) = lower(?)", handle)
+  end
+
+  def to_param
+    handle
+  end
 end

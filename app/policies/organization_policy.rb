@@ -50,6 +50,10 @@ class OrganizationPolicy < ApplicationPolicy
     organization_member_with_role?(user, :admin) || deny(t(:forbidden))
   end
 
+  def list_teams?
+    organization_member_with_role?(user, :maintainer) || deny(t(:forbidden))
+  end
+
   def destroy?
     false # For now organizations cannot be deleted
   end

@@ -362,6 +362,8 @@ ja:
     invite_member: メンバーを招待
     reservations:
     reserve_gem_name:
+    teams:
+    create_team:
   mailer:
     confirm_your_email: Eメールに送信されたリンクからEメールアドレスを確認してください。
     confirmation_subject: "%{host}に登録されたメールアドレスを確認してください"
@@ -511,6 +513,7 @@ ja:
       invite: 招待
       transfer: 移動
       reservations:
+      teams:
     members:
       create:
         user_already_invited: ユーザーは既に組織に招待されています。
@@ -560,6 +563,19 @@ ja:
         limit_reached_html:
         unlimited:
         disclaimer:
+    teams:
+      create:
+        team_created:
+      index:
+        create:
+        no_teams:
+      new:
+        title:
+        name:
+        name_placeholder:
+        handle:
+        handle_hint:
+        create:
     invitation_expiry_title:
     invitations:
       expired:

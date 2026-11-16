@@ -1,0 +1,13 @@
+<%
+  add_breadcrumb "Dashboard", dashboard_path
+  add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle), organization_path(@organization)
+  add_breadcrumb t("breadcrumbs.teams"), organization_teams_path(@organization)
+  add_breadcrumb @team.name
+%>
+
+<% content_for :subject do %>
+  <%= render "organizations/subject", organization: @organization, current: :teams %>
+<% end %>
+
+<h1 class="text-h2 mb-1" data-testid="team-show-name"><%= @team.name %></h1>
+<p class="text-b2 text-neutral-600 dark:text-neutral-400 mb-10" data-testid="team-show-handle"><%= @team.handle %></p>
