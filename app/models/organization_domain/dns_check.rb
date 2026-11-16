@@ -15,6 +15,9 @@ class OrganizationDomain::DnsCheck
 
   TIMEOUT = 2
   PROBE_TIMEOUT = 1
+  # Overall budget (seconds) after which the optional SOA / wrong-name probes are
+  # skipped. The TXT lookup itself always runs.
+  BUDGET = 5
   MAX_NAME_LENGTH = 253
   MAX_MESSAGE_LENGTH = 500
   TXT = Resolv::DNS::Resource::IN::TXT
@@ -30,6 +33,8 @@ class OrganizationDomain::DnsCheck
   end
 
   def call
+    # Only the stored row is ever queried: refuse unsaved or modified records.
+    raise InvalidDomain, "domain has unsaved changes" if @domain.new_record? || @domain.changed?
     raise DeletedDomain, "domain has been removed" if @domain.deleted_at.present?
     raise InvalidDomain, "stored domain is invalid" unless OrganizationDomain::Name.valid?(@domain.domain)
 
@@ -42,11 +47,18 @@ class OrganizationDomain::DnsCheck
   def lookup
     with_resolver { |dns| classify(dns) }
   rescue Resolv::ResolvError => e
-    [e.message.include?("DNS resolv timeout") ? "timeout" : "unknown_error", describe(e)]
+    return ["timeout", describe(e)] if e.message.include?("DNS resolv timeout")
+
+    unknown(e)
   rescue SystemCallError, SocketError, IOError => e
     ["resolver_unavailable", describe(e)]
   rescue StandardError => e
-    ["unknown_error", describe(e)]
+    unknown(e)
+  end
+
+  def unknown(error)
+    Rails.error.report(error, handled: true)
+    ["unknown_error", describe(error)]
   end
 
   def with_resolver
@@ -63,6 +75,7 @@ class OrganizationDomain::DnsCheck
 
   # Returns [nil, nil] on success, otherwise [error_code, error_message].
   def classify(dns)
+    @started_at = monotonic_now
     values = txt_values(dns, challenge_name)
     return classify_empty(dns) if values.empty?
 
@@ -71,20 +84,42 @@ class OrganizationDomain::DnsCheck
 
     seen = truncate("TXT values seen: #{values.inspect}")
     return ["value_quoted", seen] if values.any? { |v| v.delete('"').strip == ours }
-    return ["token_mismatch", seen] if values.any? { |v| v.start_with?(OrganizationDomain::TXT_VALUE_PREFIX) }
+    return ["token_mismatch", seen] if values.any? { |v| v.delete('"').strip.start_with?(OrganizationDomain::TXT_VALUE_PREFIX) }
 
     ["value_mismatch", seen]
   end
 
   def classify_empty(dns)
-    # Probes get a shorter timeout than the main lookup to keep the total bounded.
-    dns.timeouts = PROBE_TIMEOUT unless @resolver
-    return ["domain_not_found", "No SOA record found for #{apex}"] if dns.getresources(absolute(apex), SOA).empty?
+    not_found = ["record_not_found", "No TXT records found at #{challenge_name}"]
+    return skipped(not_found) if budget_spent?
 
-    wrong = wrong_name_probes.find { |name| txt_values(dns, name).include?(@domain.txt_record_value) }
+    # Probes get a shorter timeout than the main lookup.
+    dns.timeouts = PROBE_TIMEOUT unless @resolver
+    # Resolv only returns records owned by the queried name, so a subdomain has no
+    # SOA of its own; check the registrable domain instead.
+    return ["domain_not_found", "No SOA record found for #{zone}"] if dns.getresources(absolute(zone), SOA).empty?
+
+    wrong = nil
+    wrong_name_probes.each do |name|
+      return skipped(not_found) if budget_spent?
+
+      (wrong = name) && break if txt_values(dns, name).include?(@domain.txt_record_value)
+    end
     return ["record_at_wrong_name", "Value found at #{wrong} instead of #{challenge_name}"] if wrong
 
-    ["record_not_found", "No TXT records found at #{challenge_name}"]
+    not_found
+  end
+
+  def skipped(not_found)
+    [not_found.first, "#{not_found.last} (further checks skipped: time budget spent)"]
+  end
+
+  def budget_spent? = monotonic_now - @started_at >= BUDGET
+
+  def monotonic_now = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+  def zone
+    PublicSuffix.domain(apex, default_rule: nil) || apex
   end
 
   def txt_values(dns, name)
@@ -102,7 +137,14 @@ class OrganizationDomain::DnsCheck
 
   def absolute(name) = "#{name}."
 
-  def describe(error) = truncate("#{error.class}: #{error.message}")
+  IPV4 = /\b\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?\b/
+  IPV6 = /\[?(?:\h{0,4}:){2,7}\h{0,4}\]?(?::\d+)?/
+
+  # error_message is shown to owners: never store resolver addresses.
+  def describe(error)
+    message = error.message.gsub(IPV6, "[redacted]").gsub(IPV4, "[redacted]")
+    truncate("#{error.class}: #{message}")
+  end
 
   def truncate(text) = text.truncate(MAX_MESSAGE_LENGTH)
 
@@ -118,20 +160,25 @@ class OrganizationDomain::DnsCheck
 
   # One transaction: if the verified-domain unique index rejects the update,
   # the check row is rolled back too and a failure is recorded instead.
+  # The row is locked and re-read first; if it was soft-deleted during the lookup
+  # DeletedDomain is raised and nothing is recorded.
   def record_success
-    checked_at = Time.current
-    OrganizationDomain.transaction(requires_new: true) do
-      check = OrganizationDomainCheck.create!(organization_domain: @domain, checked_at:, result: "success")
-      @domain.update!(verified_at: checked_at, last_checked_at: checked_at, last_check_result: "success")
-      check
-    end
+    persist(result: "success", verified: true)
   end
 
   def record_failure(code, message)
+    persist(result: "failure", error_code: code, error_message: message, verified: false)
+  end
+
+  def persist(verified:, **attributes)
     checked_at = Time.current
     OrganizationDomain.transaction(requires_new: true) do
-      check = OrganizationDomainCheck.create!(organization_domain: @domain, checked_at:, result: "failure", error_code: code, error_message: message)
-      @domain.update!(verified_at: nil, last_checked_at: checked_at, last_check_result: "failure")
+      @domain.lock!
+      raise DeletedDomain, "domain was removed during the check" if @domain.deleted_at.present?
+
+      check = OrganizationDomainCheck.create!(organization_domain: @domain, checked_at:, **attributes)
+      @domain.update_columns(verified_at: (checked_at if verified), last_checked_at: checked_at,
+        last_check_result: attributes[:result], updated_at: checked_at)
       check
     end
   end

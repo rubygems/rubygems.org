@@ -123,28 +123,28 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
     should "record domain_not_found when the name and apex SOA are empty" do
       check = verify({ ["example.com.", SOA] => [] })
 
-      assert_failure check, :domain_not_found
+      assert_failure check, :domain_not_found, message: "No SOA record found for example.com"
       assert_equal :record_missing, check.error_group
     end
 
     should "record record_not_found when the apex resolves but there is no TXT" do
       check = verify
 
-      assert_failure check, :record_not_found
+      assert_failure check, :record_not_found, message: "No TXT records found at _rubygems-challenge.example.com"
       assert_equal :record_missing, check.error_group
     end
 
     should "record record_at_wrong_name for a value at the apex" do
       check = verify({ ["example.com.", TXT] => [txt(@domain.txt_record_value)] })
 
-      assert_failure check, :record_at_wrong_name
+      assert_failure check, :record_at_wrong_name, message: "Value found at example.com instead of _rubygems-challenge.example.com"
       assert_equal :record_missing, check.error_group
     end
 
     should "record record_at_wrong_name for a value at the doubled name" do
       check = verify({ ["_rubygems-challenge.example.com.example.com.", TXT] => [txt(@domain.txt_record_value)] })
 
-      assert_failure check, :record_at_wrong_name
+      assert_failure check, :record_at_wrong_name, message: /Value found at _rubygems-challenge.example.com.example.com instead/
     end
 
     should "skip the doubled-name probe when it would be too long" do
@@ -153,7 +153,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
       OrganizationDomain.where(id: domain.id).update_all(domain: long)
       domain.reload
       OrganizationDomain::Name.stubs(:valid?).returns(true)
-      res = FakeResolver.new({ ["#{long}.", SOA] => [soa] })
+      res = FakeResolver.new({ ["example.com.", SOA] => [soa] })
 
       check = domain.verify!(resolver: res)
 
@@ -165,7 +165,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
     should "record value_quoted" do
       check = verify({ [@name, TXT] => [txt(%("#{@domain.txt_record_value}"))] })
 
-      assert_failure check, :value_quoted
+      assert_failure check, :value_quoted, message: /TXT values seen/
       assert_equal :record_mismatch, check.error_group
     end
 
@@ -197,6 +197,31 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
       assert_equal :unknown, check.error_group
     end
 
+    should "report unknown_error to Rails.error" do
+      Rails.error.expects(:report).with { |e, opts| e.message == "weird" && opts[:handled] == true }
+
+      verify({ [@name, TXT] => RuntimeError.new("weird") })
+    end
+
+    should "redact resolver addresses from the stored message" do
+      error = Errno::ECONNREFUSED.new("connect(2) for 10.0.0.2:53 and [2001:db8::1]:53 and fe80::1")
+      check = verify({ [@name, TXT] => error })
+
+      assert_failure check, :resolver_unavailable
+      assert_includes check.error_message, "[redacted]"
+      refute_match(/10\.0\.0\.2|53|2001|fe80/, check.error_message)
+
+      check = verify({ [@name, TXT] => RuntimeError.new("dial 192.168.1.1:53") })
+
+      assert_equal "RuntimeError: dial [redacted]", check.error_message
+    end
+
+    should "record token_mismatch for a quoted value with a different token" do
+      check = verify({ [@name, TXT] => [txt('"rubygems-verification=nope"')] })
+
+      assert_failure check, :token_mismatch
+    end
+
     should "treat a non-timeout ResolvError as unknown_error" do
       check = verify({ [@name, TXT] => Resolv::ResolvError.new("other") })
 
@@ -212,7 +237,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
         assert_difference -> { @domain.checks.count }, 1 do
           check = verify({ [@name, TXT] => [txt(value)] })
 
-          assert_failure check, :already_verified
+          assert_failure check, :already_verified, message: /Another organization holds example.com/
           assert_equal :conflict, check.error_group
         end
       end
@@ -255,6 +280,76 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
     end
   end
 
+  context "subdomains" do
+    should "check the registrable domain's SOA, not the subdomain's" do
+      domain = create(:organization_domain, domain: "eng.example.com")
+      res = FakeResolver.new({ ["example.com.", SOA] => [soa] })
+
+      check = domain.verify!(resolver: res)
+
+      assert_failure check, :record_not_found, domain: domain
+      assert_includes res.queries, ["example.com.", SOA]
+    end
+
+    should "record domain_not_found when the registrable domain has no SOA" do
+      domain = create(:organization_domain, domain: "eng.example.com")
+
+      assert_failure domain.verify!(resolver: FakeResolver.new), :domain_not_found, domain: domain,
+        message: "No SOA record found for example.com"
+    end
+  end
+
+  context "time budget" do
+    should "skip the SOA and probes once the budget is spent, still running the TXT lookup" do
+      OrganizationDomain::DnsCheck.any_instance.stubs(:monotonic_now).returns(0, OrganizationDomain::DnsCheck::BUDGET + 1)
+      res = FakeResolver.new
+
+      check = @domain.verify!(resolver: res)
+
+      assert_failure check, :record_not_found, message: /time budget spent/
+      assert_equal [[@name, TXT]], res.queries
+    end
+
+    should "skip remaining probes when the budget runs out mid-way" do
+      budget = OrganizationDomain::DnsCheck::BUDGET
+      OrganizationDomain::DnsCheck.any_instance.stubs(:monotonic_now).returns(0, 0, 0, budget)
+      res = FakeResolver.new({ ["example.com.", SOA] => [soa] })
+
+      check = @domain.verify!(resolver: res)
+
+      assert_failure check, :record_not_found, message: /time budget spent/
+      assert_equal [[@name, TXT], ["example.com.", SOA], ["example.com.", TXT]], res.queries
+    end
+  end
+
+  context "stored-row guards" do
+    should "refuse a record with unsaved changes without querying or recording" do
+      @domain.verified_at = Time.current
+      res = FakeResolver.new
+
+      assert_no_difference "OrganizationDomainCheck.count" do
+        assert_raises(OrganizationDomain::DnsCheck::InvalidDomain) { @domain.verify!(resolver: res) }
+      end
+      assert_empty res.queries
+      assert_nil OrganizationDomain.find(@domain.id).verified_at
+    end
+
+    should "not verify a domain removed during the lookup" do
+      value = @domain.txt_record_value
+      res = FakeResolver.new({ [@name, TXT] => [txt(value)] })
+      id = @domain.id
+      res.define_singleton_method(:getresources) do |*args|
+        OrganizationDomain.find(id).remove!
+        super(*args)
+      end
+
+      assert_no_difference "OrganizationDomainCheck.count" do
+        assert_raises(OrganizationDomain::DnsCheck::DeletedDomain) { @domain.verify!(resolver: res) }
+      end
+      assert_nil OrganizationDomain.find(id).verified_at
+    end
+  end
+
   context "guards" do
     should "raise without querying or recording when the domain is invalid" do
       res = FakeResolver.new
@@ -282,6 +377,8 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
       config = nil
       fake = FakeResolver.new({ ["example.com.", SOA] => [soa] })
       fake.expects(:close).at_least_once
+      fake.expects(:timeouts=).with(OrganizationDomain::DnsCheck::TIMEOUT)
+      fake.expects(:timeouts=).with(OrganizationDomain::DnsCheck::PROBE_TIMEOUT)
       Resolv::DNS.stubs(:new).with { |c| config = c }.returns(fake)
 
       check = @domain.verify!
