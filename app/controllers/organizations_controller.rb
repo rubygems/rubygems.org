@@ -53,7 +53,7 @@ class OrganizationsController < Organizations::BaseController
       redirect_to organization_path(@organization)
     else
       set_domain_settings
-      render :edit
+      render :edit, status: :unprocessable_content
     end
   end
 
