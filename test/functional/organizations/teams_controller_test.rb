@@ -101,6 +101,16 @@ class Organizations::TeamsControllerTest < ActionDispatch::IntegrationTest
       assert_equal 1, css_select("[data-testid=team-handle-field]").size
     end
 
+    should "show the create step in the breadcrumbs without the teams list" do
+      get new_organization_team_path(@organization)
+
+      assert_select "nav[aria-label=Breadcrumb]" do
+        assert_select "a[href=?]", organization_path(@organization)
+        assert_select "a[href=?]", organization_teams_path(@organization), count: 0
+        assert_select "[aria-current=page]", text: "Create a Team"
+      end
+    end
+
     should "render the form for an owner" do
       @membership.update!(role: :owner)
 
@@ -327,10 +337,13 @@ class Organizations::TeamsControllerTest < ActionDispatch::IntegrationTest
       assert_response :not_found
     end
 
-    should "be linked from the team list" do
+    should "be linked from the team list with an arrow" do
       get organization_teams_path(@organization)
 
-      assert_select "a[href=?]", organization_team_path(@organization, @team), text: "Core Team"
+      assert_select "a[data-testid=team][href=?]", organization_team_path(@organization, @team) do
+        assert_select "[data-testid=team-name]", text: "Core Team"
+        assert_select "use[href$=?]", "#arrow-forward-ios"
+      end
     end
   end
 

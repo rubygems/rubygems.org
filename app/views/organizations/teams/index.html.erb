@@ -25,9 +25,9 @@
   <% else %>
     <%= c.divided_list do %>
       <% @teams.each do |team| %>
-        <%= c.list_item(data: { testid: "team" }) do %>
+        <%= c.list_item_to(organization_team_path(@organization, team), data: { testid: "team" }) do %>
           <div class="flex flex-col">
-            <%= link_to team.name, organization_team_path(@organization, team), class: "text-neutral-800 dark:text-white hover:underline", data: { testid: "team-name" } %>
+            <p class="text-neutral-800 dark:text-white" data-testid="team-name"><%= team.name %></p>
             <p class="text-b3 text-neutral-600 dark:text-neutral-400"><%= team.handle %></p>
           </div>
         <% end %>
