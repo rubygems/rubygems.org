@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class OrganizationDomain < ApplicationRecord
-  # Raised by verify! before any DNS request when the domain can't be checked.
   class VerificationError < StandardError; end
   class InvalidDomain < VerificationError; end
   class DeletedDomain < VerificationError; end
@@ -9,9 +8,7 @@ class OrganizationDomain < ApplicationRecord
   TXT_NAME_PREFIX = "_rubygems-challenge."
   TXT_VALUE_PREFIX = "rubygems-verification="
   TOKEN_ATTEMPTS = 3
-  # A check queued longer ago than this is treated as lost (so a row never stays "Checking" forever).
   STALE_CHECK_AFTER = 10.minutes
-  # The most domains an organization can have.
   LIMIT = 5
 
   belongs_to :organization
@@ -35,12 +32,6 @@ class OrganizationDomain < ApplicationRecord
   validates :domain, uniqueness: { scope: :organization_id }, on: :create
   validate :organization_under_limit, on: :create
 
-  # Adds a domain for an organization and returns the record: persisted, or with
-  # errors (invalid, or taken by a concurrent add). The unique index on token
-  # guarantees no duplicate token; on the near-impossible collision the save is
-  # retried (before_validation generates a fresh token) rather than pre-checked
-  # (racy). The added event is recorded by the record's own after_create, so it
-  # shares the insert's transaction and a failed or retried attempt leaves none.
   def self.add(organization:, domain:)
     record = new(organization:, domain:)
     attempts = 0
@@ -66,39 +57,26 @@ class OrganizationDomain < ApplicationRecord
     verified_at.present?
   end
 
-  # Deletes the domain and its checks. The event is recorded in the same
-  # transaction, so a recorded event always matches a real deletion.
   def destroy_with_audit!(actor:)
     transaction do
-      # Raises RecordNotFound if the row is already gone (so no event is recorded
-      # for a no-op) and serialises with record_check!, which locks the same row.
       lock!
       organization.record_event!(Events::OrganizationEvent::DOMAIN_DELETED, domain:, txt_record_value:, actor_gid: actor.to_gid)
       destroy!
     end
   end
 
-  # Runs a DNS check in the calling thread (the background job's work) and returns the recorded OrganizationDomainCheck.
-  # Raises early (without querying DNS) if the domain can't be checked: unsaved or
-  # changed, deleted, or with an invalid stored name. DnsCheck only makes the request.
   def verify!(resolver: nil)
     ensure_verifiable!
     result = DnsCheck.call(name: txt_record_name, expected_value: txt_record_value, resolver:)
     record_verification(result)
   end
 
-  # The one place a check result is recorded. Locks and re-reads the row (raises
-  # ActiveRecord::RecordNotFound if it was deleted), then in one transaction
-  # creates the check, updates the cached state and clears check_queued_at.
-  # Returns the created OrganizationDomainCheck.
   def record_check!(outcome:, message:)
     success = outcome == "matched"
     result = success ? "success" : "failure"
     checked_at = Time.current
     self.class.transaction(requires_new: true) do
       lock!
-      # Not through the checks association: a rolled-back create would stay
-      # cached on it (e.g. when the verified-domain index rejects the update).
       check = OrganizationDomainCheck.create!(organization_domain: self, checked_at:, result:, outcome:, message:)
       update_columns(verified_at: (checked_at if success), last_checked_at: checked_at,
         last_check_result: result, check_queued_at: nil, updated_at: checked_at)
@@ -116,17 +94,12 @@ class OrganizationDomain < ApplicationRecord
 
   private
 
-  # Only the stored, validated row is ever checked.
   def ensure_verifiable!
     raise InvalidDomain, "domain has unsaved changes" if new_record? || changed?
-    # Avoids a pointless DNS request; record_check!'s lock! is the real guard.
     raise DeletedDomain, "domain has been deleted" if destroyed? || !self.class.exists?(id)
     raise InvalidDomain, "stored domain is invalid" unless Name.valid?(domain)
   end
 
-  # If the verified-domain unique index rejects marking this domain verified,
-  # record_check!'s transaction rolls the check back and a failure is recorded
-  # instead. A row deleted during the lookup raises DeletedDomain, recording nothing.
   def record_verification(result)
     record_check!(outcome: result.outcome, message: result.message)
   rescue ActiveRecord::RecordNotUnique => e
@@ -137,14 +110,10 @@ class OrganizationDomain < ApplicationRecord
     raise DeletedDomain, "domain was deleted during the check"
   end
 
-  # The only changes made to the owner's input; anything else invalid is an error.
   def normalize_domain
     self.domain = domain.strip.downcase if domain.is_a?(String)
   end
 
-  # Inside the insert's transaction (and after any token retry succeeded), so a
-  # failed add records no event and a retry never duplicates it.
-  # actor_gid is nil outside a web request (console, jobs), where Current.user is unset.
   def record_added_event
     organization.record_event!(Events::OrganizationEvent::DOMAIN_ADDED, domain:, txt_record_value:, actor_gid: Current.user&.to_gid)
   end
@@ -159,7 +128,6 @@ class OrganizationDomain < ApplicationRecord
     errors.add(:base, :limit_reached, count: LIMIT)
   end
 
-  # One owner-facing message; every broken rule is kept in errors.details.
   def domain_name_is_valid
     rules = Name.errors_for(domain)
     errors.add(:domain, :invalid_format, rules:) if rules.any?

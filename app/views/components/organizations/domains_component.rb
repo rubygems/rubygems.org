@@ -41,7 +41,6 @@ class Organizations::DomainsComponent < ApplicationComponent
     domains.size >= OrganizationDomain::LIMIT
   end
 
-  # Replaces the form at the limit; still shows the error of a rejected create.
   def limit_note
     form_errors
     p(class: "text-b3 text-neutral-800 dark:text-neutral-200", data: { testid: "organization-domain-limit" }) do
@@ -157,7 +156,6 @@ class Organizations::DomainsComponent < ApplicationComponent
     time(datetime: time.iso8601, title: time.utc.to_s, **attributes) { text }
   end
 
-  # Verify and Retry are unavailable while a check is queued or running, and a verified domain needs neither.
   def verify_button(domain, status)
     return if %i[checking verified].include?(status)
 
@@ -217,7 +215,6 @@ class Organizations::DomainsComponent < ApplicationComponent
     dt("failure.#{check.outcome}", name: domain.txt_record_name)
   end
 
-  # The translations are under organizations.domains
   def dt(key, **)
     t("organizations.domains.#{key}", **)
   end

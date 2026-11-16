@@ -2,9 +2,6 @@
 
 require "test_helper"
 
-# Domain data is loaded only for the settings page, in the controller, and handed
-# to the views as instance variables. Views must not query the domain tables
-# themselves, and other organization pages load no domain data at all.
 class OrganizationDomainViewQueriesTest < ActionDispatch::IntegrationTest
   setup do
     @owner = create(:user)

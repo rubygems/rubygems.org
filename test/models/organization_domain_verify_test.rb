@@ -3,8 +3,6 @@
 require "test_helper"
 require "helpers/fake_dns_resolver"
 
-# OrganizationDomain#verify!: the guards that stop a check before any DNS request,
-# and recording the DnsCheck result. DnsCheck itself is tested separately.
 class OrganizationDomainVerifyTest < ActiveSupport::TestCase
   TXT = Resolv::DNS::Resource::IN::TXT
 

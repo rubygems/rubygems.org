@@ -17,7 +17,7 @@ class OrganizationDomainVerificationJob < ApplicationJob
 
     domain.verify!
   rescue OrganizationDomain::DeletedDomain
-    nil # noop
+    nil
   rescue StandardError => e
     Rails.error.report(e, handled: true)
     record_failure(domain, e)
@@ -31,7 +31,7 @@ class OrganizationDomainVerificationJob < ApplicationJob
     message = "#{error.class}: #{error.message}".truncate(OrganizationDomainCheck::MAX_MESSAGE_LENGTH)
     domain.record_check!(outcome: "other_error", message:)
   rescue ActiveRecord::RecordNotFound
-    nil # noop
+    nil
   rescue StandardError => e
     Rails.error.report(e, handled: true)
     OrganizationDomain.where(id: domain.id).update_all(check_queued_at: nil)

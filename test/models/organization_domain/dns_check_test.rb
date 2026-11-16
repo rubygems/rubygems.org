@@ -3,8 +3,6 @@
 require "test_helper"
 require "helpers/fake_dns_resolver"
 
-# DnsCheck only makes the DNS request and interprets the response; it touches no
-# records. Guards and recording are tested on OrganizationDomain#verify!.
 class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
   TXT = Resolv::DNS::Resource::IN::TXT
   NAME = "_rubygems-challenge.example.com"

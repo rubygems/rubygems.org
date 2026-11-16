@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# Permanently deletes an organization domain and its check history. The
-# organization:domain:deleted event and this action's audit keep the domain and
-# its TXT value for reference.
 class Avo::Actions::DeleteOrganizationDomain < Avo::Actions::ApplicationAction
   self.name = "Delete Organization Domain"
   self.visible = lambda {

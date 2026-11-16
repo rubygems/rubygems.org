@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# Append-only record of one DNS verification attempt.
 class OrganizationDomainCheck < ApplicationRecord
   MAX_MESSAGE_LENGTH = 500
 
@@ -16,7 +15,6 @@ class OrganizationDomainCheck < ApplicationRecord
 
   validates :checked_at, presence: true
 
-  # The most recent check for each of the given domains, as { domain_id => check }, in one bounded query.
   def self.latest_by_domain_id(domain_ids)
     where(organization_domain_id: domain_ids)
       .select("DISTINCT ON (organization_domain_id) organization_domain_checks.*")

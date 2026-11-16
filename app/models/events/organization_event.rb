@@ -20,14 +20,12 @@ class Events::OrganizationEvent < ApplicationRecord
 
   DOMAIN_ADDED = define_event "organization:domain:added" do
     attribute :domain, :string
-    # The TXT value issued for the domain.
     attribute :txt_record_value, :string
     attribute :actor_gid, :global_id
   end
 
   DOMAIN_DELETED = define_event "organization:domain:deleted" do
     attribute :domain, :string
-    # The TXT value the domain had; the event is the only record of it after the hard delete.
     attribute :txt_record_value, :string
     attribute :actor_gid, :global_id
   end

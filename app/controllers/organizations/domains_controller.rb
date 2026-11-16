@@ -19,8 +19,6 @@ class Organizations::DomainsController < Organizations::BaseController
   def verify
     domain = find_domain
 
-    # Marks the domain as checking and enqueues the background check. The flag
-    # is only set when no fresh check is queued, so repeated clicks enqueue once.
     enqueued = OrganizationDomain.transaction do
       queued = OrganizationDomain.not_checking.where(id: domain.id).update_all(check_queued_at: Time.current)
       next true if queued.zero?

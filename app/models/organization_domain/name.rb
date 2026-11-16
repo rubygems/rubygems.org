@@ -3,7 +3,6 @@
 class OrganizationDomain::Name
   ALLOWED_CHARACTERS = /\A[a-z0-9.-]+\z/
   MAX_LABEL_LENGTH = 63
-  # 253 minus "_rubygems-challenge.".length
   MAX_LENGTH = 233
 
   class << self
@@ -27,7 +26,6 @@ class OrganizationDomain::Name
     end
 
     def invalid_label_errors(domain)
-      # include subdomains in the label check
       labels = domain.split(".", -1)
       [
         (:invalid_characters unless ALLOWED_CHARACTERS.match?(domain)),

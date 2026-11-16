@@ -262,7 +262,6 @@ class OrganizationDomainTest < ActiveSupport::TestCase
 
     should "report a lost add race as a taken error instead of raising" do
       create(:organization_domain, domain: "example.com", organization: @organization)
-      # Simulate the race: the uniqueness pre-check passed before the competing row committed.
       ActiveRecord::Validations::UniquenessValidator.any_instance.stubs(:validate_each)
 
       assert_no_difference ["OrganizationDomain.count", "Events::OrganizationEvent.count"] do
