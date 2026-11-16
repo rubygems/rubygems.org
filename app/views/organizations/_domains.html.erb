@@ -101,7 +101,8 @@
                   <%= t(".error_codes.#{latest_check.error_code || 'unknown_error'}", domain: domain.domain, name: domain.txt_record_name, value: domain.txt_record_value) %>
                 </p>
                 <p class="text-b3"><%= t(".error_groups.#{group}.hint") %></p>
-                <% if latest_check.error_message.present? %>
+                <%# A mismatch only says the value doesn't match; never echo what was found in DNS. %>
+                <% if latest_check.error_message.present? && group.to_s != "record_mismatch" %>
                   <p class="text-b4 break-all" data-testid="organization-domain-failure-message">
                     <span class="font-semibold"><%= t(".detail") %></span> <span class="font-mono"><%= latest_check.error_message %></span>
                   </p>

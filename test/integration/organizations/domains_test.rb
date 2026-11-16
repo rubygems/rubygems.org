@@ -121,8 +121,8 @@ text: "Verify again"
     should "show a Retry button and the failure details after a failed check" do
       domain = create(:organization_domain, organization: @organization, domain: "bad.example.com",
         last_check_result: "failure")
-      create(:organization_domain_check, :failure, organization_domain: domain, error_code: "token_mismatch",
-        error_message: "saw rubygems-verification=other")
+      create(:organization_domain_check, :failure, organization_domain: domain, error_code: "record_not_found",
+        error_message: "No TXT records at _rubygems-challenge.bad.example.com.")
       sign_in @owner
       get edit_organization_path(@organization)
 
@@ -130,9 +130,32 @@ text: "Verify again"
       testid "organization-domain-retry"
       testid "organization-domain-verify", count: 0
       testid "organization-domain-failure"
-      testid "organization-domain-failure-detail", text: /token/i
-      testid "organization-domain-failure-message", text: /saw rubygems-verification=other/
+      testid "organization-domain-failure-detail", text: /_rubygems-challenge\.bad\.example\.com/
+      testid "organization-domain-failure-message", text: /No TXT records/
       testid "organization-domain-checked-at"
+    end
+
+    %w[token_mismatch value_mismatch value_quoted].each do |code|
+      should "only say the DNS value does not match for #{code}, without showing what was found" do
+        domain = create(:organization_domain, organization: @organization, domain: "bad.example.com",
+          last_check_result: "failure")
+        create(:organization_domain_check, :failure, organization_domain: domain, error_code: code,
+          error_message: %(TXT values seen: ["rubygems-verification=FOUND-VALUE-abc"]))
+        sign_in @owner
+        get edit_organization_path(@organization)
+
+        testid "organization-domain-failure" do
+          assert_select "h3", text: "The DNS value doesn't match"
+        end
+        testid "organization-domain-failure-detail",
+          text: "The TXT record at _rubygems-challenge.bad.example.com doesn't match the value shown above."
+        testid "organization-domain-failure-message", count: 0
+        testid "organization-domain-retry"
+        testid "organization-domain-checked-at"
+
+        refute_includes response.body, "FOUND-VALUE-abc"
+        refute_match(/values seen|quotation marks|token doesn't match|what we saw/i, response.body)
+      end
     end
   end
 
