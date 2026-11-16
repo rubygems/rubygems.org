@@ -39,4 +39,15 @@ class OrganizationDomainCheckTest < ActiveSupport::TestCase
     refute_predicate build(:organization_domain_check, result: nil), :valid?
     refute_predicate build(:organization_domain_check, error_code: "bogus"), :valid?
   end
+
+  should "return only the latest check per domain" do
+    one = create(:organization_domain)
+    two = create(:organization_domain)
+    create(:organization_domain_check, organization_domain: one, checked_at: 3.hours.ago)
+    newest = create(:organization_domain_check, :failure, organization_domain: one, checked_at: 1.hour.ago)
+    create(:organization_domain_check, organization_domain: one, checked_at: 2.hours.ago)
+    other = create(:organization_domain_check, organization_domain: two)
+
+    assert_equal({ one.id => newest, two.id => other }, OrganizationDomainCheck.latest_by_domain_id([one.id, two.id]))
+  end
 end

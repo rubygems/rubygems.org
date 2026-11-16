@@ -20,12 +20,12 @@ class Organizations::DomainsController < Organizations::BaseController
 
     check = domain.verify!
     if check.success?
-      redirect_to edit_organization_path(@organization), notice: t(".verified", domain: domain.domain)
+      redirect_to edit_organization_path(@organization), notice: t("organizations.domains.verify_result.verified", domain: domain.domain)
     else
-      redirect_to edit_organization_path(@organization), alert: t(".failed", domain: domain.domain)
+      redirect_to edit_organization_path(@organization), alert: t("organizations.domains.verify_result.failed", domain: domain.domain)
     end
   rescue OrganizationDomain::DnsCheck::Error
-    redirect_to edit_organization_path(@organization), alert: t(".unavailable", domain: domain.domain)
+    redirect_to edit_organization_path(@organization), alert: t("organizations.domains.verify_result.unavailable", domain: domain.domain)
   end
 
   def destroy

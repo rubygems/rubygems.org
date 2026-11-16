@@ -591,6 +591,7 @@ en:
       remove: Remove
       confirm_remove: Remove %{domain}? Its verification record will stop working.
       publish: "Publish this TXT record at your DNS provider, then click Verify. DNS changes can take a while to appear."
+      keep_published: Keep this TXT record published. Verify again any time to re-check it.
       txt_name: Name
       txt_value: Value
       readded_notice: You removed this domain before. Replace the old TXT record with the new value above; the old value no longer works.
@@ -626,7 +627,7 @@ en:
         unknown_error: Something unexpected went wrong while checking %{domain}.
       create:
         added: "%{domain} added. Publish the TXT record shown below, then click Verify."
-      verify:
+      verify_result:
         verified: "%{domain} is verified."
         failed: "We couldn't verify %{domain}. See the details below."
         unavailable: "%{domain} can't be checked right now."

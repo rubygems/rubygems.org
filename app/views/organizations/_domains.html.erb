@@ -1,6 +1,7 @@
 <%# locals: (organization:, new_domain: nil, domain_input: nil) %>
 <%
-  domains = organization.domains.includes(:checks).order(:created_at, :id).to_a
+  domains = organization.domains.order(:created_at, :id).to_a
+  latest_checks = OrganizationDomainCheck.latest_by_domain_id(domains.map(&:id))
   removed_names = organization.domains_including_deleted.deleted.distinct.pluck(:domain)
   new_domain_errors = new_domain ? new_domain.errors.full_messages : []
   input_classes = "w-full text-b2 rounded-lg dark:bg-neutral-950 focus:ring-inset focus:ring-1 focus:ring-orange-500"
@@ -43,7 +44,7 @@
       <ul class="mt-8 divide-y divide-neutral-200 dark:divide-neutral-800 border-t border-neutral-200 dark:border-neutral-800">
         <% domains.each do |domain| %>
           <%
-            latest_check = domain.checks.first
+            latest_check = latest_checks[domain.id]
             failed = !domain.verified? && latest_check&.failure?
             status = domain.verified? ? :verified : (failed ? :failed : :pending)
             badge = {
@@ -82,20 +83,18 @@
               </div>
             </div>
 
-            <% unless domain.verified? %>
-              <div class="mt-4 space-y-2">
-                <p class="text-b3 text-neutral-600 dark:text-neutral-400"><%= t(".publish") %></p>
-                <div data-testid="organization-domain-txt-name">
-                  <%= render CopyFieldComponent.new(value: domain.txt_record_name, label: t(".txt_name"), name: "txt_name_#{domain.id}") %>
-                </div>
-                <div data-testid="organization-domain-txt-value">
-                  <%= render CopyFieldComponent.new(value: domain.txt_record_value, label: t(".txt_value"), name: "txt_value_#{domain.id}") %>
-                </div>
-                <% if removed_names.include?(domain.domain) %>
-                  <p class="text-b3 text-orange-800 dark:text-orange-300" data-testid="organization-domain-readded-notice"><%= t(".readded_notice") %></p>
-                <% end %>
+            <div class="mt-4 space-y-2">
+              <p class="text-b3 text-neutral-600 dark:text-neutral-400"><%= domain.verified? ? t(".keep_published") : t(".publish") %></p>
+              <div data-testid="organization-domain-txt-name">
+                <%= render CopyFieldComponent.new(value: domain.txt_record_name, label: t(".txt_name"), name: "txt_name_#{domain.id}") %>
               </div>
-            <% end %>
+              <div data-testid="organization-domain-txt-value">
+                <%= render CopyFieldComponent.new(value: domain.txt_record_value, label: t(".txt_value"), name: "txt_value_#{domain.id}") %>
+              </div>
+              <% if !domain.verified? && removed_names.include?(domain.domain) %>
+                <p class="text-b3 text-orange-800 dark:text-orange-300" data-testid="organization-domain-readded-notice"><%= t(".readded_notice") %></p>
+              <% end %>
+            </div>
 
             <% if failed %>
               <% group = latest_check.error_group || :unknown %>

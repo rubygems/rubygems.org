@@ -77,6 +77,47 @@ class Organizations::DomainsTest < ActionDispatch::IntegrationTest
       refute_match(/gone\.example\.com/, response.body)
     end
 
+    should "show readable button labels" do
+      create(:organization_domain, organization: @organization, domain: "pending.example.com")
+      failed = create(:organization_domain, organization: @organization, domain: "bad.example.com", last_check_result: "failure")
+      create(:organization_domain_check, :failure, organization_domain: failed)
+      create(:organization_domain, :verified, organization: @organization, domain: "ok.example.com")
+      sign_in @owner
+      get edit_organization_path(@organization)
+
+      assert_select "[data-testid=?][data-domain=?] [data-testid=?]", "organization-domain", "pending.example.com", "organization-domain-verify",
+text: "Verify"
+      assert_select "[data-testid=?][data-domain=?] [data-testid=?]", "organization-domain", "bad.example.com", "organization-domain-retry",
+text: "Retry"
+      assert_select "[data-testid=?][data-domain=?] [data-testid=?]", "organization-domain", "ok.example.com", "organization-domain-verify",
+text: "Verify again"
+      assert_select "[data-testid=?]", "organization-domain-remove", text: "Remove", count: 3
+    end
+
+    should "show the TXT record for a verified domain too" do
+      verified = create(:organization_domain, :verified, organization: @organization, domain: "ok.example.com")
+      sign_in @owner
+      get edit_organization_path(@organization)
+
+      assert_select "[data-testid=?] input[value=?]", "organization-domain-txt-name", verified.txt_record_name
+      assert_select "[data-testid=?] input[value=?]", "organization-domain-txt-value", verified.txt_record_value
+    end
+
+    should "load the latest checks in a single query" do
+      domain = create(:organization_domain, organization: @organization, domain: "bad.example.com")
+      3.times { |i| create(:organization_domain_check, :failure, organization_domain: domain, checked_at: (i + 1).hours.ago) }
+      sign_in @owner
+      queries = []
+      callback = lambda { |*, payload|
+        queries << payload[:sql] if payload[:sql].start_with?("SELECT") && payload[:sql].include?("FROM \"organization_domain_checks\"")
+      }
+      ActiveSupport::Notifications.subscribed(callback, "sql.active_record") { get edit_organization_path(@organization) }
+
+      assert_response :success
+      assert_equal 1, queries.size
+      assert_match(/DISTINCT ON/, queries.first)
+    end
+
     should "show a Retry button and the failure details after a failed check" do
       domain = create(:organization_domain, organization: @organization, domain: "bad.example.com",
         last_check_result: "failure")
@@ -202,6 +243,26 @@ class Organizations::DomainsTest < ActionDispatch::IntegrationTest
       assert_equal %w[success failure], @domain.checks.pluck(:result)
     end
 
+    should "let the owner re-check a verified domain, and a failing re-check un-verifies it" do
+      stub_dns(FakeDnsResolver.for_domain("example.com", value: @domain.txt_record_value))
+      post verify_organization_domain_path(@organization, @domain)
+
+      assert_predicate @domain.reload, :verified?
+
+      get edit_organization_path(@organization)
+
+      testid "organization-domain-verify", text: "Verify again"
+
+      stub_dns(FakeDnsResolver.for_domain("example.com"))
+      assert_difference -> { @domain.checks.count }, 1 do
+        post verify_organization_domain_path(@organization, @domain)
+      end
+      follow_redirect!
+
+      refute_predicate @domain.reload, :verified?
+      testid "organization-domain-retry"
+    end
+
     should "404 for a removed domain and record no check" do
       @domain.remove!
 
@@ -268,6 +329,8 @@ class Organizations::DomainsTest < ActionDispatch::IntegrationTest
 
     should "deny a signed-out user every action" do
       attempt_all [302]
+
+      assert_redirected_to sign_in_path
     end
 
     should "deny an admin the settings page" do
@@ -286,6 +349,15 @@ class Organizations::DomainsTest < ActionDispatch::IntegrationTest
       OrganizationDomainCheck::ERROR_GROUPS.each_key do |group|
         assert I18n.exists?("organizations.domains.error_groups.#{group}.heading"), "missing group heading #{group}"
         assert I18n.exists?("organizations.domains.error_groups.#{group}.hint"), "missing group hint #{group}"
+      end
+    end
+
+    should "keep button labels as strings in every locale file" do
+      %w[verify recheck retry remove].each do |key|
+        assert_kind_of String, I18n.t("organizations.domains.#{key}", locale: :en)
+      end
+      %w[verified failed unavailable].each do |key|
+        assert_kind_of String, I18n.t("organizations.domains.verify_result.#{key}", locale: :en, domain: "example.com")
       end
     end
 

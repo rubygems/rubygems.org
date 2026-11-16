@@ -592,14 +592,12 @@ zh-CN:
         failed:
       verified_ago:
       verify:
-        verified:
-        failed:
-        unavailable:
       recheck:
       retry:
       remove:
       confirm_remove:
       publish:
+      keep_published:
       txt_name:
       txt_value:
       readded_notice:
@@ -635,6 +633,10 @@ zh-CN:
         unknown_error:
       create:
         added:
+      verify_result:
+        verified:
+        failed:
+        unavailable:
       destroy:
         removed:
     invitation_expiry_title:
