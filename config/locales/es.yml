@@ -115,6 +115,8 @@ es:
       models:
         organization_domain:
           attributes:
+            base:
+              limit_reached:
             domain:
               invalid_format:
         api_key:
@@ -602,6 +604,7 @@ es:
       domain:
       domain_hint:
       add:
+      limit_note:
       status:
         verified:
         pending:
@@ -609,7 +612,6 @@ es:
         checking:
       verified_ago:
       verify:
-      recheck:
       retry:
       delete:
       confirm_delete:

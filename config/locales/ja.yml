@@ -108,6 +108,8 @@ ja:
       models:
         organization_domain:
           attributes:
+            base:
+              limit_reached:
             domain:
               invalid_format:
         api_key:
@@ -571,6 +573,7 @@ ja:
       domain:
       domain_hint:
       add:
+      limit_note:
       status:
         verified:
         pending:
@@ -578,7 +581,6 @@ ja:
         checking:
       verified_ago:
       verify:
-      recheck:
       retry:
       delete:
       confirm_delete:

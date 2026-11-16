@@ -56,13 +56,36 @@ class Organizations::DomainsComponentTest < ComponentTest
       @domain = create(:organization_domain, :verified, organization: @organization)
     end
 
-    should "show Verified, the verified time and Verify again" do
+    should "show Verified, the verified time and only Delete" do
       render_component(domains: [@domain])
 
       assert_selector "[data-testid='organization-domain-status'][data-status='verified']", text: "Verified"
       assert_selector "[data-testid='organization-domain-verified-at']", text: "ago"
-      assert_selector "button[data-testid='organization-domain-verify']", text: "Verify again"
-      assert_text "Keep this TXT record published"
+      assert_no_selector "[data-testid='organization-domain-verify']"
+      assert_no_selector "[data-testid='organization-domain-retry']"
+      assert_no_text "Verify again"
+      assert_selector "button[data-testid='organization-domain-delete']", text: "Delete"
+      assert_text "Keep this TXT record published."
+    end
+  end
+
+  context "with the domain limit" do
+    should "render the add form below the limit" do
+      domains = create_list(:organization_domain, OrganizationDomain::LIMIT - 1, organization: @organization)
+      render_component(domains:)
+
+      assert_selector "[data-testid='organization-domain-form']"
+      assert_no_selector "[data-testid='organization-domain-limit']"
+    end
+
+    should "replace the form with a note at the limit" do
+      domains = create_list(:organization_domain, OrganizationDomain::LIMIT, organization: @organization)
+      render_component(domains:)
+
+      assert_no_selector "[data-testid='organization-domain-form']"
+      assert_selector "[data-testid='organization-domain-limit']",
+        text: "You've added the maximum of 5 domains. Delete one to add another."
+      assert_selector "[data-testid='organization-domain']", count: OrganizationDomain::LIMIT
     end
   end
 

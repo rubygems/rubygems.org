@@ -113,6 +113,8 @@ pt-BR:
       models:
         organization_domain:
           attributes:
+            base:
+              limit_reached:
             domain:
               invalid_format:
         api_key:
@@ -570,6 +572,7 @@ pt-BR:
       domain:
       domain_hint:
       add:
+      limit_note:
       status:
         verified:
         pending:
@@ -577,7 +580,6 @@ pt-BR:
         checking:
       verified_ago:
       verify:
-      recheck:
       retry:
       delete:
       confirm_delete:

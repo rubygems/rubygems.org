@@ -13,6 +13,45 @@ class OrganizationDomainTest < ActiveSupport::TestCase
     @organization.events.where(tag:)
   end
 
+  context "domain limit" do
+    setup do
+      OrganizationDomain::LIMIT.pred.times { |i| create(:organization_domain, organization: @organization, domain: "d#{i}.example.com") }
+    end
+
+    should "allow the last domain up to the limit" do
+      record = OrganizationDomain.add(organization: @organization, domain: "last.example.com")
+
+      assert_predicate record, :persisted?
+    end
+
+    should "reject a domain past the limit with a base error and no event" do
+      OrganizationDomain.add(organization: @organization, domain: "last.example.com")
+      events = domain_events(Events::OrganizationEvent::DOMAIN_ADDED).count
+
+      record = OrganizationDomain.add(organization: @organization, domain: "extra.example.com")
+
+      refute_predicate record, :persisted?
+      assert_equal [:limit_reached], record.errors.details[:base].pluck(:error)
+      assert_equal ["Organizations can have at most 5 domains. Delete one to add another."], record.errors.full_messages
+      assert_equal events, domain_events(Events::OrganizationEvent::DOMAIN_ADDED).count
+      assert_equal OrganizationDomain::LIMIT, @organization.domains.count
+    end
+
+    should "allow adding again after a delete" do
+      last = OrganizationDomain.add(organization: @organization, domain: "last.example.com")
+      last.destroy_with_audit!(actor: create(:user))
+
+      assert_predicate OrganizationDomain.add(organization: @organization, domain: "again.example.com"), :persisted?
+    end
+
+    should "not count another organization's domains" do
+      create(:organization_domain, organization: @organization, domain: "last.example.com")
+      other = create(:organization)
+
+      assert_predicate OrganizationDomain.add(organization: other, domain: "mine.example.com"), :persisted?
+    end
+  end
+
   context "accepted domains" do
     {
       "example.com" => "example.com",

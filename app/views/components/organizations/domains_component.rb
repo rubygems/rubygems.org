@@ -31,13 +31,25 @@ class Organizations::DomainsComponent < ApplicationComponent
       render CardComponent.new do |c|
         c.head { c.title dt(:title), icon: "language" }
         p(class: "text-b3 text-neutral-600 dark:text-neutral-400 mb-6") { dt(:description) }
-        add_domain_form
+        limit_reached? ? limit_note : add_domain_form
         domain_list if domains.any?
       end
     end
   end
 
   private
+
+  def limit_reached?
+    domains.size >= OrganizationDomain::LIMIT
+  end
+
+  # Replaces the form at the limit; still shows the error of a rejected create.
+  def limit_note
+    form_errors
+    p(class: "text-b3 text-neutral-800 dark:text-neutral-200", data: { testid: "organization-domain-limit" }) do
+      dt(:limit_note, count: OrganizationDomain::LIMIT)
+    end
+  end
 
   def add_domain_form
     form_with url: organization_domains_path(organization), method: :post, scope: :organization_domain,
@@ -143,11 +155,11 @@ class Organizations::DomainsComponent < ApplicationComponent
     time(datetime: time.iso8601, title: time.utc.to_s, **attributes) { text }
   end
 
-  # Verify and Retry are unavailable while a check is queued or running.
+  # Verify and Retry are unavailable while a check is queued or running, and a verified domain needs neither.
   def verify_button(domain, status)
-    return if status == :checking
+    return if %i[checking verified].include?(status)
 
-    button_to action_label(domain, status), verify_organization_domain_path(organization, domain),
+    button_to action_label(status), verify_organization_domain_path(organization, domain),
       method: :post,
       class: "#{ACTION_CLASSES} #{VERIFY_CLASSES}",
       data: { testid: action_testid(status), disable_with: t("form_disable_with") }
@@ -191,14 +203,8 @@ class Organizations::DomainsComponent < ApplicationComponent
     end
   end
 
-  def action_label(domain, status)
-    if status == :failed
-      dt(:retry)
-    elsif domain.verified?
-      dt(:recheck)
-    else
-      dt(:verify)
-    end
+  def action_label(status)
+    status == :failed ? dt(:retry) : dt(:verify)
   end
 
   def action_testid(status)

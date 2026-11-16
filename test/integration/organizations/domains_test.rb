@@ -6,7 +6,7 @@ require "helpers/fake_dns_helpers"
 class Organizations::DomainsTest < ActionDispatch::IntegrationTest
   include FakeDnsHelpers
 
-  BUTTON_KEYS = %w[verify recheck retry delete].freeze
+  BUTTON_KEYS = %w[verify retry delete].freeze
 
   setup do
     @owner = create(:user)
@@ -91,8 +91,9 @@ class Organizations::DomainsTest < ActionDispatch::IntegrationTest
 text: "Verify"
       assert_select "[data-testid=?][data-domain=?] [data-testid=?]", "organization-domain", "bad.example.com", "organization-domain-retry",
 text: "Retry"
-      assert_select "[data-testid=?][data-domain=?] [data-testid=?]", "organization-domain", "ok.example.com", "organization-domain-verify",
-text: "Verify again"
+      assert_select "[data-domain=?] [data-testid=?]", "ok.example.com", "organization-domain-verify", count: 0
+      assert_select "[data-domain=?] [data-testid=?]", "ok.example.com", "organization-domain-retry", count: 0
+      assert_select "[data-domain=?] [data-testid=?]", "ok.example.com", "organization-domain-delete", text: "Delete"
       assert_select "[data-testid=?]", "organization-domain-delete", text: "Delete", count: 3
     end
 
@@ -276,6 +277,21 @@ text: "Verify again"
       end
       assert_response :unprocessable_content
     end
+
+    should "reject a sixth domain with the limit message and create nothing" do
+      create_list(:organization_domain, OrganizationDomain::LIMIT, organization: @organization)
+      sign_in @owner
+      events = Events::OrganizationEvent.count
+
+      assert_no_difference -> { OrganizationDomain.count } do
+        post organization_domains_path(@organization), params: { organization_domain: { domain: "sixth.example.com" } }
+      end
+      assert_response :unprocessable_content
+      assert_equal events, Events::OrganizationEvent.count
+      testid "organization-domain-errors", text: "Organizations can have at most 5 domains. Delete one to add another."
+      testid "organization-domain-limit"
+      testid "organization-domain-form", count: 0
+    end
   end
 
   context "verify and retry" do
@@ -361,11 +377,12 @@ text: "Verify again"
       assert_equal %w[success failure], @domain.checks.pluck(:result)
     end
 
-    should "let the owner re-check a verified domain, and a failing re-check un-verifies it" do
+    should "not offer a verified domain a verify button, though the endpoint still re-checks it" do
       verified = create(:organization_domain, :verified, organization: @organization, domain: "ok.example.com")
       get edit_organization_path(@organization)
 
-      assert_select "[data-domain=?] [data-testid=?]", "ok.example.com", "organization-domain-verify", text: "Verify again"
+      assert_select "[data-domain=?] [data-testid=?]", "ok.example.com", "organization-domain-verify", count: 0
+      assert_select "[data-domain=?]", "ok.example.com", text: /Verify again/, count: 0
 
       stub_dns(FakeDnsResolver.new)
       perform_enqueued_jobs do

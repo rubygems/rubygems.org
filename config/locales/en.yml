@@ -112,6 +112,8 @@ en:
       models:
         organization_domain:
           attributes:
+            base:
+              limit_reached: "Organizations can have at most %{count} domains. Delete one to add another."
             domain:
               invalid_format: is invalid. The domain is expected in an example.com or docs.example.com format.
         api_key:
@@ -568,6 +570,7 @@ en:
       domain: Domain
       domain_hint: Enter just the domain, like example.com or docs.example.com. Each subdomain is verified separately. Domains can't be edited; delete one and add it again to change it.
       add: Add domain
+      limit_note: "You've added the maximum of %{count} domains. Delete one to add another."
       status:
         verified: Verified
         pending: Pending
@@ -575,12 +578,11 @@ en:
         checking: Checking
       verified_ago: "%{time} ago"
       verify: Verify
-      recheck: Verify again
       retry: Retry
       delete: Delete
       confirm_delete: Delete %{domain}? It and its check history will be permanently deleted, and its verification record will stop working.
       publish: "Publish this TXT record at your DNS provider, then click Verify. DNS changes can take a while to appear."
-      keep_published: Keep this TXT record published. Verify again any time to re-check it.
+      keep_published: Keep this TXT record published.
       txt_name: Name
       txt_value: Value
       checked_at: "Last checked:"

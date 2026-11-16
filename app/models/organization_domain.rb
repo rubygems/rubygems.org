@@ -11,6 +11,8 @@ class OrganizationDomain < ApplicationRecord
   TOKEN_ATTEMPTS = 3
   # A check queued longer ago than this is treated as lost (so a row never stays "Checking" forever).
   STALE_CHECK_AFTER = 10.minutes
+  # The most domains an organization can have.
+  LIMIT = 5
 
   belongs_to :organization
   has_many :checks, -> { order(checked_at: :desc, id: :desc) },
@@ -31,6 +33,7 @@ class OrganizationDomain < ApplicationRecord
   after_create :record_added_event
   validate :domain_name_is_valid, on: :create
   validates :domain, uniqueness: { scope: :organization_id }, on: :create
+  validate :organization_under_limit, on: :create
 
   # Adds a domain for an organization and returns the record: persisted, or with
   # errors (invalid, or taken by a concurrent add). The unique index on token
@@ -148,6 +151,12 @@ class OrganizationDomain < ApplicationRecord
 
   def generate_token
     self.token = SecureRandom.urlsafe_base64(32)
+  end
+
+  def organization_under_limit
+    return if organization.nil? || self.class.where(organization_id:).count < LIMIT
+
+    errors.add(:base, :limit_reached, count: LIMIT)
   end
 
   # One owner-facing message; every broken rule is kept in errors.details.
