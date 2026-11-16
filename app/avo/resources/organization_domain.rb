@@ -5,7 +5,7 @@ class Avo::Resources::OrganizationDomain < Avo::BaseResource
   self.includes = [:organization]
   self.search = {
     query: lambda {
-             needle = ActiveRecord::Base.sanitize_sql_like(params[:q].to_s)
+             needle = ActiveRecord::Base.sanitize_sql_like(params[:q].to_s.downcase)
              query.where("domain LIKE ?", "%#{needle}%")
            }
   }
