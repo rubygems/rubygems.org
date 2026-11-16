@@ -31,7 +31,7 @@ class OrganizationDomain::Name
       labels = domain.split(".", -1)
       [
         (:invalid_characters unless ALLOWED_CHARACTERS.match?(domain)),
-        (:invalid_label unless labels.all? { |label| valid_label?(label) }),
+        (:invalid_label unless labels.size >= 2 && labels.all? { |label| valid_label?(label) }),
         (:single_label if labels.size < 2),
         (:ip_address if labels.last.match?(/\A\d+\z/))
       ].compact

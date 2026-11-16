@@ -9,6 +9,10 @@ class OrganizationDomainTest < ActiveSupport::TestCase
     OrganizationDomain.new(organization: organization, domain: domain)
   end
 
+  def domain_events(tag)
+    @organization.events.where(tag:)
+  end
+
   context "accepted domains" do
     {
       "example.com" => "example.com",
@@ -37,7 +41,6 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       invalid_characters: ["exa_mple.com", "exa mple.com", "exämple.com", "ｅｘａｍｐｌｅ.com", "\"example.com\"",
                            "example.com/path", "https://example.com", "user@example.com", "example.com:443", "*.example.com"],
       invalid_label: ["-example.com", "example-.com", "a..b.com", ".example.com", "example.com.", "#{'a' * 64}.com"],
-      single_label: %w[localhost com],
       ip_address: %w[127.0.0.1 10.0.0.1],
       public_suffix: %w[co.uk github.io example.notarealtld],
       too_long: ["#{(['a' * 60] * 4).join('.')}.com"]
@@ -53,6 +56,17 @@ class OrganizationDomainTest < ActiveSupport::TestCase
             refute record.save
           end
         end
+      end
+    end
+
+    should "report a single label as both invalid_label and single_label behind one message" do
+      %w[localhost com].each do |input|
+        assert_equal %i[invalid_label single_label], OrganizationDomain::Name.errors_for(input), input
+        record = build_domain(input)
+
+        refute_predicate record, :valid?, input
+        assert_equal [error: :invalid_format, rules: %i[invalid_label single_label]], record.errors.details[:domain], input
+        assert_equal [expected_message], record.errors.full_messages, input
       end
     end
 
@@ -216,14 +230,13 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       assert_equal [:taken], record.errors.details[:domain].pluck(:error)
     end
 
-    should "differ when a removed domain is re-added, keeping the old row" do
-      old = create(:organization_domain, domain: "example.com")
-      old.remove!
+    should "differ when a removed domain is re-added, with the old row gone" do
+      old = create(:organization_domain, domain: "example.com", organization: @organization)
+      old.remove!(actor: create(:user))
       new_row = create(:organization_domain, domain: "example.com", organization: @organization)
 
       refute_equal old.token, new_row.token
-      assert OrganizationDomain.exists?(old.id)
-      assert_equal old.token, old.reload.token
+      refute OrganizationDomain.exists?(old.id)
     end
   end
 
@@ -240,11 +253,9 @@ class OrganizationDomainTest < ActiveSupport::TestCase
   end
 
   context "verification state" do
-    should "scope verified and pending, excluding deleted" do
+    should "scope verified and pending" do
       verified = create(:organization_domain, :verified)
       pending = create(:organization_domain)
-      create(:organization_domain, :verified, :deleted)
-      create(:organization_domain, :deleted)
 
       assert_equal [verified], OrganizationDomain.verified.to_a
       assert_equal [pending], OrganizationDomain.pending.to_a
@@ -252,33 +263,20 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       refute_predicate pending, :verified?
     end
 
-    should "remove softly, clearing verified_at and keeping checks" do
+    should "remove by deleting the row and its checks" do
       record = create(:organization_domain, :verified)
-      check = create(:organization_domain_check, organization_domain: record)
+      create(:organization_domain_check, organization_domain: record)
 
-      record.remove!
-
-      assert_nil record.reload.verified_at
-      refute_nil record.deleted_at
-      assert_equal [check], record.checks.to_a
-      assert_empty @organization.domains.where(id: record.id)
-    end
-
-    should "keep the original deleted_at when removed again" do
-      record = create(:organization_domain)
-      record.remove!
-      original = record.reload.deleted_at
-
-      travel 1.hour do
-        record.remove!
+      assert_difference ["OrganizationDomain.count", "OrganizationDomainCheck.count"], -1 do
+        record.remove!(actor: create(:user))
       end
-
-      assert_equal original, record.reload.deleted_at
+      refute OrganizationDomain.exists?(record.id)
+      assert_empty @organization.domains.where(id: record.id)
     end
 
     should "free a verified domain for another organization after removal" do
       record = create(:organization_domain, :verified, domain: "example.com")
-      record.remove!
+      record.remove!(actor: create(:user))
 
       assert_nothing_raised do
         create(:organization_domain, :verified, domain: "example.com", organization: create(:organization))
@@ -291,6 +289,72 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       recent = create(:organization_domain_check, organization_domain: record, checked_at: 1.day.ago)
 
       assert_equal [recent, old], record.checks.to_a
+    end
+  end
+
+  context "organization events" do
+    setup do
+      @actor = create(:user)
+      Current.user = @actor
+    end
+
+    teardown { Current.user = nil }
+
+    should "record exactly one added event with domain and actor" do
+      assert_difference -> { domain_events(Events::OrganizationEvent::DOMAIN_ADDED).count }, 1 do
+        build_domain("Example.com").save!
+      end
+
+      additional = domain_events(Events::OrganizationEvent::DOMAIN_ADDED).sole.additional
+
+      assert_equal "example.com", additional.domain
+      assert_equal @actor.to_gid, additional.actor_gid
+    end
+
+    should "record one added event when the token insert is retried" do
+      existing = create(:organization_domain)
+      SecureRandom.stubs(:urlsafe_base64).with(32).returns(existing.token, "fresh-token")
+
+      assert_difference -> { domain_events(Events::OrganizationEvent::DOMAIN_ADDED).count }, 1 do
+        build_domain("other.example.com").save!
+      end
+    end
+
+    should "record no added event for a rejected add" do
+      assert_no_difference -> { @organization.events.count } do
+        refute build_domain("localhost").save
+      end
+    end
+
+    should "record no added event for a lost add race" do
+      create(:organization_domain, domain: "example.com", organization: @organization)
+      ActiveRecord::Validations::UniquenessValidator.any_instance.stubs(:validate_each)
+
+      assert_no_difference -> { domain_events(Events::OrganizationEvent::DOMAIN_ADDED).count } do
+        refute build_domain("example.com").save
+      end
+    end
+
+    should "record a removed event with domain and actor" do
+      record = create(:organization_domain, domain: "example.com", organization: @organization)
+      remover = create(:user)
+
+      record.remove!(actor: remover)
+
+      additional = domain_events(Events::OrganizationEvent::DOMAIN_REMOVED).sole.additional
+
+      assert_equal "example.com", additional.domain
+      assert_equal remover.to_gid, additional.actor_gid
+    end
+
+    should "record no removed event and keep the row when the delete fails" do
+      record = create(:organization_domain, organization: @organization)
+      record.stubs(:destroy!).raises(ActiveRecord::RecordNotDestroyed)
+
+      assert_no_difference -> { domain_events(Events::OrganizationEvent::DOMAIN_REMOVED).count } do
+        assert_raises(ActiveRecord::RecordNotDestroyed) { record.remove!(actor: @actor) }
+      end
+      assert OrganizationDomain.exists?(record.id)
     end
   end
 end

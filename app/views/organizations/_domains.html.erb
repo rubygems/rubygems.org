@@ -1,4 +1,4 @@
-<%# locals: (organization:, domains:, latest_checks:, removed_domain_names:, new_domain: nil, domain_input: nil) %>
+<%# locals: (organization:, domains:, latest_checks:, new_domain: nil, domain_input: nil) %>
 <%
   new_domain_errors = new_domain ? new_domain.errors.full_messages : []
   input_classes = "w-full text-b2 rounded-lg dark:bg-neutral-950 focus:ring-inset focus:ring-1 focus:ring-orange-500"
@@ -108,9 +108,6 @@
               <div data-testid="organization-domain-txt-value">
                 <%= render CopyFieldComponent.new(value: domain.txt_record_value, label: t(".txt_value"), name: "txt_value_#{domain.id}") %>
               </div>
-              <% if !domain.verified? && removed_domain_names.include?(domain.domain) %>
-                <p class="text-b3 text-orange-800 dark:text-orange-300" data-testid="organization-domain-readded-notice"><%= t(".readded_notice") %></p>
-              <% end %>
             </div>
           </li>
         <% end %>

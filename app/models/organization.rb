@@ -17,8 +17,7 @@ class Organization < ApplicationRecord
   has_many :users, through: :memberships
   has_many :push_notifiable_members, ->(org) { org.users.push_notifiable_members }, through: :memberships, source: :user
   has_many :rubygems, dependent: :nullify
-  has_many :domains, -> { where(deleted_at: nil) }, class_name: "OrganizationDomain", inverse_of: :organization, dependent: nil
-  has_many :domains_including_deleted, class_name: "OrganizationDomain", dependent: :destroy, inverse_of: :organization
+  has_many :domains, class_name: "OrganizationDomain", inverse_of: :organization, dependent: :destroy
   has_many :gem_name_reservations, dependent: :destroy
   has_many :prefix_reservations, dependent: :destroy
   has_many :audits, as: :auditable, dependent: :nullify

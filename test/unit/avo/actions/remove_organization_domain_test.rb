@@ -16,11 +16,6 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
     )
   end
 
-  def visible_context(domain)
-    resource = Data.define(:record).new(record: domain)
-    Data.define(:current_user, :view, :resource).new(current_user: @current_user, view: :show, resource:)
-  end
-
   def run_action(domain, comment: "Disputed domain, removing it 1234")
     @resource.hydrate(record: domain)
     @action.handle(
@@ -32,37 +27,45 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
     )
   end
 
-  should "soft delete a verified domain keeping row, token and checks" do
+  should "delete a verified domain with its checks" do
     domain = create(:organization_domain, :verified, organization: @organization)
     create(:organization_domain_check, organization_domain: domain)
-    token = domain.token
 
-    run_action(domain)
+    assert_difference ["OrganizationDomain.count", "OrganizationDomainCheck.count"], -1 do
+      run_action(domain)
+    end
 
-    domain = OrganizationDomain.find(domain.id)
-
-    assert_predicate domain.deleted_at, :present?
-    assert_nil domain.verified_at
-    assert_equal token, domain.token
-    assert_equal 1, domain.checks.count
+    refute OrganizationDomain.exists?(domain.id)
     assert_empty @organization.domains.reload
   end
 
-  should "soft delete a pending domain" do
+  should "delete a pending domain" do
     domain = create(:organization_domain, organization: @organization)
 
     run_action(domain)
 
-    assert_predicate domain.reload.deleted_at, :present?
-    assert_equal 1, OrganizationDomain.where(id: domain.id).count
+    refute OrganizationDomain.exists?(domain.id)
   end
 
-  should "record an audit" do
-    domain = create(:organization_domain, :verified, organization: @organization)
+  should "record a removed event with the admin as actor" do
+    domain = create(:organization_domain, domain: "acme.example.com", organization: @organization)
+
+    assert_difference -> { @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_REMOVED).count }, 1 do
+      run_action(domain)
+    end
+
+    additional = @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_REMOVED).sole.additional
+
+    assert_equal "acme.example.com", additional.domain
+    assert_equal @current_user.to_gid, additional.actor_gid
+  end
+
+  should "record an audit that survives the domain being destroyed" do
+    domain = create(:organization_domain, :verified, domain: "acme.example.com", organization: @organization)
 
     run_action(domain, comment: "Disputed by another organization")
 
-    audit = Audit.where(auditable: domain).sole
+    audit = Audit.where(auditable_type: "OrganizationDomain", auditable_id: domain.id).sole
 
     assert_equal "Remove Organization Domain", audit.action
     assert_equal @current_user, audit.admin_github_user
@@ -70,9 +73,8 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
 
     changes = audit.audited_changes["records"][domain.to_global_id.to_s]["changes"]
 
-    assert_equal %w[deleted_at updated_at verified_at], changes.keys.sort
-    assert_nil changes["deleted_at"].first
-    assert_nil changes["verified_at"].last
+    assert_equal "acme.example.com", changes["domain"].first
+    assert_equal [domain.to_global_id.uri.to_s], audit.audited_changes["models"]
   end
 
   should "free the domain for another organization with a new token" do
@@ -91,10 +93,12 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
   should "not modify anything without a sufficient comment" do
     domain = create(:organization_domain, :verified, organization: @organization)
 
-    run_action(domain, comment: "short")
+    assert_no_difference -> { Events::OrganizationEvent.count } do
+      run_action(domain, comment: "short")
+    end
 
-    assert_nil domain.reload.deleted_at
-    assert_predicate domain, :verified?
+    assert OrganizationDomain.exists?(domain.id)
+    assert_predicate domain.reload, :verified?
     assert_equal 0, Audit.where(auditable: domain).count
   end
 
@@ -102,29 +106,6 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
     action_mock = Data.define(:current_user, :view, :resource).new(current_user: @current_user, view: :show, resource: nil)
 
     assert action_mock.instance_exec(&Avo::Actions::RemoveOrganizationDomain.visible)
-  end
-
-  should "not be visible for an already removed domain" do
-    domain = create(:organization_domain, organization: @organization)
-    domain.remove!
-    action_mock = visible_context(domain)
-
-    refute action_mock.instance_exec(&Avo::Actions::RemoveOrganizationDomain.visible)
-    action_mock = visible_context(create(:organization_domain))
-
-    assert action_mock.instance_exec(&Avo::Actions::RemoveOrganizationDomain.visible)
-  end
-
-  should "not re-stamp deleted_at when run on an already removed domain" do
-    domain = create(:organization_domain, organization: @organization)
-    domain.remove!
-    original = domain.reload.deleted_at
-
-    travel 1.hour do
-      run_action(domain)
-    end
-
-    assert_equal original, domain.reload.deleted_at
   end
 
   should "ask for confirmation naming the domain" do

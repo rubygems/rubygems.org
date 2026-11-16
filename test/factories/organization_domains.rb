@@ -10,10 +10,6 @@ FactoryBot.define do
       last_checked_at { verified_at }
       last_check_result { "success" }
     end
-
-    trait :deleted do
-      deleted_at { Time.zone.now }
-    end
   end
 
   factory :organization_domain_check do

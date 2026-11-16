@@ -21,7 +21,7 @@ class Organizations::DomainsTest < ActionDispatch::IntegrationTest
   end
 
   def state_counts
-    [OrganizationDomain.count, OrganizationDomainCheck.count, OrganizationDomain.where.not(deleted_at: nil).count]
+    [OrganizationDomain.count, OrganizationDomainCheck.count, Events::OrganizationEvent.count]
   end
 
   def assert_denied(expected)
@@ -57,7 +57,6 @@ class Organizations::DomainsTest < ActionDispatch::IntegrationTest
     should "show each domain with its TXT record, status and buttons" do
       pending = create(:organization_domain, organization: @organization, domain: "pending.example.com")
       create(:organization_domain, :verified, organization: @organization, domain: "ok.example.com")
-      create(:organization_domain, :deleted, organization: @organization, domain: "gone.example.com")
       sign_in @owner
       get edit_organization_path(@organization)
 
@@ -74,7 +73,6 @@ class Organizations::DomainsTest < ActionDispatch::IntegrationTest
       assert_select "[data-testid=?][data-domain=?]", "organization-domain", "ok.example.com" do
         testid "organization-domain-status", text: /verified/i
       end
-      refute_match(/gone\.example\.com/, response.body)
     end
 
     should "show readable button labels" do
@@ -194,6 +192,18 @@ text: "Verify again"
       assert_empty @resolver.queries
     end
 
+    should "record one added event with the owner as actor" do
+      sign_in @owner
+
+      assert_difference -> { @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_ADDED).count }, 1 do
+        post organization_domains_path(@organization), params: { organization_domain: { domain: "Example.com" } }
+      end
+      additional = @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_ADDED).sole.additional
+
+      assert_equal "example.com", additional.domain
+      assert_equal @owner.to_gid, additional.actor_gid
+    end
+
     should "ignore a posted token" do
       sign_in @owner
       post organization_domains_path(@organization), params: { organization_domain: { domain: "example.com", token: "evil" } }
@@ -202,7 +212,7 @@ text: "Verify again"
       refute_equal "evil", domain.token
     end
 
-    should "remove then re-add generates a new value and says the old record must be replaced" do
+    should "remove then re-add generates a new value" do
       sign_in @owner
       post organization_domains_path(@organization), params: { organization_domain: { domain: "example.com" } }
       old = @organization.domains.sole
@@ -215,7 +225,7 @@ text: "Verify again"
       refute_equal old.token, fresh.token
       assert_select "[data-testid=?] input[value=?]", "organization-domain-txt-value", fresh.txt_record_value
       assert_select "[data-testid=?] input[value=?]", "organization-domain-txt-value", old.txt_record_value, count: 0
-      testid "organization-domain-readded-notice"
+      testid "organization-domain-readded-notice", count: 0
     end
 
     format_message = "Domain is invalid. The domain is expected in an example.com or docs.example.com format."
@@ -298,7 +308,7 @@ text: "Verify again"
     end
 
     should "404 for a removed domain and record no check" do
-      @domain.remove!
+      @domain.remove!(actor: @owner)
 
       assert_no_difference -> { OrganizationDomainCheck.count } do
         post verify_organization_domain_path(@organization, @domain)
@@ -316,20 +326,42 @@ text: "Verify again"
   end
 
   context "remove" do
-    should "soft delete the domain" do
+    should "delete the domain and its checks and record a removed event for the owner" do
       domain = create(:organization_domain, organization: @organization, domain: "example.com")
+      create(:organization_domain_check, organization_domain: domain)
       sign_in @owner
-      delete organization_domain_path(@organization, domain)
+
+      assert_difference ["OrganizationDomain.count", "OrganizationDomainCheck.count"], -1 do
+        delete organization_domain_path(@organization, domain)
+      end
 
       assert_redirected_to edit_organization_path(@organization)
-      refute_nil domain.reload.deleted_at
+      refute OrganizationDomain.exists?(domain.id)
       assert_empty @organization.domains
+      additional = @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_REMOVED).sole.additional
+
+      assert_equal "example.com", additional.domain
+      assert_equal @owner.to_gid, additional.actor_gid
+    end
+
+    should "let another organization add and verify the domain after removal" do
+      domain = create(:organization_domain, :verified, organization: @organization, domain: "example.com")
+      sign_in @owner
+      delete organization_domain_path(@organization, domain)
+      other = create(:organization_domain, organization: create(:organization), domain: "example.com")
+
+      assert other.update(verified_at: Time.zone.now)
+      refute_equal domain.token, other.token
     end
 
     should "404 for an already removed domain" do
-      domain = create(:organization_domain, :deleted, organization: @organization, domain: "example.com")
+      domain = create(:organization_domain, organization: @organization, domain: "example.com")
+      domain.remove!(actor: @owner)
       sign_in @owner
-      delete organization_domain_path(@organization, domain)
+
+      assert_no_difference -> { @organization.events.count } do
+        delete organization_domain_path(@organization, domain)
+      end
 
       assert_response :not_found
     end
@@ -357,7 +389,7 @@ text: "Verify again"
         attempt_all [403, 404]
 
         refute_predicate @domain.reload, :verified?
-        assert_nil @domain.deleted_at
+        assert OrganizationDomain.exists?(@domain.id)
       end
     end
 
@@ -390,7 +422,7 @@ text: "Verify again"
       assert_response :not_found
       assert_equal counts, state_counts
       assert_empty resolver.queries
-      assert_nil victim.reload.deleted_at
+      assert OrganizationDomain.exists?(victim.id)
       refute_predicate victim, :verified?
     end
   end
@@ -401,7 +433,7 @@ text: "Verify again"
       ActiveRecord::Validations::UniquenessValidator.any_instance.stubs(:validate_each)
       sign_in @owner
 
-      assert_no_difference "OrganizationDomain.count" do
+      assert_no_difference ["OrganizationDomain.count", "Events::OrganizationEvent.count"] do
         post organization_domains_path(@organization), params: { organization_domain: { domain: "example.com" } }
       end
 

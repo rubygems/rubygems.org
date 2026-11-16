@@ -582,7 +582,6 @@ en:
       keep_published: Keep this TXT record published. Verify again any time to re-check it.
       txt_name: Name
       txt_value: Value
-      readded_notice: You removed this domain before. Replace the old TXT record with the new value above; the old value no longer works.
       detail: "Details:"
       checked_at: "Last checked:"
       checked_ago: "%{time} ago"

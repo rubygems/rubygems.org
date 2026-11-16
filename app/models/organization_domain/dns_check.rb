@@ -35,7 +35,7 @@ class OrganizationDomain::DnsCheck
   def call
     # Only the stored row is ever queried: refuse unsaved or modified records.
     raise InvalidDomain, "domain has unsaved changes" if @domain.new_record? || @domain.changed?
-    raise DeletedDomain, "domain has been removed" if @domain.deleted_at.present?
+    raise DeletedDomain, "domain has been removed" if @domain.destroyed? || !OrganizationDomain.exists?(@domain.id)
     raise InvalidDomain, "stored domain is invalid" unless OrganizationDomain::Name.valid?(@domain.domain)
 
     code, message = lookup
@@ -182,7 +182,7 @@ class OrganizationDomain::DnsCheck
 
   # One transaction: if the verified-domain unique index rejects the update,
   # the check row is rolled back too and a failure is recorded instead.
-  # The row is locked and re-read first; if it was soft-deleted during the lookup
+  # The row is locked and re-read first; if it was deleted during the lookup
   # DeletedDomain is raised and nothing is recorded.
   def record_success
     persist(result: "success", verified: true)
@@ -196,12 +196,13 @@ class OrganizationDomain::DnsCheck
     checked_at = Time.current
     OrganizationDomain.transaction(requires_new: true) do
       @domain.lock!
-      raise DeletedDomain, "domain was removed during the check" if @domain.deleted_at.present?
 
       check = OrganizationDomainCheck.create!(organization_domain: @domain, checked_at:, **attributes)
       @domain.update_columns(verified_at: (checked_at if verified), last_checked_at: checked_at,
         last_check_result: attributes[:result], updated_at: checked_at)
       check
     end
+  rescue ActiveRecord::RecordNotFound
+    raise DeletedDomain, "domain was removed during the check"
   end
 end

@@ -13,25 +13,26 @@ class OrganizationDomain < ApplicationRecord
 
   attr_readonly :domain, :token
 
-  scope :not_deleted, -> { where(deleted_at: nil) }
-  scope :verified, -> { not_deleted.where.not(verified_at: nil) }
-  scope :pending, -> { not_deleted.where(verified_at: nil) }
-  scope :deleted, -> { where.not(deleted_at: nil) }
+  scope :verified, -> { where.not(verified_at: nil) }
+  scope :pending, -> { where(verified_at: nil) }
 
   before_validation :normalize_domain, on: :create
   before_validation :generate_token, on: :create
+  after_create :record_added_event
   validate :domain_name_is_valid, on: :create
-  validates :domain, uniqueness: { scope: :organization_id, conditions: -> { not_deleted } }, on: :create
+  validates :domain, uniqueness: { scope: :organization_id }, on: :create
 
   def verified?
     verified_at.present?
   end
 
-  # A no-op for an already removed domain, which keeps its original deleted_at.
-  def remove!
-    return if deleted_at.present?
-
-    update!(deleted_at: Time.current, verified_at: nil)
+  # Deletes the domain and its checks. The event is recorded in the same
+  # transaction, so a recorded event always matches a real removal.
+  def remove!(actor:)
+    transaction do
+      organization.record_event!(Events::OrganizationEvent::DOMAIN_REMOVED, domain:, actor_gid: actor.to_gid)
+      destroy!
+    end
   end
 
   # Runs a synchronous DNS check and returns the recorded OrganizationDomainCheck.
@@ -55,6 +56,12 @@ class OrganizationDomain < ApplicationRecord
     self.domain = domain.strip.downcase if domain.is_a?(String)
   end
 
+  # Inside the insert's transaction (and after any token retry succeeded), so a
+  # failed add records no event and a retry never duplicates it.
+  def record_added_event
+    organization.record_event!(Events::OrganizationEvent::DOMAIN_ADDED, domain:, actor_gid: Current.user&.to_gid)
+  end
+
   def generate_token
     self.token = SecureRandom.urlsafe_base64(32)
   end
@@ -74,7 +81,7 @@ class OrganizationDomain < ApplicationRecord
     rescue ActiveRecord::RecordNotUnique => e
       # Lost a race with a concurrent add of the same domain: surface the usual
       # validation error (returning false makes save fail rather than raise).
-      if e.message.include?("index_organization_domains_on_organization_id_and_domain_active")
+      if e.message.include?("index_organization_domains_on_organization_id_and_domain")
         errors.add(:domain, :taken)
         return false
       end

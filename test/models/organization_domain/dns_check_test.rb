@@ -273,7 +273,7 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
 
     should "not accept the token of a removed and re-added domain" do
       old_value = @domain.txt_record_value
-      @domain.remove!
+      @domain.remove!(actor: create(:user))
       fresh = create(:organization_domain, domain: "example.com", organization: @domain.organization)
 
       assert_failure verify({ [@name, TXT] => [txt(old_value)] }, domain: fresh), :token_mismatch, domain: fresh
@@ -339,15 +339,16 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
       value = @domain.txt_record_value
       res = FakeDnsResolver.new({ [@name, TXT] => [txt(value)] })
       id = @domain.id
+      actor = create(:user)
       res.define_singleton_method(:getresources) do |*args|
-        OrganizationDomain.find(id).remove!
+        OrganizationDomain.find(id).remove!(actor:)
         super(*args)
       end
 
       assert_no_difference "OrganizationDomainCheck.count" do
         assert_raises(OrganizationDomain::DnsCheck::DeletedDomain) { @domain.verify!(resolver: res) }
       end
-      assert_nil OrganizationDomain.find(id).verified_at
+      refute OrganizationDomain.exists?(id)
     end
   end
 
@@ -362,12 +363,23 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
       assert_empty res.queries
     end
 
-    should "raise without querying or recording for a deleted domain" do
-      @domain.remove!
+    should "raise without querying or recording for a destroyed domain" do
+      @domain.remove!(actor: create(:user))
       res = FakeDnsResolver.new
 
       assert_no_difference "OrganizationDomainCheck.count" do
         assert_raises(OrganizationDomain::DnsCheck::DeletedDomain) { @domain.verify!(resolver: res) }
+      end
+      assert_empty res.queries
+    end
+
+    should "raise without querying or recording when the row was deleted elsewhere" do
+      stale = OrganizationDomain.find(@domain.id)
+      @domain.remove!(actor: create(:user))
+      res = FakeDnsResolver.new
+
+      assert_no_difference "OrganizationDomainCheck.count" do
+        assert_raises(OrganizationDomain::DnsCheck::DeletedDomain) { stale.verify!(resolver: res) }
       end
       assert_empty res.queries
     end

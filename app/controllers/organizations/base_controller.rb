@@ -24,6 +24,5 @@ class Organizations::BaseController < ApplicationController
   def set_domain_settings
     @domains = @organization.domains.order(:created_at, :id).to_a
     @latest_checks = OrganizationDomainCheck.latest_by_domain_id(@domains.map(&:id))
-    @removed_domain_names = @organization.domains_including_deleted.deleted.distinct.pluck(:domain)
   end
 end

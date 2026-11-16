@@ -10,12 +10,6 @@ class Avo::Resources::OrganizationDomain < Avo::BaseResource
            }
   }
 
-  class DeletedFilter < Avo::Filters::ScopeBooleanFilter; end
-
-  def filters
-    filter DeletedFilter, arguments: { default: { not_deleted: true, deleted: false } }
-  end
-
   def actions
     action Avo::Actions::RemoveOrganizationDomain
   end
@@ -28,7 +22,6 @@ class Avo::Resources::OrganizationDomain < Avo::BaseResource
     field :verified_at, as: :date_time, readonly: true
     field :last_checked_at, as: :date_time, readonly: true
     field :last_check_result, as: :text, readonly: true
-    field :deleted_at, as: :date_time, readonly: true
     field :created_at, as: :date_time, readonly: true, only_on: :show
 
     field :checks, as: :has_many

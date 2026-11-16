@@ -17,4 +17,14 @@ class Events::OrganizationEvent < ApplicationRecord
     attribute :rubygem_gid, :global_id
     attribute :actor_gid, :global_id
   end
+
+  DOMAIN_ADDED = define_event "organization:domain:added" do
+    attribute :domain, :string
+    attribute :actor_gid, :global_id
+  end
+
+  DOMAIN_REMOVED = define_event "organization:domain:removed" do
+    attribute :domain, :string
+    attribute :actor_gid, :global_id
+  end
 end

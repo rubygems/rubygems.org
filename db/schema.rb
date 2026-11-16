@@ -571,11 +571,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_025535) do
     t.datetime "verified_at"
     t.datetime "last_checked_at"
     t.string "last_check_result"
-    t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["domain"], name: "index_organization_domains_on_domain_verified", unique: true, where: "((verified_at IS NOT NULL) AND (deleted_at IS NULL))"
-    t.index ["organization_id", "domain"], name: "index_organization_domains_on_organization_id_and_domain_active", unique: true, where: "(deleted_at IS NULL)"
+    t.index ["domain"], name: "index_organization_domains_on_domain_verified", unique: true, where: "(verified_at IS NOT NULL)"
+    t.index ["organization_id", "domain"], name: "index_organization_domains_on_organization_id_and_domain", unique: true
     t.index ["organization_id"], name: "index_organization_domains_on_organization_id"
     t.index ["token"], name: "index_organization_domains_on_token", unique: true
     t.check_constraint "domain::text = lower(domain::text)", name: "organization_domains_domain_lowercase"

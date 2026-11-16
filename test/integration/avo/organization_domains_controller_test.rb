@@ -8,7 +8,6 @@ class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @organization = create(:organization, name: "Acme Corp")
     @domain = create(:organization_domain, :verified, organization: @organization, domain: "acme.example.com")
-    @removed = create(:organization_domain, :deleted, organization: @organization, domain: "old.example.com")
     create(:organization_domain_check, :failure, organization_domain: @domain,
       error_code: "token_mismatch", error_message: "saw rubygems-verification=other")
   end
@@ -22,17 +21,6 @@ class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
     page.assert_text "acme.example.com"
   end
 
-  test "listing deleted domains with the filter" do
-    admin_sign_in_as create(:admin_github_user, :is_admin)
-    filters = Base64.encode64({ "Avo::Resources::OrganizationDomain::DeletedFilter" => { "not_deleted" => false, "deleted" => true } }.to_json)
-
-    get avo.resources_organization_domains_path(encoded_filters: filters)
-
-    assert_response :success
-    page.assert_text "old.example.com"
-    page.assert_no_text "acme.example.com"
-  end
-
   test "showing a domain with its token and the remove action" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
 
@@ -43,15 +31,6 @@ class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
     page.assert_text "Acme Corp"
     page.assert_text @domain.token
     page.assert_text "Remove Organization Domain"
-  end
-
-  test "showing a removed domain" do
-    admin_sign_in_as create(:admin_github_user, :is_admin)
-
-    get avo.resources_organization_domain_path(@removed)
-
-    assert_response :success
-    page.assert_text "old.example.com"
   end
 
   test "listing check history including error details" do
@@ -100,7 +79,7 @@ class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
       assert_redirected_to avo.root_path
     end
 
-    assert_nil @domain.reload.deleted_at
+    assert OrganizationDomain.exists?(@domain.id)
     refute_equal "forged", @domain.token
   end
 
@@ -121,7 +100,7 @@ class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
     admin_sign_in_as admin_outside_rubygems_org_team
     attributes = @domain.attributes
 
-    assert_no_difference -> { Audit.count } do
+    assert_no_difference [-> { Audit.count }, -> { Events::OrganizationEvent.count }] do
       post "/admin/resources/organization_domains/actions",
         params: {
           action_id: "Avo::Actions::RemoveOrganizationDomain",
