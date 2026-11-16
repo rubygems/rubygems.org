@@ -321,6 +321,32 @@ class Organizations::TeamsControllerTest < ActionDispatch::IntegrationTest
       assert_select "a[href=?]", organization_teams_path(@organization)
     end
 
+    should "link to teams for a maintainer" do
+      @membership.update!(role: :maintainer)
+
+      get organization_path(@organization)
+
+      assert_select "a[href=?]", organization_teams_path(@organization)
+    end
+
+    should "not link to teams for a non-member" do
+      sign_in_as(create(:user))
+
+      get organization_path(@organization)
+
+      assert_response :success
+      assert_select "a[href=?]", organization_teams_path(@organization), count: 0
+    end
+
+    should "not link to teams when signed out" do
+      delete sign_out_path
+
+      get organization_path(@organization)
+
+      assert_response :success
+      assert_select "a[href=?]", organization_teams_path(@organization), count: 0
+    end
+
     should "not link to teams when the feature is disabled" do
       disable_feature(FeatureFlag::ORGANIZATION_TEAMS)
 

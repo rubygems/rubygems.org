@@ -12,6 +12,8 @@ class OrganizationTeam < ApplicationRecord
     length: { within: 2..255 }
 
   def save_with_creation_event(actor:)
+    return false unless new_record?
+
     transaction do
       save && organization.record_event!(Events::OrganizationEvent::TEAM_CREATED,
         team: handle, team_gid: to_gid,

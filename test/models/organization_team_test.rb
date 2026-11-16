@@ -112,6 +112,18 @@ class OrganizationTeamTest < ActiveSupport::TestCase
       end
     end
 
+    should "not save or record an event for a team that already exists" do
+      team = create(:organization_team, organization: @organization, handle: "core")
+      team.name = "Renamed Team"
+
+      assert_no_difference -> { Events::OrganizationEvent.count } do
+        refute team.save_with_creation_event(actor: @actor)
+      end
+
+      assert_equal "core", team.reload.handle
+      refute_equal "Renamed Team", team.name
+    end
+
     should "not save the team when the event cannot be recorded" do
       team = @organization.organization_teams.build(handle: "core", name: "Core Team")
       @organization.stubs(:record_event!).raises(ActiveRecord::RecordInvalid)
