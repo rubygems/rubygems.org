@@ -68,6 +68,19 @@ class OrganizationDomainViewQueriesTest < ActionDispatch::IntegrationTest
     assert_select "[data-testid=?]", "organization-verified-domain", text: /arrakis\.example\.com/
   end
 
+  test "a successful name update loads no settings-card domain data" do
+    sign_in @owner
+    check_queries = []
+    callback = ->(*, payload) { check_queries << payload[:sql] if payload[:sql].include?("organization_domain_checks") }
+
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+      patch organization_path(@organization), params: { organization: { name: "Arrakis Renamed" } }
+    end
+
+    assert_redirected_to organization_path(@organization)
+    assert_empty check_queries
+  end
+
   private
 
   def sign_in(user)

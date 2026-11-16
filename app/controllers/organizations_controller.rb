@@ -10,7 +10,9 @@ class OrganizationsController < Organizations::BaseController
   before_action :find_organization, only: %i[show edit update]
   skip_before_action :set_verified_domains
   before_action :set_verified_domains, only: %i[show edit update]
-  before_action :set_domain_settings, only: %i[edit update]
+  # The Domains card only appears on the settings page (edit). A failed update
+  # re-renders edit and loads it there; a successful update redirects without it.
+  before_action :set_domain_settings, only: :edit
   before_action :set_gem_sort, only: :show
   before_action :set_page, only: :show
 
@@ -50,6 +52,7 @@ class OrganizationsController < Organizations::BaseController
     if @organization.update(organization_params)
       redirect_to organization_path(@organization)
     else
+      set_domain_settings
       render :edit
     end
   end
