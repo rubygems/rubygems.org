@@ -10,10 +10,4 @@ class OrganizationTeamPolicy < ApplicationPolicy
   def show?
     organization_member_with_role?(user, :maintainer) || deny(t(:forbidden))
   end
-
-  def create?
-    organization_member_with_role?(user, :admin) || deny(t(:forbidden))
-  end
-
-  alias new? create?
 end

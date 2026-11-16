@@ -18,6 +18,13 @@ class OrganizationTeamTest < ActiveSupport::TestCase
       should_not allow_value("has space").for(:handle)
       should_not allow_value("abc\n<script>bad").for(:handle)
 
+      should allow_value("security").for(:handle)
+      should allow_value("newsroom").for(:handle)
+
+      %w[new edit create destroy index show update NEW].each do |reserved|
+        should_not allow_value(reserved).for(:handle).with_message("is reserved and cannot be used")
+      end
+
       should "be between 2 and 40 characters" do
         team = build(:organization_team, handle: "a")
 
@@ -79,6 +86,12 @@ class OrganizationTeamTest < ActiveSupport::TestCase
     end
 
     context "organization" do
+      should "be required by the database" do
+        assert_raises(ActiveRecord::NotNullViolation) do
+          OrganizationTeam.insert_all!([handle: "orphan", name: "Orphan Team", organization_id: nil])
+        end
+      end
+
       should "be required" do
         team = build(:organization_team, organization: nil)
 

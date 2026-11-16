@@ -8,7 +8,8 @@ class Organizations::TeamsController < Organizations::BaseController
   def index
     authorize @organization, :list_teams?
 
-    @teams = @organization.organization_teams.order(:name)
+    @teams = @organization.organization_teams.order(:name).load
+    @team_size = @teams.size
   end
 
   def show
@@ -17,13 +18,13 @@ class Organizations::TeamsController < Organizations::BaseController
   end
 
   def new
+    authorize @organization, :create_team?
     @team = @organization.organization_teams.build
-    authorize @team, :new?
   end
 
   def create
+    authorize @organization, :create_team?
     @team = @organization.organization_teams.build(team_params)
-    authorize @team, :create?
 
     if @team.save_with_creation_event(actor: current_user)
       redirect_to organization_teams_path(@organization), notice: t(".team_created")

@@ -38,6 +38,17 @@ class Organizations::TeamsControllerTest < ActionDispatch::IntegrationTest
       assert_equal 1, css_select("[data-testid=create-team]").size
     end
 
+    should "load the teams with a single query" do
+      create_list(:organization_team, 2, organization: @organization)
+
+      assert_queries_match(/FROM "organization_teams"/, count: 1) do
+        get organization_teams_path(@organization)
+      end
+
+      assert_response :success
+      assert_equal 2, css_select("[data-testid=team]").size
+    end
+
     should "show an empty state" do
       get organization_teams_path(@organization)
 
@@ -161,6 +172,15 @@ class Organizations::TeamsControllerTest < ActionDispatch::IntegrationTest
 
       assert_response :unprocessable_content
       assert page.has_content? "Handle is invalid"
+    end
+
+    should "reject a handle that is a reserved route word" do
+      assert_no_difference [-> { OrganizationTeam.count }, -> { Events::OrganizationEvent.count }] do
+        post organization_teams_path(@organization), params: team_params(handle: "new")
+      end
+
+      assert_response :unprocessable_content
+      assert page.has_content? "Handle is reserved and cannot be used"
     end
 
     should "reject a handle already used in the organization" do

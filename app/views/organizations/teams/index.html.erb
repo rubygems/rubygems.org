@@ -12,8 +12,8 @@
 
 <%= render CardComponent.new do |c| %>
   <%= c.head do %>
-    <%= c.title t("organizations.show.teams"), icon: "organizations", count: @teams.size %>
-    <% if policy(OrganizationTeam.new(organization: @organization)).create? %>
+    <%= c.title t("organizations.show.teams"), icon: "organizations", count: @team_size %>
+    <% if policy(@organization).create_team? %>
       <%= render ButtonComponent.new t(".create"), new_organization_team_path(@organization), type: :link, size: :small, data: { testid: "create-team" } %>
     <% end %>
   <% end %>

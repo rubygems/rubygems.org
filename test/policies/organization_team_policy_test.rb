@@ -25,26 +25,6 @@ class OrganizationTeamPolicyTest < PolicyTestCase
     end
   end
 
-  context "#new?" do
-    should "be authorized for org admins and owners" do
-      assert_authorized @owner, :new?
-      assert_authorized @admin, :new?
-
-      refute_authorized @maintainer, :new?
-      refute_authorized @guest, :new?
-    end
-  end
-
-  context "#create?" do
-    should "be authorized for org admins and owners" do
-      assert_authorized @owner, :create?
-      assert_authorized @admin, :create?
-
-      refute_authorized @maintainer, :create?
-      refute_authorized @guest, :create?
-    end
-  end
-
   context "with a team that has no organization" do
     setup do
       @team = OrganizationTeam.new
@@ -52,7 +32,6 @@ class OrganizationTeamPolicyTest < PolicyTestCase
 
     should "not be authorized for anyone" do
       refute_authorized @owner, :show?
-      refute_authorized @owner, :create?
     end
   end
 end

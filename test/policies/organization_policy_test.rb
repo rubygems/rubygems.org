@@ -111,6 +111,16 @@ class OrganizationPolicyTest < PolicyTestCase
     end
   end
 
+  context "#create_team?" do
+    should "only be authorized if the user is an admin or owner" do
+      assert_authorized @owner, :create_team?
+      assert_authorized @admin, :create_team?
+
+      refute_authorized @maintainer, :create_team?
+      refute_authorized @guest, :create_team?
+    end
+  end
+
   context "#list_teams?" do
     should "only be authorized if the user is a member of the organization" do
       assert_authorized @owner, :list_teams?
