@@ -59,15 +59,25 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       refute_predicate record, :valid?
       message = record.errors[:domain].first
 
-      assert_includes message, "`_`"
-      assert_includes message, "`/`"
-      assert_equal 1, message.scan("`_`").size
+      assert_includes message, "“_”"
+      assert_includes message, "“/”"
+      assert_equal 1, message.scan("“_”").size
+      refute_includes message, "`"
+    end
+
+    should "not use backticks in any domain error message" do
+      %w[localhost 192.168.0.1 co.uk -a.com].push("exa_mple.com", "exämple.com").each do |input|
+        record = build_domain(input)
+        record.valid?
+
+        refute_includes record.errors[:domain].join, "`", input
+      end
     end
 
     should "add a hint for common mistakes" do
       {
-        "https://example.com" => "without `https://`",
-        "example.com/path" => "without `https://`",
+        "https://example.com" => "without https://",
+        "example.com/path" => "without https://",
         "user@example.com" => "not an email address",
         "*.example.com" => "Wildcards aren't supported",
         "example.com:443" => "Remove the port",
@@ -77,6 +87,7 @@ class OrganizationDomainTest < ActiveSupport::TestCase
         record.valid?
 
         assert_includes record.errors[:domain].first, hint, input
+        refute_includes record.errors[:domain].first, "`", input
       end
     end
 
@@ -194,6 +205,18 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       assert_raises(ActiveRecord::RecordNotUnique) { build_domain("other.example.com").save! }
     end
 
+    should "report a lost add race as a taken error instead of raising" do
+      create(:organization_domain, domain: "example.com", organization: @organization)
+      # Simulate the race: the uniqueness pre-check passed before the competing row committed.
+      ActiveRecord::Validations::UniquenessValidator.any_instance.stubs(:validate_each)
+      record = build_domain("example.com")
+
+      assert_no_difference "OrganizationDomain.count" do
+        refute record.save
+      end
+      assert_equal [:taken], record.errors.details[:domain].pluck(:error)
+    end
+
     should "differ when a removed domain is re-added, keeping the old row" do
       old = create(:organization_domain, domain: "example.com")
       old.remove!
@@ -240,6 +263,18 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       refute_nil record.deleted_at
       assert_equal [check], record.checks.to_a
       assert_empty @organization.domains.where(id: record.id)
+    end
+
+    should "keep the original deleted_at when removed again" do
+      record = create(:organization_domain)
+      record.remove!
+      original = record.reload.deleted_at
+
+      travel 1.hour do
+        record.remove!
+      end
+
+      assert_equal original, record.reload.deleted_at
     end
 
     should "free a verified domain for another organization after removal" do

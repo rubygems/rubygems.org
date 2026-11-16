@@ -192,6 +192,23 @@ class OrganizationDomain::DnsCheckTest < ActiveSupport::TestCase
       assert_equal "RuntimeError: dial [redacted]", check.error_message
     end
 
+    should "only redact real IP addresses, leaving class names and times intact" do
+      {
+        "Errno::ECONNREFUSED" => "Errno::ECONNREFUSED",
+        "Resolv::DNS::Resource::IN::TXT" => "Resolv::DNS::Resource::IN::TXT",
+        "at 12:30:45 today" => "at 12:30:45 today",
+        "10.0.0.2:53" => "[redacted]",
+        "[2001:db8::1]:53" => "[redacted]",
+        "fe80::1" => "[redacted]",
+        "192.168.1.1:53" => "[redacted]",
+        "to 2001:db8::1 failed" => "to [redacted] failed"
+      }.each do |input, expected|
+        check = verify({ [@name, TXT] => RuntimeError.new(input) })
+
+        assert_equal "RuntimeError: #{expected}", check.error_message, input
+      end
+    end
+
     should "record token_mismatch for a quoted value with a different token" do
       check = verify({ [@name, TXT] => [txt('"rubygems-verification=nope"')] })
 

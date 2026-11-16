@@ -138,12 +138,23 @@ class OrganizationDomain::DnsCheck
   def absolute(name) = "#{name}."
 
   IPV4 = /\b\d{1,3}(?:\.\d{1,3}){3}(?::\d+)?\b/
-  IPV6 = /\[?(?:\h{0,4}:){2,7}\h{0,4}\]?(?::\d+)?/
+  IPV6_CANDIDATE = /(?<![\w:])\[?(?:\h{0,4}:){2,7}\h{0,4}\]?(?::\d+)?(?![\w:])/
 
   # error_message is shown to owners: never store resolver addresses.
   def describe(error)
-    message = error.message.gsub(IPV6, "[redacted]").gsub(IPV4, "[redacted]")
+    message = error.message.gsub(IPV6_CANDIDATE) { |candidate| ip_address?(candidate) ? "[redacted]" : candidate }
+      .gsub(IPV4, "[redacted]")
     truncate("#{error.class}: #{message}")
+  end
+
+  # Candidate IPv6 matches are redacted only if they parse as real addresses,
+  # so class names like Errno::ECONNREFUSED and times like 12:30:45 survive.
+  def ip_address?(candidate)
+    address = candidate.sub(/\A\[(.*)\](?::\d+)?\z/, '\\1')
+    IPAddr.new(address)
+    true
+  rescue IPAddr::Error
+    false
   end
 
   def truncate(text) = text.truncate(MAX_MESSAGE_LENGTH)

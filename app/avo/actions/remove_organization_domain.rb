@@ -3,7 +3,7 @@
 class Avo::Actions::RemoveOrganizationDomain < Avo::Actions::ApplicationAction
   self.name = "Remove Organization Domain"
   self.visible = lambda {
-    current_user.team_member?("rubygems-org") && view == :show
+    current_user.team_member?("rubygems-org") && view == :show && resource&.record&.deleted_at.blank?
   }
   self.message = lambda {
     "Are you sure you would like to remove the domain '#{record.domain}'? " \

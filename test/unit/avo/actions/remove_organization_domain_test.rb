@@ -16,6 +16,11 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
     )
   end
 
+  def visible_context(domain)
+    resource = Data.define(:record).new(record: domain)
+    Data.define(:current_user, :view, :resource).new(current_user: @current_user, view: :show, resource:)
+  end
+
   def run_action(domain, comment: "Disputed domain, removing it 1234")
     @resource.hydrate(record: domain)
     @action.handle(
@@ -94,9 +99,32 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
   end
 
   should "be visible on show for rubygems-org admins" do
-    action_mock = Data.define(:current_user, :view).new(current_user: @current_user, view: :show)
+    action_mock = Data.define(:current_user, :view, :resource).new(current_user: @current_user, view: :show, resource: nil)
 
     assert action_mock.instance_exec(&Avo::Actions::RemoveOrganizationDomain.visible)
+  end
+
+  should "not be visible for an already removed domain" do
+    domain = create(:organization_domain, organization: @organization)
+    domain.remove!
+    action_mock = visible_context(domain)
+
+    refute action_mock.instance_exec(&Avo::Actions::RemoveOrganizationDomain.visible)
+    action_mock = visible_context(create(:organization_domain))
+
+    assert action_mock.instance_exec(&Avo::Actions::RemoveOrganizationDomain.visible)
+  end
+
+  should "not re-stamp deleted_at when run on an already removed domain" do
+    domain = create(:organization_domain, organization: @organization)
+    domain.remove!
+    original = domain.reload.deleted_at
+
+    travel 1.hour do
+      run_action(domain)
+    end
+
+    assert_equal original, domain.reload.deleted_at
   end
 
   should "ask for confirmation naming the domain" do
@@ -110,7 +138,7 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
     info_data = @current_user.info_data.deep_dup
     info_data[:viewer][:organization][:teams][:edges].reject! { |edge| edge.dig(:node, :slug) == "rubygems-org" }
     @current_user.update!(info_data:)
-    action_mock = Data.define(:current_user, :view).new(current_user: @current_user, view: :show)
+    action_mock = Data.define(:current_user, :view, :resource).new(current_user: @current_user, view: :show, resource: nil)
 
     refute action_mock.instance_exec(&Avo::Actions::RemoveOrganizationDomain.visible)
     refute_predicate @action, :authorized?

@@ -341,6 +341,41 @@ text: "Verify again"
     end
   end
 
+  context "cross-organization access" do
+    should "404 for another organization's domain id under the owner's own organization path" do
+      victim = create(:organization_domain, organization: create(:organization), domain: "victim.example.com")
+      resolver = stub_dns(FakeDnsResolver.for_domain("victim.example.com", value: victim.txt_record_value))
+      sign_in @owner
+      counts = state_counts
+
+      post verify_organization_domain_path(@organization, victim)
+
+      assert_response :not_found
+      delete organization_domain_path(@organization, victim)
+
+      assert_response :not_found
+      assert_equal counts, state_counts
+      assert_empty resolver.queries
+      assert_nil victim.reload.deleted_at
+      refute_predicate victim, :verified?
+    end
+  end
+
+  context "adding a domain concurrently" do
+    should "re-render with a taken error instead of a 500 when the add race is lost" do
+      create(:organization_domain, organization: @organization, domain: "example.com")
+      ActiveRecord::Validations::UniquenessValidator.any_instance.stubs(:validate_each)
+      sign_in @owner
+
+      assert_no_difference "OrganizationDomain.count" do
+        post organization_domains_path(@organization), params: { organization_domain: { domain: "example.com" } }
+      end
+
+      assert_response :unprocessable_content
+      testid "organization-domain-input"
+    end
+  end
+
   context "error code locale keys" do
     should "exist for every error code and group" do
       OrganizationDomainCheck.error_codes.each_key do |code|
@@ -353,11 +388,15 @@ text: "Verify again"
     end
 
     should "keep button labels as strings in every locale file" do
-      %w[verify recheck retry remove].each do |key|
-        assert_kind_of String, I18n.t("organizations.domains.#{key}", locale: :en)
-      end
-      %w[verified failed unavailable].each do |key|
-        assert_kind_of String, I18n.t("organizations.domains.verify_result.#{key}", locale: :en, domain: "example.com")
+      buttons = %w[verify recheck retry remove]
+      results = %w[verified failed unavailable]
+      I18n.available_locales.each do |locale|
+        buttons.each do |key|
+          assert_kind_of String, I18n.t("organizations.domains.#{key}", locale:), "#{locale} #{key}"
+        end
+        results.each do |key|
+          assert_kind_of String, I18n.t("organizations.domains.verify_result.#{key}", locale:, domain: "example.com"), "#{locale} #{key}"
+        end
       end
     end
 

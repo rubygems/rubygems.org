@@ -27,7 +27,10 @@ class OrganizationDomain < ApplicationRecord
     verified_at.present?
   end
 
+  # A no-op for an already removed domain, which keeps its original deleted_at.
   def remove!
+    return if deleted_at.present?
+
     update!(deleted_at: Time.current, verified_at: nil)
   end
 
@@ -63,7 +66,7 @@ class OrganizationDomain < ApplicationRecord
   end
 
   def message_options(error)
-    characters = error.characters.map { |char| "`#{char}`" }.to_sentence(two_words_connector: ", ", last_word_connector: ", ")
+    characters = error.characters.map { |char| "“#{char}”" }.to_sentence(two_words_connector: ", ", last_word_connector: ", ")
     hint = error.hint ? " #{I18n.t(error.hint, scope: 'activerecord.errors.models.organization_domain.hints')}" : ""
     { characters:, hint: }
   end
@@ -75,6 +78,12 @@ class OrganizationDomain < ApplicationRecord
     begin
       self.class.transaction(requires_new: true) { super }
     rescue ActiveRecord::RecordNotUnique => e
+      # Lost a race with a concurrent add of the same domain: surface the usual
+      # validation error (returning false makes save fail rather than raise).
+      if e.message.include?("index_organization_domains_on_organization_id_and_domain_active")
+        errors.add(:domain, :taken)
+        return false
+      end
       raise unless e.message.include?("index_organization_domains_on_token")
       raise if (attempts += 1) >= TOKEN_ATTEMPTS
 
