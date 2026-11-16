@@ -14,7 +14,6 @@ class Organizations::BaseController < ApplicationController
     @organization = Organization.find_by_handle!(params[:organization_id])
   end
 
-  # Rendered by organizations/_domains on the settings page.
   def set_domain_settings
     @domains = @organization.domains.order(:created_at, :id).to_a
     @latest_checks = OrganizationDomainCheck.latest_by_domain_id(@domains.map(&:id))

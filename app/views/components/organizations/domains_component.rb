@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# The Domains card on the organization settings page. Takes everything preloaded
-# (latest_checks is { domain_id => check }) and never queries.
 class Organizations::DomainsComponent < ApplicationComponent
   include Phlex::Rails::Helpers::FormWith
   include Phlex::Rails::Helpers::ButtonTo
@@ -31,7 +29,7 @@ class Organizations::DomainsComponent < ApplicationComponent
       render CardComponent.new do |c|
         c.head { c.title dt(:title), icon: "language" }
         p(class: "text-b3 text-neutral-600 dark:text-neutral-400 mb-6") { dt(:description) }
-        limit_reached? ? limit_note : add_domain_form
+        limit_reached? ? limit_note : new_domain_form
         domain_list if domains.any?
       end
     end
@@ -51,15 +49,20 @@ class Organizations::DomainsComponent < ApplicationComponent
     end
   end
 
-  def add_domain_form
+  def new_domain_form
     form_with url: organization_domains_path(organization), method: :post, scope: :organization_domain,
               data: { testid: "organization-domain-form" } do |form|
       form.label :domain, dt(:domain), class: "block text-b2 font-semibold mb-2"
       form_errors
       div(class: "flex flex-col sm:flex-row gap-4") do
         domain_field(form)
-        render ButtonComponent.new(dt(:add), type: :submit, style: :outline, class: "shrink-0",
-                                             data: { testid: "organization-domain-add" })
+        render ButtonComponent.new(
+          dt(:add),
+          type: :submit,
+          style: :outline,
+          class: "shrink-0",
+          data: { testid: "organization-domain-add" }
+        )
       end
       p(class: "mt-2 text-b3 text-neutral-600 dark:text-neutral-400") { dt(:domain_hint) }
     end
@@ -113,7 +116,6 @@ class Organizations::DomainsComponent < ApplicationComponent
              "text-red-800 dark:text-red-200 space-y-2",
       data: { testid: "organization-domain-failure", outcome: check.outcome }
     ) do
-      # Only the outcome is shown; the stored message is for admins.
       p(class: "text-b3 font-semibold", data: { testid: "organization-domain-failure-detail" }) { failure_message(domain, check) }
       p(class: "text-b3") { dt(:retry_hint) }
       p(class: "text-b4 text-red-700 dark:text-red-300") do
@@ -215,7 +217,7 @@ class Organizations::DomainsComponent < ApplicationComponent
     dt("failure.#{check.outcome}", name: domain.txt_record_name)
   end
 
-  # The strings live under organizations.domains (shared with the controller's flash messages).
+  # The translations are under organizations.domains
   def dt(key, **)
     t("organizations.domains.#{key}", **)
   end
