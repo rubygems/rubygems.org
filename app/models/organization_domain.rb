@@ -30,6 +30,9 @@ class OrganizationDomain < ApplicationRecord
   # transaction, so a recorded event always matches a real removal.
   def remove!(actor:)
     transaction do
+      # Raises RecordNotFound if the row is already gone (so no event is recorded
+      # for a no-op) and serialises with DnsCheck, which locks the same row.
+      lock!
       organization.record_event!(Events::OrganizationEvent::DOMAIN_REMOVED, domain:, actor_gid: actor.to_gid)
       destroy!
     end
@@ -58,6 +61,7 @@ class OrganizationDomain < ApplicationRecord
 
   # Inside the insert's transaction (and after any token retry succeeded), so a
   # failed add records no event and a retry never duplicates it.
+  # actor_gid is nil outside a web request (console, jobs), where Current.user is unset.
   def record_added_event
     organization.record_event!(Events::OrganizationEvent::DOMAIN_ADDED, domain:, actor_gid: Current.user&.to_gid)
   end

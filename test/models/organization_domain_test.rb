@@ -347,6 +347,16 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       assert_equal remover.to_gid, additional.actor_gid
     end
 
+    should "raise and record one removed event when a stale instance removes it again" do
+      first = OrganizationDomain.find(create(:organization_domain, organization: @organization).id)
+      second = OrganizationDomain.find(first.id)
+
+      first.remove!(actor: @actor)
+
+      assert_raises(ActiveRecord::RecordNotFound) { second.remove!(actor: @actor) }
+      assert_equal 1, domain_events(Events::OrganizationEvent::DOMAIN_REMOVED).count
+    end
+
     should "record no removed event and keep the row when the delete fails" do
       record = create(:organization_domain, organization: @organization)
       record.stubs(:destroy!).raises(ActiveRecord::RecordNotDestroyed)

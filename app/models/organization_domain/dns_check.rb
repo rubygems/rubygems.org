@@ -35,6 +35,7 @@ class OrganizationDomain::DnsCheck
   def call
     # Only the stored row is ever queried: refuse unsaved or modified records.
     raise InvalidDomain, "domain has unsaved changes" if @domain.new_record? || @domain.changed?
+    # Only avoids a pointless DNS query; the lock! in persist is the real guard.
     raise DeletedDomain, "domain has been removed" if @domain.destroyed? || !OrganizationDomain.exists?(@domain.id)
     raise InvalidDomain, "stored domain is invalid" unless OrganizationDomain::Name.valid?(@domain.domain)
 

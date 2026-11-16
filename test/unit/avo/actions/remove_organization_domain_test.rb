@@ -60,6 +60,18 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
     assert_equal @current_user.to_gid, additional.actor_gid
   end
 
+  should "not record a second event or raise when the domain is already removed" do
+    domain = create(:organization_domain, organization: @organization)
+    stale = OrganizationDomain.find(domain.id)
+    run_action(domain)
+
+    assert_no_difference -> { @organization.events.count } do
+      run_action(stale)
+    end
+
+    assert_equal 1, @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_REMOVED).count
+  end
+
   should "record an audit that survives the domain being destroyed" do
     domain = create(:organization_domain, :verified, domain: "acme.example.com", organization: @organization)
 

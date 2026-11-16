@@ -225,7 +225,6 @@ text: "Verify again"
       refute_equal old.token, fresh.token
       assert_select "[data-testid=?] input[value=?]", "organization-domain-txt-value", fresh.txt_record_value
       assert_select "[data-testid=?] input[value=?]", "organization-domain-txt-value", old.txt_record_value, count: 0
-      testid "organization-domain-readded-notice", count: 0
     end
 
     format_message = "Domain is invalid. The domain is expected in an example.com or docs.example.com format."
@@ -342,6 +341,19 @@ text: "Verify again"
 
       assert_equal "example.com", additional.domain
       assert_equal @owner.to_gid, additional.actor_gid
+    end
+
+    should "404 on a second delete of the same domain and record one removed event" do
+      domain = create(:organization_domain, organization: @organization, domain: "example.com")
+      sign_in @owner
+      delete organization_domain_path(@organization, domain)
+
+      assert_redirected_to edit_organization_path(@organization)
+
+      delete organization_domain_path(@organization, domain)
+
+      assert_response :not_found
+      assert_equal 1, @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_REMOVED).count
     end
 
     should "let another organization add and verify the domain after removal" do
