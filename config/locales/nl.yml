@@ -516,6 +516,7 @@ nl:
       invite:
       transfer:
       reservations:
+      verified_domain:
     members:
       create:
         user_already_invited:
