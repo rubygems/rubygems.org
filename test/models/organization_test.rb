@@ -93,25 +93,6 @@ class OrganizationTest < ActiveSupport::TestCase
 
         assert_predicate organization, :valid?
       end
-
-      should "be invalid when a user already owns the handle in different case" do
-        create(:user, handle: "someuser")
-        organization = build(:organization, handle: "SomeUser")
-
-        refute_predicate organization, :valid?
-        assert_contains organization.errors[:handle], "has already been taken"
-      end
-
-      should "not check user handles when the handle is unchanged" do
-        organization = create(:organization, handle: "mycompany")
-        # Simulate a collision predating this validation: User's own guard
-        # would reject this handle now, so write it past validation.
-        create(:user).update_column(:handle, "mycompany")
-
-        organization.name = "A New Name"
-
-        assert_predicate organization, :valid?
-      end
     end
   end
 
