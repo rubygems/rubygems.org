@@ -592,10 +592,10 @@ en:
           hint: Try again in a moment.
         record_missing:
           heading: We couldn't find the record
-          hint: Check the exact record name above. DNS changes can take time to propagate, so it may help to wait a few minutes and retry.
+          hint: Check the exact record name below. DNS changes can take time to propagate, so it may help to wait a few minutes and retry.
         record_mismatch:
           heading: The DNS value doesn't match
-          hint: Update the TXT record to the value shown above, then retry.
+          hint: Update the TXT record to the value shown below, then retry.
         conflict:
           heading: This domain is already verified elsewhere
           hint: Another organization already holds this domain as verified.
@@ -608,9 +608,9 @@ en:
         domain_not_found: The domain %{domain} doesn't exist in DNS. Check the spelling and that the domain is registered.
         record_not_found: No TXT record was found at %{name}. Add it with the value shown.
         record_at_wrong_name: We found the value at the wrong name. Move it to %{name}.
-        value_quoted: The TXT record at %{name} doesn't match the value shown above.
-        token_mismatch: The TXT record at %{name} doesn't match the value shown above.
-        value_mismatch: The TXT record at %{name} doesn't match the value shown above.
+        value_quoted: The TXT record at %{name} doesn't match the value shown below.
+        token_mismatch: The TXT record at %{name} doesn't match the value shown below.
+        value_mismatch: The TXT record at %{name} doesn't match the value shown below.
         already_verified: Another organization has already verified %{domain}.
         unknown_error: Something unexpected went wrong while checking %{domain}.
       create:

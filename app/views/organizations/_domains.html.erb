@@ -51,6 +51,26 @@
             }.fetch(status)
           %>
           <li class="py-6" data-testid="organization-domain" data-domain="<%= domain.domain %>">
+            <% if failed %>
+              <% group = latest_check.error_group || :unknown %>
+              <div class="mb-4 p-4 rounded-md border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 space-y-2" data-testid="organization-domain-failure" data-error-code="<%= latest_check.error_code %>">
+                <h3 class="text-b2 font-semibold"><%= t(".error_groups.#{group}.heading") %></h3>
+                <p class="text-b3" data-testid="organization-domain-failure-detail">
+                  <%= t(".error_codes.#{latest_check.error_code || 'unknown_error'}", domain: domain.domain, name: domain.txt_record_name, value: domain.txt_record_value) %>
+                </p>
+                <p class="text-b3"><%= t(".error_groups.#{group}.hint") %></p>
+                <%# A mismatch only says the value doesn't match; never echo what was found in DNS. %>
+                <% if latest_check.error_message.present? && group.to_s != "record_mismatch" %>
+                  <p class="text-b4 break-all" data-testid="organization-domain-failure-message">
+                    <span class="font-semibold"><%= t(".detail") %></span> <span class="font-mono"><%= latest_check.error_message %></span>
+                  </p>
+                <% end %>
+                <p class="text-b4 text-red-700 dark:text-red-300">
+                  <%= t(".checked_at") %>
+                  <time datetime="<%= latest_check.checked_at.iso8601 %>" title="<%= latest_check.checked_at.utc %>" data-testid="organization-domain-checked-at"><%= t(".checked_ago", time: time_ago_in_words(latest_check.checked_at)) %></time>
+                </p>
+              </div>
+            <% end %>
             <div class="flex flex-wrap items-center justify-between gap-4">
               <div class="flex flex-wrap items-center gap-3 min-w-0">
                 <span class="text-b1 font-semibold break-all"><%= domain.domain %></span>
@@ -92,27 +112,6 @@
                 <p class="text-b3 text-orange-800 dark:text-orange-300" data-testid="organization-domain-readded-notice"><%= t(".readded_notice") %></p>
               <% end %>
             </div>
-
-            <% if failed %>
-              <% group = latest_check.error_group || :unknown %>
-              <div class="mt-4 p-4 rounded-md border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 space-y-2" data-testid="organization-domain-failure" data-error-code="<%= latest_check.error_code %>">
-                <h3 class="text-b2 font-semibold"><%= t(".error_groups.#{group}.heading") %></h3>
-                <p class="text-b3" data-testid="organization-domain-failure-detail">
-                  <%= t(".error_codes.#{latest_check.error_code || 'unknown_error'}", domain: domain.domain, name: domain.txt_record_name, value: domain.txt_record_value) %>
-                </p>
-                <p class="text-b3"><%= t(".error_groups.#{group}.hint") %></p>
-                <%# A mismatch only says the value doesn't match; never echo what was found in DNS. %>
-                <% if latest_check.error_message.present? && group.to_s != "record_mismatch" %>
-                  <p class="text-b4 break-all" data-testid="organization-domain-failure-message">
-                    <span class="font-semibold"><%= t(".detail") %></span> <span class="font-mono"><%= latest_check.error_message %></span>
-                  </p>
-                <% end %>
-                <p class="text-b4 text-red-700 dark:text-red-300">
-                  <%= t(".checked_at") %>
-                  <time datetime="<%= latest_check.checked_at.iso8601 %>" title="<%= latest_check.checked_at.utc %>" data-testid="organization-domain-checked-at"><%= t(".checked_ago", time: time_ago_in_words(latest_check.checked_at)) %></time>
-                </p>
-              </div>
-            <% end %>
           </li>
         <% end %>
       </ul>

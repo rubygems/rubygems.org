@@ -135,6 +135,23 @@ text: "Verify again"
       testid "organization-domain-checked-at"
     end
 
+    should "show a failed check above the domain it belongs to" do
+      domain = create(:organization_domain, organization: @organization, domain: "bad.example.com",
+        last_check_result: "failure")
+      create(:organization_domain_check, :failure, organization_domain: domain)
+      sign_in @owner
+      get edit_organization_path(@organization)
+
+      row = css_select("[data-domain=\"bad.example.com\"]").first.to_html
+      failure_at = row.index(%(data-testid="organization-domain-failure"))
+      domain_at = row.index("bad.example.com</span>")
+      txt_at = row.index(%(data-testid="organization-domain-txt-name"))
+
+      assert failure_at, "failure box missing"
+      assert_operator failure_at, :<, domain_at, "failure box should come before the domain name"
+      assert_operator domain_at, :<, txt_at, "domain name should come before the TXT record"
+    end
+
     %w[token_mismatch value_mismatch value_quoted].each do |code|
       should "only say the DNS value does not match for #{code}, without showing what was found" do
         domain = create(:organization_domain, organization: @organization, domain: "bad.example.com",
@@ -148,7 +165,7 @@ text: "Verify again"
           assert_select "h3", text: "The DNS value doesn't match"
         end
         testid "organization-domain-failure-detail",
-          text: "The TXT record at _rubygems-challenge.bad.example.com doesn't match the value shown above."
+          text: "The TXT record at _rubygems-challenge.bad.example.com doesn't match the value shown below."
         testid "organization-domain-failure-message", count: 0
         testid "organization-domain-retry"
         testid "organization-domain-checked-at"
