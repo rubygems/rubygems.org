@@ -5,6 +5,7 @@ class Organizations::BaseController < ApplicationController
   before_action :redirect_to_new_mfa, if: :mfa_required_not_yet_enabled?
   before_action :redirect_to_settings_strong_mfa_required, if: :mfa_required_weak_level_enabled?
   before_action :find_organization
+  before_action :set_verified_domains
 
   layout "subject"
 
@@ -12,5 +13,17 @@ class Organizations::BaseController < ApplicationController
 
   def find_organization
     @organization = Organization.find_by_handle!(params[:organization_id])
+  end
+
+  # Rendered by organizations/_subject on every organization page.
+  def set_verified_domains
+    @verified_domains = @organization.domains.verified.order(:domain).pluck(:domain)
+  end
+
+  # Rendered by organizations/_domains on the settings page.
+  def set_domain_settings
+    @domains = @organization.domains.order(:created_at, :id).to_a
+    @latest_checks = OrganizationDomainCheck.latest_by_domain_id(@domains.map(&:id))
+    @removed_domain_names = @organization.domains_including_deleted.deleted.distinct.pluck(:domain)
   end
 end

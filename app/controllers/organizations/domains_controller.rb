@@ -11,6 +11,7 @@ class Organizations::DomainsController < Organizations::BaseController
       redirect_to edit_organization_path(@organization), notice: t(".added", domain: @new_domain.domain)
     else
       add_edit_breadcrumbs
+      set_domain_settings
       render "organizations/edit", status: :unprocessable_content
     end
   end
