@@ -6,7 +6,7 @@ require "helpers/fake_dns_helpers"
 class Organizations::DomainsTest < ActionDispatch::IntegrationTest
   include FakeDnsHelpers
 
-  BUTTON_KEYS = %w[verify recheck retry remove].freeze
+  BUTTON_KEYS = %w[verify recheck retry delete].freeze
 
   setup do
     @owner = create(:user)
@@ -72,7 +72,7 @@ class Organizations::DomainsTest < ActionDispatch::IntegrationTest
         assert_select "[data-testid=?] input[value=?]", "organization-domain-txt-value", pending.txt_record_value
         testid "organization-domain-verify"
         testid "organization-domain-retry", count: 0
-        testid "organization-domain-remove"
+        testid "organization-domain-delete"
       end
       assert_select "[data-testid=?][data-domain=?]", "organization-domain", "ok.example.com" do
         testid "organization-domain-status", text: /verified/i
@@ -93,7 +93,7 @@ text: "Verify"
 text: "Retry"
       assert_select "[data-testid=?][data-domain=?] [data-testid=?]", "organization-domain", "ok.example.com", "organization-domain-verify",
 text: "Verify again"
-      assert_select "[data-testid=?]", "organization-domain-remove", text: "Remove", count: 3
+      assert_select "[data-testid=?]", "organization-domain-delete", text: "Delete", count: 3
     end
 
     should "show the TXT record for a verified domain too" do
@@ -159,7 +159,7 @@ text: "Verify again"
       end
     end
 
-    should "show the Checking state while a check is queued, hiding Verify and Retry but not Remove" do
+    should "show the Checking state while a check is queued, hiding Verify and Retry but not Delete" do
       create(:organization_domain, organization: @organization, domain: "wait.example.com", check_queued_at: Time.current)
       failed = create(:organization_domain, organization: @organization, domain: "bad.example.com",
         last_check_result: "failure", check_queued_at: Time.current)
@@ -174,7 +174,7 @@ text: "Verify again"
       testid "organization-domain-verify", count: 0
       testid "organization-domain-retry", count: 0
       testid "organization-domain-failure", count: 0
-      testid "organization-domain-remove", count: 2
+      testid "organization-domain-delete", count: 2
     end
 
     should "show a failed check above the domain it belongs to" do
@@ -233,7 +233,7 @@ text: "Verify again"
       refute_equal "evil", domain.token
     end
 
-    should "remove then re-add generates a new value" do
+    should "delete then re-add generates a new value" do
       sign_in @owner
       post organization_domains_path(@organization), params: { organization_domain: { domain: "example.com" } }
       old = @organization.domains.sole
@@ -376,8 +376,8 @@ text: "Verify again"
       assert_equal 1, verified.checks.count
     end
 
-    should "404 for a removed domain and enqueue nothing" do
-      @domain.remove!(actor: @owner)
+    should "404 for a deleted domain and enqueue nothing" do
+      @domain.destroy_with_audit!(actor: @owner)
 
       assert_no_difference -> { OrganizationDomainCheck.count } do
         post verify_organization_domain_path(@organization, @domain)
@@ -388,8 +388,8 @@ text: "Verify again"
     end
   end
 
-  context "remove" do
-    should "delete the domain and its checks and record a removed event for the owner" do
+  context "delete" do
+    should "delete the domain and its checks and record a deleted event for the owner" do
       domain = create(:organization_domain, organization: @organization, domain: "example.com")
       create(:organization_domain_check, organization_domain: domain)
       sign_in @owner
@@ -399,15 +399,25 @@ text: "Verify again"
       end
 
       assert_redirected_to edit_organization_path(@organization)
+      assert_equal "example.com deleted.", flash[:notice]
       refute OrganizationDomain.exists?(domain.id)
       assert_empty @organization.domains
-      additional = @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_REMOVED).sole.additional
+      additional = @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_DELETED).sole.additional
 
       assert_equal "example.com", additional.domain
       assert_equal @owner.to_gid, additional.actor_gid
     end
 
-    should "404 on a second delete of the same domain and record one removed event" do
+    should "confirm before deleting, saying it is permanent" do
+      create(:organization_domain, organization: @organization, domain: "example.com")
+      sign_in @owner
+      get edit_organization_path(@organization)
+
+      assert_select "form:has([data-testid=?])[data-turbo-confirm=?]", "organization-domain-delete",
+        "Delete example.com? It and its check history will be permanently deleted, and its verification record will stop working."
+    end
+
+    should "404 on a second delete of the same domain and record one deleted event" do
       domain = create(:organization_domain, organization: @organization, domain: "example.com")
       sign_in @owner
       delete organization_domain_path(@organization, domain)
@@ -417,10 +427,10 @@ text: "Verify again"
       delete organization_domain_path(@organization, domain)
 
       assert_response :not_found
-      assert_equal 1, @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_REMOVED).count
+      assert_equal 1, @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_DELETED).count
     end
 
-    should "let another organization add and verify the domain after removal" do
+    should "let another organization add and verify the domain after deletion" do
       domain = create(:organization_domain, :verified, organization: @organization, domain: "example.com")
       sign_in @owner
       delete organization_domain_path(@organization, domain)
@@ -430,9 +440,9 @@ text: "Verify again"
       refute_equal domain.token, other.token
     end
 
-    should "404 for an already removed domain" do
+    should "404 for an already deleted domain" do
       domain = create(:organization_domain, organization: @organization, domain: "example.com")
-      domain.remove!(actor: @owner)
+      domain.destroy_with_audit!(actor: @owner)
       sign_in @owner
 
       assert_no_difference -> { @organization.events.count } do

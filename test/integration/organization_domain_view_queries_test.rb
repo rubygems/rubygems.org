@@ -13,7 +13,7 @@ class OrganizationDomainViewQueriesTest < ActionDispatch::IntegrationTest
     failed = create(:organization_domain, organization: @organization, domain: "docs.arrakis.example.com",
       last_check_result: "failure")
     create(:organization_domain_check, :failure, organization_domain: failed)
-    create(:organization_domain, organization: @organization, domain: "removed.example.com").remove!(actor: @owner)
+    create(:organization_domain, organization: @organization, domain: "deleted.example.com").destroy_with_audit!(actor: @owner)
   end
 
   test "the public organization pages render verified domains without querying from views" do

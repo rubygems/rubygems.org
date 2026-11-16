@@ -569,8 +569,8 @@ nl:
       verify:
       recheck:
       retry:
-      remove:
-      confirm_remove:
+      delete:
+      confirm_delete:
       publish:
       keep_published:
       txt_name:
@@ -588,7 +588,7 @@ nl:
       queue_failed:
       queued:
       destroy:
-        removed:
+        deleted:
     invitation_expiry_title:
     invitations:
       expired:

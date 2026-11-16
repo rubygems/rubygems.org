@@ -83,9 +83,9 @@ class OrganizationDomainVerifyTest < ActiveSupport::TestCase
       assert_equal %w[failure success], @domain.checks.pluck(:result)
     end
 
-    should "not accept the token of a removed and re-added domain" do
+    should "not accept the token of a deleted and re-added domain" do
       old_value = @domain.txt_record_value
-      @domain.remove!(actor: create(:user))
+      @domain.destroy_with_audit!(actor: create(:user))
       fresh = create(:organization_domain, domain: "example.com")
 
       assert_failure verify({ [@name, TXT] => [txt(old_value)] }, domain: fresh), :record_mismatch, domain: fresh
@@ -119,7 +119,7 @@ class OrganizationDomainVerifyTest < ActiveSupport::TestCase
     end
 
     should "refuse a destroyed domain without a DNS request or a check" do
-      @domain.remove!(actor: create(:user))
+      @domain.destroy_with_audit!(actor: create(:user))
       OrganizationDomain::DnsCheck.expects(:call).never
 
       assert_no_difference "OrganizationDomainCheck.count" do
@@ -129,7 +129,7 @@ class OrganizationDomainVerifyTest < ActiveSupport::TestCase
 
     should "refuse a domain deleted elsewhere without a DNS request or a check" do
       stale = OrganizationDomain.find(@domain.id)
-      @domain.remove!(actor: create(:user))
+      @domain.destroy_with_audit!(actor: create(:user))
       OrganizationDomain::DnsCheck.expects(:call).never
 
       assert_no_difference "OrganizationDomainCheck.count" do
@@ -137,12 +137,12 @@ class OrganizationDomainVerifyTest < ActiveSupport::TestCase
       end
     end
 
-    should "not record anything for a domain removed during the lookup" do
+    should "not record anything for a domain deleted during the lookup" do
       res = FakeDnsResolver.new({ [@name, TXT] => [txt(@domain.txt_record_value)] })
       id = @domain.id
       actor = create(:user)
       res.define_singleton_method(:getresources) do |*args|
-        OrganizationDomain.find(id).remove!(actor:)
+        OrganizationDomain.find(id).destroy_with_audit!(actor:)
         super(*args)
       end
 

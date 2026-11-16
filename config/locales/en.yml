@@ -566,7 +566,7 @@ en:
       title: Domains
       description: Prove your organization controls a domain by publishing a DNS TXT record. Each domain has its own record and is verified separately.
       domain: Domain
-      domain_hint: Enter just the domain, like example.com or docs.example.com. Each subdomain is verified separately. Domains can't be edited; remove one and add it again to change it.
+      domain_hint: Enter just the domain, like example.com or docs.example.com. Each subdomain is verified separately. Domains can't be edited; delete one and add it again to change it.
       add: Add domain
       status:
         verified: Verified
@@ -577,8 +577,8 @@ en:
       verify: Verify
       recheck: Verify again
       retry: Retry
-      remove: Remove
-      confirm_remove: Remove %{domain}? Its verification record will stop working.
+      delete: Delete
+      confirm_delete: Delete %{domain}? It and its check history will be permanently deleted, and its verification record will stop working.
       publish: "Publish this TXT record at your DNS provider, then click Verify. DNS changes can take a while to appear."
       keep_published: Keep this TXT record published. Verify again any time to re-check it.
       txt_name: Name
@@ -596,7 +596,7 @@ en:
       queue_failed: We couldn't start the verification for %{domain}. Please try again.
       queued: We're verifying %{domain} in the background. Revisit this page later to see the result. DNS changes can take a while to propagate.
       destroy:
-        removed: "%{domain} removed."
+        deleted: "%{domain} deleted."
     invitation_expiry_title: "%{time} UTC"
     invitations:
       expired: This invitation has expired. Ask an organization admin to resend it.

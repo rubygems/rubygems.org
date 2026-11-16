@@ -256,9 +256,9 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       refute_includes OrganizationDomain.instance_methods(false), :_create_record
     end
 
-    should "differ when a removed domain is re-added, with the old row gone" do
+    should "differ when a deleted domain is re-added, with the old row gone" do
       old = create(:organization_domain, domain: "example.com", organization: @organization)
-      old.remove!(actor: create(:user))
+      old.destroy_with_audit!(actor: create(:user))
       new_row = create(:organization_domain, domain: "example.com", organization: @organization)
 
       refute_equal old.token, new_row.token
@@ -306,20 +306,20 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       refute_predicate pending, :verified?
     end
 
-    should "remove by deleting the row and its checks" do
+    should "delete the row and its checks" do
       record = create(:organization_domain, :verified)
       create(:organization_domain_check, organization_domain: record)
 
       assert_difference ["OrganizationDomain.count", "OrganizationDomainCheck.count"], -1 do
-        record.remove!(actor: create(:user))
+        record.destroy_with_audit!(actor: create(:user))
       end
       refute OrganizationDomain.exists?(record.id)
       assert_empty @organization.domains.where(id: record.id)
     end
 
-    should "free a verified domain for another organization after removal" do
+    should "free a verified domain for another organization after deletion" do
       record = create(:organization_domain, :verified, domain: "example.com")
-      record.remove!(actor: create(:user))
+      record.destroy_with_audit!(actor: create(:user))
 
       assert_nothing_raised do
         create(:organization_domain, :verified, domain: "example.com", organization: create(:organization))
@@ -380,37 +380,37 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       end
     end
 
-    should "record a removed event with domain and actor" do
+    should "record a deleted event with domain and actor" do
       record = create(:organization_domain, domain: "example.com", organization: @organization)
-      remover = create(:user)
+      deleter = create(:user)
 
       value = record.txt_record_value
-      record.remove!(actor: remover)
+      record.destroy_with_audit!(actor: deleter)
 
       refute OrganizationDomain.exists?(record.id)
-      additional = domain_events(Events::OrganizationEvent::DOMAIN_REMOVED).sole.additional
+      additional = domain_events(Events::OrganizationEvent::DOMAIN_DELETED).sole.additional
 
       assert_equal "example.com", additional.domain
       assert_equal value, additional.txt_record_value
-      assert_equal remover.to_gid, additional.actor_gid
+      assert_equal deleter.to_gid, additional.actor_gid
     end
 
-    should "raise and record one removed event when a stale instance removes it again" do
+    should "raise and record one deleted event when a stale instance deletes it again" do
       first = OrganizationDomain.find(create(:organization_domain, organization: @organization).id)
       second = OrganizationDomain.find(first.id)
 
-      first.remove!(actor: @actor)
+      first.destroy_with_audit!(actor: @actor)
 
-      assert_raises(ActiveRecord::RecordNotFound) { second.remove!(actor: @actor) }
-      assert_equal 1, domain_events(Events::OrganizationEvent::DOMAIN_REMOVED).count
+      assert_raises(ActiveRecord::RecordNotFound) { second.destroy_with_audit!(actor: @actor) }
+      assert_equal 1, domain_events(Events::OrganizationEvent::DOMAIN_DELETED).count
     end
 
-    should "record no removed event and keep the row when the delete fails" do
+    should "record no deleted event and keep the row when the delete fails" do
       record = create(:organization_domain, organization: @organization)
       record.stubs(:destroy!).raises(ActiveRecord::RecordNotDestroyed)
 
-      assert_no_difference -> { domain_events(Events::OrganizationEvent::DOMAIN_REMOVED).count } do
-        assert_raises(ActiveRecord::RecordNotDestroyed) { record.remove!(actor: @actor) }
+      assert_no_difference -> { domain_events(Events::OrganizationEvent::DOMAIN_DELETED).count } do
+        assert_raises(ActiveRecord::RecordNotDestroyed) { record.destroy_with_audit!(actor: @actor) }
       end
       assert OrganizationDomain.exists?(record.id)
     end

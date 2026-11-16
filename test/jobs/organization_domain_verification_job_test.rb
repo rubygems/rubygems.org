@@ -85,7 +85,7 @@ class OrganizationDomainVerificationJobTest < ActiveJob::TestCase
   end
 
   test "a domain deleted before the job runs is a silent no-op" do
-    @domain.remove!(actor: create(:user))
+    @domain.destroy_with_audit!(actor: create(:user))
     resolver = stub_dns(FakeDnsResolver.new)
 
     assert_no_difference "OrganizationDomainCheck.count" do
@@ -100,7 +100,7 @@ class OrganizationDomainVerificationJobTest < ActiveJob::TestCase
     actor = create(:user)
     resolver = stub_dns(FakeDnsResolver.new)
     resolver.define_singleton_method(:getresources) do |*|
-      OrganizationDomain.find(id).remove!(actor:)
+      OrganizationDomain.find(id).destroy_with_audit!(actor:)
       []
     end
 

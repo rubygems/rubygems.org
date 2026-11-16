@@ -47,14 +47,14 @@ class DeleteOrganizationDomainTest < ActiveSupport::TestCase
     refute OrganizationDomain.exists?(domain.id)
   end
 
-  should "record a removed event with the admin as actor when deleting" do
+  should "record a deleted event with the admin as actor" do
     domain = create(:organization_domain, domain: "acme.example.com", organization: @organization)
 
-    assert_difference -> { @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_REMOVED).count }, 1 do
+    assert_difference -> { @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_DELETED).count }, 1 do
       run_action(domain)
     end
 
-    additional = @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_REMOVED).sole.additional
+    additional = @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_DELETED).sole.additional
 
     assert_equal "acme.example.com", additional.domain
     assert_equal domain.txt_record_value, additional.txt_record_value
@@ -70,7 +70,7 @@ class DeleteOrganizationDomainTest < ActiveSupport::TestCase
       run_action(stale)
     end
 
-    assert_equal 1, @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_REMOVED).count
+    assert_equal 1, @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_DELETED).count
   end
 
   should "record an audit that survives the domain being destroyed" do

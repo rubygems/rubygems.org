@@ -37,9 +37,9 @@ class Organizations::DomainsController < Organizations::BaseController
 
   def destroy
     domain = find_domain
-    domain.remove!(actor: current_user)
+    domain.destroy_with_audit!(actor: current_user)
 
-    redirect_to edit_organization_path(@organization), notice: t(".removed", domain: domain.domain)
+    redirect_to edit_organization_path(@organization), notice: t(".deleted", domain: domain.domain)
   end
 
   private

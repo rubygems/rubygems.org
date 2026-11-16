@@ -64,20 +64,20 @@ class OrganizationDomain < ApplicationRecord
   end
 
   # Deletes the domain and its checks. The event is recorded in the same
-  # transaction, so a recorded event always matches a real removal.
-  def remove!(actor:)
+  # transaction, so a recorded event always matches a real deletion.
+  def destroy_with_audit!(actor:)
     transaction do
       # Raises RecordNotFound if the row is already gone (so no event is recorded
       # for a no-op) and serialises with record_check!, which locks the same row.
       lock!
-      organization.record_event!(Events::OrganizationEvent::DOMAIN_REMOVED, domain:, txt_record_value:, actor_gid: actor.to_gid)
+      organization.record_event!(Events::OrganizationEvent::DOMAIN_DELETED, domain:, txt_record_value:, actor_gid: actor.to_gid)
       destroy!
     end
   end
 
   # Runs a DNS check in the calling thread (the background job's work) and returns the recorded OrganizationDomainCheck.
   # Raises early (without querying DNS) if the domain can't be checked: unsaved or
-  # changed, removed, or with an invalid stored name. DnsCheck only makes the request.
+  # changed, deleted, or with an invalid stored name. DnsCheck only makes the request.
   def verify!(resolver: nil)
     ensure_verifiable!
     result = DnsCheck.call(name: txt_record_name, expected_value: txt_record_value, resolver:)
@@ -85,7 +85,7 @@ class OrganizationDomain < ApplicationRecord
   end
 
   # The one place a check result is recorded. Locks and re-reads the row (raises
-  # ActiveRecord::RecordNotFound if it was removed), then in one transaction
+  # ActiveRecord::RecordNotFound if it was deleted), then in one transaction
   # creates the check, updates the cached state and clears check_queued_at.
   # Returns the created OrganizationDomainCheck.
   def record_check!(outcome:, message:)
@@ -117,7 +117,7 @@ class OrganizationDomain < ApplicationRecord
   def ensure_verifiable!
     raise InvalidDomain, "domain has unsaved changes" if new_record? || changed?
     # Avoids a pointless DNS request; record_check!'s lock! is the real guard.
-    raise DeletedDomain, "domain has been removed" if destroyed? || !self.class.exists?(id)
+    raise DeletedDomain, "domain has been deleted" if destroyed? || !self.class.exists?(id)
     raise InvalidDomain, "stored domain is invalid" unless Name.valid?(domain)
   end
 
@@ -131,7 +131,7 @@ class OrganizationDomain < ApplicationRecord
 
     record_check!(outcome: "other_error", message: "Another organization has already verified this domain.")
   rescue ActiveRecord::RecordNotFound
-    raise DeletedDomain, "domain was removed during the check"
+    raise DeletedDomain, "domain was deleted during the check"
   end
 
   # The only changes made to the owner's input; anything else invalid is an error.

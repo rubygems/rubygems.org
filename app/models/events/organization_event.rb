@@ -25,7 +25,7 @@ class Events::OrganizationEvent < ApplicationRecord
     attribute :actor_gid, :global_id
   end
 
-  DOMAIN_REMOVED = define_event "organization:domain:removed" do
+  DOMAIN_DELETED = define_event "organization:domain:deleted" do
     attribute :domain, :string
     # The TXT value the domain had; the event is the only record of it after the hard delete.
     attribute :txt_record_value, :string

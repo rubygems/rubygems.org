@@ -90,10 +90,10 @@
                     class: "#{action_classes} border-orange-500 text-orange-700 dark:text-orange-300 hover:bg-orange-50 dark:hover:bg-neutral-800",
                     data: { testid: "organization-domain-verify", disable_with: t("form_disable_with") } %>
                 <% end %>
-                <%= button_to t(".remove"), organization_domain_path(organization, domain), method: :delete,
+                <%= button_to t(".delete"), organization_domain_path(organization, domain), method: :delete,
                   class: "#{action_classes} border-neutral-400 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800",
-                  form: { data: { turbo_confirm: t(".confirm_remove", domain: domain.domain) } },
-                  data: { testid: "organization-domain-remove" } %>
+                  form: { data: { turbo_confirm: t(".confirm_delete", domain: domain.domain) } },
+                  data: { testid: "organization-domain-delete" } %>
               </div>
             </div>
 

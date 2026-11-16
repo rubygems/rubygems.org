@@ -106,7 +106,7 @@ class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
         params: {
           action_id: "Avo::Actions::DeleteOrganizationDomain",
           resource_view: "show",
-          fields: { comment: "Removing without permission" },
+          fields: { comment: "Deleting without permission" },
           id: @domain.id
         },
         as: :turbo_stream

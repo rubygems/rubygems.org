@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Permanently deletes an organization domain and its check history. The
-# organization:domain:removed event and this action's audit keep the domain and
+# organization:domain:deleted event and this action's audit keep the domain and
 # its TXT value for reference.
 class Avo::Actions::DeleteOrganizationDomain < Avo::Actions::ApplicationAction
   self.name = "Delete Organization Domain"
@@ -17,7 +17,7 @@ class Avo::Actions::DeleteOrganizationDomain < Avo::Actions::ApplicationAction
 
   class ActionHandler < Avo::Actions::ActionHandler
     def handle_record(domain)
-      domain.remove!(actor: current_user)
+      domain.destroy_with_audit!(actor: current_user)
     end
   end
 end
