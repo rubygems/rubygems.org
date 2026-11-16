@@ -83,22 +83,11 @@ class OrganizationDomain::DnsCheck
     persist(outcome: "other_error", message: "Another organization has already verified this domain.")
   end
 
-  # One transaction: if the verified-domain unique index rejects the update, the
-  # check row is rolled back too and a failure is recorded instead. The row is
-  # locked and re-read first; if it was deleted during the lookup DeletedDomain
-  # is raised and nothing is recorded. check_queued_at is cleared here, with the check.
+  # If the verified-domain unique index rejects the update, record_check!'s
+  # transaction rolls the check back too and a failure is recorded instead. A row
+  # deleted during the lookup raises DeletedDomain and nothing is recorded.
   def persist(outcome:, message:)
-    success = outcome == "matched"
-    result = success ? "success" : "failure"
-    checked_at = Time.current
-    OrganizationDomain.transaction(requires_new: true) do
-      @domain.lock!
-
-      check = OrganizationDomainCheck.create!(organization_domain: @domain, checked_at:, result:, outcome:, message:)
-      @domain.update_columns(verified_at: (checked_at if success), last_checked_at: checked_at,
-        last_check_result: result, check_queued_at: nil, updated_at: checked_at)
-      check
-    end
+    @domain.record_check!(outcome:, message:)
   rescue ActiveRecord::RecordNotFound
     raise DeletedDomain, "domain was removed during the check"
   end

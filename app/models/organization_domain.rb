@@ -76,6 +76,25 @@ class OrganizationDomain < ApplicationRecord
     DnsCheck.call(self, resolver:)
   end
 
+  # The one place a check result is recorded. Locks and re-reads the row (raises
+  # ActiveRecord::RecordNotFound if it was removed), then in one transaction
+  # creates the check, updates the cached state and clears check_queued_at.
+  # Returns the created OrganizationDomainCheck.
+  def record_check!(outcome:, message:)
+    success = outcome == "matched"
+    result = success ? "success" : "failure"
+    checked_at = Time.current
+    self.class.transaction(requires_new: true) do
+      lock!
+      # Not through the checks association: a rolled-back create would stay
+      # cached on it (e.g. when the verified-domain index rejects the update).
+      check = OrganizationDomainCheck.create!(organization_domain: self, checked_at:, result:, outcome:, message:)
+      update_columns(verified_at: (checked_at if success), last_checked_at: checked_at,
+        last_check_result: result, check_queued_at: nil, updated_at: checked_at)
+      check
+    end
+  end
+
   def txt_record_name
     "#{TXT_NAME_PREFIX}#{domain}"
   end

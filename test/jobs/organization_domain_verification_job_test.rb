@@ -109,16 +109,36 @@ class OrganizationDomainVerificationJobTest < ActiveJob::TestCase
     end
   end
 
-  test "an unexpected error is not retried, clears check_queued_at and is reported" do
+  test "an unexpected error is caught: the job succeeds and records the failure" do
     OrganizationDomain.any_instance.stubs(:verify!).raises(ActiveRecord::StatementInvalid, "boom")
-    Rails.error.expects(:report).once
+    Rails.error.expects(:report).with { |e, opts| e.is_a?(ActiveRecord::StatementInvalid) && opts == { handled: true } }
 
     assert_no_enqueued_jobs only: OrganizationDomainVerificationJob do
-      OrganizationDomainVerificationJob.perform_now(@domain.id)
+      assert_nothing_raised { OrganizationDomainVerificationJob.perform_now(@domain.id) }
     end
 
+    assert_equal %w[failure other_error], [check.result, check.outcome]
+    assert_equal "ActiveRecord::StatementInvalid: boom", check.message
     assert_nil queued_at
+  end
+
+  test "if recording the failure also fails, the job still succeeds and clears check_queued_at" do
+    OrganizationDomain.any_instance.stubs(:verify!).raises(RuntimeError, "boom")
+    OrganizationDomain.any_instance.stubs(:record_check!).raises(ActiveRecord::StatementInvalid, "db down")
+    Rails.error.expects(:report).twice
+
+    assert_no_enqueued_jobs only: OrganizationDomainVerificationJob do
+      assert_nothing_raised { OrganizationDomainVerificationJob.perform_now(@domain.id) }
+    end
+
     assert_empty @domain.checks
+    assert_nil queued_at
+  end
+
+  test "adds no error handlers of its own beyond GoodJob's concurrency retry" do
+    own = OrganizationDomainVerificationJob.rescue_handlers.map(&:first) - ApplicationJob.rescue_handlers.map(&:first)
+
+    assert_equal ["GoodJob::ActiveJobExtensions::Concurrency::ConcurrencyExceededError"], own.uniq
   end
 
   test "an error from the DNS work is not retried: one run records one check" do
@@ -156,13 +176,15 @@ class OrganizationDomainVerificationJobTest < ActiveJob::TestCase
     end
   end
 
-  test "a ConcurrencyExceededError is retried, not discarded" do
-    OrganizationDomain.any_instance.stubs(:verify!).raises(GoodJob::ActiveJobExtensions::Concurrency::ConcurrencyExceededError)
+  test "a ConcurrencyExceededError raised before perform (as GoodJob does) is retried, not recorded" do
+    job = OrganizationDomainVerificationJob.new(@domain.id)
+    job.stubs(:perform).raises(GoodJob::ActiveJobExtensions::Concurrency::ConcurrencyExceededError)
     Rails.error.expects(:report).never
 
     assert_enqueued_jobs 1, only: OrganizationDomainVerificationJob do
-      OrganizationDomainVerificationJob.perform_now(@domain.id)
+      job.perform_now
     end
+    assert_empty @domain.checks
     refute_nil queued_at
   end
 end
