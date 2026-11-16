@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class OrganizationDomain < ApplicationRecord
+  # Raised by verify! before any DNS request when the domain can't be checked.
+  class VerificationError < StandardError; end
+  class InvalidDomain < VerificationError; end
+  class DeletedDomain < VerificationError; end
+
   TXT_NAME_PREFIX = "_rubygems-challenge."
   TXT_VALUE_PREFIX = "rubygems-verification="
   TOKEN_ATTEMPTS = 3
@@ -71,9 +76,12 @@ class OrganizationDomain < ApplicationRecord
   end
 
   # Runs a DNS check in the calling thread (the background job's work) and returns the recorded OrganizationDomainCheck.
-  # Raises (without querying DNS) for a removed or invalid domain.
+  # Raises early (without querying DNS) if the domain can't be checked: unsaved or
+  # changed, removed, or with an invalid stored name. DnsCheck only makes the request.
   def verify!(resolver: nil)
-    DnsCheck.call(self, resolver:)
+    ensure_verifiable!
+    result = DnsCheck.call(name: txt_record_name, expected_value: txt_record_value, resolver:)
+    record_verification(result)
   end
 
   # The one place a check result is recorded. Locks and re-reads the row (raises
@@ -104,6 +112,27 @@ class OrganizationDomain < ApplicationRecord
   end
 
   private
+
+  # Only the stored, validated row is ever checked.
+  def ensure_verifiable!
+    raise InvalidDomain, "domain has unsaved changes" if new_record? || changed?
+    # Avoids a pointless DNS request; record_check!'s lock! is the real guard.
+    raise DeletedDomain, "domain has been removed" if destroyed? || !self.class.exists?(id)
+    raise InvalidDomain, "stored domain is invalid" unless Name.valid?(domain)
+  end
+
+  # If the verified-domain unique index rejects marking this domain verified,
+  # record_check!'s transaction rolls the check back and a failure is recorded
+  # instead. A row deleted during the lookup raises DeletedDomain, recording nothing.
+  def record_verification(result)
+    record_check!(outcome: result.outcome, message: result.message)
+  rescue ActiveRecord::RecordNotUnique => e
+    raise unless e.message.include?("index_organization_domains_on_domain_verified")
+
+    record_check!(outcome: "other_error", message: "Another organization has already verified this domain.")
+  rescue ActiveRecord::RecordNotFound
+    raise DeletedDomain, "domain was removed during the check"
+  end
 
   # The only changes made to the owner's input; anything else invalid is an error.
   def normalize_domain

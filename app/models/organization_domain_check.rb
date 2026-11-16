@@ -2,6 +2,8 @@
 
 # Append-only record of one DNS verification attempt.
 class OrganizationDomainCheck < ApplicationRecord
+  MAX_MESSAGE_LENGTH = 500
+
   belongs_to :organization_domain
 
   enum :result, { success: "success", failure: "failure" }, validate: true

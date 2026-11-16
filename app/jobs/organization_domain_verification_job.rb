@@ -25,7 +25,7 @@ class OrganizationDomainVerificationJob < ApplicationJob
     return if domain.nil?
 
     domain.verify!
-  rescue OrganizationDomain::DnsCheck::DeletedDomain
+  rescue OrganizationDomain::DeletedDomain
     nil # Removed during the check: nothing to record.
   rescue StandardError => e
     Rails.error.report(e, handled: true)
@@ -37,7 +37,7 @@ class OrganizationDomainVerificationJob < ApplicationJob
   def record_failure(domain, error)
     return if domain.nil?
 
-    message = "#{error.class}: #{error.message}".truncate(OrganizationDomain::DnsCheck::MAX_MESSAGE_LENGTH)
+    message = "#{error.class}: #{error.message}".truncate(OrganizationDomainCheck::MAX_MESSAGE_LENGTH)
     domain.record_check!(outcome: "other_error", message:)
   rescue ActiveRecord::RecordNotFound
     nil # Removed meanwhile: nothing to record.
