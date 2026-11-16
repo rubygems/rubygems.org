@@ -21,7 +21,7 @@ class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
     page.assert_text "acme.example.com"
   end
 
-  test "showing a domain with its token and the remove action" do
+  test "showing a domain with its token and the delete action" do
     admin_sign_in_as create(:admin_github_user, :is_admin)
 
     get avo.resources_organization_domain_path(@domain)
@@ -31,7 +31,7 @@ class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
     page.assert_text "Acme Corp"
     page.assert_text @domain.token
     page.assert_text "Check queued at"
-    page.assert_text "Remove Organization Domain"
+    page.assert_text "Delete Organization Domain"
   end
 
   test "listing check history including outcome and message" do
@@ -95,7 +95,7 @@ class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
     refute_match @domain.token, response.body
   end
 
-  test "removing a domain through the action as an admin outside the rubygems.org team is denied" do
+  test "deleting a domain through the action as an admin outside the rubygems.org team is denied" do
     requires_avo_pro
 
     admin_sign_in_as admin_outside_rubygems_org_team
@@ -104,7 +104,7 @@ class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
     assert_no_difference [-> { Audit.count }, -> { Events::OrganizationEvent.count }] do
       post "/admin/resources/organization_domains/actions",
         params: {
-          action_id: "Avo::Actions::RemoveOrganizationDomain",
+          action_id: "Avo::Actions::DeleteOrganizationDomain",
           resource_view: "show",
           fields: { comment: "Removing without permission" },
           id: @domain.id
@@ -114,6 +114,6 @@ class Avo::OrganizationDomainsControllerTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to avo.root_path
     assert_equal attributes, OrganizationDomain.find(@domain.id).attributes
-    assert_empty Audit.where(action: "Remove Organization Domain")
+    assert_empty Audit.where(action: "Delete Organization Domain")
   end
 end

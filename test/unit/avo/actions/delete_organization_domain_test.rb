@@ -2,13 +2,13 @@
 
 require "test_helper"
 
-class RemoveOrganizationDomainTest < ActiveSupport::TestCase
+class DeleteOrganizationDomainTest < ActiveSupport::TestCase
   setup do
     @organization = create(:organization)
     @current_user = create(:admin_github_user, :is_admin)
     Avo::Current.stubs(:user).returns(@current_user)
     @resource = Avo::Resources::OrganizationDomain.new
-    @action = Avo::Actions::RemoveOrganizationDomain.new(
+    @action = Avo::Actions::DeleteOrganizationDomain.new(
       record: nil,
       resource: @resource,
       user: @current_user,
@@ -16,7 +16,7 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
     )
   end
 
-  def run_action(domain, comment: "Disputed domain, removing it 1234")
+  def run_action(domain, comment: "Disputed domain, deleting it 1234")
     @resource.hydrate(record: domain)
     @action.handle(
       current_user: @current_user,
@@ -47,7 +47,7 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
     refute OrganizationDomain.exists?(domain.id)
   end
 
-  should "record a removed event with the admin as actor" do
+  should "record a removed event with the admin as actor when deleting" do
     domain = create(:organization_domain, domain: "acme.example.com", organization: @organization)
 
     assert_difference -> { @organization.events.where(tag: Events::OrganizationEvent::DOMAIN_REMOVED).count }, 1 do
@@ -61,7 +61,7 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
     assert_equal @current_user.to_gid, additional.actor_gid
   end
 
-  should "not record a second event or raise when the domain is already removed" do
+  should "not record a second event or raise when the domain is already deleted" do
     domain = create(:organization_domain, organization: @organization)
     stale = OrganizationDomain.find(domain.id)
     run_action(domain)
@@ -80,7 +80,7 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
 
     audit = Audit.where(auditable_type: "OrganizationDomain", auditable_id: domain.id).sole
 
-    assert_equal "Remove Organization Domain", audit.action
+    assert_equal "Delete Organization Domain", audit.action
     assert_equal @current_user, audit.admin_github_user
     assert_equal "Disputed by another organization", audit.comment
 
@@ -119,14 +119,19 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
   should "be visible on show for rubygems-org admins" do
     action_mock = Data.define(:current_user, :view, :resource).new(current_user: @current_user, view: :show, resource: nil)
 
-    assert action_mock.instance_exec(&Avo::Actions::RemoveOrganizationDomain.visible)
+    assert action_mock.instance_exec(&Avo::Actions::DeleteOrganizationDomain.visible)
   end
 
-  should "ask for confirmation naming the domain" do
+  should "ask for confirmation naming the domain and saying it is permanently deleted" do
     domain = create(:organization_domain, domain: "acme.example.com")
     action_mock = Data.define(:record).new(record: domain)
+    message = action_mock.instance_exec(&Avo::Actions::DeleteOrganizationDomain.message)
 
-    assert_includes action_mock.instance_exec(&Avo::Actions::RemoveOrganizationDomain.message), "acme.example.com"
+    assert_includes message, "acme.example.com"
+    assert_includes message, "permanently deleted"
+    assert_includes message, "audit trail"
+    refute_match(/remov/i, message)
+    assert_equal "Delete Domain", Avo::Actions::DeleteOrganizationDomain.confirm_button_label
   end
 
   should "not be visible or authorized for operators outside the rubygems.org team" do
@@ -135,7 +140,7 @@ class RemoveOrganizationDomainTest < ActiveSupport::TestCase
     @current_user.update!(info_data:)
     action_mock = Data.define(:current_user, :view, :resource).new(current_user: @current_user, view: :show, resource: nil)
 
-    refute action_mock.instance_exec(&Avo::Actions::RemoveOrganizationDomain.visible)
+    refute action_mock.instance_exec(&Avo::Actions::DeleteOrganizationDomain.visible)
     refute_predicate @action, :authorized?
   end
 

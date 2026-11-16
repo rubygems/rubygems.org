@@ -84,7 +84,7 @@ class OrganizationDomainVerificationJobTest < ActiveJob::TestCase
     assert_nil queued_at
   end
 
-  test "a domain removed before the job runs is a silent no-op" do
+  test "a domain deleted before the job runs is a silent no-op" do
     @domain.remove!(actor: create(:user))
     resolver = stub_dns(FakeDnsResolver.new)
 
@@ -95,7 +95,7 @@ class OrganizationDomainVerificationJobTest < ActiveJob::TestCase
     assert_empty resolver.queries
   end
 
-  test "a domain removed during the lookup records nothing and does not raise" do
+  test "a domain deleted during the lookup records nothing and does not raise" do
     id = @domain.id
     actor = create(:user)
     resolver = stub_dns(FakeDnsResolver.new)

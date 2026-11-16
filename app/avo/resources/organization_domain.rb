@@ -11,7 +11,7 @@ class Avo::Resources::OrganizationDomain < Avo::BaseResource
   }
 
   def actions
-    action Avo::Actions::RemoveOrganizationDomain
+    action Avo::Actions::DeleteOrganizationDomain
   end
 
   def fields
