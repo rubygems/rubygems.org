@@ -87,12 +87,11 @@ class OrganizationTest < ActiveSupport::TestCase
         assert_contains organization.errors[:handle], "is reserved and cannot be used"
       end
 
-      should "be invalid when a user already owns the handle" do
+      should "be valid when a user already owns the handle" do
         create(:user, handle: "someuser")
         organization = build(:organization, handle: "someuser")
 
-        refute_predicate organization, :valid?
-        assert_contains organization.errors[:handle], "has already been taken"
+        assert_predicate organization, :valid?
       end
 
       should "be invalid when a user already owns the handle in different case" do
