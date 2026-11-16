@@ -571,6 +571,7 @@ en:
         name: Name
         name_placeholder: Core Team
         handle: Handle
+        handle_placeholder: core-team
         handle_hint: Letters, numbers, dashes and underscores only. Must be unique within the organization.
         create: Create
     invitation_expiry_title: "%{time} UTC"

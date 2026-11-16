@@ -88,6 +88,28 @@ class OrganizationTeamTest < ActiveSupport::TestCase
     end
   end
 
+  context "finding a team by handle" do
+    setup do
+      @organization = create(:organization)
+      @team = create(:organization_team, organization: @organization, handle: "core")
+      @other_team = create(:organization_team, handle: "other")
+    end
+
+    should "find a team in the organization case-insensitively" do
+      assert_equal @team, @organization.organization_teams.find_by_case_insensitive_handle!("CORE")
+    end
+
+    should "not find another organization's team" do
+      assert_raises(ActiveRecord::RecordNotFound) do
+        @organization.organization_teams.find_by_case_insensitive_handle!("other")
+      end
+    end
+
+    should "only be available through an organization" do
+      refute_respond_to OrganizationTeam, :find_by_case_insensitive_handle!
+    end
+  end
+
   context "#save_with_creation_event" do
     setup do
       @organization = create(:organization)

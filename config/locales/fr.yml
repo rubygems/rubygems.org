@@ -576,6 +576,7 @@ fr:
         name:
         name_placeholder:
         handle:
+        handle_placeholder:
         handle_hint:
         create:
     invitation_expiry_title:

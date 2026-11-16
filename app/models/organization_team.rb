@@ -21,10 +21,6 @@ class OrganizationTeam < ApplicationRecord
     end
   end
 
-  def self.find_by_handle!(handle)
-    find_by!("lower(handle) = lower(?)", handle)
-  end
-
   def to_param
     handle
   end

@@ -12,7 +12,7 @@ class Organizations::TeamsController < Organizations::BaseController
   end
 
   def show
-    @team = @organization.organization_teams.find_by_handle!(params.expect(:id))
+    @team = @organization.organization_teams.find_by_case_insensitive_handle!(params.expect(:id))
     authorize @team, :show?
   end
 
