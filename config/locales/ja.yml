@@ -517,7 +517,6 @@ ja:
       invite: 招待
       transfer: 移動
       reservations:
-      verified_domain:
     members:
       create:
         user_already_invited: ユーザーは既に組織に招待されています。

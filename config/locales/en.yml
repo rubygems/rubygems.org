@@ -514,7 +514,6 @@ en:
       invite: Invite
       transfer: Transfer
       reservations: Reserved Names
-      verified_domain: 'Verified:'
     members:
       create:
         user_already_invited: User already invited to the organization.

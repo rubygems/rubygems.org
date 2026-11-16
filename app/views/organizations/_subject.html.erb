@@ -9,16 +9,6 @@
         <%= icon_tag("organizations", size: 6, class: "-mt-1 -ml-1 mr-1 inline-block") -%><%= t("organizations.show.organization") %>
       </span>
     </p>
-    <% if @verified_domains.any? %>
-      <ul class="mt-2 space-y-1" data-testid="organization-verified-domains">
-        <% @verified_domains.each do |domain| %>
-          <li class="text-b3 text-neutral-800 dark:text-neutral-200" data-testid="organization-verified-domain">
-            <span class="font-semibold text-green-700 dark:text-green-400"><%= t("organizations.show.verified_domain") %></span>
-            <span class="break-all"><%= domain %></span>
-          </li>
-        <% end %>
-      </ul>
-    <% end %>
   </div>
 </div>
 

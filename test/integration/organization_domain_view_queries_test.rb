@@ -2,8 +2,9 @@
 
 require "test_helper"
 
-# Domain data for organization pages is loaded in controllers and handed to the
-# views as instance variables. Views must not query the domain tables themselves.
+# Domain data is loaded only for the settings page, in the controller, and handed
+# to the views as instance variables. Views must not query the domain tables
+# themselves, and other organization pages load no domain data at all.
 class OrganizationDomainViewQueriesTest < ActionDispatch::IntegrationTest
   setup do
     @owner = create(:user)
@@ -16,22 +17,22 @@ class OrganizationDomainViewQueriesTest < ActionDispatch::IntegrationTest
     create(:organization_domain, organization: @organization, domain: "deleted.example.com").destroy_with_audit!(actor: @owner)
   end
 
-  test "the public organization pages render verified domains without querying from views" do
+  test "the public organization pages load no domain data and show no domains" do
     [organization_path(@organization), organization_gems_path(@organization)].each do |path|
-      assert_no_domain_queries_from_views { get path }
+      assert_no_domain_queries { get path }
 
       assert_response :success
-      assert_select "[data-testid=?]", "organization-verified-domain", text: /arrakis\.example\.com/
+      refute_match(/arrakis\.example\.com/, response.body)
     end
   end
 
-  test "the members page renders verified domains without querying from views" do
+  test "the members page loads no domain data and shows no domains" do
     sign_in @owner
 
-    assert_no_domain_queries_from_views { get organization_memberships_path(@organization) }
+    assert_no_domain_queries { get organization_memberships_path(@organization) }
 
     assert_response :success
-    assert_select "[data-testid=?]", "organization-verified-domain", text: /arrakis\.example\.com/
+    refute_match(/arrakis\.example\.com/, response.body)
   end
 
   test "the settings page renders the domains card without querying from views" do
@@ -40,7 +41,6 @@ class OrganizationDomainViewQueriesTest < ActionDispatch::IntegrationTest
     assert_no_domain_queries_from_views { get edit_organization_path(@organization) }
 
     assert_response :success
-    assert_select "[data-testid=?]", "organization-verified-domain", text: /arrakis\.example\.com/
     assert_select "[data-testid=?]", "organization-domain", count: 2
     assert_select "[data-testid=?]", "organization-domain-failure", count: 1
   end
@@ -54,7 +54,6 @@ class OrganizationDomainViewQueriesTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_content
     assert_select "[data-testid=?]", "organization-domain", count: 2
-    assert_select "[data-testid=?]", "organization-verified-domain", text: /arrakis\.example\.com/
   end
 
   test "re-rendering settings after an invalid name does not query from views" do
@@ -65,7 +64,6 @@ class OrganizationDomainViewQueriesTest < ActionDispatch::IntegrationTest
     end
 
     assert_select "[data-testid=?]", "organization-domain", count: 2
-    assert_select "[data-testid=?]", "organization-verified-domain", text: /arrakis\.example\.com/
   end
 
   test "a successful name update loads no settings-card domain data" do
@@ -85,6 +83,15 @@ class OrganizationDomainViewQueriesTest < ActionDispatch::IntegrationTest
 
   def sign_in(user)
     post session_path(session: { who: user.handle, password: PasswordHelpers::SECURE_TEST_PASSWORD })
+  end
+
+  def assert_no_domain_queries(&)
+    domain_queries = []
+    callback = ->(*, payload) { domain_queries << payload[:sql] if payload[:sql].include?("organization_domain") }
+
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record", &)
+
+    assert_empty domain_queries, "Expected no organization domain queries"
   end
 
   def assert_no_domain_queries_from_views(&)
