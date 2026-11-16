@@ -178,17 +178,9 @@ text: "Verify again"
       testid "organization-domain-readded-notice"
     end
 
-    [
-      ["https://example.com/path", /domain/i],
-      ["exa_mple.com", /_/],
-      ["user@example.com", /@|email/i],
-      ["*.example.com", /\*|wildcard/i],
-      ["example.com:443", /:|port/i],
-      ["exämple.com", /punycode|ä/],
-      ["127.0.0.1", /IP address/],
-      ["co.uk", /public suffix/],
-      ["example.com.", /label|\./]
-    ].each do |input, message|
+    format_message = "Domain is invalid. The domain is expected in an example.com or docs.example.com format."
+    ["https://example.com/path", "exa_mple.com", "user@example.com", "*.example.com", "example.com:443",
+     "exämple.com", "127.0.0.1", "co.uk", "example.com.", "-bad_..com"].each do |input|
       should "reject #{input.inspect}, keep the input and look up nothing" do
         sign_in @owner
 
@@ -197,7 +189,9 @@ text: "Verify again"
         end
         assert_response :unprocessable_content
         assert_select "[data-testid=?][value=?]", "organization-domain-input", input
-        testid "organization-domain-errors", text: message
+        testid "organization-domain-errors" do
+          assert_select "li", count: 1, text: format_message
+        end
 
         assert_empty @resolver.queries
       end

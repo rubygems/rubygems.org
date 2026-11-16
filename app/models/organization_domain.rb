@@ -59,16 +59,10 @@ class OrganizationDomain < ApplicationRecord
     self.token = SecureRandom.urlsafe_base64(32)
   end
 
+  # One owner-facing message; every broken rule is kept in errors.details.
   def domain_name_is_valid
-    Name.errors_for(domain).each do |error|
-      errors.add(:domain, error.key, **message_options(error))
-    end
-  end
-
-  def message_options(error)
-    characters = error.characters.map { |char| "“#{char}”" }.to_sentence(two_words_connector: ", ", last_word_connector: ", ")
-    hint = error.hint ? " #{I18n.t(error.hint, scope: 'activerecord.errors.models.organization_domain.hints')}" : ""
-    { characters:, hint: }
+    rules = Name.errors_for(domain)
+    errors.add(:domain, :invalid_format, rules:) if rules.any?
   end
 
   # The unique index on token guarantees no duplicate; on the near-impossible

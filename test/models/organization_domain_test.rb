@@ -30,6 +30,8 @@ class OrganizationDomainTest < ActiveSupport::TestCase
   end
 
   context "rejected domains" do
+    expected_message = "Domain is invalid. The domain is expected in an example.com or docs.example.com format."
+
     {
       blank: [nil, "", "   "],
       invalid_characters: ["exa_mple.com", "exa mple.com", "exämple.com", "ｅｘａｍｐｌｅ.com", "\"example.com\"",
@@ -39,13 +41,14 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       ip_address: %w[127.0.0.1 10.0.0.1],
       public_suffix: %w[co.uk github.io example.notarealtld],
       too_long: ["#{(['a' * 60] * 4).join('.')}.com"]
-    }.each do |key, inputs|
+    }.each do |rule, inputs|
       inputs.each do |input|
-        should "reject #{input.inspect} with #{key} and save nothing" do
+        should "reject #{input.inspect} for #{rule} with the single format message and save nothing" do
           record = build_domain(input)
 
           refute_predicate record, :valid?
-          assert_equal [key], record.errors.details[:domain].pluck(:error)
+          assert_equal [error: :invalid_format, rules: [rule]], record.errors.details[:domain]
+          assert_equal [expected_message], record.errors.full_messages
           assert_no_difference "OrganizationDomain.count" do
             refute record.save
           end
@@ -53,50 +56,46 @@ class OrganizationDomainTest < ActiveSupport::TestCase
       end
     end
 
-    should "name the offending characters once each" do
-      record = build_domain("ex_a_mple.com/path/")
-
-      refute_predicate record, :valid?
-      message = record.errors[:domain].first
-
-      assert_includes message, "“_”"
-      assert_includes message, "“/”"
-      assert_equal 1, message.scan("“_”").size
-      refute_includes message, "`"
-    end
-
-    should "not use backticks in any domain error message" do
-      %w[localhost 192.168.0.1 co.uk -a.com].push("exa_mple.com", "exämple.com").each do |input|
-        record = build_domain(input)
-        record.valid?
-
-        refute_includes record.errors[:domain].join, "`", input
-      end
-    end
-
-    should "add a hint for common mistakes" do
+    should "collect every rule the domain breaks behind one message" do
       {
-        "https://example.com" => "without https://",
-        "example.com/path" => "without https://",
-        "user@example.com" => "not an email address",
-        "*.example.com" => "Wildcards aren't supported",
-        "example.com:443" => "Remove the port",
-        "exämple.com" => "punycode"
-      }.each do |input, hint|
+        "-bad_.com" => %i[invalid_characters invalid_label],
+        "exa_mple..com" => %i[invalid_characters invalid_label],
+        "#{(['a_' * 30] * 4).join('.')}.com" => %i[invalid_characters too_long],
+        "-#{'a' * 63}.#{(['a' * 60] * 3).join('.')}.com" => %i[invalid_label too_long]
+      }.each do |input, rules|
         record = build_domain(input)
-        record.valid?
 
-        assert_includes record.errors[:domain].first, hint, input
-        refute_includes record.errors[:domain].first, "`", input
+        refute_predicate record, :valid?, input
+        assert_equal [error: :invalid_format, rules:], record.errors.details[:domain], input
+        assert_equal [expected_message], record.errors.full_messages, input
       end
     end
 
-    should "stop at the first failing rule" do
-      record = build_domain("-bad_.com")
-      record.valid?
+    should "not add a public suffix rule on top of a structural one" do
+      ["https://example.com", "exa_mple.com", "-example.com", "localhost", "10.0.0.1"].each do |input|
+        record = build_domain(input)
+        record.valid?
 
-      assert_equal 1, record.errors[:domain].size
-      assert_equal :invalid_characters, record.errors.details[:domain].first[:error]
+        refute_includes record.errors.details[:domain].first[:rules], :public_suffix, input
+      end
+    end
+
+    should "not include hints, offending characters or backticks in the message" do
+      %w[https://example.com user@example.com *.example.com example.com:443 exämple.com exa_mple.com].each do |input|
+        record = build_domain(input)
+        record.valid?
+        message = record.errors.full_messages.join
+
+        refute_includes message, "`", input
+        refute_match(/without https|email address|Wildcards|port|punycode|invalid characters|“/, message, input)
+      end
+    end
+
+    should "have no per-rule messages or hints left in the locale" do
+      %w[hints attributes.domain.invalid_characters attributes.domain.invalid_label attributes.domain.single_label
+         attributes.domain.ip_address attributes.domain.public_suffix attributes.domain.too_long].each do |key|
+        refute I18n.exists?("activerecord.errors.models.organization_domain.#{key}", :en), key
+      end
     end
 
     should "not alter input beyond strip and downcase" do

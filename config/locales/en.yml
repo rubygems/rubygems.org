@@ -111,21 +111,9 @@ en:
         protected_provider: is a major consumer mail provider and cannot be blocked
       models:
         organization_domain:
-          hints:
-            url: Enter just the domain, like example.com, without https:// or a path.
-            email: Enter the domain, not an email address.
-            wildcard: Wildcards aren't supported. Add each hostname separately.
-            port: Remove the port.
-            unicode: Enter internationalized domains in punycode (xn--…).
           attributes:
             domain:
-              blank: can't be blank
-              invalid_characters: "contains invalid characters: %{characters}. Use only letters, numbers, dots and hyphens.%{hint}"
-              invalid_label: has an invalid label. Each part between dots must be 1-63 letters, numbers or hyphens, and must not start or end with a hyphen.
-              single_label: must have at least two parts, like example.com
-              ip_address: must be a domain name, not an IP address
-              public_suffix: must be a registered domain, not a public suffix or unknown top-level domain
-              too_long: is too long. It must be at most 233 characters so the verification record name fits DNS limits.
+              invalid_format: is invalid. The domain is expected in an example.com or docs.example.com format.
         api_key:
           attributes:
             expires_at:
@@ -578,7 +566,7 @@ en:
       title: Domains
       description: Prove your organization controls a domain by publishing a DNS TXT record. Each domain has its own record and is verified separately.
       domain: Domain
-      domain_hint: Enter just the domain, like example.com. Subdomains are verified separately. Domains can't be edited; remove one and add it again to change it.
+      domain_hint: Enter just the domain, like example.com or docs.example.com. Each subdomain is verified separately. Domains can't be edited; remove one and add it again to change it.
       add: Add domain
       status:
         verified: Verified
