@@ -580,6 +580,14 @@ zh-CN:
         handle_placeholder:
         handle_hint:
         create:
+      members:
+        create:
+          added:
+            one:
+            other:
+          none_selected:
+        destroy:
+          removed:
       members_component:
         members:
         no_members:

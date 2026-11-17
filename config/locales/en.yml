@@ -574,6 +574,14 @@ en:
         handle_placeholder: core-team
         handle_hint: Letters, numbers, dashes and underscores only. Must be unique within the organization.
         create: Create
+      members:
+        create:
+          added:
+            one: Added 1 member to the team.
+            other: Added %{count} members to the team.
+          none_selected: Select at least one member to add.
+        destroy:
+          removed: Removed %{handle} from the team.
       members_component:
         members: Members
         no_members: No members yet
