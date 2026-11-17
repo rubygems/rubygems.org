@@ -574,6 +574,12 @@ en:
         handle_placeholder: core-team
         handle_hint: Letters, numbers, dashes and underscores only. Must be unique within the organization.
         create: Create
+      members_component:
+        members: Members
+        no_members: No members yet
+        remove: Remove
+        add_members: Add members
+        add_selected: Add selected
     invitation_expiry_title: "%{time} UTC"
     invitations:
       expired: This invitation has expired. Ask an organization admin to resend it.

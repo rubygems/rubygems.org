@@ -571,6 +571,12 @@ zh-TW:
         handle_placeholder:
         handle_hint:
         create:
+      members_component:
+        members:
+        no_members:
+        remove:
+        add_members:
+        add_selected:
     invitation_expiry_title:
     invitations:
       expired:
