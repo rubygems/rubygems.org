@@ -7,9 +7,9 @@ ruby file: ".ruby-version"
 gem "rails", "~> 8.1.4.1"
 gem "rails-i18n", "~> 8.1.0"
 
-gem "aws-sdk-s3", "~> 1.237"
-gem "aws-sdk-sqs", "~> 1.124"
-gem "aws_advanced_ruby_driver_wrapper", "~> 1.0.1", require: "aws_advanced_ruby_driver_wrapper/postgresql"
+gem "aws-sdk-s3", "~> 1.240"
+gem "aws-sdk-sqs", "~> 1.127"
+gem "aws_advanced_ruby_driver_wrapper", "~> 1.1.0", require: "aws_advanced_ruby_driver_wrapper/postgresql"
 gem "bootsnap", "~> 1.26"
 gem "clearance", "~> 2.12"
 gem "dalli", "~> 4.3", ">= 4.3.7"
@@ -75,7 +75,7 @@ gem "yaml-schema", "~> 1.2"
 # Admin dashboard
 gem "avo", "~> 3.34"
 gem "pagy", "~> 8.4"
-gem "view_component", "~> 4.22.0"
+gem "view_component", "~> 4.23.0"
 gem "pundit", "~> 2.5"
 gem "chartkick", "~> 5.3"
 gem "groupdate", "~> 6.8"
@@ -145,7 +145,7 @@ group :development do
 end
 
 group :test do
-  gem "minitest", "~> 6.0", require: false
+  gem "minitest", "~> 6.1", require: false
   gem "capybara", "~> 3.40"
   gem "launchy", "~> 3.1"
   gem "rack-test", "~> 2.3", require: "rack/test"
