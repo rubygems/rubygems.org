@@ -195,6 +195,69 @@ class OrganizationTeamTest < ActiveSupport::TestCase
       end
     end
 
+    context "#add_members!" do
+      setup do
+        @actor = create(:user)
+      end
+
+      should "add each membership and record an added event per member" do
+        first, second = create_list(:membership, 2, organization: @organization)
+        added_events = -> { @organization.events.where(tag: Events::OrganizationEvent::TEAM_MEMBER_ADDED) }
+
+        assert_difference [-> { @team.team_memberships.count }, -> { added_events.call.count }], 2 do
+          @team.add_members!([first, second], actor: @actor)
+        end
+
+        event = added_events.call.find_by("additional->>'member' = ?", first.user.display_handle)
+
+        assert_equal @team.handle, event.additional.team
+        assert_equal @team, event.additional.team_gid.find
+        assert_equal first.user, event.additional.member_gid.find
+        assert_equal @actor.display_handle, event.additional.actor
+        assert_equal @actor, event.additional.actor_gid.find
+      end
+
+      should "add nothing and record nothing if any membership is invalid" do
+        valid = create(:membership, organization: @organization)
+        pending = create(:membership, :pending, organization: @organization)
+
+        assert_no_difference [-> { OrganizationTeamMembership.count }, -> { Events::OrganizationEvent.count }] do
+          assert_raises(ActiveRecord::RecordInvalid) { @team.add_members!([valid, pending], actor: @actor) }
+        end
+      end
+    end
+
+    context "#remove_member!" do
+      setup do
+        @actor = create(:user)
+      end
+
+      should "remove the member and record a removed event" do
+        membership = create(:organization_team_membership, organization_team: @team).membership
+        removed_events = -> { @organization.events.where(tag: Events::OrganizationEvent::TEAM_MEMBER_REMOVED) }
+
+        assert_difference -> { @team.team_memberships.count }, -1 do
+          assert_difference -> { removed_events.call.count }, 1 do
+            @team.remove_member!(membership, actor: @actor)
+          end
+        end
+
+        event = removed_events.call.sole
+
+        assert_equal @team.handle, event.additional.team
+        assert_equal membership.user.display_handle, event.additional.member
+        assert_equal @actor.display_handle, event.additional.actor
+      end
+
+      should "raise not found removing a membership not on the team" do
+        membership = create(:membership, organization: @organization)
+
+        assert_no_difference [-> { OrganizationTeamMembership.count }, -> { Events::OrganizationEvent.count }] do
+          assert_raises(ActiveRecord::RecordNotFound) { @team.remove_member!(membership, actor: @actor) }
+        end
+      end
+    end
+
     context "#addable_memberships" do
       should "include confirmed members not on the team, ordered by handle" do
         zed = create(:membership, organization: @organization, user: create(:user, handle: "zed"))
