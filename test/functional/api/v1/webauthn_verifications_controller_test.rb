@@ -91,6 +91,19 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
       should respond_with :success
     end
 
+    should "identify the API key's user, not the signed-in session user" do
+      api_key = create(:api_key, key: "12345", scopes: %i[push_rubygem])
+      create(:webauthn_credential, user: api_key.user)
+      sign_in_as(create(:user))
+      @request.env["HTTP_AUTHORIZATION"] = "12345"
+
+      span = with_appsec_trace { post :create }
+
+      assert_response :success
+      assert_equal api_key.user.id.to_s, span.get_tag("usr.id")
+      assert_equal Digest::SHA256.hexdigest(api_key.user.handle), span.get_tag("usr.login")
+    end
+
     context "user has enabled webauthn" do
       should_respond_to_format :yaml
       should_respond_to_format :json
@@ -244,6 +257,61 @@ class Api::V1::WebauthnVerificationsControllerTest < ActionController::TestCase
         assert_equal "pending", json_response["status"]
         assert_equal "Security device authentication is still pending.", json_response["message"]
       end
+    end
+  end
+
+  context "Datadog AppSec login tracking" do
+    setup do
+      @user = create(:user)
+      create(:webauthn_credential, user: @user)
+    end
+
+    should "track failure for a wrong password and create no verification" do
+      authorize_with("#{@user.email}:wrong-password")
+      span = assert_no_difference -> { WebauthnVerification.count } do
+        with_appsec_trace { post :create }
+      end
+
+      assert_response :unauthorized
+      assert_login_failure_tracked(span, login: @user.handle, user: @user, reason: "invalid_credentials")
+      refute_tags_include(span, "wrong-password", @user.email)
+    end
+
+    should "track failure for an unknown user by the stripped login" do
+      authorize_with(" nobody :#{@user.password}")
+      span = with_appsec_trace { get :status, params: { webauthn_token: "11111", format: :json } }
+
+      assert_response :unauthorized
+      assert_login_failure_tracked(span, login: "nobody", reason: "invalid_credentials")
+      refute_tags_include(span, @user.password)
+    end
+
+    should "not track success for a correct password" do
+      authorize_with("#{@user.email}:#{@user.password}")
+      span = with_appsec_trace { post :create }
+
+      assert_response :success
+      refute_login_tracked(span)
+    end
+
+    should "not track a login for an API key" do
+      create(:api_key, key: "12345", scopes: %i[push_rubygem], owner: @user)
+      @request.env["HTTP_AUTHORIZATION"] = "12345"
+      span = with_appsec_trace { post :create }
+
+      assert_response :success
+      assert_equal @user.id.to_s, span.get_tag("usr.id")
+      refute_login_tracked(span)
+    end
+
+    should "not track a login for an unknown API key" do
+      @request.env["HTTP_AUTHORIZATION"] = "not-a-key"
+      span = assert_no_difference -> { WebauthnVerification.count } do
+        with_appsec_trace { post :create }
+      end
+
+      assert_response :unauthorized
+      refute_login_tracked(span)
     end
   end
 end

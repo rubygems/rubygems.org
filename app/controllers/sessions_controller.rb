@@ -32,7 +32,10 @@ class SessionsController < Clearance::SessionsController
   end
 
   def webauthn_full_create
-    return login_failure(@webauthn_error) unless webauthn_credential_verified?
+    unless webauthn_credential_verified?
+      track_login_failure(@user_webauthn_credential&.user)
+      return login_failure(@webauthn_error)
+    end
 
     @user = user_webauthn_credential.user
 
@@ -111,20 +114,27 @@ class SessionsController < Clearance::SessionsController
         )
         set_login_flash
         redirect_to(url_after_create)
+      elsif @user
+        track_login_failure(@user)
+        login_failure(status.failure_message)
       else
         attempted_user = begin
           User.find_by_email(who) || User.find_by(handle: who)
         rescue Encoding::UndefinedConversionError
           nil
         end
-        login = attempted_user ? (attempted_user.handle || attempted_user.email) : who.to_s
-        metadata = attempted_user ? { "usr.id": attempted_user.id.to_s } : {}
-        Datadog::Kit::AppSec::Events::V2.track_user_login_failure(
-          Digest::SHA256.hexdigest(login), attempted_user.present?, metadata
-        )
+        track_login_failure(attempted_user, who.to_s)
         login_failure(status.failure_message)
       end
     end
+  end
+
+  def track_login_failure(user, attempted_login = "")
+    login = user ? (user.handle || user.email) : attempted_login
+    metadata = user ? { "usr.id": user.id.to_s } : {}
+    Datadog::Kit::AppSec::Events::V2.track_user_login_failure(
+      Digest::SHA256.hexdigest(login), user.present?, metadata
+    )
   end
 
   def login_failure(message)
@@ -135,6 +145,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def webauthn_failure
+    track_login_failure(@user)
     invalidate_mfa_session(@webauthn_error)
   end
 
@@ -150,6 +161,7 @@ class SessionsController < Clearance::SessionsController
   def find_mfa_user
     @user = User.find_by(id: session[:mfa_user]) if mfa_session_active? && session[:mfa_user] && session[:mfa_flow] == controller_path
     return if @user
+    track_login_failure(session[:mfa_flow] == controller_path ? User.find_by(id: session[:mfa_user]) : nil)
     delete_mfa_session
     login_failure t("multifactor_auths.session_expired")
   end
@@ -274,6 +286,7 @@ class SessionsController < Clearance::SessionsController
   end
 
   def incorrect_otp
+    track_login_failure(@user)
     delete_mfa_session
     super
   end

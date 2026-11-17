@@ -620,6 +620,92 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
       end
     end
 
+    context "changing mfa level with Datadog AppSec" do
+      setup do
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+      end
+
+      should "track lowering ui_and_api to ui_and_gem_signin" do
+        put :update, params: { level: "ui_and_gem_signin" }
+        span = with_appsec_trace { post :otp_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now, level: "ui_and_gem_signin" } }
+
+        assert_predicate @user.reload, :mfa_ui_and_gem_signin?
+        assert_equal(
+          { "track" => "true", "usr.id" => @user.id.to_s, "mfa.change" => "level_lowered",
+            "mfa.previous_level" => "ui_and_api", "mfa.level" => "ui_and_gem_signin", "mfa.remaining_factors" => "1" },
+          appsec_event_tags(span, "mfa.weakened")
+        )
+      end
+
+      should "not track or change the level for an incorrect OTP" do
+        put :update, params: { level: "ui_and_gem_signin" }
+        span = with_appsec_trace { post :otp_update, params: { otp: "123456", level: "ui_and_gem_signin" } }
+
+        assert_redirected_to edit_settings_path
+        assert_equal "Your OTP code is incorrect.", flash[:error]
+        assert_predicate @user.reload, :mfa_ui_and_api?
+        assert_empty appsec_event_tags(span, "mfa.weakened")
+      end
+
+      should "not track keeping ui_and_gem_signin" do
+        @user.update!(mfa_level: :ui_and_gem_signin)
+        put :update, params: { level: "ui_and_gem_signin" }
+        span = with_appsec_trace { post :otp_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now, level: "ui_and_gem_signin" } }
+
+        assert_predicate @user.reload, :mfa_ui_and_gem_signin?
+        assert_empty appsec_event_tags(span, "mfa.weakened")
+      end
+
+      should "not track raising ui_and_gem_signin to ui_and_api" do
+        @user.update!(mfa_level: :ui_and_gem_signin)
+        put :update, params: { level: "ui_and_api" }
+        span = with_appsec_trace { post :otp_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now, level: "ui_and_api" } }
+
+        assert_predicate @user.reload, :mfa_ui_and_api?
+        assert_empty appsec_event_tags(span, "mfa.weakened")
+      end
+
+      should "not track raising ui_only to ui_and_gem_signin" do
+        @user.update!(mfa_level: :ui_only)
+        put :update, params: { level: "ui_and_gem_signin" }
+        span = with_appsec_trace { post :otp_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now, level: "ui_and_gem_signin" } }
+
+        assert_predicate @user.reload, :mfa_ui_and_gem_signin?
+        assert_empty appsec_event_tags(span, "mfa.weakened")
+      end
+
+      context "with a webauthn device" do
+        setup do
+          webauthn_credential = create(:webauthn_credential, user: @user)
+          @client = WebAuthn::FakeClient.new(WebAuthn.configuration.allowed_origins.first, encoding: false)
+          WebauthnHelpers.create_credential(webauthn_credential:, client: @client)
+          put :update, params: { level: "ui_and_gem_signin" }
+        end
+
+        should "track lowering the level after webauthn verification" do
+          credentials = WebauthnHelpers.get_result(client: @client, challenge: session[:webauthn_authentication]["challenge"])
+          span = with_appsec_trace { post :webauthn_update, params: { level: "ui_and_gem_signin", credentials: } }
+
+          assert_predicate @user.reload, :mfa_ui_and_gem_signin?
+          assert_equal(
+            { "track" => "true", "usr.id" => @user.id.to_s, "mfa.change" => "level_lowered",
+              "mfa.previous_level" => "ui_and_api", "mfa.level" => "ui_and_gem_signin", "mfa.remaining_factors" => "2" },
+            appsec_event_tags(span, "mfa.weakened")
+          )
+        end
+
+        should "not track or change the level when webauthn verification fails" do
+          credentials = WebauthnHelpers.get_result(client: @client, challenge: SecureRandom.hex)
+          span = with_appsec_trace { post :webauthn_update, params: { level: "ui_and_gem_signin", credentials: } }
+
+          assert_redirected_to edit_settings_path
+          assert_equal "WebAuthn::ChallengeVerificationError", flash[:error]
+          assert_predicate @user.reload, :mfa_ui_and_api?
+          assert_empty appsec_event_tags(span, "mfa.weakened")
+        end
+      end
+    end
+
     context "on GET to recovery" do
       context "when show_recovery_codes is array" do
         setup do

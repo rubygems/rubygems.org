@@ -42,7 +42,9 @@ class TotpsController < ApplicationController
   def destroy
     if current_user.ui_mfa_verified?(otp_param)
       flash[:success] = t(".success")
+      previous_level = current_user.mfa_level
       current_user.disable_totp!
+      track_mfa_weakened("totp_disabled", previous_level:)
       redirect_to session.fetch("mfa_redirect_uri", edit_settings_path)
       session.delete("mfa_redirect_uri")
     else
