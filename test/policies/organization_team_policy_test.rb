@@ -25,6 +25,18 @@ class OrganizationTeamPolicyTest < PolicyTestCase
     end
   end
 
+  %i[add_member? remove_member?].each do |action|
+    context "##{action}" do
+      should "be authorized for org owners and admins only" do
+        assert_authorized @owner, action
+        assert_authorized @admin, action
+
+        refute_authorized @maintainer, action
+        refute_authorized @guest, action
+      end
+    end
+  end
+
   context "with a team that has no organization" do
     setup do
       @team = OrganizationTeam.new
@@ -32,6 +44,8 @@ class OrganizationTeamPolicyTest < PolicyTestCase
 
     should "not be authorized for anyone" do
       refute_authorized @owner, :show?
+      refute_authorized @owner, :add_member?
+      refute_authorized @owner, :remove_member?
     end
   end
 end
