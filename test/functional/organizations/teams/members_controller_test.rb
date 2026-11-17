@@ -95,6 +95,16 @@ class Organizations::Teams::MembersControllerTest < ActionDispatch::IntegrationT
       assert_response :not_found
     end
 
+    should "be not found for an admin whose invitation is still pending" do
+      invitee = create(:user)
+      create(:membership, :pending, organization: @organization, user: invitee, role: :admin)
+      sign_in_as(invitee)
+
+      assert_no_team_changes { add_members(@dave) }
+
+      assert_response :not_found
+    end
+
     should "be not found for a non-member" do
       sign_in_as(create(:user))
 
@@ -166,6 +176,16 @@ class Organizations::Teams::MembersControllerTest < ActionDispatch::IntegrationT
 
     should "be not found for a maintainer" do
       @membership.update!(role: :maintainer)
+
+      assert_no_team_changes { remove_member }
+
+      assert_response :not_found
+    end
+
+    should "be not found for an admin whose invitation is still pending" do
+      invitee = create(:user)
+      create(:membership, :pending, organization: @organization, user: invitee, role: :admin)
+      sign_in_as(invitee)
 
       assert_no_team_changes { remove_member }
 

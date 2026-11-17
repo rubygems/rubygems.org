@@ -34,6 +34,13 @@ class OrganizationTeamPolicyTest < PolicyTestCase
         refute_authorized @maintainer, action
         refute_authorized @guest, action
       end
+
+      should "not be authorized for an admin whose invitation is still pending" do
+        invitee = create(:user)
+        create(:membership, :pending, organization: @organization, user: invitee, role: :admin)
+
+        refute_authorized invitee, action
+      end
     end
   end
 
