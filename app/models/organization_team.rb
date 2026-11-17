@@ -2,6 +2,9 @@
 
 class OrganizationTeam < ApplicationRecord
   belongs_to :organization
+  has_many :team_memberships, -> { order(:created_at, :id) },
+    class_name: "OrganizationTeamMembership", dependent: :destroy, inverse_of: :organization_team
+  has_many :memberships, through: :team_memberships
 
   validates :handle, presence: true,
     uniqueness: { case_sensitive: false, scope: :organization },
@@ -21,6 +24,12 @@ class OrganizationTeam < ApplicationRecord
         team: handle, team_gid: to_gid,
         created_by: actor.display_handle, actor_gid: actor.to_gid)
     end
+  end
+
+  def addable_memberships
+    organization.memberships
+      .where.not(id: team_memberships.select(:membership_id))
+      .joins(:user).includes(:user).order("users.handle")
   end
 
   def to_param
