@@ -46,7 +46,7 @@ class VerifyLinkJob < ApplicationJob
 
     body = +""
     response = get(uri) do |chunk|
-      raise HTTPResponseError, "Response body exceeds verification limit" if body.bytesize + chunk.bytesize > MAX_BODY_SIZE
+      raise HTTPResponseError, "Response body exceeds #{MAX_BODY_SIZE} bytes" if body.bytesize + chunk.bytesize > MAX_BODY_SIZE
 
       body << chunk
     end

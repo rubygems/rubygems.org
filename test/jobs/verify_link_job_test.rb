@@ -133,7 +133,8 @@ class VerifyLinkJobTest < ActiveJob::TestCase
   end
 
   test "rejects a response larger than the verification limit" do
-    stub_request(:get, @links[:home]).to_return(status: 200, body: LINKBACK_HTML + ("x" * 1.megabyte))
+    stub_request(:get, @links[:home]).to_return(status: 200,
+      body: LINKBACK_HTML + ("x" * (VerifyLinkJob::MAX_BODY_SIZE - LINKBACK_HTML.bytesize + 1)))
 
     VerifyLinkJob.perform_now(link_verification: @home)
 
