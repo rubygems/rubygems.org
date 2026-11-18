@@ -106,6 +106,7 @@ data:
         proxy_redirect off;
         proxy_read_timeout 60s;
 
+        # Only gem uploads need large request bodies; they get their own limit below.
         client_max_body_size 1m;
 
         # Stop unsupported methods from getting to Puma,
