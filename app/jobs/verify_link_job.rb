@@ -26,6 +26,7 @@ class VerifyLinkJob < ApplicationJob
   end
 
   TIMEOUT_SEC = 5
+  MAX_BODY_SIZE = 1.megabyte
 
   def perform(link_verification:)
     return unless link_verification.should_verify?
@@ -43,10 +44,14 @@ class VerifyLinkJob < ApplicationJob
 
     expected_href = linkable.linkable_verification_uri.to_s.downcase
 
-    response = get(uri)
+    body = +""
+    response = get(uri) do |chunk|
+      raise HTTPResponseError, "Response body exceeds #{MAX_BODY_SIZE} bytes" if body.bytesize + chunk.bytesize > MAX_BODY_SIZE
+
+      body << chunk
+    end
     raise HTTPResponseError, "Expected 200, got #{response.status}" unless response.status == 200
-    # TODO: body_with_limit, https://github.com/mastodon/mastodon/blob/33c8708a1ac7df363bf2bd74ab8fa2ed7168379c/app/lib/request.rb#L246
-    doc = Nokogiri::HTML5(response.body)
+    doc = Nokogiri::HTML5(body)
 
     xpaths = [
       # rel=me, what mastodon uses for profile link verification
@@ -70,8 +75,8 @@ class VerifyLinkJob < ApplicationJob
     raise LinkNotPresentError, "Expected #{expected_href} to be present in #{uri}"
   end
 
-  def get(url)
-    Faraday.new(nil, request: { timeout: TIMEOUT_SEC }) do |f|
+  def get(url, &on_data)
+    connection = Faraday.new(nil, request: { timeout: TIMEOUT_SEC }) do |f|
       # Hosts here are arbitrary user-supplied URLs, so don't let Datadog split each one into its own service.
       f.use :datadog_tracing, split_by_domain: false, peer_service: "linkback-verification" if Datadog.configuration.tracing.enabled
 
@@ -80,14 +85,12 @@ class VerifyLinkJob < ApplicationJob
 
       f.response :logger, logger, headers: false, errors: true
       f.response :raise_error
-    end.get(
-      url,
-      {},
-      {
-        "User-Agent" => "RubyGems.org Linkback Verification/#{AppRevision.version}",
-        "Accept" => "text/html"
-      }
-    )
+    end
+    connection.get(url) do |request|
+      request.headers["User-Agent"] = "RubyGems.org Linkback Verification/#{AppRevision.version}"
+      request.headers["Accept"] = "text/html"
+      request.options.on_data = on_data
+    end
   end
 
   def should_retry?
