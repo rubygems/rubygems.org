@@ -38,7 +38,6 @@ class Organization::ReservedHandlesTest < ActiveSupport::TestCase
       assert Organization::Handle.reserved?("RUBY_GEMS")
     end
 
-    # TODO: BRIAN: I'm not sure on how to handle the prefix problem as of yet
     should "not treat a reserved name as a prefix or substring match" do
       refute Organization::Handle.reserved?("apiary")
       refute Organization::Handle.reserved?("myapi")
