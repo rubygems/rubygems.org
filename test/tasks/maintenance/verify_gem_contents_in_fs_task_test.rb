@@ -118,5 +118,15 @@ class Maintenance::VerifyGemContentsInFsTaskTest < ActiveSupport::TestCase
     should "return true when patterns are valid" do
       assert_predicate task(gem_name_pattern: "^.+$", full_name_pattern: "-\\d"), :valid?
     end
+
+    should "return false when patterns are not valid" do
+      invalid = task(gem_name_pattern: "(", full_name_pattern: "[", version_pattern: "(", platform_pattern: "[")
+
+      refute_predicate invalid, :valid?
+      %i[gem_name_pattern full_name_pattern version_pattern platform_pattern].each do |field|
+        assert_includes invalid.errors[field], "is not a valid regular expression"
+      end
+      assert_predicate task(gem_name_pattern: "(?q)acme"), :valid?
+    end
   end
 end
