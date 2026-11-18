@@ -132,6 +132,27 @@ class VerifyLinkJobTest < ActiveJob::TestCase
     assert_no_enqueued_jobs only: VerifyLinkJob
   end
 
+  test "rejects a response larger than the verification limit" do
+    stub_request(:get, @links[:home]).to_return(status: 200, body: LINKBACK_HTML + ("x" * 1.megabyte))
+
+    VerifyLinkJob.perform_now(link_verification: @home)
+
+    refute_predicate @home.reload, :verified?
+    assert_nil @home.last_verified_at
+    assert_equal 1, @home.failures_since_last_verification
+    assert_enqueued_jobs 1, only: VerifyLinkJob
+  end
+
+  test "verifies a response at the verification limit" do
+    stub_request(:get, @links[:home]).to_return(status: 200,
+      body: LINKBACK_HTML + (" " * (VerifyLinkJob::MAX_BODY_SIZE - LINKBACK_HTML.bytesize)))
+
+    VerifyLinkJob.perform_now(link_verification: @home)
+
+    assert_predicate @home.reload, :verified?
+    assert_equal 0, @home.failures_since_last_verification
+  end
+
   test "verifies github repo link" do
     freeze_time
 
