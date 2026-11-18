@@ -10,8 +10,6 @@ class Maintenance::VerifyGemContentsInFsTask < MaintenanceTasks::Task
 
   attribute :only_indexed, :boolean, default: true
 
-  validate :patterns_are_valid
-
   def collection
     collection = Version.all
     collection = collection.indexed if only_indexed
@@ -32,17 +30,6 @@ class Maintenance::VerifyGemContentsInFsTask < MaintenanceTasks::Task
   end
 
   private
-
-  def patterns_are_valid
-    %i[gem_name_pattern version_pattern platform_pattern full_name_pattern].each do |pattern|
-      next if send(pattern).blank?
-      begin
-        Regexp.new(send(pattern))
-      rescue RegexpError
-        errors.add(pattern, "is not a valid regular expression")
-      end
-    end
-  end
 
   def matches_regexp(collection, field, regexp)
     collection.where(collection.arel_table[field].matches_regexp(regexp))

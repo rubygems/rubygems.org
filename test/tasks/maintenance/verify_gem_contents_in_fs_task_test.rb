@@ -93,6 +93,21 @@ class Maintenance::VerifyGemContentsInFsTaskTest < ActiveSupport::TestCase
 
       assert_equal 1, task(gem_name_pattern: "^.$").collection.count
     end
+
+    should "apply database-supported patterns to all filters" do
+      version = create(:version, rubygem: create(:rubygem, name: "acme"))
+      create(:version, rubygem: create(:rubygem, name: "aXme"))
+
+      { gem_name_pattern: version.rubygem.name, platform_pattern: version.platform,
+        full_name_pattern: version.full_name }.each do |field, value|
+        pattern = "(?q)#{value}"
+        filtered = task(field => pattern)
+
+        assert_predicate filtered, :valid?
+        assert_includes filtered.collection, version
+      end
+      assert_equal 1, task(gem_name_pattern: "(?q)acme").collection.count
+    end
   end
 
   context "#valid?" do
@@ -102,10 +117,6 @@ class Maintenance::VerifyGemContentsInFsTaskTest < ActiveSupport::TestCase
 
     should "return true when patterns are valid" do
       assert_predicate task(gem_name_pattern: "^.+$", full_name_pattern: "-\\d"), :valid?
-    end
-
-    should "return false when patterns are not valid" do
-      refute_predicate task(gem_name_pattern: "(", full_name_pattern: "["), :valid?
     end
   end
 end
