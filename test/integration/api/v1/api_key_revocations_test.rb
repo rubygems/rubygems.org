@@ -129,6 +129,8 @@ class Api::V1::ApiKeyRevocationsTest < ActionDispatch::IntegrationTest
           api_key = create(:api_key, key: "leaked-token", owner: @user)
           body = JSON.dump([token: "leaked-token", type: "rubygems", url: "https://example.com/leak"])
           headers = { header_keyid => "test_key_id", header_signature => Base64.strict_encode64(sign_body(body)) }
+          headers["Truffle-Public-Key-Identifier"] = "unknown-truffle-key"
+          headers["Truffle-Public-Key-Signature"] = "invalid"
           if name == :github
             headers[DEPS_DEV_HEADER_KEYID] = "test_key_id"
             headers[DEPS_DEV_HEADER_SIGNATURE] = Base64.strict_encode64(sign_body("wrong body"))
@@ -392,7 +394,184 @@ class Api::V1::ApiKeyRevocationsTest < ActionDispatch::IntegrationTest
     end
   end
 
+  context "from Truffle" do
+    setup do
+      @truffle_key = OpenSSL::PKey::EC.generate("prime256v1")
+      @truffle_config = Rails.configuration.secret_scanning.fetch(:truffle, {})
+      @original_truffle_config = @truffle_config.dup
+      @truffle_config.merge!(key_identifier: "test-truffle-key", public_key: @truffle_key.public_to_pem)
+      @user = create(:user)
+      @api_key = create(:api_key, key: "leaked-token", owner: @user)
+      @unrelated_key = create(:api_key, owner: @user)
+      @finding = { id: "finding-1", token: "leaked-token", type: "RubyGems", url: "https://example.com/leak", source: "Github" }
+    end
+
+    teardown do
+      @truffle_config.replace(@original_truffle_config)
+    end
+
+    should "authenticate P-256 signed raw bytes and revoke without classification feedback" do
+      body = "#{JSON.pretty_generate([@finding])}\n"
+
+      assert_difference -> { @user.events.where(tag: Events::UserEvent::API_KEY_DELETED).count }, 1 do
+        assert_emails 1 do
+          perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+            post_truffle(body)
+          end
+        end
+      end
+
+      assert_response :no_content
+      assert_empty response.body
+      assert_predicate @api_key.reload, :expired?
+      refute_predicate @unrelated_key.reload, :expired?
+      assert_equal [@user.email], ActionMailer::Base.deliveries.sole.to
+      assert_match @finding[:url], ActionMailer::Base.deliveries.sole.body.to_s
+    end
+
+    %i[missing_headers missing_identifier missing_signature unknown_identifier unconfigured_key altered_bytes wrong_key malformed_signature
+       mixed_headers invalid_github invalid_deps_dev unauthenticated_malformed_json].each do |denial|
+      should "deny #{denial} without mutations, events, jobs, or emails" do
+        body = JSON.pretty_generate([@finding])
+        headers = {}
+        case denial
+        when :missing_headers
+          headers = { "Truffle-Public-Key-Identifier" => nil, "Truffle-Public-Key-Signature" => nil }
+        when :missing_identifier then headers["Truffle-Public-Key-Identifier"] = nil
+        when :missing_signature then headers["Truffle-Public-Key-Signature"] = nil
+        when :unknown_identifier then headers["Truffle-Public-Key-Identifier"] = "unknown"
+        when :unconfigured_key then @truffle_config[:public_key] = nil
+        when :altered_bytes
+          headers["Truffle-Public-Key-Signature"] = Base64.strict_encode64(@truffle_key.sign("SHA256", JSON.dump([@finding])))
+        when :wrong_key
+          headers["Truffle-Public-Key-Signature"] = Base64.strict_encode64(OpenSSL::PKey::EC.generate("prime256v1").sign("SHA256", body))
+        when :malformed_signature then headers["Truffle-Public-Key-Signature"] = "not-base64!"
+        when :unauthenticated_malformed_json
+          body = '[{"token":'
+          headers["Truffle-Public-Key-Signature"] = Base64.strict_encode64(@truffle_key.sign("SHA256", "different bytes"))
+        when :mixed_headers
+          headers = { "Truffle-Public-Key-Signature" => nil, HEADER_SIGNATURE => Base64.strict_encode64(@truffle_key.sign("SHA256", body)) }
+        when :invalid_github, :invalid_deps_dev
+          provider = denial == :invalid_github ? SecretScanning::GitHub : SecretScanning::DepsDev
+          headers = { provider::IDENTIFIER_HEADER => "test_key_id", provider::SIGNATURE_HEADER => "invalid" }
+          Rails.cache.delete([provider::CACHE_NAMESPACE, "public_keys", "test_key_id"])
+          stub_request(:get, provider::KEYS_URI).to_return(
+            headers: { "Content-Type" => "application/json" },
+            body: { public_keys: [key_identifier: "test_key_id", key: @truffle_key.public_to_pem] }.to_json
+          )
+        end
+
+        assert_truffle_no_side_effects do
+          post_truffle(body, headers:)
+        end
+
+        assert_response :unauthorized
+      end
+    end
+
+    should "accept Truffle when earlier providers have incomplete headers" do
+      post_truffle(JSON.dump([@finding]), headers: { HEADER_KEYID => "incomplete", DEPS_DEV_HEADER_SIGNATURE => "incomplete" })
+
+      assert_response :no_content
+      assert_predicate @api_key.reload, :expired?
+    end
+
+    [nil, "", "   ", 42, false, [], {}].product(%w[id token type url source]).each do |invalid, field|
+      should "reject #{field} of #{invalid.inspect} before revoking any finding" do
+        finding = @finding.merge(field.to_sym => invalid)
+        finding.delete(field.to_sym) if invalid.nil?
+
+        assert_truffle_no_side_effects { post_truffle(JSON.dump([@finding, finding])) }
+
+        assert_response :bad_request
+      end
+    end
+
+    should "reject non-array payloads and non-object findings" do
+      [@finding, { _json: [@finding] }, nil, "finding", [@finding, nil], [@finding, "finding"]].each do |payload|
+        assert_truffle_no_side_effects { post_truffle(JSON.dump(payload)) }
+
+        assert_response :bad_request
+      end
+    end
+
+    should "reject malformed JSON without side effects" do
+      assert_truffle_no_side_effects { post_truffle('[{"token":') }
+
+      assert_response :bad_request
+    end
+
+    should "acknowledge an empty batch without side effects" do
+      assert_truffle_no_side_effects { post_truffle("[]") }
+
+      assert_response :no_content
+      assert_empty response.body
+    end
+
+    should "expire trusted publisher keys without jobs or emails" do
+      publisher_key = create(:api_key, owner: create(:oidc_trusted_publisher_github_action), key: "publisher-token")
+
+      assert_no_difference -> { @user.events.count } do
+        assert_no_enqueued_jobs do
+          assert_emails 0 do
+            post_truffle(JSON.dump([@finding.merge(token: "publisher-token")]))
+          end
+        end
+      end
+
+      assert_response :no_content
+      assert_empty response.body
+      assert_predicate publisher_key.reload, :expired?
+      refute_predicate @api_key.reload, :expired?
+    end
+
+    should "deduplicate by token and acknowledge retries without revoking or notifying again" do
+      body = JSON.dump([@finding, @finding.merge(id: "finding-2", url: "https://example.com/last"), @finding.merge(token: "unknown")])
+      unrelated_state = @unrelated_key.reload.attributes
+
+      assert_difference -> { @user.events.where(tag: Events::UserEvent::API_KEY_DELETED).count }, 1 do
+        assert_emails 1 do
+          perform_enqueued_jobs only: ActionMailer::MailDeliveryJob do
+            post_truffle(body)
+          end
+        end
+      end
+
+      assert_response :no_content
+      assert_empty response.body
+      assert_predicate @api_key.reload, :expired?
+      assert_equal unrelated_state, @unrelated_key.reload.attributes
+      assert_match "https://example.com/last", ActionMailer::Base.deliveries.sole.body.to_s
+
+      travel 1.hour do
+        assert_truffle_no_side_effects { post_truffle(body) }
+      end
+
+      assert_response :no_content
+      assert_empty response.body
+    end
+  end
+
   private
+
+  def post_truffle(body, headers: {})
+    post revoke_api_v1_api_key_path, params: body, headers: {
+      "CONTENT_TYPE" => "application/json",
+      "Truffle-Public-Key-Identifier" => "test-truffle-key",
+      "Truffle-Public-Key-Signature" => Base64.strict_encode64(@truffle_key.sign("SHA256", body))
+    }.merge(headers)
+  end
+
+  def assert_truffle_no_side_effects(&block)
+    state = [@api_key, @unrelated_key].map { |key| key.reload.attributes }
+    assert_no_difference -> { @user.events.count } do
+      assert_no_enqueued_jobs do
+        assert_emails(0, &block)
+      end
+    end
+
+    assert_equal(state, [@api_key, @unrelated_key].map { |key| key.reload.attributes })
+  end
 
   def sign_body(body)
     private_key = OpenSSL::PKey::EC.new(@private_key_pem)
