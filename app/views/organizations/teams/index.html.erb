@@ -1,0 +1,37 @@
+<%
+  add_breadcrumb "Dashboard", dashboard_path
+  add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle), organization_path(@organization)
+  add_breadcrumb t("breadcrumbs.teams"), organization_teams_path(@organization)
+%>
+
+<% content_for :subject do %>
+  <%= render "organizations/subject", organization: @organization, current: :teams %>
+<% end %>
+
+<h1 class="text-h2 mb-10"><%= t("organizations.show.teams") %></h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title t("organizations.show.teams"), icon: "organizations", count: @team_size %>
+    <% if policy(@organization).create_team? %>
+      <%= render ButtonComponent.new t(".create"), new_organization_team_path(@organization), type: :link, size: :small, data: { testid: "create-team" } %>
+    <% end %>
+  <% end %>
+
+  <% if @teams.empty? %>
+    <%= prose do %>
+      <i><%= t(".no_teams") %></i>
+    <% end %>
+  <% else %>
+    <%= c.divided_list do %>
+      <% @teams.each do |team| %>
+        <%= c.list_item_to(organization_team_path(@organization, team), data: { testid: "team" }) do %>
+          <div class="flex flex-col">
+            <p class="text-neutral-800 dark:text-white" data-testid="team-name"><%= team.name %></p>
+            <p class="text-b3 text-neutral-600 dark:text-neutral-400"><%= team.handle %></p>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

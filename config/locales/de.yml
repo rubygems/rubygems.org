@@ -383,6 +383,8 @@ de:
     invite_member:
     reservations:
     reserve_gem_name:
+    teams:
+    create_team:
   mailer:
     confirm_your_email: Bitte bestätigen Sie Ihre E-Mail-Adresse mit dem Link, der
       an Ihre E-Mail gesendet wurde.
@@ -552,6 +554,7 @@ de:
       invite:
       transfer:
       reservations:
+      teams:
     members:
       create:
         user_already_invited:
@@ -601,6 +604,20 @@ de:
         limit_reached_html:
         unlimited:
         disclaimer:
+    teams:
+      create:
+        team_created:
+      index:
+        create:
+        no_teams:
+      new:
+        title:
+        name:
+        name_placeholder:
+        handle:
+        handle_placeholder:
+        handle_hint:
+        create:
     invitation_expiry_title:
     invitations:
       expired:

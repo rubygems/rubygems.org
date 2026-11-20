@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_10_184402) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -587,6 +587,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "organization_teams", force: :cascade do |t|
+    t.string "handle", null: false
+    t.string "name", null: false
+    t.bigint "organization_id", null: false
+    t.boolean "default", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index "organization_id, lower((handle)::text)", name: "index_organization_team_handle_on_organizations", unique: true
+    t.index ["organization_id"], name: "index_organization_teams_on_organization_id"
+  end
+
   create_table "organizations", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "deleted_at", precision: nil
@@ -870,6 +881,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
   add_foreign_key "organization_invites", "users"
   add_foreign_key "organization_onboarding_invites", "organization_onboardings"
   add_foreign_key "organization_onboarding_invites", "users"
+  add_foreign_key "organization_teams", "organizations"
   add_foreign_key "ownership_calls", "rubygems", name: "ownership_calls_rubygem_id_fk"
   add_foreign_key "ownership_calls", "users", name: "ownership_calls_user_id_fk"
   add_foreign_key "ownership_requests", "ownership_calls", name: "ownership_requests_ownership_call_id_fk"

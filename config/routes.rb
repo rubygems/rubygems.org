@@ -314,6 +314,7 @@ Rails.application.routes.draw do
       resources :gems, only: :index, controller: 'organizations/gems'
       resources :gem_name_reservations, only: %i[index new create destroy], path: 'reservations',
         controller: 'organizations/gem_name_reservations'
+      resources :teams, only: %i[index show new create], controller: 'organizations/teams'
     end
   end
 
