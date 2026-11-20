@@ -1,4 +1,7 @@
 <% @title = t("multifactor_authentication") %>
+<% content_for :search_engine_tags do %>
+  <meta name="robots" content="noindex">
+<% end %>
 
 <%
   label_class = "block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2"

@@ -112,6 +112,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
           assert_response :success
           assert_new_password_form
           assert_password_reset_response_headers
+          assert_noindex_without_search_engine_links
         end
 
         should "presents the password edit form" do
@@ -207,6 +208,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
         assert_response :success
         assert_otp_form
+        assert_noindex_without_search_engine_links
         refute_signed_in
       end
     end

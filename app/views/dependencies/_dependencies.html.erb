@@ -6,11 +6,11 @@
       <li>
         <span>
           <% if version %>
-            <%= tag.span(class: "deps_expanded deps_expanded-link", data: { gem_id: name, version: }) {} %>
+            <%= tag.span(class: "deps_expanded deps_expanded-link", data: { url: rubygem_version_dependencies_path(rubygem_id: name, version_id: version, format: :json) }) {} %>
           <% end %>
         </span>
         <% if version %>
-          <%= link_to "/gems/#{name}/versions/#{version}", target: :_blank do %>
+          <%= link_to rubygem_version_path(rubygem_id: name, id: version), target: :_blank do %>
             <span class="deps_item"><%= name %> <%= version %>
             <span class="deps_item--details"> <%= req %></span></span>
           <% end %>
