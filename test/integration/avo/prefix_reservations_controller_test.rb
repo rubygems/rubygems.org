@@ -134,14 +134,4 @@ class Avo::PrefixReservationsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
   end
-
-  private
-
-  def admin_outside_rubygems_org_team
-    admin = create(:admin_github_user, :is_admin)
-    info_data = admin.info_data.deep_dup
-    info_data[:viewer][:organization][:teams][:edges].reject! { |edge| edge.dig(:node, :slug) == "rubygems-org" }
-    admin.update!(info_data:)
-    admin
-  end
 end

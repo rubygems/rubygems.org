@@ -8,6 +8,7 @@ class OrganizationsController < Organizations::BaseController
   before_action :redirect_to_settings_strong_mfa_required, only: :index, if: :mfa_required_weak_level_enabled?
 
   before_action :find_organization, only: %i[show edit update]
+  before_action :set_domain_settings, only: :edit
   before_action :set_gem_sort, only: :show
   before_action :set_page, only: :show
 
@@ -47,7 +48,8 @@ class OrganizationsController < Organizations::BaseController
     if @organization.update(organization_params)
       redirect_to organization_path(@organization)
     else
-      render :edit
+      set_domain_settings
+      render :edit, status: :unprocessable_content
     end
   end
 

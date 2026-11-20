@@ -2,6 +2,7 @@
 
 require "test_helper"
 require "helpers/rate_limit_helpers"
+require "helpers/fake_dns_helpers"
 
 class RackAttackTest < ActionDispatch::IntegrationTest
   include RateLimitHelpers
