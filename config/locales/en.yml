@@ -584,6 +584,11 @@ en:
           removed: Removed %{handle} from the team.
       members_component:
         members: Members
+        handle: Handle
+        name: Name
+        email: Email
+        added: Added
+        actions: Actions
         no_members: No members yet
         remove: Remove
         add_members: Add members

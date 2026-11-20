@@ -10,7 +10,10 @@ class Organizations::Teams::MembersComponentPreview < Lookbook::Preview
 
     render Organizations::Teams::MembersComponent.new(
       team:,
-      members: [membership(1, "alice", "Alice Smith"), membership(2, "bob", nil)],
+      team_memberships: [
+        team_membership(membership(1, "alice", "Alice Smith", public_email: true), 3.days.ago),
+        team_membership(membership(2, "bob", nil), 1.hour.ago)
+      ],
       addable_memberships: [
         membership(3, "dave", "Dave Kim", public_email: true),
         membership(4, "erin", "Erin Park"),
@@ -21,6 +24,10 @@ class Organizations::Teams::MembersComponentPreview < Lookbook::Preview
   end
 
   private
+
+  def team_membership(membership, added_at)
+    OrganizationTeamMembership.new(membership:, created_at: added_at)
+  end
 
   def membership(id, handle, full_name, public_email: false)
     user = User.new(handle:, full_name:, email: "#{handle}@rubygems.test", public_email:)

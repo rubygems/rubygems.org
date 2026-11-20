@@ -17,7 +17,7 @@ class Organizations::TeamsController < Organizations::BaseController
     authorize @team, :show?
 
     @can_manage_members = policy(@team).add_member?
-    @members = @team.memberships.includes(:user)
+    @team_memberships = @team.team_memberships.includes(membership: :user).load
     @addable_memberships = @can_manage_members ? @team.addable_memberships : []
   end
 

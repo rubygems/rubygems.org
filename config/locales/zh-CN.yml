@@ -590,6 +590,11 @@ zh-CN:
           removed:
       members_component:
         members:
+        handle:
+        name:
+        email:
+        added:
+        actions:
         no_members:
         remove:
         add_members:
