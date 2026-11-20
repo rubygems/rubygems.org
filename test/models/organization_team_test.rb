@@ -202,13 +202,16 @@ class OrganizationTeamTest < ActiveSupport::TestCase
 
       should "add each membership and record an added event per member" do
         first, second = create_list(:membership, 2, organization: @organization)
-        added_events = -> { @organization.events.where(tag: Events::OrganizationEvent::TEAM_MEMBER_ADDED) }
 
-        assert_difference [-> { @team.team_memberships.count }, -> { added_events.call.count }], 2 do
-          @team.add_members!([first, second], actor: @actor)
-        end
+        @team.add_members!([first, second], actor: @actor)
 
-        event = added_events.call.find_by("additional->>'member' = ?", first.user.display_handle)
+        assert_equal 2, @team.team_memberships.count
+
+        added_events = @organization.events.where(tag: Events::OrganizationEvent::TEAM_MEMBER_ADDED)
+
+        assert_equal 2, added_events.count
+
+        event = added_events.frnd_by("additional->>'member' = ?", first.user.display_handle)
 
         assert_equal @team.handle, event.additional.team
         assert_equal @team, event.additional.team_gid.find
