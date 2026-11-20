@@ -51,7 +51,8 @@ class Organizations::Teams::MembersComponent < ApplicationComponent
 
   def member_row(team_membership)
     user = team_membership.membership.user
-    tr(class: "border-b border-neutral-200 dark:border-neutral-800", data: { testid: "team-member" }) do
+    tr(class: "border-b border-neutral-200 dark:border-neutral-800 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800",
+      data: { testid: "team-member" }) do
       td(class: "#{TD} font-semibold text-neutral-900 dark:text-white", data: { testid: "team-member-handle" }) { user.handle }
       td(class: TD, data: { testid: "team-member-name" }) { user.full_name.to_s }
       td(class: "#{TD} break-all", data: { testid: "team-member-email" }) { user.public_email? ? user.email : "" }
