@@ -369,6 +369,9 @@ de:
         close_menu:
         search_gem_html: Suche Gems&hellip;
         members:
+        theme_auto:
+        theme_light:
+        theme_dark:
       mfa_banner_html:
   breadcrumbs:
     home: Startseite

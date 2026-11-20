@@ -53,6 +53,10 @@ class NavigationTest < ApplicationSystemTestCase
     end
 
     assert_no_selector menu
+    assert_selector "header [data-testid='theme-toggle']:focus"
+
+    page.driver.with_playwright_page { it.keyboard.press("Tab") }
+
     assert_selector "header a:focus", text: "Sign in"
 
     button.hover
@@ -197,7 +201,7 @@ class NavigationTest < ApplicationSystemTestCase
 
     assert_selector "a[title='RubyGems']:focus"
 
-    find("body").send_keys(:tab, :tab, :tab)
+    find("body").send_keys(:tab, :tab, :tab, :tab)
 
     assert_selector "button[aria-label='Open menu']:focus"
     assert_no_selector "dialog[open]"

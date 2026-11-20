@@ -349,6 +349,9 @@ nl:
         close_menu:
         search_gem_html: Gems Zoeken&hellip;
         members:
+        theme_auto:
+        theme_light:
+        theme_dark:
       mfa_banner_html:
   breadcrumbs:
     home: Startpagina

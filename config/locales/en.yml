@@ -351,6 +351,9 @@ en:
         close_menu: Close menu
         search_gem_html: Search Gems&hellip;
         members: Members
+        theme_auto: "Theme: auto"
+        theme_light: "Theme: light"
+        theme_dark: "Theme: dark"
       mfa_banner_html: 🎉 We now support security devices! Improve your account security by <a href="/settings/edit#security-device">setting up</a> a new device. [Learn more](link to blog post)!
   breadcrumbs:
     home: Home
