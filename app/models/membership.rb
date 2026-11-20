@@ -6,6 +6,8 @@ class Membership < ApplicationRecord
 
   belongs_to :invited_by, class_name: "User", optional: true
 
+  has_many :organization_team_memberships, dependent: :destroy
+
   scope :unconfirmed, -> { where(confirmed_at: nil) }
   scope :confirmed, -> { where.not(confirmed_at: nil) }
 

@@ -577,6 +577,25 @@ ja:
         handle_placeholder:
         handle_hint:
         create:
+      members:
+        create:
+          added:
+            one:
+            other:
+          none_selected:
+        destroy:
+          removed:
+      members_component:
+        members:
+        handle:
+        name:
+        email:
+        added:
+        actions:
+        no_members:
+        remove:
+        add_members:
+        add_selected:
     invitation_expiry_title:
     invitations:
       expired:

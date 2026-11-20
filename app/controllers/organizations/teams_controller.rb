@@ -15,6 +15,10 @@ class Organizations::TeamsController < Organizations::BaseController
   def show
     @team = @organization.organization_teams.find_by_case_insensitive_handle!(params.expect(:id))
     authorize @team, :show?
+
+    @can_manage_members = policy(@team).add_member?
+    @team_memberships = @team.team_memberships.includes(membership: :user).load
+    @addable_memberships = @can_manage_members ? @team.addable_memberships : []
   end
 
   def new

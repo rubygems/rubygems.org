@@ -11,3 +11,5 @@
 
 <h1 class="text-h2 mb-1" data-testid="team-show-name"><%= @team.name %></h1>
 <p class="text-b2 text-neutral-600 dark:text-neutral-400 mb-10" data-testid="team-show-handle"><%= @team.handle %></p>
+
+<%= render Organizations::Teams::MembersComponent.new(team: @team, team_memberships: @team_memberships, addable_memberships: @addable_memberships, can_manage: @can_manage_members) %>
