@@ -583,6 +583,18 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       refute_tags_include(span, @password)
     end
 
+    should "reject a malformed Basic-auth username without creating a key" do
+      login = "\xFF".b
+      authorize_with("#{login}:#{@password}")
+      span = assert_no_difference [-> { ApiKey.count }, -> { enqueued_jobs.size }, -> { ActionMailer::Base.deliveries.size }] do
+        with_appsec_trace { post :create, params: { name: "test", index_rubygems: "true" } }
+      end
+
+      assert_response :unauthorized
+      assert_login_failure_tracked(span, login:, reason: "invalid_credentials")
+      assert_empty appsec_event_family_tags(span, "api_key.")
+    end
+
     should "track failure, not success, when the password is right but the OTP is missing" do
       @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
       authorize_with("#{@user.email}:#{@password}")
@@ -683,6 +695,18 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
         secrets = [@response.body, api_key.hashed_key, @user.password]
 
         assert_empty(tags.values.map(&:to_s).select { |value| secrets.any? { value.include?(it) } })
+      end
+
+      should "return the saved API key when Datadog event tracking raises" do
+        authorize_with("#{@user.email}:#{@user.password}")
+        error = RuntimeError.new("Datadog tracking failed")
+        Datadog::Kit::AppSec::Events.stubs(:track).raises(error)
+        Rails.error.expects(:report).with(error, handled: true)
+
+        post :create, params: { name: "test-key", index_rubygems: "true" }, format: "text"
+
+        assert_response :success
+        assert_equal @user.api_keys.sole.hashed_key, Digest::SHA256.hexdigest(@response.body)
       end
 
       should "not track a create that fails validation" do
