@@ -30,7 +30,7 @@
     <header class="bg-white dark:bg-black">
       <!-- Header Nav -->
       <div class="py-4 px-8 border-b border-neutral-400 dark:border-neutral-800">
-        <div class="flex flex-wrap xl:flex-nowrap justify-between max-w-screen-xl mx-auto" data-controller="dialog">
+        <div class="flex flex-wrap <%= signed_in? ? "lg:flex-nowrap" : "xl:flex-nowrap" %> justify-between max-w-screen-xl mx-auto" data-controller="dialog">
           <!-- Logo, desktop nav, mobile nav dialog -->
           <div class="flex shrink-0 flex-row items-center xl:mr-auto">
             <!-- Logo -->
@@ -40,7 +40,7 @@
             <% end %>
 
             <!-- Desktop Navigation Links -->
-            <nav class="hidden xl:flex shrink-0 flex-row ml-7 items-center justify-end whitespace-nowrap text-b2 text-neutral-800 dark:text-white leading-7">
+            <nav class="hidden <%= signed_in? ? "lg:flex" : "xl:flex" %> shrink-0 flex-row ml-7 items-center justify-end whitespace-nowrap text-b2 text-neutral-800 dark:text-white leading-7">
               <%= link_to t("layouts.application.header.explore"), explore_path, class: "lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
               <%= link_to t("layouts.application.footer.blog"), "https://blog.rubygems.org", class: "ml-7 lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
               <%= link_to t("layouts.application.footer.statistics"), stats_path, class: "ml-7 lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
@@ -145,7 +145,7 @@
               </button>
             <% end %>
 
-            <div class="relative ml-2 hidden xl:block xl:ml-3" data-controller="dropdown" data-action="keydown.esc->dropdown#close focusout->dropdown#hide">
+            <div class="relative ml-2 hidden <%= signed_in? ? "lg:block" : "xl:block" %> xl:ml-3" data-controller="dropdown" data-action="keydown.esc->dropdown#close focusout->dropdown#hide">
               <button type="button" data-action="dropdown#toggle click@window->dropdown#hide" data-dropdown-target="button" aria-label="<%= t('layouts.application.header.language') %>" aria-controls="header-language-menu" aria-expanded="false" class="flex h-9 items-center gap-1 rounded border border-neutral-300 bg-white px-2 text-b3 font-semibold text-neutral-800 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:border-neutral-700 dark:bg-black dark:text-white dark:hover:bg-neutral-800">
                 <%= icon_tag "language", class: "h-5 w-5" %>
                 <span><%= I18n.locale.to_s.split("-").first.upcase %></span>
@@ -168,7 +168,7 @@
             <%= render "layouts/session" %>
 
             <!-- Mobile Menu Button -->
-            <button data-action="dialog#open" data-dialog-target="button" aria-label="<%= t('layouts.application.header.open_menu') %>" class="flex w-9 h-9 ml-3 shrink-0 items-center justify-center rounded-lg border border-neutral-400 dark:border-neutral-700 text-neutral-900 dark:text-white bg-white dark:bg-black hover:bg-neutral-100 dark:hover:bg-neutral-800 active:bg-neutral-200 dark:active:bg-neutral-700 xl:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">
+            <button data-action="dialog#open" data-dialog-target="button" aria-label="<%= t('layouts.application.header.open_menu') %>" class="flex w-9 h-9 ml-3 shrink-0 items-center justify-center rounded-lg border border-neutral-400 dark:border-neutral-700 text-neutral-900 dark:text-white bg-white dark:bg-black hover:bg-neutral-100 dark:hover:bg-neutral-800 active:bg-neutral-200 dark:active:bg-neutral-700 <%= signed_in? ? "lg:hidden" : "xl:hidden" %> focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">
               <%= icon_tag "menu", class: "w-6 h-6", aria: { hidden: true } %>
             </button>
           </div>
