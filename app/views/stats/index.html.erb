@@ -1,7 +1,7 @@
 <% @title = t(".title") %>
 
 <% card_class = "flex flex-col gap-2 px-6 py-8 rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-black" %>
-<% stat_label_class = "flex items-center gap-2 text-b4 font-bold uppercase tracking-wide text-neutral-600 dark:text-neutral-400" %>
+<% stat_label_class = "flex min-w-0 items-start gap-2 text-b4 font-bold uppercase tracking-wide text-neutral-600 dark:text-neutral-400" %>
 <% stat_count_class = "text-h3 font-semibold text-neutral-900 dark:text-white" %>
 
 <div class="flex flex-wrap items-center justify-between gap-4 mb-10">
@@ -17,17 +17,17 @@
   ) %>
 </div>
 
-<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
   <div class="<%= card_class %>">
-    <span class="<%= stat_label_class %>"><%= icon_tag("gems", size: 5, class: "fill-orange") %><%= t("stats.index.total_gems") %></span>
+    <span class="<%= stat_label_class %>"><%= icon_tag("gems", size: 5, class: "shrink-0 fill-orange") %><span><%= t("stats.index.total_gems") %></span></span>
     <span class="<%= stat_count_class %>"><%= number_with_delimiter @number_of_gems %></span>
   </div>
   <div class="<%= card_class %>">
-    <span class="<%= stat_label_class %>"><%= icon_tag("account-box", size: 5, class: "fill-orange") %><%= t("stats.index.total_users") %></span>
+    <span class="<%= stat_label_class %>"><%= icon_tag("account-box", size: 5, class: "shrink-0 fill-orange") %><span><%= t("stats.index.total_users") %></span></span>
     <span class="<%= stat_count_class %>"><%= number_with_delimiter @number_of_users %></span>
   </div>
   <div class="<%= card_class %>">
-    <span class="<%= stat_label_class %>"><%= icon_tag("arrow-circle-down", size: 5, class: "fill-orange") %><%= t("total_downloads") %></span>
+    <span class="<%= stat_label_class %>"><%= icon_tag("arrow-circle-down", size: 5, class: "shrink-0 fill-orange") %><span><%= t("total_downloads") %></span></span>
     <span class="<%= stat_count_class %>"><%= number_with_delimiter @number_of_downloads %></span>
   </div>
 </div>
