@@ -25,7 +25,6 @@ gem "flipper-ui", "~> 1.4"
 gem "good_job", "~> 3.99"
 gem "gravtastic", "~> 3.2"
 gem "honeybadger", "~> 6.10.2", require: false
-gem "http_accept_language", "~> 2.1"
 gem "kaminari", "~> 1.3"
 gem "mail", "~> 2.9"
 gem "octokit", "~> 10.0"
