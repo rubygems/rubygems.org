@@ -211,7 +211,7 @@ class OrganizationTeamTest < ActiveSupport::TestCase
 
         assert_equal 2, added_events.count
 
-        event = added_events.frnd_by("additional->>'member' = ?", first.user.display_handle)
+        event = added_events.find_by("additional->>'member' = ?", first.user.display_handle)
 
         assert_equal @team.handle, event.additional.team
         assert_equal @team, event.additional.team_gid.find
