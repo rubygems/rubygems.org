@@ -44,7 +44,7 @@ class LocaleTest < ApplicationSystemTestCase
 
     language_button.click
 
-    assert_selector "#header-language-menu", visible: true
+    assert_selector "#header-language-menu", visible: :visible
 
     find("#header-language-menu a", text: "Deutsch").send_keys(:escape)
 

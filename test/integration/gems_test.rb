@@ -60,10 +60,10 @@ class GemsTest < ActionDispatch::IntegrationTest
   test "gem page emits search engine tags alongside head content" do
     get rubygem_path(@rubygem.slug)
 
-    assert page.has_css?(%(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"]), visible: false)
+    assert page.has_css?(%(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"]), visible: :all)
     css = %(link[rel="alternate"][type="application/atom+xml"][title="sandworm Version Feed"][href="/gems/sandworm/versions.atom"])
 
-    assert page.has_css?(css, visible: false)
+    assert page.has_css?(css, visible: :all)
   end
 
   test "canonical url for an old version" do
@@ -116,7 +116,7 @@ class GemsTest < ActionDispatch::IntegrationTest
   test "header navigation links to the gems explore page first" do
     get root_path
 
-    desktop_links = page.all("header nav.lg\\:flex a")
+    desktop_links = page.all("header nav.xl\\:flex a")
     mobile_links = page.all("header dialog nav a", visible: :all)
 
     assert_equal ["Explore", explore_path], [desktop_links.first.text, desktop_links.first[:href]]
@@ -180,7 +180,7 @@ class GemsTest < ActionDispatch::IntegrationTest
 
       assert_response :success
       assert_equal 0, search_engine_link_count, "#{path} emitted search engine links for a signed-in user"
-      assert page.has_css?(%(link[rel="alternate"][type="application/atom+xml"]), visible: false), "#{path} lost its Atom feed link"
+      assert page.has_css?(%(link[rel="alternate"][type="application/atom+xml"]), visible: :all), "#{path} lost its Atom feed link"
     end
   end
 
@@ -188,7 +188,7 @@ class GemsTest < ActionDispatch::IntegrationTest
     ["", "?locale=de", "?utm_source=newsletter", "?anything=1"].each do |query|
       get "#{rubygem_path(@rubygem.slug)}#{query}"
 
-      assert page.has_css?(%(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"]), visible: false),
+      assert page.has_css?(%(link[rel="canonical"][href="http://localhost/gems/sandworm/versions/1.0.0"]), visible: :all),
         "gem page#{query} lost its canonical target"
     end
   end

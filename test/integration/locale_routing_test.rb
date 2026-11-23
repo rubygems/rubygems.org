@@ -165,7 +165,7 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     get "/de/pages/about"
 
     assert_response :success
-    asset_urls = page.all(:css, %(link[rel="stylesheet"][href], script[src]), visible: false).filter_map { |node| node[:href] || node[:src] }
+    asset_urls = page.all(:css, %(link[rel="stylesheet"][href], script[src]), visible: :all).filter_map { |node| node[:href] || node[:src] }
 
     refute_empty asset_urls
     assert_empty asset_urls.grep(%r{\A/de/})
@@ -320,11 +320,11 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     get "/de"
 
     assert_response :success
-    assert page.has_css?(%(link[rel="canonical"][href="http://localhost/de"]), visible: false)
-    alternates = page.all(:css, %(link[rel="alternate"][hreflang]), visible: false)
+    assert page.has_css?(%(link[rel="canonical"][href="http://localhost/de"]), visible: :all)
+    alternates = page.all(:css, %(link[rel="alternate"][hreflang]), visible: :all)
 
     assert_equal I18n.available_locales.length + 1, alternates.length
-    assert page.has_css?(%(link[rel="alternate"][hreflang="x-default"][href="http://localhost/"]), visible: false)
+    assert page.has_css?(%(link[rel="alternate"][hreflang="x-default"][href="http://localhost/"]), visible: :all)
   end
 
   test "search engine tags are omitted for signed-in requests" do
@@ -334,8 +334,8 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     get "/de"
 
     assert_response :success
-    refute page.has_css?(%(link[rel="canonical"]), visible: false)
-    refute page.has_css?(%(link[rel="alternate"][hreflang]), visible: false)
+    refute page.has_css?(%(link[rel="canonical"]), visible: :all)
+    refute page.has_css?(%(link[rel="alternate"][hreflang]), visible: :all)
   end
 
   test "the header language switcher is rendered" do
@@ -345,7 +345,7 @@ class LocaleRoutingTest < ActionDispatch::IntegrationTest
     assert page.has_css?(%(button[aria-label="#{I18n.t('layouts.application.header.language')}"]))
     language_menu = %(nav[aria-label="#{I18n.t('layouts.application.header.language')}"])
 
-    assert page.has_css?("#{language_menu} a[href='/de']", text: I18n.t(:locale_name, locale: :de), visible: false)
+    assert page.has_css?("#{language_menu} a[href='/de']", text: I18n.t(:locale_name, locale: :de), visible: :all)
     refute page.has_css?(%(footer nav[aria-label="Languages"]))
   end
 
