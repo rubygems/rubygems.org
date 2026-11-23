@@ -375,6 +375,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         span = with_appsec_trace { delete :destroy, params: { id: @credential.id } }
 
         assert_predicate @user.reload, :mfa_disabled?
+        assert_equal({ "mfa.weakened" => 1 }, @appsec_event_calls)
         assert_equal(
           { "track" => "true", "usr.id" => @user.id.to_s, "mfa.change" => "webauthn_credential_removed",
             "mfa.previous_level" => "ui_and_api", "mfa.level" => "disabled", "mfa.remaining_factors" => "0" },
@@ -389,6 +390,7 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         span = with_appsec_trace { delete :destroy, params: { id: @credential.id } }
 
         assert_equal 1, @user.webauthn_credentials.count
+        assert_equal({ "mfa.weakened" => 1 }, @appsec_event_calls)
         assert_equal(
           { "track" => "true", "usr.id" => @user.id.to_s, "mfa.change" => "webauthn_credential_removed",
             "mfa.previous_level" => "ui_and_api", "mfa.level" => "ui_and_api", "mfa.remaining_factors" => "2" },

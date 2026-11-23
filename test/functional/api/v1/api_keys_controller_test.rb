@@ -802,7 +802,9 @@ class Api::V1::ApiKeysControllerTest < ActionController::TestCase
       end
 
       should "not track an update that fails validation" do
-        span = with_appsec_trace { put :update, params: { api_key: "rubygems_update_secret", show_dashboard: "true" } }
+        span = assert_no_changes -> { @api_key.reload.last_accessed_at } do
+          with_appsec_trace { put :update, params: { api_key: "rubygems_update_secret", show_dashboard: "true" } }
+        end
 
         assert_response :unprocessable_content
         assert_equal %i[push_rubygem], @api_key.reload.scopes

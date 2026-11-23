@@ -1072,7 +1072,9 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
     @request.env["HTTP_AUTHORIZATION"] = "not-a-real-key"
 
     span = with_appsec_trace do
-      post :create, params: { rubygem_id: rubygem.slug, email: new_owner.email }
+      assert_no_changes -> { [enqueued_jobs.size, ActionMailer::Base.deliveries.size] } do
+        post :create, params: { rubygem_id: rubygem.slug, email: new_owner.email }
+      end
     end
 
     assert_response :unauthorized

@@ -722,15 +722,26 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
       end
 
       should "not reset or track keys without a verified password reset" do
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+        begin_password_reset
+
+        assert_otp_form
+
         span = with_appsec_trace do
-          put password_path, params: {
-            password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
-          }
+          assert_no_changes -> { [@user.events.count, enqueued_jobs.size, ActionMailer::Base.deliveries.size] } do
+            put password_path, params: {
+              password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
+            }
+          end
         end
 
         assert_redirected_to sign_in_path
-        assert_equal @api_key, @user.reload.api_key
+        assert_equal I18n.t("passwords.edit.token_failure"), flash[:alert]
+        assert_equal @old_encrypted_password, @user.reload.encrypted_password
+        assert_equal @api_key, @user.api_key
         assert_equal 2, @user.api_keys.unexpired.count
+        assert_empty @appsec_event_calls
+        refute_login_tracked span
         assert_empty appsec_event_family_tags(span, "api_key.")
       end
 

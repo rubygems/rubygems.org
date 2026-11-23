@@ -63,17 +63,8 @@ class ApiKeysController < ApplicationController
 
   def update
     @api_key = current_user.api_keys.find(params.expect(:id))
-    previous_scope = api_key_scope(@api_key)
-    @api_key.assign_attributes(api_key_update_params(@api_key))
 
-    if @api_key.errors.present?
-      flash.now[:error] = @api_key.errors.full_messages.to_sentence
-      return render :edit
-    end
-
-    saved = @api_key.save
-    track_api_key_scope_change(current_user, @api_key, previous_scope)
-    if saved
+    if update_api_key_and_track_scope_change(current_user, @api_key) { api_key_update_params(@api_key) }
       redirect_to profile_api_keys_path, flash: { notice: t(".success") }
     else
       flash.now[:error] = @api_key.errors.full_messages.to_sentence

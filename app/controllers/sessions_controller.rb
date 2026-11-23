@@ -33,13 +33,14 @@ class SessionsController < Clearance::SessionsController
 
   def webauthn_full_create
     unless webauthn_credential_verified?
-      track_login_failure(@user_webauthn_credential&.user)
+      track_login_failure(nil)
       return login_failure(@webauthn_error)
     end
 
     @user = user_webauthn_credential.user
 
     if @user.blocked_email
+      track_login_failure(@user)
       flash.now.alert = t("sessions.create.account_blocked")
       webauthn_new_setup
       render template: "sessions/new", status: :unauthorized

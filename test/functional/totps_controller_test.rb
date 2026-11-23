@@ -123,6 +123,7 @@ class TotpsControllerTest < ActionController::TestCase
           span = with_appsec_trace { delete :destroy, params: { otp: ROTP::TOTP.new(@user.totp_seed).now } }
 
           assert_predicate @user.reload, :mfa_disabled?
+          assert_equal({ "mfa.weakened" => 1 }, @appsec_event_calls)
           assert_equal(
             { "track" => "true", "usr.id" => @user.id.to_s, "mfa.change" => "totp_disabled",
               "mfa.previous_level" => "ui_only", "mfa.level" => "disabled", "mfa.remaining_factors" => "0" },
@@ -162,6 +163,7 @@ class TotpsControllerTest < ActionController::TestCase
             span = with_appsec_trace { delete :destroy, params: { otp: ROTP::TOTP.new(@user.totp_seed).now } }
 
             assert_predicate @user.reload, :totp_disabled?
+            assert_equal({ "mfa.weakened" => 1 }, @appsec_event_calls)
             assert_equal(
               { "track" => "true", "usr.id" => @user.id.to_s, "mfa.change" => "totp_disabled",
                 "mfa.previous_level" => "ui_only", "mfa.level" => "ui_only", "mfa.remaining_factors" => "1" },

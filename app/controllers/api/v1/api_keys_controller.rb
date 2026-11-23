@@ -32,10 +32,8 @@ class Api::V1::ApiKeysController < Api::BaseController
 
       check_mfa(user) do
         api_key = user.api_keys.find_by!(hashed_key: hashed_key(key_param))
-        previous_scope = api_key_scope(api_key)
 
-        if api_key.update(api_key_update_params(api_key))
-          track_api_key_scope_change(user, api_key, previous_scope)
+        if update_api_key_and_track_scope_change(user, api_key) { api_key_update_params(api_key) }
           respond_with "Scopes for the API key #{api_key.name} updated"
         else
           errors = api_key.errors.full_messages

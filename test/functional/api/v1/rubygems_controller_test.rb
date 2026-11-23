@@ -1046,11 +1046,21 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     should "identify the key's user, not the signed-in session user" do
       sign_in_as(create(:user))
       @request.env["HTTP_AUTHORIZATION"] = "user-push-key"
+      identity = Datadog::Kit::Identity
+      set_user = identity.method(:set_user)
+      identified_users = []
+      identity.define_singleton_method(:set_user) do |*args, **kwargs|
+        identified_users << kwargs.fetch(:id)
+        set_user.call(*args, **kwargs)
+      end
 
       span = with_appsec_trace { post :create, body: gem_file(&:read) }
 
       assert_response :success
       assert_equal @user.id.to_s, span.get_tag("usr.id")
+      assert_equal [@user.id.to_s], identified_users
+    ensure
+      identity.define_singleton_method(:set_user, set_user) if set_user
     end
 
     should "not identify a user for a trusted publisher key" do
@@ -1084,6 +1094,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
         assert_nil span.get_tag("appsec.events.api_key.authorization.failure.track")
         assert_nil span.get_tag("usr.id")
         assert_nil span.get_tag("appsec.events.gem.push.success.track")
+        assert_equal({ "api_key.authentication.failure" => 1 }, @appsec_event_calls)
         assert_no_secret span, key
       end
       assert_no_push_side_effects
@@ -1137,6 +1148,7 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
     assert_nil span.get_tag("appsec.events.api_key.authentication.failure.track")
     assert_equal @user.id.to_s, span.get_tag("usr.id")
     assert_nil span.get_tag("appsec.events.gem.push.success.track")
+    assert_equal({ "api_key.authorization.failure" => 1 }, @appsec_event_calls)
     assert_no_secret span, "user-push-key"
   end
 

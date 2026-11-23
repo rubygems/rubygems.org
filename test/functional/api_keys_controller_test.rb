@@ -766,6 +766,66 @@ path: "/profile/api_keys/1" },
           assert_empty appsec_event_family_tags(span, "api_key.")
         end
 
+        should "not attribute a scope change before the update to an MFA-only request" do
+          key_id = @api_key.id
+          apply_other_update = lambda do |key|
+            ApiKey.where(id: key.id).update_all(scopes: %i[add_owner index_rubygems]) if key.id == key_id && key.scopes == %i[index_rubygems]
+          end
+          ApiKey.set_callback(:find, :after, apply_other_update)
+
+          span = with_appsec_trace { patch :update, params: { api_key: { mfa: true }, id: @api_key.id } }
+
+          assert_redirected_to profile_api_keys_path
+          assert @api_key.reload.mfa
+          assert_equal %i[add_owner index_rubygems], @api_key.scopes
+          assert_empty appsec_event_family_tags(span, "api_key.")
+        ensure
+          ApiKey.skip_callback(:find, :after, apply_other_update)
+        end
+
+        context "when the restricted gem changes name case during the update" do
+          setup do
+            @rubygem = create(:rubygem, name: "scope-test")
+            ownership = create(:ownership, user: @user, rubygem: @rubygem)
+            @api_key.update!(scopes: %i[push_rubygem], rubygem_id: ownership.rubygem_id)
+            key_id = @api_key.id
+            gem_id = @rubygem.id
+            @rename_gem = lambda do |key|
+              Rubygem.where(id: gem_id).update_all(name: "Scope-test") if key.id == key_id
+            end
+            ApiKey.set_callback(:update, :after, @rename_gem)
+          end
+
+          teardown do
+            ApiKey.skip_callback(:update, :after, @rename_gem) if @rename_gem
+          end
+
+          should "not track a scope change on an MFA-only update" do
+            span = with_appsec_trace { patch :update, params: { api_key: { mfa: true }, id: @api_key.id } }
+
+            assert_redirected_to profile_api_keys_path
+            assert @api_key.reload.mfa
+            assert_equal @rubygem.id, @api_key.rubygem_id
+            assert_equal "Scope-test", @rubygem.reload.name
+            assert_empty appsec_event_family_tags(span, "api_key.")
+          end
+
+          should "track only the added scope using the same gem name in both tags" do
+            span = with_appsec_trace { patch :update, params: { api_key: { add_owner: true }, id: @api_key.id } }
+            tags = appsec_event_tags(span, "api_key.scope_change.success")
+
+            assert_redirected_to profile_api_keys_path
+            assert_equal %i[add_owner push_rubygem], @api_key.reload.scopes
+            assert_equal @rubygem.id, @api_key.rubygem_id
+            assert_equal "Scope-test", @rubygem.reload.name
+            assert_equal({ "api_key.scope_change.success" => 1 }, @appsec_event_calls)
+            assert_equal "push_rubygem", tags["api_key.previous_scopes"]
+            assert_equal "add_owner,push_rubygem", tags["api_key.scopes"]
+            assert_equal "Scope-test", tags["api_key.gem"]
+            assert_equal "Scope-test", tags["api_key.previous_gem"]
+          end
+        end
+
         should "not track an update that fails validation" do
           span = with_appsec_trace { patch :update, params: { api_key: { add_owner: true, show_dashboard: true }, id: @api_key.id } }
 

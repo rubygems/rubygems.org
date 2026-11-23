@@ -1274,7 +1274,21 @@ class SessionsControllerTest < ActionController::TestCase
         assert_login_failure_tracked span, user: @user
       end
 
-      should "track a failed passwordless security device as a login failure for its owner" do
+      should "track a blocked account after a verified passwordless security device" do
+        @user.block!
+        get :new
+        challenge = session[:webauthn_authentication]["challenge"]
+        credentials = WebauthnHelpers.get_result(client: @client, challenge:, user_handle: @user.webauthn_id)
+        span = nil
+        assert_mfa_sign_in_denied(@user) do
+          span = with_appsec_trace { post :webauthn_full_create, params: { credentials: } }
+        end
+
+        assert_equal I18n.t("sessions.create.account_blocked"), flash[:alert]
+        assert_login_failure_tracked span, user: @user
+      end
+
+      should "track an anonymous failure when passwordless security device verification fails" do
         get :new
         credentials = WebauthnHelpers.get_result(client: @client, challenge: SecureRandom.hex, user_handle: @user.webauthn_id)
         span = nil
@@ -1283,7 +1297,7 @@ class SessionsControllerTest < ActionController::TestCase
         end
 
         assert_equal "WebAuthn::ChallengeVerificationError", flash[:alert]
-        assert_login_failure_tracked span, user: @user
+        assert_login_failure_tracked span, user: nil
       end
 
       should "not attribute a passwordless assertion from an unregistered device to the user it names" do

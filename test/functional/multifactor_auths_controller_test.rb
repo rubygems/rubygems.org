@@ -630,6 +630,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
         span = with_appsec_trace { post :otp_update, params: { otp: ROTP::TOTP.new(@user.totp_seed).now, level: "ui_and_gem_signin" } }
 
         assert_predicate @user.reload, :mfa_ui_and_gem_signin?
+        assert_equal({ "mfa.weakened" => 1 }, @appsec_event_calls)
         assert_equal(
           { "track" => "true", "usr.id" => @user.id.to_s, "mfa.change" => "level_lowered",
             "mfa.previous_level" => "ui_and_api", "mfa.level" => "ui_and_gem_signin", "mfa.remaining_factors" => "1" },
@@ -687,6 +688,7 @@ class MultifactorAuthsControllerTest < ActionController::TestCase
           span = with_appsec_trace { post :webauthn_update, params: { level: "ui_and_gem_signin", credentials: } }
 
           assert_predicate @user.reload, :mfa_ui_and_gem_signin?
+          assert_equal({ "mfa.weakened" => 1 }, @appsec_event_calls)
           assert_equal(
             { "track" => "true", "usr.id" => @user.id.to_s, "mfa.change" => "level_lowered",
               "mfa.previous_level" => "ui_and_api", "mfa.level" => "ui_and_gem_signin", "mfa.remaining_factors" => "2" },
