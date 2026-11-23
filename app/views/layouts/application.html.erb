@@ -30,9 +30,9 @@
     <header class="bg-white dark:bg-black">
       <!-- Header Nav -->
       <div class="py-4 px-8 border-b border-neutral-400 dark:border-neutral-800">
-        <div class="flex flex-wrap justify-between max-w-screen-xl mx-auto" data-controller="dialog">
+        <div class="flex flex-wrap xl:flex-nowrap justify-between max-w-screen-xl mx-auto" data-controller="dialog">
           <!-- Logo, desktop nav, mobile nav dialog -->
-          <div class="flex flex-row items-center xl:mr-auto">
+          <div class="flex shrink-0 flex-row items-center xl:mr-auto">
             <!-- Logo -->
             <%= link_to(root_path, title: "RubyGems", class: "flex h-8 items-center text-orange text-b1") do %>
               <%= icon_tag "logo", size: 8, class: "w-7 h-7 lg:w-8 lg:h-8", aria: { label: "RubyGems Home" } %>
@@ -40,7 +40,7 @@
             <% end %>
 
             <!-- Desktop Navigation Links -->
-            <nav class="hidden lg:flex flex-row ml-7 items-center justify-end text-b2 text-neutral-800 dark:text-white leading-7">
+            <nav class="hidden xl:flex shrink-0 flex-row ml-7 items-center justify-end whitespace-nowrap text-b2 text-neutral-800 dark:text-white leading-7">
               <%= link_to t("layouts.application.header.explore"), explore_path, class: "lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
               <%= link_to t("layouts.application.footer.blog"), "https://blog.rubygems.org", class: "ml-7 lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
               <%= link_to t("layouts.application.footer.statistics"), stats_path, class: "ml-7 lowercase hover:text-neutral-600 dark:hover:text-neutral-400" %>
@@ -137,7 +137,7 @@
           </div>
 
           <!-- Search button, Profile, and mobile menu button -->
-          <div class="ml-auto flex flex-row items-center xl:ml-0 xl:order-3">
+          <div class="ml-auto flex shrink-0 flex-row items-center xl:ml-0 xl:order-3">
             <!-- Search button -->
             <% unless home_page? %>
               <button type="button" data-action="reveal-search#toggle:stop" data-reveal-search-target="button toggle" aria-label="Open search" aria-controls="header-search" aria-expanded="false" class="flex xl:hidden h-9 w-9 box-border text-neutral-800 dark:text-white hover:text-neutral-600 dark:hover:text-neutral-400 items-center justify-center rounded border-neutral-300 dark:border-neutral-700">
@@ -145,7 +145,7 @@
               </button>
             <% end %>
 
-            <div class="relative ml-2 hidden lg:block xl:ml-3" data-controller="dropdown" data-action="keydown.esc->dropdown#close focusout->dropdown#hide">
+            <div class="relative ml-2 hidden xl:block xl:ml-3" data-controller="dropdown" data-action="keydown.esc->dropdown#close focusout->dropdown#hide">
               <button type="button" data-action="dropdown#toggle click@window->dropdown#hide" data-dropdown-target="button" aria-label="<%= t('layouts.application.header.language') %>" aria-controls="header-language-menu" aria-expanded="false" class="flex h-9 items-center gap-1 rounded border border-neutral-300 bg-white px-2 text-b3 font-semibold text-neutral-800 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500 dark:border-neutral-700 dark:bg-black dark:text-white dark:hover:bg-neutral-800">
                 <%= icon_tag "language", class: "h-5 w-5" %>
                 <span><%= I18n.locale.to_s.split("-").first.upcase %></span>
@@ -168,16 +168,16 @@
             <%= render "layouts/session" %>
 
             <!-- Mobile Menu Button -->
-            <button data-action="dialog#open" data-dialog-target="button" aria-label="<%= t('layouts.application.header.open_menu') %>" class="flex w-9 h-9 ml-3 shrink-0 items-center justify-center rounded-lg border border-neutral-400 dark:border-neutral-700 text-neutral-900 dark:text-white bg-white dark:bg-black hover:bg-neutral-100 dark:hover:bg-neutral-800 active:bg-neutral-200 dark:active:bg-neutral-700 lg:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">
+            <button data-action="dialog#open" data-dialog-target="button" aria-label="<%= t('layouts.application.header.open_menu') %>" class="flex w-9 h-9 ml-3 shrink-0 items-center justify-center rounded-lg border border-neutral-400 dark:border-neutral-700 text-neutral-900 dark:text-white bg-white dark:bg-black hover:bg-neutral-100 dark:hover:bg-neutral-800 active:bg-neutral-200 dark:active:bg-neutral-700 xl:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange">
               <%= icon_tag "menu", class: "w-6 h-6", aria: { hidden: true } %>
             </button>
           </div>
 
           <!-- Search Bar -->
           <% unless home_page? %>
-            <div id="header-search" data-reveal-search-target="item" class="hidden pt-4 w-full items-center xl:flex xl:pt-0 xl:w-72 xl:order-2">
-              <%= form_tag(search_path, method: :get, data: { controller: "autocomplete", autocomplete_selected_class: "bg-neutral-100 dark:bg-neutral-800", reveal_target: "item" }, class: "relative w-full items-center", role: "search") do %>
-                <%= rubygem_search_field(data: { reveal_search_target: "input" }, class: "w-full md h-9 pr-12 bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded border-neutral-300 dark:border-neutral-700 box-border outline-none focus:ring-0 focus:border-neutral-500") %>
+            <div id="header-search" data-reveal-search-target="item" class="hidden pt-4 w-full items-center xl:flex xl:ml-7 xl:pt-0 xl:w-72 xl:min-w-28 xl:shrink xl:order-2">
+              <%= form_tag(search_path, method: :get, data: { controller: "autocomplete", autocomplete_selected_class: "bg-neutral-100 dark:bg-neutral-800", reveal_target: "item" }, class: "relative w-full min-w-0 items-center", role: "search") do %>
+                <%= rubygem_search_field(data: { reveal_search_target: "input" }, class: "w-full min-w-0 md h-9 pr-12 bg-neutral-200 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded border-neutral-300 dark:border-neutral-700 box-border outline-none focus:ring-0 focus:border-neutral-500") %>
 
                 <ul id="query_suggestions" role="listbox" data-autocomplete-target="suggestions" class="hidden absolute z-40 start-0 mt-2 w-full bg-white dark:bg-black text-b2 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-800 rounded shadow-md divide-y divide-neutral-200 dark:divide-neutral-800"></ul>
 
