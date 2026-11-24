@@ -1,33 +1,37 @@
 # frozen_string_literal: true
 
 class FooterComponent < ApplicationComponent
-  # icon and view_box are nil for supporters whose vector logo isn't in
-  # icons.svg yet; they render as a text placeholder in the same box.
+  # Every supporter must have a logo: new supporters submit one when they join,
+  # so there is no text fallback. view_box must be "0 0 <width> <height>".
   Supporter = Data.define(:name, :url, :icon, :view_box) do
-    def initialize(name:, url:, icon: nil, view_box: nil) = super
-    def placeholder? = icon.nil?
+    def initialize(name:, url:, icon:, view_box:)
+      raise ArgumentError, "#{name}: icon is required" if icon.blank?
+      # We need the viewbox from the svg to scale accurately across screen sizes
+      unless view_box.to_s.match?(/\A0 0 \d+(\.\d+)? \d+(\.\d+)?\z/)
+        raise ArgumentError, "#{name}: view_box must be \"0 0 <width> <height>\", got #{view_box.inspect}"
+      end
+
+      super
+    end
+
     def width = view_box.split[2]
     def height = view_box.split[3]
   end
 
-  # Footer symbols in icons.svg keep the Figma design's 80-unit row height, so
-  # each logo's relative size matches the design. view_box must start at 0 0
-  # because <use> places the symbol's viewport at the outer SVG's origin.
   OPERATOR = Supporter.new("Ruby Central", "https://rubycentral.org/", "ruby-central-footer", "0 0 86 80")
 
-  # Tier order and membership follow the Figma footer ("Option 2").
   TIERS = {
     ruby_alliance: [
       Supporter.new("Gusto", "https://gusto.com/", "gusto-footer", "0 0 981.93 371.84"),
+      Supporter.new("Sentry", "https://sentry.io/welcome/", "sentry-footer", "0 0 200 44"),
       Supporter.new("Shopify", "https://www.shopify.com/", "shopify-footer", "0 0 280 80"),
       Supporter.new("thoughtbot", "https://thoughtbot.com/", "thoughtbot-footer", "0 0 412 80"),
-      Supporter.new("Rubyroid Labs", "https://rubyroidlabs.com/", "rubyroid-labs-footer", "0 0 211 38"),
-      Supporter.new("Sentry", "https://sentry.io/welcome/", "sentry-footer", "0 0 200 44")
+      Supporter.new("Rubyroid Labs", "https://rubyroidlabs.com/", "rubyroid-labs-footer", "0 0 211 38")
     ],
     rubygems_supporters: [
       Supporter.new("CloudAMQP", "https://www.cloudamqp.com/", "cloudamqp-footer", "0 0 326 80"),
-      Supporter.new("Kajabi", "https://www.kajabi.com/", "kajabi-footer", "0 0 341 80"),
-      Supporter.new("Def Method", "https://www.defmethod.com/", "def-method-footer", "0 0 319 80")
+      Supporter.new("Def Method", "https://www.defmethod.com/", "def-method-footer", "0 0 319 80"),
+      Supporter.new("Kajabi", "https://www.kajabi.com/", "kajabi-footer", "0 0 341 80")
     ],
     infrastructure_donors: [
       Supporter.new("AWS", "https://aws.amazon.com/", "aws-footer", "0 0 135 80"),
@@ -43,15 +47,6 @@ class FooterComponent < ApplicationComponent
   LOGO_BOX = "flex items-center justify-center rounded px-3 border " \
              "border-black/10 bg-black/5 dark:border-white/10 dark:bg-black/20 " \
              "hover:bg-black/10 dark:hover:bg-black/30"
-
-  attr_reader :tiers
-
-  # tiers is overridable so tests and previews can render other supporter sets
-  # (e.g. a placeholder) without changing the real footer.
-  def initialize(tiers: TIERS)
-    super()
-    @tiers = tiers
-  end
 
   def view_template
     footer do
@@ -105,7 +100,7 @@ class FooterComponent < ApplicationComponent
               tier_label(:ruby_alliance)
               see_all_link("hidden lg:inline")
             end
-            logo_grid(tiers[:ruby_alliance], cols: "grid-cols-3 md:grid-cols-5", box: "h-16", logo: "h-9!")
+            logo_grid(TIERS[:ruby_alliance], cols: "grid-cols-3 md:grid-cols-5", box: "h-16", logo: "h-9!")
           end
         end
 
@@ -131,7 +126,7 @@ class FooterComponent < ApplicationComponent
 
   def tier(key)
     div(class: "mb-3") { tier_label(key) }
-    logo_grid(tiers[key], cols: "grid-cols-3", box: "h-14", logo: "h-8!")
+    logo_grid(TIERS[key], cols: "grid-cols-3", box: "h-14", logo: "h-8!")
   end
 
   def tier_label(key)
@@ -155,24 +150,12 @@ class FooterComponent < ApplicationComponent
     end
   end
 
-  # aspect-ratio is needed because icon_tag's square width/height attributes
-  # would otherwise set the SVG's intrinsic ratio and force a square box.
-  # max-w-full lets wide wordmarks shrink inside narrow boxes on small screens.
+  # aspect-ratio is needed because icon_tag's square width/height attributes set the SVG in a square box
+  #   causing wider svgs to shrink to unreadable sizes.
+  # max-w-full lets wide svgs shrink inside narrow boxes on small screens and stay readable.
   def logo(supporter, height)
-    return logo_placeholder(supporter) if supporter.placeholder?
-
     icon_tag(supporter.icon, size: 8, class: "#{height} w-auto! max-w-full",
              viewBox: supporter.view_box,
              style: "aspect-ratio: #{supporter.width} / #{supporter.height}")
-  end
-
-  # The link already carries aria-label, so the visible name is hidden from
-  # assistive tech to avoid it being read twice.
-  def logo_placeholder(supporter)
-    span(
-      class: "text-center leading-tight text-b4 md:text-b3 font-semibold",
-      aria: { hidden: "true" },
-      data: { testid: "footer-logo-placeholder" }
-    ) { supporter.name }
   end
 end
