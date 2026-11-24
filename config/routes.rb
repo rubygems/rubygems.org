@@ -330,14 +330,14 @@ Rails.application.routes.draw do
         patch :acknowledge
       end
     end
-  end
 
-  ################################################################################
-  # UI API
+    ################################################################################
+    # UI API
 
-  scope constraints: { format: :json }, defaults: { format: :json } do
-    resources :webauthn_credentials, only: :create do
-      post :callback, on: :collection
+    scope constraints: { format: :json }, defaults: { format: :json } do
+      resources :webauthn_credentials, only: :create do
+        post :callback, on: :collection
+      end
     end
   end
 
