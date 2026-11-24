@@ -111,6 +111,12 @@ class MailerPreview < ActionMailer::Preview
     Mailer.api_key_created(api_key.id)
   end
 
+  def temporary_push_grant_activated
+    grant = TemporaryPushGrant.new(id: 1, rubygem: Rubygem.last, grantee: User.last, version: "1.0.0", expires_at: 72.hours.from_now)
+    grant.artifacts.build(platform: "ruby")
+    Mailer.temporary_push_grant_activated(grant, "rubygems_#{'0' * 48}")
+  end
+
   def api_key_revoked
     api_key = ApiKey.where(owner_type: "User").last
     Mailer.api_key_revoked(api_key.user.id, api_key.name, api_key.scopes.to_sentence, "https://example.com")

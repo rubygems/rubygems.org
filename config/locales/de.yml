@@ -443,6 +443,16 @@ de:
       subject: Sicherheitsgerät entfernt auf %{host}
       title: SICHERHEITSGERÄT ENTFERNT
       subtitle: Hallo %{handle}!
+    temporary_push_grant_activated:
+      subject:
+      title:
+      subtitle:
+      intro:
+      scope_html:
+      expires_html:
+      key_intro:
+      usage_html:
+      unexpected:
     totp_enabled:
       subject: Authentifizierungs-App auf %{host} aktiviert
       title: AUTHENTIFIZIERUNGS-APP AKTIVIERT

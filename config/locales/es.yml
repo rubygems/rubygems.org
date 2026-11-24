@@ -437,6 +437,16 @@ es:
       subject: Eiminado dispositivo de seguridad de %{host}
       title: DISPOSITIVO DE SEGURIDAD ELIMINADO
       subtitle: "¡Hola %{handle}!"
+    temporary_push_grant_activated:
+      subject:
+      title:
+      subtitle:
+      intro:
+      scope_html:
+      expires_html:
+      key_intro:
+      usage_html:
+      unexpected:
     totp_enabled:
       subject: Aplicación de autenticación activada en %{host}
       title: APLICACIÓN DE AUTENTICACIÓN ACTIVADA

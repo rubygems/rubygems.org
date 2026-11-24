@@ -15,6 +15,7 @@ class Pusher # rubocop:disable Metrics/ClassLength
   def initialize(api_key, body, request: nil, attestations: nil)
     @api_key = api_key
     @scoped_rubygem = api_key.rubygem
+    @temporary_push_grant = api_key.temporary_push_grant if api_key.user?
 
     @body = StringIO.new(body.read)
     @attestations = attestations
@@ -36,6 +37,10 @@ class Pusher # rubocop:disable Metrics/ClassLength
   end
 
   def authorize
+    @temporary_push_grant ? authorize_temporary_push_grant : authorize_owner_or_claim
+  end
+
+  def authorize_owner_or_claim
     return notify_reserved if rubygem.reserved_name?
 
     if rubygem.pushable? && (api_key.user? || pending_trusted_publisher)
@@ -252,6 +257,7 @@ class Pusher # rubocop:disable Metrics/ClassLength
 
       rubygem.disown if reset_ownership?
       persist_version
+      @temporary_push_grant&.artifact_for(version)&.update!(version:)
 
       raise ActiveRecord::Rollback if rubygem.unowned? && !reestablish_ownership
 
@@ -265,7 +271,19 @@ class Pusher # rubocop:disable Metrics/ClassLength
   # Only disown an all-yanked gem when the pusher is not an owner and ownership is
   # re-established in this push; a claim only reclaims a released (pushable) name.
   def reset_ownership?
+    return false if @temporary_push_grant
+
     rubygem.versions.indexed.none? && !owner.owns_gem?(rubygem) && (api_key.user? || (rubygem.pushable? && pending_trusted_publisher))
+  end
+
+  # A grant key publishes only the grant's approved artifacts and never claims or
+  # changes ownership, even for a gem the grantee could otherwise push or claim.
+  # Inside the push transaction the row lock serializes this check against
+  # revocation and against concurrent uploads of the same artifact.
+  def authorize_temporary_push_grant
+    @temporary_push_grant.lock!
+    denial = @temporary_push_grant.upload_denial_reason(rubygem, version)
+    denial ? notify(denial, 403) : true
   end
 
   def missing_pending_owner?
@@ -274,6 +292,8 @@ class Pusher # rubocop:disable Metrics/ClassLength
 
   # Rejections are reachable only for gems already ownerless: authorize requires ownership or a claim for pushable gems.
   def reestablish_ownership
+    return true if @temporary_push_grant # a grant publishes without ownership, even for an ownerless gem
+
     claimed_organization.add_new_rubygem!(rubygem, actor: rubygem.claimed_by) if rubygem.claimed_by
 
     if api_key.user?

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_24_122639) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -696,6 +696,61 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 
+  create_table "temporary_push_grant_approvals", force: :cascade do |t|
+    t.bigint "temporary_push_grant_id", null: false
+    t.bigint "admin_github_user_id", null: false
+    t.text "conflict_disclosure", null: false
+    t.string "scope_digest", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["admin_github_user_id"], name: "index_temporary_push_grant_approvals_on_admin_github_user_id"
+    t.index ["temporary_push_grant_id", "admin_github_user_id"], name: "idx_on_temporary_push_grant_id_admin_github_user_id_0fad151814", unique: true
+  end
+
+  create_table "temporary_push_grant_artifacts", force: :cascade do |t|
+    t.bigint "temporary_push_grant_id", null: false
+    t.string "platform", null: false
+    t.string "sha256", null: false
+    t.integer "version_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["temporary_push_grant_id", "platform"], name: "idx_on_temporary_push_grant_id_platform_ba34c807ab", unique: true
+    t.index ["version_id"], name: "index_temporary_push_grant_artifacts_on_version_id", unique: true
+  end
+
+  create_table "temporary_push_grants", force: :cascade do |t|
+    t.integer "rubygem_id", null: false
+    t.integer "grantee_id", null: false
+    t.bigint "original_grant_id"
+    t.bigint "api_key_id"
+    t.string "version", null: false
+    t.string "source_commit", null: false
+    t.string "request_url", null: false
+    t.text "justification", null: false
+    t.text "correction_reason"
+    t.string "requester_github_login", null: false
+    t.string "grantee_github_login", null: false
+    t.datetime "outreach_sent_at", null: false
+    t.datetime "response_deadline_at", null: false
+    t.text "shortened_response_reason"
+    t.string "technical_reviewer"
+    t.text "technical_review_notes"
+    t.datetime "technical_reviewed_at"
+    t.string "technical_review_digest"
+    t.datetime "activated_at"
+    t.datetime "expires_at"
+    t.datetime "suspended_at"
+    t.text "suspension_reason"
+    t.datetime "revoked_at"
+    t.text "revocation_reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["api_key_id"], name: "index_temporary_push_grants_on_api_key_id", unique: true
+    t.index ["grantee_id"], name: "index_temporary_push_grants_on_grantee_id"
+    t.index ["original_grant_id"], name: "index_temporary_push_grants_on_original_grant_id", unique: true
+    t.index ["rubygem_id"], name: "index_temporary_push_grants_on_rubygem_id"
+  end
+
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "api_key"
     t.string "blocked_email"
@@ -881,6 +936,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
   add_foreign_key "rubygem_transfers", "organizations"
   add_foreign_key "rubygem_transfers", "users", column: "created_by_id"
   add_foreign_key "rubygems", "organizations", on_delete: :nullify
+  add_foreign_key "temporary_push_grant_approvals", "admin_github_users"
+  add_foreign_key "temporary_push_grant_approvals", "temporary_push_grants"
+  add_foreign_key "temporary_push_grant_artifacts", "temporary_push_grants"
+  add_foreign_key "temporary_push_grant_artifacts", "versions"
+  add_foreign_key "temporary_push_grants", "api_keys"
+  add_foreign_key "temporary_push_grants", "rubygems"
+  add_foreign_key "temporary_push_grants", "temporary_push_grants", column: "original_grant_id"
+  add_foreign_key "temporary_push_grants", "users", column: "grantee_id"
   add_foreign_key "versions", "api_keys", column: "pusher_api_key_id"
   add_foreign_key "versions", "rubygems", name: "versions_rubygem_id_fk"
   add_foreign_key "web_hooks", "users", name: "web_hooks_user_id_fk"

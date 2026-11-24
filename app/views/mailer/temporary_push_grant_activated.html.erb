@@ -1,0 +1,31 @@
+<% scope = "mailer.temporary_push_grant_activated" %>
+<% @title = t("#{scope}.title") %>
+<% @sub_title = t("#{scope}.subtitle", handle: @grant.grantee.handle) %>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff">
+  <tr>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+    <td>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+
+      <div class="h3-1-center" style="color:#1e1e1e; font-family:Georgia, serif; min-width:auto !important; font-size:20px; line-height:26px;">
+        <p><%= t("#{scope}.intro", gem: @grant.rubygem.name) %></p>
+        <p>
+          <%= t("#{scope}.scope_html", gem: @grant.rubygem.name, version: @grant.version, platforms: @grant.artifacts.map(&:platform).to_sentence) %>
+          <br>
+          <%= t("#{scope}.expires_html", expires_at: @grant.expires_at.to_formatted_s(:rfc822)) %>
+        </p>
+        <p>
+          <%= t("#{scope}.key_intro") %>
+          <br>
+          <code><%= @key %></code>
+        </p>
+        <p><%= t("#{scope}.usage_html", gem: @grant.rubygem.name, version: @grant.version) %></p>
+        <p><%= t("#{scope}.unexpected") %></p>
+      </div>
+
+      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%"><tr><td height="35" class="spacer" style="font-size:0pt; line-height:0pt; text-align:center; width:100%; min-width:100%">&nbsp;</td></tr></table>
+    </td>
+    <td class="content-spacing" style="font-size:0pt; line-height:0pt; text-align:left" width="20"></td>
+  </tr>
+</table>

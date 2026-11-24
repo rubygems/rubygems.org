@@ -415,6 +415,16 @@ zh-TW:
       subject: "%{host} 上的安全裝置已移除"
       title: 安全裝置已移除
       subtitle: 嗨 %{handle}！
+    temporary_push_grant_activated:
+      subject:
+      title:
+      subtitle:
+      intro:
+      scope_html:
+      expires_html:
+      key_intro:
+      usage_html:
+      unexpected:
     totp_enabled:
       subject: "%{host} 上的驗證器應用程式已啟用"
       title: 已啟用驗證器應用程式

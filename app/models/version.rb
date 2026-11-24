@@ -20,6 +20,7 @@ class Version < ApplicationRecord # rubocop:disable Metrics/ClassLength
   has_one :deletion, dependent: :delete, inverse_of: :version, required: false
   has_one :yanker, through: :deletion, source: :user, inverse_of: :yanked_versions, required: false
   has_many :attestations, dependent: :destroy, inverse_of: :version
+  has_one :temporary_push_grant_artifact, dependent: :nullify, inverse_of: :version
 
   before_validation :set_canonical_number, if: :number_changed?
   before_validation :content_addressify!

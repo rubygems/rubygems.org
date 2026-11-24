@@ -416,6 +416,16 @@ ja:
       subject: "%{host}のセキュリティ機器を削除しました"
       title: セキュリティ機器が削除されました
       subtitle: こんにちは、%{handle}！
+    temporary_push_grant_activated:
+      subject:
+      title:
+      subtitle:
+      intro:
+      scope_html:
+      expires_html:
+      key_intro:
+      usage_html:
+      unexpected:
     totp_enabled:
       subject: "%{host}で認証アプリを有効にしました"
       title: 認証アプリが有効になりました

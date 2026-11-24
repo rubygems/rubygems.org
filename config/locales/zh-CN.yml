@@ -416,6 +416,16 @@ zh-CN:
       subject: 某个安全设备已从 RubyGems.org 中移除
       title: 安全设备已移除
       subtitle: 你好，%{handle}！
+    temporary_push_grant_activated:
+      subject:
+      title:
+      subtitle:
+      intro:
+      scope_html:
+      expires_html:
+      key_intro:
+      usage_html:
+      unexpected:
     totp_enabled:
       subject: 认证 App 已在 RubyGems.org 上启用
       title: 认证 App 已启用
