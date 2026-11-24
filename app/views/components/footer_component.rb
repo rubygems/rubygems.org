@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 class FooterComponent < ApplicationComponent
-  # Every supporter must have a logo: new supporters submit one when they join,
-  # so there is no text fallback. view_box must be "0 0 <width> <height>".
+  # We need the viewbox from the svg to scale accurately across screen sizes
+  #   view_box must be "0 0 <width> <height>".
   Supporter = Data.define(:name, :url, :icon, :view_box) do
     def initialize(name:, url:, icon:, view_box:)
       raise ArgumentError, "#{name}: icon is required" if icon.blank?
-      # We need the viewbox from the svg to scale accurately across screen sizes
       unless view_box.to_s.match?(/\A0 0 \d+(\.\d+)? \d+(\.\d+)?\z/)
         raise ArgumentError, "#{name}: view_box must be \"0 0 <width> <height>\", got #{view_box.inspect}"
       end
@@ -18,7 +17,7 @@ class FooterComponent < ApplicationComponent
     def height = view_box.split[3]
   end
 
-  OPERATOR = Supporter.new("Ruby Central", "https://rubycentral.org/", "ruby-central-footer", "0 0 86 80")
+  OPERATOR = Supporter.new("Ruby Central", "https://rubycentral.org/", "ruby-central-footer", "0 0 291 75")
 
   TIERS = {
     ruby_alliance: [
