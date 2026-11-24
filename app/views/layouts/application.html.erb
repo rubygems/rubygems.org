@@ -177,60 +177,7 @@
     <% end %>
 
     <!-- Footer -->
-    <footer>
-      <div class="w-full px-8 py-8 bg-orange-100 dark:bg-orange-950 text-neutral-800 dark:text-neutral-200">
-        <!-- Footer Nav -->
-        <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row gap-x-8 gap-y-4 justify-between">
-          <nav class="min-w-0">
-            <ul class="flex flex-col md:flex-row md:flex-wrap md:gap-x-8 md:gap-y-2 text-b1 md:text-b2">
-              <li><%= link_to t("layouts.application.footer.about"), page_path("about"), class: "hover:text-neutral-600" %></li>
-              <li><%= link_to t("layouts.application.footer.docs"), "https://guides.rubygems.org/command-reference/#gem-install", class: "hover:text-neutral-600" %></li>
-              <li><%= link_to t("layouts.application.footer.policies"), policies_path, class: "hover:text-neutral-600" %></li>
-              <li><%= link_to t("layouts.application.footer.status"), "https://status.rubygems.org", class: "hover:text-neutral-600" %></li>
-              <li><%= link_to t("layouts.application.footer.security"), page_path("security"), class: "hover:text-neutral-600" %></li>
-              <li><%= link_to t('pages.supporters.title'), supporters_path, class: "hover:text-neutral-600" %></li>
-              <li><%= mail_to "support@rubygems.org", t('layouts.application.footer.help'), class: "hover:text-neutral-600" %></li>
-            </ul>
-          </nav>
-          <div class="flex shrink-0 gap-4">
-            <a href="https://github.com/rubygems/rubygems.org">
-              <%= icon_tag "github" %>
-            </a>
-            <a href="https://ruby.social/users/rubygems">
-              <%= icon_tag "mastodon" %>
-            </a>
-            <a href="https://x.com/rubygems" aria-label="<%= t("layouts.application.footer.x") %>">
-              <%= icon_tag "x-twitter" %>
-            </a>
-            <a href="https://bsky.app/profile/rubygems.bsky.social" aria-label="<%= t("layouts.application.footer.bluesky") %>">
-              <%= icon_tag "bluesky" %>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="w-full px-6 bg-orange-200 dark:bg-orange-900 text-neutral-900 dark:text-neutral-100">
-        <!-- Supported By -->
-        <div class="flex flex-col lg:flex-row max-w-screen-xl mx-auto py-6 items-center justify-between">
-          <!-- RubyGems.org is supported by -->
-          <p class="mb-6 lg:mb-0 lg:mr-14 lg:w-52 text-b2 leading-6 text-balance">
-            <%= t("layouts.application.footer.supported_by_html") %>
-          </p>
-
-          <!-- Supporter Icons -->
-          <div class="w-full lg:grow mx-auto grid grid-cols-3 gap-6 justify-items-center md:flex md:items-center md:justify-between">
-            <a href="https://thoughtbot.com/" class="p-1"> <%= icon_tag "thoughtbot-footer", alt: "thoughtbot", size: 30 %> </a>
-            <a href="https://rubycentral.org/" class="p-1"><%= icon_tag "ruby-central", size: 15 %></a>
-            <a href="https://aws.amazon.com/" class="p-1"><%= icon_tag "aws", size: 15 %></a>
-            <a href="https://dnsimple.link/resolving-rubygems" class="p-1"><%= icon_tag "dnsimple", size: 30 %></a>
-            <a href="https://www.datadoghq.com/" class="p-1"><%= icon_tag "datadog", size: 15 %></a>
-            <a href="https://www.fastly.com/" class="p-1"><%= icon_tag "fastly", size: 20 %></a>
-            <a href="https://www.honeybadger.io/" class="p-1"><%= icon_tag "honeybadger", size: 15 %></a>
-            <a href="https://mend.io/" class="col-start-2 p-1"><%= icon_tag "mend-io", size: 15 %></a>
-          </div>
-        </div>
-      </div>
-    </footer>
+    <%= render FooterComponent.new %>
   </div>
 </body>
 </html>

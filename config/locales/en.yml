@@ -332,6 +332,10 @@ en:
         x: X (formerly Twitter)
         supported_by: Supported by
         operated_by: Operated by
+        ruby_alliance: Ruby Alliance
+        rubygems_supporters: RubyGems Supporters
+        infrastructure_donors: Infrastructure Donors
+        see_all_supporters: See all supporters
         supported_by_html: |
           <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
           is supported by
