@@ -99,6 +99,25 @@ class GemSortPreferenceTest < ActionDispatch::IntegrationTest
     assert_equal %w[sortgem-b sortgem-c sortgem-a], listed_gems
   end
 
+  test "sort links drop a query locale" do
+    get "#{profile_path(@user.handle)}?locale=fr"
+
+    assert_select "[role='menuitemradio']" do |items|
+      assert_equal %w[recent downloads name].map { "#{profile_path(@user.handle)}?sort=#{it}" }, items.pluck("href")
+    end
+    assert_select "input[type='hidden'][name='locale']", count: 0
+  end
+
+  test "search links drop a query locale" do
+    sorts = %w[relevance recent downloads name]
+    get "/search?query=sortgem&page=1&locale=de"
+
+    assert_select "[role='menuitemradio']" do |items|
+      assert_equal sorts.map { "/search?query=sortgem&sort=#{it}" }, items.pluck("href")
+    end
+    assert_select "input[type='hidden'][name='locale']", count: 0
+  end
+
   test "search uses the remembered order" do
     get profile_path(@user.handle, sort: "recent")
     get search_path(query: "sortgem")

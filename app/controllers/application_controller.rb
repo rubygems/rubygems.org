@@ -54,6 +54,7 @@ class ApplicationController < ActionController::Base
   # The locale comes only from the URL path. A query-string locale must not leak into helpers
   # that copy params into generated URLs (e.g. Kaminari pagination links on cached pages).
   def discard_query_locale
+    request.query_parameters.delete(:locale)
     return if request.path_parameters.key?(:locale)
 
     params.delete(:locale)
