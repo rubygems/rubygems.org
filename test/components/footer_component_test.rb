@@ -14,20 +14,46 @@ class FooterComponentTest < ComponentTest
     assert_logo_link operator, FooterComponent::OPERATOR
   end
 
-  test "renders each tier with a heading and its supporters in order" do
-    supporters = page.find("[data-testid='footer-supporters']")
-    headings = supporters.all("h2").map(&:text)
+  test "renders each tier with a heading" do
+    headings = page.find("[data-testid='footer-supporters']").all("h2").map(&:text)
 
     assert_equal ["Ruby Alliance", "RubyGems Supporters", "Infrastructure Donors"], headings
+  end
 
-    FooterComponent::TIERS.each_value do |tier|
+  test "renders every supporter in non-rotating tiers, in order" do
+    supporters = page.find("[data-testid='footer-supporters']")
+    labels = supporters.all("a[aria-label]").pluck(:"aria-label")
+
+    FooterComponent::TIERS.except(*FooterComponent::ROTATING_TIERS.keys).each_value do |tier|
       tier.each { |supporter| assert_logo_link supporters, supporter }
+
+      assert_equal tier.map(&:name), labels & tier.map(&:name)
+    end
+  end
+
+  test "renders a random subset of RubyGems Supporters, in list order" do
+    tier = FooterComponent::TIERS[:rubygems_supporters]
+    count = FooterComponent::ROTATING_TIERS[:rubygems_supporters]
+
+    assert_operator tier.size, :>, count, "rotation needs more supporters than slots"
+
+    supporters = page.find("[data-testid='footer-supporters']")
+    shown = supporters.all("a[aria-label]").pluck(:"aria-label") & tier.map(&:name)
+
+    assert_equal count, shown.size
+    assert_equal tier.map(&:name) & shown, shown
+    tier.select { shown.include?(it.name) }.each { |supporter| assert_logo_link supporters, supporter }
+  end
+
+  test "rotation is deterministic for a given random source and reaches every supporter" do
+    tier_names = FooterComponent::TIERS[:rubygems_supporters].map(&:name)
+    shown_for = lambda do |seed|
+      render FooterComponent.new(random: Random.new(seed))
+      page.find("[data-testid='footer-supporters']").all("a[aria-label]").pluck(:"aria-label") & tier_names
     end
 
-    labels = supporters.all("a[aria-label]").pluck(:"aria-label")
-    expected = [FooterComponent::OPERATOR, *FooterComponent::TIERS.values.flatten].map(&:name)
-
-    assert_equal expected, labels
+    assert_equal shown_for.call(1), shown_for.call(1)
+    assert_equal tier_names.sort, (1..50).flat_map { shown_for.call(it) }.uniq.sort
   end
 
   test "links to the full supporters page" do

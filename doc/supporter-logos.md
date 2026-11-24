@@ -40,3 +40,14 @@ We use a full color SVG or PNG (or whatever) logo on the Supporters page and a m
 3. **Add the supporter to `FooterComponent::TIERS`** in the right tier. Use a `view_box` of `"0 0 <width> <height>"`, taking the width and height from the symbol's `viewBox`. The origin must be `0 0`. Every supporter needs an `icon` and a `view_box`: new supporters are expected to submit a logo when they join, so there's no text fallback.
 4. **Run the tests** in `test/components/footer_component_test.rb`. Test checks every icon exists in the sprite and compares the view box size with the actual svg to catch mistakes.
 5. **Check it in a browser** at desktop and phone widths, in both light and dark mode. The logo should be readable and not overflow its box.
+
+## Rotation
+
+The **RubyGems Supporters** tier shows **3 supporters chosen at random** on each render, displayed in their `TIERS` order. Ruby Alliance and Infrastructure Donors always show every supporter. To change the count, or to make another tier rotate, edit `FooterComponent::ROTATING_TIERS`. A rotating tier needs more supporters than slots; a test checks this.
+
+HTML caching limits how often the rotation changes:
+
+- The homepage and gem pages (versions, dependencies and reverse dependencies) are cached for signed-out visitors: 60 seconds at Fastly and in the browser, plus up to 30 seconds stale. The same 3 supporters show there for about a minute at a time.
+- Every other page, and every signed-in request, picks a new 3 on each load.
+
+Over a day this still spreads impressions across all supporters in the tier.

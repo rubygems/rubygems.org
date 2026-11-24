@@ -30,7 +30,9 @@ class FooterComponent < ApplicationComponent
     rubygems_supporters: [
       Supporter.new("CloudAMQP", "https://www.cloudamqp.com/", "cloudamqp-footer", "0 0 326 80"),
       Supporter.new("Def Method", "https://www.defmethod.com/", "def-method-footer", "0 0 319 80"),
-      Supporter.new("Kajabi", "https://www.kajabi.com/", "kajabi-footer", "0 0 341 80")
+      Supporter.new("Kajabi", "https://www.kajabi.com/", "kajabi-footer", "0 0 341 80"),
+      Supporter.new("NaCl", "https://www.netlab.jp/", "nacl-footer", "0 0 209 82"),
+      Supporter.new("SerpApi", "https://serpapi.com/?utm_source=rubygems.org", "serpapi-footer", "0 0 189 80")
     ],
     infrastructure_donors: [
       Supporter.new("AWS", "https://aws.amazon.com/", "aws-footer", "0 0 135 80"),
@@ -39,6 +41,10 @@ class FooterComponent < ApplicationComponent
     ]
   }.freeze
 
+  # Tiers that show a random subset of their supporters on each render, and how
+  # many. Tiers not listed here show every supporter.
+  ROTATING_TIERS = { rubygems_supporters: 3 }.freeze
+
   CONTAINER = "w-full max-w-screen-xl mx-auto"
   NAV_LINK_CLASS = "hover:text-neutral-600 dark:hover:text-neutral-400"
   LABEL_CLASS = "text-b4 uppercase tracking-widest font-semibold"
@@ -46,6 +52,12 @@ class FooterComponent < ApplicationComponent
   LOGO_BOX = "flex items-center justify-center rounded px-3 border " \
              "border-black/10 bg-black/5 dark:border-white/10 dark:bg-black/20 " \
              "hover:bg-black/10 dark:hover:bg-black/30"
+
+  # Use dependency injection for deterministic tests!
+  def initialize(random: Random.new)
+    super()
+    @random = random
+  end
 
   def view_template
     footer do
@@ -99,7 +111,7 @@ class FooterComponent < ApplicationComponent
               tier_label(:ruby_alliance)
               see_all_link("hidden lg:inline")
             end
-            logo_grid(TIERS[:ruby_alliance], cols: "grid-cols-3 md:grid-cols-5", box: "h-16", logo: "h-9!")
+            logo_grid(supporters_for(:ruby_alliance), cols: "grid-cols-3 md:grid-cols-5", box: "h-16", logo: "h-9!")
           end
         end
 
@@ -125,11 +137,19 @@ class FooterComponent < ApplicationComponent
 
   def tier(key)
     div(class: "mb-3") { tier_label(key) }
-    logo_grid(TIERS[key], cols: "grid-cols-3", box: "h-14", logo: "h-8!")
+    logo_grid(supporters_for(key), cols: "grid-cols-3", box: "h-14", logo: "h-8!")
   end
 
   def tier_label(key)
     h2(class: LABEL_CLASS) { t("layouts.application.footer.#{key}") }
+  end
+
+  def supporters_for(key)
+    supporters = TIERS.fetch(key)
+    count = ROTATING_TIERS[key]
+    return supporters unless count
+
+    supporters.sample(count, random: @random).sort_by { supporters.index(it) }
   end
 
   def logo_grid(supporters, cols:, box:, logo:)
