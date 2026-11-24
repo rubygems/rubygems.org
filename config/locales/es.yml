@@ -725,7 +725,7 @@ es:
       o "Interfaz de usuario y API". En el futuro será obligatorio tener AMF configurada
       en alguno de esos niveles.
     setup_webauthn_html: "\U0001F389 ¡Ahora soportamos dispositivos de seguridad!
-      Aumenta la seguridad de tu cuenta <a href=\"/settings/edit#security-device\">configurando</a>
+      Aumenta la seguridad de tu cuenta <a href=\"/es/settings/edit#security-device\">configurando</a>
       un nuevo dispositivo."
     api:
       mfa_required:
@@ -1014,7 +1014,7 @@ es:
       managed_by:
       outside_contributors:
       authors_header: Autores
-      self_no_mfa_warning_html: Considera por favor <a href="/settings/edit">activar
+      self_no_mfa_warning_html: Considera por favor <a href="/es/settings/edit">activar
         la autenticación de múltiples factores (AMF)</a> para mantener tu cuenta segura.
       not_using_mfa_warning_show: "* Algunos propietarios no están usando AMF. Haga
         click para ver la lista completa."
