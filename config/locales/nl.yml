@@ -314,9 +314,11 @@ nl:
         designed_by: Ontwerp
         discussion_forum: Forum
         gems_served_by:
+        github:
         guides: Handleidingen
         help: Hulp
         hosted_by: Hosting
+        mastodon:
         monitored_by: Monitoring
         optimized_by: Optimalisatie
         policies:
@@ -328,7 +330,6 @@ nl:
         status: Status
         support_us:
         x:
-        supported_by: Ondersteuning
         operated_by:
         ruby_alliance:
         rubygems_supporters:

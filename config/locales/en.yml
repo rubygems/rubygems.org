@@ -316,9 +316,11 @@ en:
         designed_by: Designed by
         discussion_forum: Discuss
         gems_served_by: Gems served by
+        github: GitHub
         guides: Guides
         help: Help
         hosted_by: Hosted by
+        mastodon: Mastodon
         monitored_by: Monitored by
         optimized_by: Optimized by
         policies: Policies
@@ -330,7 +332,6 @@ en:
         status: Status
         support_us: Support Us
         x: X (formerly Twitter)
-        supported_by: Supported by
         operated_by: Operated by
         ruby_alliance: Ruby Alliance
         rubygems_supporters: RubyGems Supporters
