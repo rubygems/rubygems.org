@@ -549,8 +549,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_10_184402) do
     t.datetime "updated_at", null: false
     t.index ["api_key_id"], name: "index_oidc_trusted_publisher_id_tokens_on_api_key_id"
     t.index ["asserted_owner_id"], name: "index_oidc_trusted_publisher_id_tokens_on_asserted_owner_id"
-    t.index ["oidc_provider_id"], name: "index_oidc_trusted_publisher_id_tokens_on_oidc_provider_id"
     t.index ["oidc_provider_id", "jti"], name: "index_oidc_trusted_publisher_id_tokens_on_provider_and_jti", unique: true
+    t.index ["oidc_provider_id"], name: "index_oidc_trusted_publisher_id_tokens_on_oidc_provider_id"
   end
 
   create_table "organization_invites", force: :cascade do |t|
@@ -595,7 +595,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_10_184402) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index "organization_id, lower((handle)::text)", name: "index_organization_team_handle_on_organizations", unique: true
-    t.index ["organization_id"], name: "index_organization_teams_on_organization_id"
   end
 
   create_table "organizations", force: :cascade do |t|
