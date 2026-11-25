@@ -36,7 +36,7 @@ class FooterComponent < ApplicationComponent
     ],
     infrastructure_donors: [
       Supporter.new("AWS", "https://aws.amazon.com/", "aws-footer", "0 0 135 80"),
-      Supporter.new("Datadog", "https://www.datadoghq.com/", "datadog-footer", "0 0 81 80"),
+      Supporter.new("Datadog", "https://www.datadoghq.com/", "datadog-footer", "0 0 799.7 196"),
       Supporter.new("Fastly", "https://www.fastly.com/", "fastly-footer", "0 0 207 80")
     ]
   }.freeze
