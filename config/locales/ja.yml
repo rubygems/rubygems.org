@@ -332,9 +332,6 @@ ja:
         rubygems_supporters:
         infrastructure_donors:
         see_all_supporters:
-        supported_by_html: |
-          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
-          は以下から支援を受けています
         uptime: 稼働時間
         secured_by: セキュリティ
       header:

@@ -332,9 +332,6 @@ zh-CN:
         rubygems_supporters:
         infrastructure_donors:
         see_all_supporters:
-        supported_by_html: |
-          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
-          <br class="hidden lg:block"> 由以下支持
         uptime: 服务运行时间
         secured_by: 安全保护
       header:

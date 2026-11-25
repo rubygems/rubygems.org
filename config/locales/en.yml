@@ -336,9 +336,6 @@ en:
         rubygems_supporters: RubyGems Supporters
         infrastructure_donors: Infrastructure Donors
         see_all_supporters: See all supporters
-        supported_by_html: |
-          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
-          is supported by
         uptime: Uptime
         secured_by: Secured by
       header:
