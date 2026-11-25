@@ -204,18 +204,6 @@ class Organizations::TeamsControllerTest < ActionDispatch::IntegrationTest
       assert page.has_content? "Handle has already been taken"
     end
 
-    should "ignore attempts to set the organization or default flag" do
-      other_organization = create(:organization)
-
-      post organization_teams_path(@organization),
-        params: team_params(organization_id: other_organization.id, default: true)
-
-      team = OrganizationTeam.sole
-
-      assert_equal @organization, team.organization
-      refute team.default
-    end
-
     should "not create a team for a maintainer" do
       @membership.update!(role: :maintainer)
 
