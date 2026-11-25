@@ -101,6 +101,9 @@ fr:
         workflow_repository_name:
       oidc/pending_trusted_publisher:
         rubygem_name:
+      organization_team:
+        name:
+        handle:
     errors:
       messages:
         not_pwned:
@@ -122,6 +125,10 @@ fr:
           attributes:
             handle:
               invalid:
+        organization_team:
+          attributes:
+            handle:
+              reserved:
         membership:
           attributes:
             user:

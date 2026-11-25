@@ -97,6 +97,9 @@ ja:
         workflow_repository_name:
       oidc/pending_trusted_publisher:
         rubygem_name: RubyGem名
+      organization_team:
+        name:
+        handle:
     errors:
       messages:
         not_pwned: 過去にデータ侵害を受けたためお使いになれません
@@ -118,6 +121,10 @@ ja:
           attributes:
             handle:
               invalid: は英字から始まり、英字、数字、アンダーバー、ハイフンのみが含まれていなければなりません
+        organization_team:
+          attributes:
+            handle:
+              reserved:
         membership:
           attributes:
             user:

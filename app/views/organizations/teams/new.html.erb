@@ -1,5 +1,5 @@
 <%
-  add_breadcrumb "Dashboard", dashboard_path
+  add_breadcrumb t("breadcrumbs.dashboard"), dashboard_path
   add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle), organization_path(@organization)
   add_breadcrumb t("breadcrumbs.create_team")
 %>

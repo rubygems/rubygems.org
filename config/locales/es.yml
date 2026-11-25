@@ -102,6 +102,9 @@ es:
         workflow_repository_name:
       oidc/pending_trusted_publisher:
         rubygem_name:
+      organization_team:
+        name:
+        handle:
     errors:
       messages:
         not_pwned: ha aparecido con anterioridad en una filtración de datos y no se
@@ -125,6 +128,10 @@ es:
           attributes:
             handle:
               invalid:
+        organization_team:
+          attributes:
+            handle:
+              reserved:
         membership:
           attributes:
             user:

@@ -108,6 +108,9 @@ de:
         workflow_repository_name:
       oidc/pending_trusted_publisher:
         rubygem_name: RubyGem-Name
+      organization_team:
+        name:
+        handle:
     errors:
       messages:
         not_pwned: ist bereits in einem Datenleck aufgetaucht und sollte nicht verwendet
@@ -131,6 +134,10 @@ de:
           attributes:
             handle:
               invalid:
+        organization_team:
+          attributes:
+            handle:
+              reserved:
         membership:
           attributes:
             user:

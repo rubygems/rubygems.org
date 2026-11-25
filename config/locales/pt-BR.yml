@@ -101,6 +101,9 @@ pt-BR:
         workflow_repository_name:
       oidc/pending_trusted_publisher:
         rubygem_name:
+      organization_team:
+        name:
+        handle:
     errors:
       messages:
         not_pwned: já apareceu anteriormente em um vazamento de dados e não deve ser
@@ -123,6 +126,10 @@ pt-BR:
           attributes:
             handle:
               invalid:
+        organization_team:
+          attributes:
+            handle:
+              reserved:
         membership:
           attributes:
             user:

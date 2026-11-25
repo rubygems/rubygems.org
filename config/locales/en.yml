@@ -101,6 +101,9 @@ en:
         workflow_repository_name: Workflow Repository Name
       oidc/pending_trusted_publisher:
         rubygem_name: RubyGem name
+      organization_team:
+        name: Name
+        handle: Handle
     errors:
       messages:
         not_pwned: has previously appeared in a data breach and should not be used
@@ -122,6 +125,10 @@ en:
           attributes:
             handle:
               invalid: "must start with a letter and can only contain letters, numbers, underscores, and dashes"
+        organization_team:
+          attributes:
+            handle:
+              reserved: is reserved and cannot be used
         membership:
           attributes:
             user:

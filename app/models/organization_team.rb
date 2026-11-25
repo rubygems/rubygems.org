@@ -34,6 +34,6 @@ class OrganizationTeam < ApplicationRecord
   def handle_not_reserved
     return unless Organization::Handle::RESTFUL_ACTIONS.include?(handle.to_s.downcase)
 
-    errors.add(:handle, "is reserved and cannot be used")
+    errors.add(:handle, :reserved)
   end
 end
