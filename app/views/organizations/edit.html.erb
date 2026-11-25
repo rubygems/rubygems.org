@@ -24,3 +24,11 @@
     </div>
   <% end %>
 <% end %>
+
+<%= render Organizations::DomainsComponent.new(
+  organization: @organization,
+  domains: @domains,
+  latest_checks: @latest_checks,
+  new_domain: @new_domain,
+  domain_input: @domain_input
+) %>

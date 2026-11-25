@@ -72,6 +72,18 @@ class OrganizationsTest < ActionDispatch::IntegrationTest
     assert page.has_content? "New Name"
   end
 
+  test "should re-render the settings page as unprocessable when the display name is invalid" do
+    organization = create(:organization, owners: [@user], name: "Old Name")
+
+    patch organization_path(organization), params: {
+      organization: { name: "" }
+    }
+
+    assert_response :unprocessable_content
+    assert_select "form[action=?]", organization_path(organization)
+    assert_equal "Old Name", organization.reload.name
+  end
+
   test "should render user roles for users in the organization" do
     organization = create(:organization, owners: [@user])
 

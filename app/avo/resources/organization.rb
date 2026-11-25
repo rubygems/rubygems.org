@@ -33,6 +33,7 @@ class Avo::Resources::Organization < Avo::BaseResource
       field :rubygems, as: :has_many
       field :gem_name_reservations, as: :has_many
       field :prefix_reservations, as: :has_many
+      field :domains, as: :has_many
       field :organization_onboarding, as: :belongs_to
     end
   end

@@ -105,6 +105,12 @@ zh-TW:
         public_suffix:
         protected_provider:
       models:
+        organization_domain:
+          attributes:
+            base:
+              limit_reached:
+            domain:
+              invalid_format:
         api_key:
           attributes:
             expires_at:
@@ -555,6 +561,41 @@ zh-TW:
         limit_reached_html:
         unlimited:
         disclaimer:
+    domains:
+      title:
+      description:
+      domain:
+      domain_hint:
+      add:
+      limit_note:
+      status:
+        verified:
+        pending:
+        failed:
+        checking:
+      verified_ago:
+      verify:
+      retry:
+      delete:
+      confirm_delete:
+      publish:
+      keep_published:
+      txt_name:
+      txt_value:
+      checked_at:
+      checked_ago:
+      checking:
+      retry_hint:
+      failure:
+        record_not_found:
+        record_mismatch:
+        other_error:
+      create:
+        added:
+      queue_failed:
+      queued:
+      destroy:
+        deleted:
     invitation_expiry_title:
     invitations:
       expired:

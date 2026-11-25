@@ -10,6 +10,7 @@ class Admin::OrganizationPolicy < Admin::ApplicationPolicy
   has_association :memberships
   has_association :users
   has_association :prefix_reservations
+  has_association :domains
 
   def avo_index?
     rubygems_org_admin?

@@ -50,6 +50,10 @@ class OrganizationPolicy < ApplicationPolicy
     organization_member_with_role?(user, :admin) || deny(t(:forbidden))
   end
 
+  def manage_domains?
+    organization_member_with_role?(user, :owner) || deny(t(:forbidden))
+  end
+
   def destroy?
     false # For now organizations cannot be deleted
   end
