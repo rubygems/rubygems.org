@@ -350,9 +350,10 @@ de:
         x:
         supported_by: Unterstützt von
         operated_by:
-        supported_by_html: |
-          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
-          wird unterstützt von
+        ruby_alliance:
+        rubygems_supporters:
+        infrastructure_donors:
+        see_all_supporters:
         uptime: Betriebszeit
         secured_by:
       header:

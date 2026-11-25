@@ -336,9 +336,10 @@ fr:
         x:
         supported_by: Soutenu par
         operated_by:
-        supported_by_html: |
-          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
-          <br class="hidden lg:block"> est soutenu par
+        ruby_alliance:
+        rubygems_supporters:
+        infrastructure_donors:
+        see_all_supporters:
         uptime: Uptime
         secured_by:
       header:

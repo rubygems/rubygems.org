@@ -330,9 +330,10 @@ nl:
         x:
         supported_by: Ondersteuning
         operated_by:
-        supported_by_html: |
-          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
-          <br class="hidden lg:block"> wordt ondersteund door
+        ruby_alliance:
+        rubygems_supporters:
+        infrastructure_donors:
+        see_all_supporters:
         uptime: Uptime
         secured_by:
       header:

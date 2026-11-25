@@ -328,9 +328,10 @@ zh-CN:
         x:
         supported_by: 支持
         operated_by:
-        supported_by_html: |
-          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
-          <br class="hidden lg:block"> 由以下支持
+        ruby_alliance:
+        rubygems_supporters:
+        infrastructure_donors:
+        see_all_supporters:
         uptime: 服务运行时间
         secured_by: 安全保护
       header:
