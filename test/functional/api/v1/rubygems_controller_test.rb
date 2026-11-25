@@ -1025,4 +1025,144 @@ class Api::V1::RubygemsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "Datadog identity for API key pushes" do
+    setup do
+      @user = create(:user, handle: "appsec_api_pusher")
+      @api_key = create(:api_key, owner: @user, key: "user-push-key", scopes: %i[push_rubygem])
+    end
+
+    should "identify the key's user on an allowed push" do
+      @request.env["HTTP_AUTHORIZATION"] = "user-push-key"
+
+      span = with_appsec_trace { post :create, body: gem_file(&:read) }
+
+      assert_response :success
+      assert_equal @user.id.to_s, span.get_tag("usr.id")
+      assert_equal Digest::SHA256.hexdigest("appsec_api_pusher"), span.get_tag("usr.login")
+      assert_no_api_key_rejection span
+    end
+
+    should "identify the key's user, not the signed-in session user" do
+      sign_in_as(create(:user))
+      @request.env["HTTP_AUTHORIZATION"] = "user-push-key"
+      identity = Datadog::Kit::Identity
+      set_user = identity.method(:set_user)
+      identified_users = []
+      identity.define_singleton_method(:set_user) do |*args, **kwargs|
+        identified_users << kwargs.fetch(:id)
+        set_user.call(*args, **kwargs)
+      end
+
+      span = with_appsec_trace { post :create, body: gem_file(&:read) }
+
+      assert_response :success
+      assert_equal @user.id.to_s, span.get_tag("usr.id")
+      assert_equal [@user.id.to_s], identified_users
+    ensure
+      identity.define_singleton_method(:set_user, set_user) if set_user
+    end
+
+    should "not identify a user for a trusted publisher key" do
+      pending_trusted_publisher = create(:oidc_pending_trusted_publisher, rubygem_name: "test", user: @user)
+      api_key = create(:api_key, owner: pending_trusted_publisher.trusted_publisher, key: "tp-push-key", scopes: %i[push_rubygem])
+      create(:oidc_trusted_publisher_id_token, api_key:, asserted_owner: @user)
+      sign_in_as(@user)
+      @request.env["HTTP_AUTHORIZATION"] = "tp-push-key"
+
+      span = with_appsec_trace { post :create, body: gem_file(&:read) }
+
+      assert_response :success
+      assert Rubygem.exists?(name: "test")
+      assert_nil span.get_tag("usr.id")
+      assert_nil span.get_tag("usr.login")
+      assert_no_api_key_rejection span
+    end
+
+    should "track an authentication failure without identity for unknown and expired keys" do
+      @api_key.update_column(:expires_at, 1.minute.ago)
+      sign_in_as(@user)
+
+      ["user-push-key", "not-a-real-key"].each do |key|
+        @request.env["HTTP_AUTHORIZATION"] = key
+
+        span = with_appsec_trace { post :create, body: gem_file(&:read) }
+
+        assert_response :unauthorized
+        assert_equal "Access Denied. Please sign up for an account at https://rubygems.org", @response.body
+        assert_equal "true", span.get_tag("appsec.events.api_key.authentication.failure.track")
+        assert_nil span.get_tag("appsec.events.api_key.authorization.failure.track")
+        assert_nil span.get_tag("usr.id")
+        assert_nil span.get_tag("appsec.events.gem.push.success.track")
+        assert_equal({ "api_key.authentication.failure" => 1 }, @appsec_event_calls)
+        assert_no_secret span, key
+      end
+      assert_no_push_side_effects
+    end
+
+    should "not track an authentication failure when no key is sent" do
+      span = with_appsec_trace { post :create, body: gem_file(&:read) }
+
+      assert_response :unauthorized
+      assert_nil span.get_tag("usr.id")
+      assert_nil span.get_tag("appsec.events.gem.push.success.track")
+      assert_no_api_key_rejection span
+      assert_no_push_side_effects
+    end
+
+    should "track an authorization failure for a user with an unconfirmed email" do
+      @user.update!(email_confirmed: false)
+      @request.env["HTTP_AUTHORIZATION"] = "user-push-key"
+
+      span = with_appsec_trace { post :create, body: gem_file(&:read) }
+
+      assert_response :forbidden
+      assert_equal "Please confirm your email address before using the API. Check your inbox for a confirmation link.", @response.body
+      assert_api_key_authorization_failure span, "email_not_confirmed"
+      assert_no_push_side_effects
+    end
+
+    should "track an authorization failure for a soft-deleted key" do
+      @api_key.soft_delete!
+      @request.env["HTTP_AUTHORIZATION"] = "user-push-key"
+
+      span = with_appsec_trace { post :create, body: gem_file(&:read) }
+
+      assert_response :forbidden
+      assert_equal "An invalid API key cannot be used. Please delete it and create a new one.", @response.body
+      assert_api_key_authorization_failure span, "soft_deleted"
+      assert_no_push_side_effects
+    end
+  end
+
+  private
+
+  def assert_no_api_key_rejection(span)
+    assert_nil span.get_tag("appsec.events.api_key.authentication.failure.track")
+    assert_nil span.get_tag("appsec.events.api_key.authorization.failure.track")
+  end
+
+  def assert_api_key_authorization_failure(span, reason)
+    assert_equal "true", span.get_tag("appsec.events.api_key.authorization.failure.track")
+    assert_equal reason, span.get_tag("appsec.events.api_key.authorization.failure.reason")
+    assert_nil span.get_tag("appsec.events.api_key.authentication.failure.track")
+    assert_equal @user.id.to_s, span.get_tag("usr.id")
+    assert_nil span.get_tag("appsec.events.gem.push.success.track")
+    assert_equal({ "api_key.authorization.failure" => 1 }, @appsec_event_calls)
+    assert_no_secret span, "user-push-key"
+  end
+
+  def assert_no_secret(span, key)
+    values = span.tags.values.map(&:to_s)
+
+    refute(values.any? { |value| value.include?(key) || value.include?(Digest::SHA256.hexdigest(key)) })
+  end
+
+  def assert_no_push_side_effects
+    assert_equal 0, Rubygem.count
+    assert_equal 0, Version.count
+    assert_nil @api_key.reload.last_accessed_at
+    assert_no_enqueued_jobs
+    assert_empty ActionMailer::Base.deliveries
+  end
 end

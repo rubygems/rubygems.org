@@ -658,4 +658,300 @@ path: "/profile/api_keys/1" },
       end
     end
   end
+
+  context "Datadog API key lifecycle events" do
+    setup { @user = create(:user) }
+
+    context "when signed in with a verified session" do
+      setup do
+        sign_in_as(@user)
+        session[:verification] = 10.minutes.from_now
+        session[:verified_user] = @user.id
+      end
+
+      should "track a created key with its owner and scopes but not its secret" do
+        ownership = create(:ownership, user: @user)
+        span = with_appsec_trace do
+          post :create, params: { api_key: { name: "test", push_rubygem: true, add_owner: true, mfa: true, rubygem_id: ownership.rubygem_id } }
+        end
+        api_key = @user.api_keys.sole
+        event = "appsec.events.api_key.create.success"
+        tags = appsec_event_family_tags(span, "api_key.")
+
+        assert_equal({ "api_key.create.success" => 1 }, @appsec_event_calls)
+
+        assert_equal "true", tags["#{event}.track"]
+        assert_equal @user.id.to_s, tags["#{event}.usr.id"]
+        assert_equal @user.to_gid.to_s, tags["#{event}.actor.gid"]
+        assert_equal "user", tags["#{event}.actor.type"]
+        assert_equal api_key.to_gid.to_s, tags["#{event}.api_key.gid"]
+        assert_equal "add_owner,push_rubygem", tags["#{event}.api_key.scopes"]
+        assert_equal ownership.rubygem.name, tags["#{event}.api_key.gem"]
+        assert_equal "true", tags["#{event}.api_key.mfa"]
+        assert_empty tags.keys.grep_v(/\A#{Regexp.escape(event)}\./), "only one lifecycle event is tracked"
+        secrets = [session[:api_key], api_key.hashed_key]
+
+        assert_empty(tags.values.map(&:to_s).select { |value| secrets.any? { value.include?(it) } })
+      end
+
+      should "not track a create that fails validation" do
+        span = with_appsec_trace { post :create, params: { api_key: { add_owner: true } } }
+
+        assert_text "Name can't be blank"
+        assert_empty @user.api_keys
+        assert_empty appsec_event_family_tags(span, "api_key.")
+      end
+
+      context "updating a key" do
+        setup { @api_key = create(:api_key, owner: @user, scopes: %i[index_rubygems]) }
+
+        should "track added scopes with the previous scopes" do
+          span = with_appsec_trace { patch :update, params: { api_key: { add_owner: true }, id: @api_key.id } }
+          event = "appsec.events.api_key.scope_change.success"
+          tags = appsec_event_family_tags(span, "api_key.")
+
+          assert_equal({ "api_key.scope_change.success" => 1 }, @appsec_event_calls)
+
+          assert_redirected_to profile_api_keys_path
+          assert_equal "true", tags["#{event}.track"]
+          assert_equal @user.id.to_s, tags["#{event}.usr.id"]
+          assert_equal @api_key.to_gid.to_s, tags["#{event}.api_key.gid"]
+          assert_equal "add_owner,index_rubygems", tags["#{event}.api_key.scopes"]
+          assert_equal "index_rubygems", tags["#{event}.api_key.previous_scopes"]
+          assert_empty tags.keys.grep_v(/\A#{Regexp.escape(event)}\./)
+        end
+
+        should "track a gem scope widened to all gems" do
+          ownership = create(:ownership, user: @user)
+          @api_key.update!(scopes: %i[push_rubygem], rubygem_id: ownership.rubygem_id)
+          span = with_appsec_trace { patch :update, params: { api_key: { rubygem_id: "" }, id: @api_key.id } }
+          event = "appsec.events.api_key.scope_change.success"
+          tags = appsec_event_family_tags(span, "api_key.")
+
+          assert_equal({ "api_key.scope_change.success" => 1 }, @appsec_event_calls)
+
+          assert_redirected_to profile_api_keys_path
+          assert_nil @api_key.reload.rubygem
+          assert_equal "push_rubygem", tags["#{event}.api_key.scopes"]
+          assert_equal "push_rubygem", tags["#{event}.api_key.previous_scopes"]
+          assert_equal ownership.rubygem.name, tags["#{event}.api_key.previous_gem"]
+          assert_nil tags["#{event}.api_key.gem"]
+        end
+
+        should "track only the committed gem scope change when the rest of a failed update is not saved" do
+          ownership = create(:ownership, user: @user)
+          @api_key.update!(scopes: %i[push_rubygem], rubygem_id: ownership.rubygem_id)
+          span = with_appsec_trace do
+            patch :update, params: { api_key: { rubygem_id: "", show_dashboard: true }, id: @api_key.id }
+          end
+          event = "appsec.events.api_key.scope_change.success"
+          tags = appsec_event_family_tags(span, "api_key.")
+
+          assert_equal({ "api_key.scope_change.success" => 1 }, @appsec_event_calls)
+
+          assert_text "Show dashboard scope must be enabled exclusively"
+          assert_equal %i[push_rubygem], @api_key.reload.scopes
+          assert_nil @api_key.rubygem
+          assert_equal "push_rubygem", tags["#{event}.api_key.scopes"], "the attempted show_dashboard scope was not saved"
+          assert_equal "push_rubygem", tags["#{event}.api_key.previous_scopes"]
+          assert_nil tags["#{event}.api_key.gem"]
+          assert_equal ownership.rubygem.name, tags["#{event}.api_key.previous_gem"]
+        end
+
+        should "not track an update that only changes mfa" do
+          span = with_appsec_trace { patch :update, params: { api_key: { mfa: true }, id: @api_key.id } }
+
+          assert_redirected_to profile_api_keys_path
+          assert @api_key.reload.mfa
+          assert_empty appsec_event_family_tags(span, "api_key.")
+        end
+
+        should "not attribute a scope change before the update to an MFA-only request" do
+          key_id = @api_key.id
+          apply_other_update = lambda do |key|
+            ApiKey.where(id: key.id).update_all(scopes: %i[add_owner index_rubygems]) if key.id == key_id && key.scopes == %i[index_rubygems]
+          end
+          ApiKey.set_callback(:find, :after, apply_other_update)
+
+          span = with_appsec_trace { patch :update, params: { api_key: { mfa: true }, id: @api_key.id } }
+
+          assert_redirected_to profile_api_keys_path
+          assert @api_key.reload.mfa
+          assert_equal %i[add_owner index_rubygems], @api_key.scopes
+          assert_empty appsec_event_family_tags(span, "api_key.")
+        ensure
+          ApiKey.skip_callback(:find, :after, apply_other_update)
+        end
+
+        context "when the restricted gem changes name case during the update" do
+          setup do
+            @rubygem = create(:rubygem, name: "scope-test")
+            ownership = create(:ownership, user: @user, rubygem: @rubygem)
+            @api_key.update!(scopes: %i[push_rubygem], rubygem_id: ownership.rubygem_id)
+            key_id = @api_key.id
+            gem_id = @rubygem.id
+            @rename_gem = lambda do |key|
+              Rubygem.where(id: gem_id).update_all(name: "Scope-test") if key.id == key_id
+            end
+            ApiKey.set_callback(:update, :after, @rename_gem)
+          end
+
+          teardown do
+            ApiKey.skip_callback(:update, :after, @rename_gem) if @rename_gem
+          end
+
+          should "not track a scope change on an MFA-only update" do
+            span = with_appsec_trace { patch :update, params: { api_key: { mfa: true }, id: @api_key.id } }
+
+            assert_redirected_to profile_api_keys_path
+            assert @api_key.reload.mfa
+            assert_equal @rubygem.id, @api_key.rubygem_id
+            assert_equal "Scope-test", @rubygem.reload.name
+            assert_empty appsec_event_family_tags(span, "api_key.")
+          end
+
+          should "track only the added scope using the same gem name in both tags" do
+            span = with_appsec_trace { patch :update, params: { api_key: { add_owner: true }, id: @api_key.id } }
+            tags = appsec_event_tags(span, "api_key.scope_change.success")
+
+            assert_redirected_to profile_api_keys_path
+            assert_equal %i[add_owner push_rubygem], @api_key.reload.scopes
+            assert_equal @rubygem.id, @api_key.rubygem_id
+            assert_equal "Scope-test", @rubygem.reload.name
+            assert_equal({ "api_key.scope_change.success" => 1 }, @appsec_event_calls)
+            assert_equal "push_rubygem", tags["api_key.previous_scopes"]
+            assert_equal "add_owner,push_rubygem", tags["api_key.scopes"]
+            assert_equal "Scope-test", tags["api_key.gem"]
+            assert_equal "Scope-test", tags["api_key.previous_gem"]
+          end
+        end
+
+        should "not track an update that fails validation" do
+          span = with_appsec_trace { patch :update, params: { api_key: { add_owner: true, show_dashboard: true }, id: @api_key.id } }
+
+          assert_text "Show dashboard scope must be enabled exclusively"
+          assert_equal %i[index_rubygems], @api_key.reload.scopes
+          assert_empty appsec_event_family_tags(span, "api_key.")
+        end
+      end
+
+      should "track a revoked key" do
+        api_key = create(:api_key, owner: @user, scopes: %i[push_rubygem])
+        span = with_appsec_trace { delete :destroy, params: { id: api_key.id } }
+        event = "appsec.events.api_key.revoke.success"
+        tags = appsec_event_family_tags(span, "api_key.")
+
+        assert_equal({ "api_key.revoke.success" => 1 }, @appsec_event_calls)
+
+        assert_predicate api_key.reload, :expired?
+        assert_equal "true", tags["#{event}.track"]
+        assert_equal @user.id.to_s, tags["#{event}.usr.id"]
+        assert_equal api_key.to_gid.to_s, tags["#{event}.api_key.gid"]
+        assert_equal "push_rubygem", tags["#{event}.api_key.scopes"]
+        assert_empty tags.keys.grep_v(/\A#{Regexp.escape(event)}\./)
+      end
+
+      should "not track revoking an already-expired key" do
+        api_key = create(:api_key, owner: @user, expires_at: 1.hour.from_now)
+        api_key.update_column(:expires_at, 1.hour.ago)
+        span = with_appsec_trace { delete :destroy, params: { id: api_key.id } }
+
+        assert_equal "The API key has already expired.", flash[:error]
+        assert_empty appsec_event_family_tags(span, "api_key.")
+      end
+
+      should "track a reset once rather than once per key" do
+        create_list(:api_key, 2, owner: @user)
+        span = with_appsec_trace { delete :reset }
+        event = "appsec.events.api_key.reset.success"
+        tags = appsec_event_family_tags(span, "api_key.")
+
+        assert_equal({ "api_key.reset.success" => 1 }, @appsec_event_calls)
+        assert_empty @user.api_keys.unexpired
+        assert_equal "true", tags["#{event}.track"]
+        assert_equal @user.id.to_s, tags["#{event}.usr.id"]
+        assert_equal @user.to_gid.to_s, tags["#{event}.actor.gid"]
+        assert_empty tags.keys.grep_v(/\A#{Regexp.escape(event)}\./)
+      end
+
+      context "on another user's key" do
+        setup { @api_key = create(:api_key, scopes: %i[index_rubygems]) }
+
+        should "not update or track it" do
+          span = assert_no_changes -> { [enqueued_jobs.size, ActionMailer::Base.deliveries.size] } do
+            with_appsec_trace { patch :update, params: { api_key: { add_owner: true }, id: @api_key.id } }
+          end
+
+          assert_response :not_found
+          assert_equal %i[index_rubygems], @api_key.reload.scopes
+          assert_empty appsec_event_family_tags(span, "api_key.")
+        end
+
+        should "not revoke or track it" do
+          span = assert_no_changes -> { [enqueued_jobs.size, ActionMailer::Base.deliveries.size] } do
+            with_appsec_trace { delete :destroy, params: { id: @api_key.id } }
+          end
+
+          assert_response :not_found
+          refute_predicate @api_key.reload, :expired?
+          assert_empty appsec_event_family_tags(span, "api_key.")
+        end
+      end
+    end
+
+    should "not create or track a key when signed out" do
+      span = assert_no_changes -> { [enqueued_jobs.size, ActionMailer::Base.deliveries.size] } do
+        with_appsec_trace { post :create, params: { api_key: { name: "test", add_owner: true } } }
+      end
+
+      assert_redirected_to sign_in_path
+      assert_empty @user.api_keys
+      assert_empty appsec_event_family_tags(span, "api_key.")
+    end
+
+    context "when signed in without a verified session" do
+      setup { sign_in_as(@user) }
+
+      should "not create or track a key" do
+        span = assert_no_changes -> { [enqueued_jobs.size, ActionMailer::Base.deliveries.size] } do
+          with_appsec_trace { post :create, params: { api_key: { name: "test", add_owner: true } } }
+        end
+
+        assert_redirected_to verify_session_path
+        assert_empty @user.api_keys
+        assert_empty appsec_event_family_tags(span, "api_key.")
+      end
+
+      should "not reset or track keys" do
+        api_key = create(:api_key, owner: @user)
+        span = assert_no_changes -> { [enqueued_jobs.size, ActionMailer::Base.deliveries.size] } do
+          with_appsec_trace { delete :reset }
+        end
+
+        assert_redirected_to verify_session_path
+        refute_predicate api_key.reload, :expired?
+        assert_empty appsec_event_family_tags(span, "api_key.")
+      end
+    end
+
+    context "when MFA is required but not enabled" do
+      setup do
+        sign_in_as(@user)
+        session[:verification] = 10.minutes.from_now
+        session[:verified_user] = @user.id
+        User.any_instance.stubs(:mfa_required?).returns(true)
+      end
+
+      should "not update or track scopes" do
+        api_key = create(:api_key, owner: @user, scopes: %i[index_rubygems])
+        span = assert_no_changes -> { [enqueued_jobs.size, ActionMailer::Base.deliveries.size] } do
+          with_appsec_trace { patch :update, params: { api_key: { add_owner: true }, id: api_key.id } }
+        end
+
+        assert_redirected_to edit_settings_path
+        assert_equal %i[index_rubygems], api_key.reload.scopes
+        assert_empty appsec_event_family_tags(span, "api_key.")
+      end
+    end
+  end
 end

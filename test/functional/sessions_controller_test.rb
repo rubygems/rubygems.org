@@ -861,6 +861,32 @@ class SessionsControllerTest < ActionController::TestCase
     )
   end
 
+  def assert_login_success_tracked(span)
+    assert_equal({ track_user_login_success: 1 }, @login_event_calls)
+    assert_equal "true", span.get_tag("appsec.events.users.login.success.track")
+    assert_equal @login_digest, span.get_tag("appsec.events.users.login.success.usr.login")
+    assert_equal @user.id.to_s, span.get_tag("usr.id")
+    assert_nil span.get_tag("appsec.events.users.login.failure.track")
+  end
+
+  def assert_login_failure_tracked(span, user:)
+    assert_equal({ track_user_login_failure: 1 }, @login_event_calls)
+    assert_equal "true", span.get_tag("appsec.events.users.login.failure.track")
+    if user
+      assert_equal @login_digest, span.get_tag("appsec.events.users.login.failure.usr.login")
+      assert_equal "true", span.get_tag("appsec.events.users.login.failure.usr.exists")
+      assert_equal user.id.to_s, span.get_tag("appsec.events.users.login.failure.usr.id")
+    else
+      assert_equal "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        span.get_tag("appsec.events.users.login.failure.usr.login")
+      assert_equal "false", span.get_tag("appsec.events.users.login.failure.usr.exists")
+      assert_nil span.get_tag("appsec.events.users.login.failure.usr.id")
+    end
+
+    assert_nil span.get_tag("appsec.events.users.login.success.track")
+    assert_nil span.get_tag("usr.id")
+  end
+
   def verify_challenge
     post(
       :webauthn_create,
@@ -1103,6 +1129,191 @@ class SessionsControllerTest < ActionController::TestCase
       refute @controller.session[:password_compromised]
       refute @controller.session[:compromised_password_user_id]
       assert_equal @user.id, @controller.session[:mfa_user]
+    end
+  end
+
+  context "Datadog AppSec login tracking with MFA" do
+    setup do
+      @user = create(:user, handle: "mfa_tracked")
+      @user.enable_totp!(ROTP::Base32.random_base32, :ui_only)
+      @login_digest = Digest::SHA256.hexdigest("mfa_tracked")
+    end
+
+    should "not track the MFA prompt as a login success or failure" do
+      span = with_appsec_trace do
+        post :create, params: { session: { who: "mfa_tracked", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+      end
+
+      assert_response :ok
+      refute_login_tracked(span)
+    end
+
+    should "track a correct OTP as a login success for the MFA user" do
+      post :create, params: { session: { who: "mfa_tracked", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+      span = with_appsec_trace { post :otp_create, params: { otp: ROTP::TOTP.new(@user.totp_seed).now } }
+
+      assert_redirected_to dashboard_path
+      assert_signed_in_as @user
+      assert_login_success_tracked span
+    end
+
+    should "track a wrong OTP as a login failure for the MFA user" do
+      post :create, params: { session: { who: "mfa_tracked", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+      wrong_otp = (ROTP::TOTP.new(@user.totp_seed).now.to_i.succ % 1_000_000).to_s
+      span = nil
+      assert_mfa_sign_in_denied(@user) { span = with_appsec_trace { post :otp_create, params: { otp: wrong_otp } } }
+
+      assert_equal "Your OTP code is incorrect.", flash[:alert]
+      assert_nil session[:mfa_user]
+      assert_login_failure_tracked span, user: @user
+    end
+
+    should "track an expired MFA session as a login failure for the user who passed the password check" do
+      post :create, params: { session: { who: "mfa_tracked", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+      travel 30.minutes
+      span = nil
+      assert_mfa_sign_in_denied(@user) do
+        span = with_appsec_trace { post :otp_create, params: { otp: ROTP::TOTP.new(@user.totp_seed).now } }
+      end
+
+      assert_equal "Your login page session has expired.", flash[:alert]
+      assert_login_failure_tracked span, user: @user
+    end
+
+    should "not attribute an MFA challenge from another flow to its user" do
+      @controller.session[:mfa_expires_at] = 15.minutes.from_now.to_s
+      @controller.session[:mfa_user] = @user.id
+      @controller.session[:mfa_flow] = "passwords"
+      span = nil
+      assert_mfa_sign_in_denied(@user) do
+        span = with_appsec_trace { post :otp_create, params: { otp: ROTP::TOTP.new(@user.totp_seed).now } }
+      end
+
+      assert_equal "Your login page session has expired.", flash[:alert]
+      assert_login_failure_tracked span, user: nil
+    end
+
+    should "track a guard rejection after correct OTP as a login failure for the MFA user" do
+      @user.update!(email_confirmed: false)
+      post :create, params: { session: { who: "mfa_tracked", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+      span = nil
+      assert_no_difference(-> { @user.events.where(tag: Events::UserEvent::LOGIN_SUCCESS).count }) do
+        span = with_appsec_trace { post :otp_create, params: { otp: ROTP::TOTP.new(@user.totp_seed).now } }
+      end
+
+      assert_response :unauthorized
+      assert_equal "Please confirm your email address with the link sent to your email.", flash[:alert]
+      refute_signed_in
+      assert_predicate cookies[:remember_token], :blank?
+      assert_login_failure_tracked span, user: @user
+    end
+
+    context "with a security device" do
+      setup do
+        @webauthn_credential = create(:webauthn_credential, user: @user)
+        @client = WebAuthn::FakeClient.new(WebAuthn.configuration.allowed_origins.first, encoding: false)
+        WebauthnHelpers.create_credential(webauthn_credential: @webauthn_credential, client: @client)
+      end
+
+      should "track a verified security device after password as a login success" do
+        post :create, params: { session: { who: "mfa_tracked", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        challenge = session[:webauthn_authentication]["challenge"]
+        span = with_appsec_trace do
+          post :webauthn_create, params: { credentials: WebauthnHelpers.get_result(client: @client, challenge:) }
+        end
+
+        assert_redirected_to dashboard_path
+        assert_signed_in_as @user
+        assert_login_success_tracked span
+      end
+
+      should "track a failed security device after password as a login failure for the MFA user" do
+        post :create, params: { session: { who: "mfa_tracked", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        credentials = WebauthnHelpers.get_result(client: @client, challenge: SecureRandom.hex)
+        span = nil
+        assert_mfa_sign_in_denied(@user, credential: @webauthn_credential) do
+          span = with_appsec_trace { post :webauthn_create, params: { credentials: } }
+        end
+
+        assert_equal "WebAuthn::ChallengeVerificationError", flash[:alert]
+        assert_nil session[:mfa_user]
+        assert_login_failure_tracked span, user: @user
+      end
+
+      should "track a verified passwordless security device as a login success" do
+        get :new
+        challenge = session[:webauthn_authentication]["challenge"]
+        span = with_appsec_trace do
+          post :webauthn_full_create, params: {
+            credentials: WebauthnHelpers.get_result(client: @client, challenge:, user_handle: @user.webauthn_id)
+          }
+        end
+
+        assert_redirected_to dashboard_path
+        assert_signed_in_as @user
+        assert_login_success_tracked span
+      end
+
+      should "track a guard rejection after a passwordless security device as a login failure for its owner" do
+        @user.update!(email_confirmed: false)
+        get :new
+        challenge = session[:webauthn_authentication]["challenge"]
+        span = nil
+        assert_no_difference(-> { @user.events.where(tag: Events::UserEvent::LOGIN_SUCCESS).count }) do
+          span = with_appsec_trace do
+            post :webauthn_full_create, params: {
+              credentials: WebauthnHelpers.get_result(client: @client, challenge:, user_handle: @user.webauthn_id)
+            }
+          end
+        end
+
+        assert_response :unauthorized
+        assert_equal "Please confirm your email address with the link sent to your email.", flash[:alert]
+        refute_signed_in
+        assert_predicate cookies[:remember_token], :blank?
+        assert_login_failure_tracked span, user: @user
+      end
+
+      should "track a blocked account after a verified passwordless security device" do
+        @user.block!
+        get :new
+        challenge = session[:webauthn_authentication]["challenge"]
+        credentials = WebauthnHelpers.get_result(client: @client, challenge:, user_handle: @user.webauthn_id)
+        span = nil
+        assert_mfa_sign_in_denied(@user) do
+          span = with_appsec_trace { post :webauthn_full_create, params: { credentials: } }
+        end
+
+        assert_equal I18n.t("sessions.create.account_blocked"), flash[:alert]
+        assert_login_failure_tracked span, user: @user
+      end
+
+      should "track an anonymous failure when passwordless security device verification fails" do
+        get :new
+        credentials = WebauthnHelpers.get_result(client: @client, challenge: SecureRandom.hex, user_handle: @user.webauthn_id)
+        span = nil
+        assert_mfa_sign_in_denied(@user, credential: @webauthn_credential) do
+          span = with_appsec_trace { post :webauthn_full_create, params: { credentials: } }
+        end
+
+        assert_equal "WebAuthn::ChallengeVerificationError", flash[:alert]
+        assert_login_failure_tracked span, user: nil
+      end
+
+      should "not attribute a passwordless assertion from an unregistered device to the user it names" do
+        get :new
+        challenge = session[:webauthn_authentication]["challenge"]
+        other_client = WebAuthn::FakeClient.new(WebAuthn.configuration.allowed_origins.first, encoding: false)
+        WebauthnHelpers.create_result(client: other_client)
+        credentials = WebauthnHelpers.get_result(client: other_client, challenge:, user_handle: @user.webauthn_id)
+        span = nil
+        assert_mfa_sign_in_denied(@user, credential: @webauthn_credential) do
+          span = with_appsec_trace { post :webauthn_full_create, params: { credentials: } }
+        end
+
+        assert_equal "Credentials required", flash[:alert]
+        assert_login_failure_tracked span, user: nil
+      end
     end
   end
 

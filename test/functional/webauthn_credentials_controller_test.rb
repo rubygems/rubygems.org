@@ -363,5 +363,79 @@ class WebauthnCredentialsControllerTest < ActionController::TestCase
         assert_equal @user_hashed_recovery_codes, @user.reload.mfa_hashed_recovery_codes
       end
     end
+
+    context "with Datadog AppSec" do
+      setup do
+        @user = create(:user)
+        @credential = create(:webauthn_credential, user: @user)
+      end
+
+      should "track losing the last factor" do
+        sign_in_as @user
+        span = with_appsec_trace { delete :destroy, params: { id: @credential.id } }
+
+        assert_predicate @user.reload, :mfa_disabled?
+        assert_equal({ "mfa.weakened" => 1 }, @appsec_event_calls)
+        assert_equal(
+          { "track" => "true", "usr.id" => @user.id.to_s, "mfa.change" => "webauthn_credential_removed",
+            "mfa.previous_level" => "ui_and_api", "mfa.level" => "disabled", "mfa.remaining_factors" => "0" },
+          appsec_event_tags(span, "mfa.weakened")
+        )
+      end
+
+      should "track removing one of several factors" do
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+        create(:webauthn_credential, user: @user)
+        sign_in_as @user
+        span = with_appsec_trace { delete :destroy, params: { id: @credential.id } }
+
+        assert_equal 1, @user.webauthn_credentials.count
+        assert_equal({ "mfa.weakened" => 1 }, @appsec_event_calls)
+        assert_equal(
+          { "track" => "true", "usr.id" => @user.id.to_s, "mfa.change" => "webauthn_credential_removed",
+            "mfa.previous_level" => "ui_and_api", "mfa.level" => "ui_and_api", "mfa.remaining_factors" => "2" },
+          appsec_event_tags(span, "mfa.weakened")
+        )
+      end
+
+      should "not track or remove another user's credential" do
+        sign_in_as create(:user)
+        span = with_appsec_trace do
+          assert_no_changes lambda {
+            [WebauthnCredential.exists?(@credential.id), @user.reload.mfa_level, @user.mfa_hashed_recovery_codes,
+             enqueued_jobs.size, ActionMailer::Base.deliveries.size]
+          } do
+            delete :destroy, params: { id: @credential.id }
+          end
+        end
+
+        assert_response :not_found
+        assert_empty appsec_event_tags(span, "mfa.weakened")
+      end
+
+      should "not track or remove a credential when logged out" do
+        span = with_appsec_trace do
+          assert_no_changes lambda {
+            [WebauthnCredential.exists?(@credential.id), @user.reload.mfa_level, @user.mfa_hashed_recovery_codes,
+             enqueued_jobs.size, ActionMailer::Base.deliveries.size]
+          } do
+            delete :destroy, params: { id: @credential.id }
+          end
+        end
+
+        assert_redirected_to sign_in_path
+        assert_empty appsec_event_tags(span, "mfa.weakened")
+      end
+
+      should "not track when the credential is not destroyed" do
+        sign_in_as @user
+        WebauthnCredential.any_instance.stubs(:destroy).returns(false)
+        span = with_appsec_trace { delete :destroy, params: { id: @credential.id } }
+
+        assert_redirected_to edit_settings_path
+        assert_predicate @user.reload, :mfa_ui_and_api?
+        assert_empty appsec_event_tags(span, "mfa.weakened")
+      end
+    end
   end
 end

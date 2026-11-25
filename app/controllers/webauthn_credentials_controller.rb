@@ -29,8 +29,10 @@ class WebauthnCredentialsController < ApplicationController
 
   def destroy
     webauthn_credential = current_user.webauthn_credentials.find(params.expect(:id))
+    previous_level = current_user.mfa_level
     if webauthn_credential.destroy
       flash[:notice] = t(".webauthn_credential.confirm_delete")
+      track_mfa_weakened("webauthn_credential_removed", previous_level:)
     else
       flash[:error] = webauthn_credential.errors.full_messages.to_sentence
     end

@@ -53,15 +53,7 @@ class ApplicationController < ActionController::Base
 
   def set_user_tag
     return unless signed_in?
-    set_tag "gemcutter.user.id", current_user.id
-
-    trace = Datadog::Tracing.active_trace
-    return unless trace
-    Datadog::Kit::Identity.set_user(
-      trace,
-      id: current_user.id.to_s,
-      login: Digest::SHA256.hexdigest(current_user.handle || current_user.email)
-    )
+    set_user_identity(current_user)
   end
 
   rescue_from(ActionController::ParameterMissing) do |e|
@@ -86,6 +78,18 @@ class ApplicationController < ActionController::Base
   helper_method :add_breadcrumb
 
   protected
+
+  def set_user_identity(user)
+    set_tag "gemcutter.user.id", user.id
+
+    trace = Datadog::Tracing.active_trace
+    return unless trace
+    Datadog::Kit::Identity.set_user(
+      trace,
+      id: user.id.to_s,
+      login: Digest::SHA256.hexdigest(user.handle || user.email)
+    )
+  end
 
   def http_basic_authentication_options_valid?(**options)
     options[:password].present? && options[:name].present?
@@ -238,6 +242,19 @@ class ApplicationController < ActionController::Base
   def set_current_request
     Current.request = request
     Current.user = current_user
+  end
+
+  def track_mfa_weakened(change, previous_level:)
+    Datadog::Kit::AppSec::Events.track(
+      "mfa.weakened",
+      "usr.id": current_user.id.to_s,
+      "mfa.change": change,
+      "mfa.previous_level": previous_level,
+      "mfa.level": current_user.mfa_level,
+      "mfa.remaining_factors": (current_user.webauthn_credentials.count + (current_user.totp_enabled? ? 1 : 0)).to_s
+    )
+  rescue StandardError => e
+    Rails.error.report(e, handled: true)
   end
 
   def browser

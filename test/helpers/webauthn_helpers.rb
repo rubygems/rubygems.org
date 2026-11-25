@@ -33,8 +33,8 @@ module WebauthnHelpers
     )
   end
 
-  def self.get_result(client:, challenge:)
-    result = client.get(challenge: Base64.urlsafe_decode64(challenge))
+  def self.get_result(client:, challenge:, user_handle: nil)
+    result = client.get(challenge: Base64.urlsafe_decode64(challenge), user_handle:)
     result["rawId"] = Base64.urlsafe_encode64(result["rawId"])
     result["response"]["authenticatorData"] =
       Base64.urlsafe_encode64(result["response"]["authenticatorData"])

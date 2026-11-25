@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class PasswordsController < ApplicationController
+  include ApiKeyable
   include MfaExpiryMethods
   include RequireMfa
   include WebauthnVerifiable
@@ -42,8 +43,8 @@ class PasswordsController < ApplicationController
   def update
     case @user.update_password_with_token(reset_params[:password], token: session[:password_reset_token])
     when :updated
-      @user.reset_api_key! if reset_params[:reset_api_key] == "true" # singular
-      @user.api_keys.expire_all! if reset_params[:reset_api_keys] == "true" # plural
+      track_api_key_event("api_key.legacy_reset.success", @user) if reset_params[:reset_api_key] == "true" && @user.reset_api_key! # singular
+      track_api_key_event("api_key.reset.success", @user) if reset_params[:reset_api_keys] == "true" && @user.api_keys.expire_all! # plural
       StatsD.increment "login.password_compromised.reset_completed" if session[:password_reset_reason] == "compromised"
       delete_password_reset_session
       flash[:notice] = t(".success")

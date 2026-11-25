@@ -619,6 +619,150 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
         refute_empty @user.api_keys.expired
       end
     end
+
+    context "Datadog API key lifecycle events" do
+      setup do
+        create(:api_key, owner: @user)
+        @secrets = [@token, @api_key, PasswordHelpers::SECURE_TEST_PASSWORD, *@user.api_keys.pluck(:hashed_key)]
+      end
+
+      should "track one reset when all API keys are reset" do
+        begin_password_reset
+        span = with_appsec_trace do
+          put password_path, params: { password_reset: { reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        end
+        event = "appsec.events.api_key.reset.success"
+        tags = appsec_event_family_tags(span, "api_key.")
+
+        assert_equal({ "api_key.reset.success" => 1 }, @appsec_event_calls)
+        assert_redirected_to sign_in_path
+        assert_empty @user.api_keys.unexpired
+        assert_equal @api_key, @user.reload.api_key
+        assert_equal "true", tags["#{event}.track"]
+        assert_equal @user.id.to_s, tags["#{event}.usr.id"]
+        assert_equal @user.to_gid.to_s, tags["#{event}.actor.gid"]
+        assert_empty tags.keys.grep_v(/\A#{Regexp.escape(event)}\./), "only one lifecycle event is tracked"
+        assert_empty(tags.values.map(&:to_s).select { |value| @secrets.any? { value.include?(it) } })
+      end
+
+      should "track a legacy key reset without its old or new value" do
+        begin_password_reset
+        span = with_appsec_trace do
+          put password_path, params: { password_reset: { reset_api_key: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        end
+        event = "appsec.events.api_key.legacy_reset.success"
+        tags = appsec_event_family_tags(span, "api_key.")
+        secrets = [*@secrets, @user.reload.api_key]
+
+        assert_equal({ "api_key.legacy_reset.success" => 1 }, @appsec_event_calls)
+        assert_redirected_to sign_in_path
+        refute_equal @api_key, @user.api_key
+        refute_empty @user.api_keys.unexpired
+        assert_equal "true", tags["#{event}.track"]
+        assert_equal @user.id.to_s, tags["#{event}.usr.id"]
+        assert_equal @user.to_gid.to_s, tags["#{event}.actor.gid"]
+        assert_empty tags.keys.grep_v(/\A#{Regexp.escape(event)}\./), "only one lifecycle event is tracked"
+        assert_empty(tags.values.map(&:to_s).select { |value| secrets.any? { value.include?(it) } })
+      end
+
+      should "track each reset once when both are selected" do
+        begin_password_reset
+        span = with_appsec_trace do
+          put password_path, params: {
+            password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
+          }
+        end
+
+        assert_equal({ "api_key.legacy_reset.success" => 1, "api_key.reset.success" => 1 }, @appsec_event_calls)
+        assert_equal %w[appsec.events.api_key.legacy_reset.success.track appsec.events.api_key.reset.success.track],
+          appsec_event_family_tags(span, "api_key.").keys.grep(/\.track\z/).sort
+      end
+
+      should "track the reset user, not a different user who is signed in" do
+        other_user = create(:user)
+        other_key = create(:api_key, owner: other_user)
+        begin_password_reset
+        span = with_appsec_trace do
+          put password_path(as: other_user), params: { password_reset: { reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD } }
+        end
+
+        assert_redirected_to dashboard_path, "the other user is signed in during the update"
+        assert_equal @user.id.to_s, span.get_tag("appsec.events.api_key.reset.success.usr.id")
+        assert_equal @user.to_gid.to_s, span.get_tag("appsec.events.api_key.reset.success.actor.gid")
+        refute_predicate other_key.reload, :expired?
+      end
+
+      [nil, "false"].each do |selection|
+        should "not track a password change with reset_api_key(s) #{selection.inspect}" do
+          begin_password_reset
+          span = with_appsec_trace do
+            put password_path, params: {
+              password_reset: { reset_api_key: selection, reset_api_keys: selection, password: PasswordHelpers::SECURE_TEST_PASSWORD }.compact
+            }
+          end
+
+          assert_redirected_to sign_in_path
+          refute_equal @old_encrypted_password, @user.reload.encrypted_password
+          assert_equal @api_key, @user.api_key
+          assert_equal 2, @user.api_keys.unexpired.count
+          assert_empty appsec_event_family_tags(span, "api_key.")
+        end
+      end
+
+      should "not reset or track keys when the new password is invalid" do
+        begin_password_reset
+        span = with_appsec_trace do
+          put password_path, params: { password_reset: { reset_api_key: "true", reset_api_keys: "true", password: "pass" } }
+        end
+
+        assert_response :unprocessable_content
+        assert_equal @api_key, @user.reload.api_key
+        assert_equal 2, @user.api_keys.unexpired.count
+        assert_empty appsec_event_family_tags(span, "api_key.")
+      end
+
+      should "not reset or track keys without a verified password reset" do
+        @user.enable_totp!(ROTP::Base32.random_base32, :ui_and_api)
+        begin_password_reset
+
+        assert_otp_form
+
+        span = with_appsec_trace do
+          assert_no_changes -> { [@user.events.count, enqueued_jobs.size, ActionMailer::Base.deliveries.size] } do
+            put password_path, params: {
+              password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
+            }
+          end
+        end
+
+        assert_redirected_to sign_in_path
+        assert_equal I18n.t("passwords.edit.token_failure"), flash[:alert]
+        assert_equal @old_encrypted_password, @user.reload.encrypted_password
+        assert_equal @api_key, @user.api_key
+        assert_equal 2, @user.api_keys.unexpired.count
+        assert_empty @appsec_event_calls
+        refute_login_tracked span
+        assert_empty appsec_event_family_tags(span, "api_key.")
+      end
+
+      should "not reset or track keys when the reset token has expired" do
+        @user.update!(password_reset_token_expires_at: 1.minute.from_now)
+        begin_password_reset
+        span = travel 2.minutes do
+          with_appsec_trace do
+            put password_path, params: {
+              password_reset: { reset_api_key: "true", reset_api_keys: "true", password: PasswordHelpers::SECURE_TEST_PASSWORD }
+            }
+          end
+        end
+
+        assert_redirected_to sign_in_path
+        assert_equal I18n.t("passwords.edit.token_failure"), flash[:alert]
+        assert_equal @api_key, @user.reload.api_key
+        assert_equal 2, @user.api_keys.unexpired.count
+        assert_empty appsec_event_family_tags(span, "api_key.")
+      end
+    end
   end
 
   private

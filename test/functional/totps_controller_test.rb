@@ -118,6 +118,59 @@ class TotpsControllerTest < ActionController::TestCase
             refute_nil session[:mfa_redirect_uri]
           end
         end
+
+        should "track losing the last factor with Datadog AppSec" do
+          span = with_appsec_trace { delete :destroy, params: { otp: ROTP::TOTP.new(@user.totp_seed).now } }
+
+          assert_predicate @user.reload, :mfa_disabled?
+          assert_equal({ "mfa.weakened" => 1 }, @appsec_event_calls)
+          assert_equal(
+            { "track" => "true", "usr.id" => @user.id.to_s, "mfa.change" => "totp_disabled",
+              "mfa.previous_level" => "ui_only", "mfa.level" => "disabled", "mfa.remaining_factors" => "0" },
+            appsec_event_tags(span, "mfa.weakened")
+          )
+        end
+
+        should "not track MFA weakening with Datadog AppSec for an incorrect OTP" do
+          span = with_appsec_trace do
+            assert_no_changes -> { @user.reload.attributes.slice("totp_seed", "mfa_level", "mfa_hashed_recovery_codes") } do
+              delete :destroy, params: { otp: "123456" }
+            end
+          end
+
+          assert_redirected_to edit_settings_path
+          assert_equal "Your OTP code is incorrect.", flash[:error]
+          assert_empty appsec_event_tags(span, "mfa.weakened")
+        end
+
+        should "still disable TOTP and report the error when Datadog AppSec tracking raises" do
+          error = RuntimeError.new("datadog is down")
+          Datadog::Kit::AppSec::Events.stubs(:track).raises(error)
+          Rails.error.expects(:report).with(error, handled: true)
+
+          delete :destroy, params: { otp: ROTP::TOTP.new(@user.totp_seed).now }
+
+          assert_redirected_to edit_settings_path
+          assert_predicate @user.reload, :totp_disabled?
+        end
+
+        context "when a webauthn device remains" do
+          setup do
+            create(:webauthn_credential, user: @user)
+          end
+
+          should "track removing one of several factors with Datadog AppSec" do
+            span = with_appsec_trace { delete :destroy, params: { otp: ROTP::TOTP.new(@user.totp_seed).now } }
+
+            assert_predicate @user.reload, :totp_disabled?
+            assert_equal({ "mfa.weakened" => 1 }, @appsec_event_calls)
+            assert_equal(
+              { "track" => "true", "usr.id" => @user.id.to_s, "mfa.change" => "totp_disabled",
+                "mfa.previous_level" => "ui_only", "mfa.level" => "ui_only", "mfa.remaining_factors" => "1" },
+              appsec_event_tags(span, "mfa.weakened")
+            )
+          end
+        end
       end
     end
 

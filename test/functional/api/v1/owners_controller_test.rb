@@ -1062,4 +1062,23 @@ class Api::V1::OwnersControllerTest < ActionController::TestCase
       end
     end
   end
+
+  should "not attach the signed-in session user's identity to an API key request" do
+    rubygem = create(:rubygem)
+    owner = create(:user)
+    create(:ownership, rubygem:, user: owner)
+    new_owner = create(:user)
+    sign_in_as(owner)
+    @request.env["HTTP_AUTHORIZATION"] = "not-a-real-key"
+
+    span = with_appsec_trace do
+      assert_no_changes -> { [enqueued_jobs.size, ActionMailer::Base.deliveries.size] } do
+        post :create, params: { rubygem_id: rubygem.slug, email: new_owner.email }
+      end
+    end
+
+    assert_response :unauthorized
+    assert_nil span.get_tag("usr.id")
+    refute_includes rubygem.owners_including_unconfirmed, new_owner
+  end
 end
