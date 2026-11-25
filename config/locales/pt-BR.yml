@@ -319,9 +319,11 @@ pt-BR:
         designed_by: Design
         discussion_forum: Fóruns
         gems_served_by: Provisionamento
+        github:
         guides: Guias
         help: Ajuda
         hosted_by: Hospedagem
+        mastodon:
         monitored_by: Monitoramento
         optimized_by: Otimizações
         policies:
@@ -333,7 +335,6 @@ pt-BR:
         status: Status
         support_us:
         x:
-        supported_by: Patrocínio
         operated_by:
         ruby_alliance:
         rubygems_supporters:

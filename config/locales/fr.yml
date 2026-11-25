@@ -320,9 +320,11 @@ fr:
         designed_by: Design par
         discussion_forum: Discussions
         gems_served_by: Gems mis à disposition par
+        github:
         guides: Guides
         help: Aide
         hosted_by: Hébergé par
+        mastodon:
         monitored_by: Monitoring par
         optimized_by: Optimisé par
         policies:
@@ -334,7 +336,6 @@ fr:
         status: Statut
         support_us:
         x:
-        supported_by: Soutenu par
         operated_by:
         ruby_alliance:
         rubygems_supporters:

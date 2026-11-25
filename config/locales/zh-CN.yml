@@ -312,9 +312,11 @@ zh-CN:
         designed_by: 设计
         discussion_forum: 讨论
         gems_served_by: 服务
+        github:
         guides: 指南
         help: 帮助
         hosted_by: 托管
+        mastodon:
         monitored_by: 监控
         optimized_by: 优化
         policies:
@@ -326,7 +328,6 @@ zh-CN:
         status: 状态
         support_us:
         x:
-        supported_by: 支持
         operated_by:
         ruby_alliance:
         rubygems_supporters:

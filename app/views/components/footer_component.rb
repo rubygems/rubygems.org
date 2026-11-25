@@ -93,8 +93,8 @@ class FooterComponent < ApplicationComponent
 
   def social_links
     div(class: "flex shrink-0 gap-4") do
-      a(href: "https://github.com/rubygems/rubygems.org") { icon_tag("github") }
-      a(href: "https://ruby.social/users/rubygems") { icon_tag("mastodon") }
+      a(href: "https://github.com/rubygems/rubygems.org", aria: { label: t("layouts.application.footer.github") }) { icon_tag("github") }
+      a(href: "https://ruby.social/users/rubygems", aria: { label: t("layouts.application.footer.mastodon") }) { icon_tag("mastodon") }
       a(href: "https://x.com/rubygems", aria: { label: t("layouts.application.footer.x") }) { icon_tag("x-twitter") }
       a(href: "https://bsky.app/profile/rubygems.bsky.social", aria: { label: t("layouts.application.footer.bluesky") }) { icon_tag("bluesky") }
     end

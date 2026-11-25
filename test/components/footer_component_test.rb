@@ -56,6 +56,12 @@ class FooterComponentTest < ComponentTest
     assert_equal tier_names.sort, (1..50).flat_map { shown_for.call(it) }.uniq.sort
   end
 
+  test "names every social link for screen readers" do
+    labels = %w[github.com ruby.social x.com bsky.app].map { page.find("a[href*='#{it}']")[:"aria-label"] }
+
+    assert_equal ["GitHub", "Mastodon", "X (formerly Twitter)", "Bluesky"], labels
+  end
+
   test "links to the full supporters page" do
     assert_selector "a[href='/supporters']", text: "See all supporters"
   end
