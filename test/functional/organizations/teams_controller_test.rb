@@ -269,6 +269,49 @@ class Organizations::TeamsControllerTest < ActionDispatch::IntegrationTest
       assert_select "[data-testid=team-show-handle]", text: "core"
     end
 
+    should "list team members in the order added" do
+      %w[carol alice].each do |handle|
+        membership = create(:membership, organization: @organization, user: create(:user, handle:))
+        travel 1.minute
+        @team.team_memberships.create!(membership:)
+      end
+
+      get organization_team_path(@organization, @team)
+
+      assert_response :success
+      assert_equal %w[carol alice], css_select("[data-testid=team-member-handle]").map(&:text)
+    end
+
+    should "show the add members picker to an admin" do
+      create(:membership, organization: @organization)
+
+      get organization_team_path(@organization, @team)
+
+      assert_select "[data-testid=add-team-members]", count: 1
+      assert_select "[data-testid=add-member-option]", count: 2 # the admin and the other member
+    end
+
+    should "not show the add members picker to a maintainer" do
+      @membership.update!(role: :maintainer)
+      create(:membership, organization: @organization)
+
+      get organization_team_path(@organization, @team)
+
+      assert_response :success
+      assert_select "[data-testid=add-team-members]", count: 0
+      assert_select "[data-testid=remove-team-member]", count: 0
+    end
+
+    should "still render after a member leaves the organization" do
+      leaving = create(:organization_team_membership, organization_team: @team).membership
+      leaving.destroy!
+
+      get organization_team_path(@organization, @team)
+
+      assert_response :success
+      assert_select "[data-testid=team-members-empty]"
+    end
+
     should "show the team to a maintainer" do
       @membership.update!(role: :maintainer)
 

@@ -582,6 +582,25 @@ en:
         handle_placeholder: core-team
         handle_hint: Letters, numbers, dashes and underscores only. Must be unique within the organization.
         create: Create
+      members:
+        create:
+          added:
+            one: Added 1 member to the team.
+            other: Added %{count} members to the team.
+          none_selected: Select at least one member to add.
+        destroy:
+          removed: Removed %{handle} from the team.
+      members_component:
+        members: Members
+        handle: Handle
+        name: Name
+        email: Email
+        added: Added
+        actions: Actions
+        no_members: No members yet
+        remove: Remove
+        add_members: Add members
+        add_selected: Add selected
     invitation_expiry_title: "%{time} UTC"
     invitations:
       expired: This invitation has expired. Ask an organization admin to resend it.

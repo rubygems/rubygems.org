@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_10_184402) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_17_193158) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -587,6 +587,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_10_184402) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "organization_team_memberships", force: :cascade do |t|
+    t.bigint "organization_team_id", null: false
+    t.bigint "membership_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["membership_id"], name: "index_organization_team_memberships_on_membership_id"
+    t.index ["organization_team_id", "membership_id"], name: "index_organization_team_memberships_on_team_and_membership", unique: true
+  end
+
   create_table "organization_teams", force: :cascade do |t|
     t.string "handle", null: false
     t.string "name", null: false
@@ -879,6 +888,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_10_184402) do
   add_foreign_key "organization_invites", "users"
   add_foreign_key "organization_onboarding_invites", "organization_onboardings"
   add_foreign_key "organization_onboarding_invites", "users"
+  add_foreign_key "organization_team_memberships", "memberships", on_delete: :cascade
+  add_foreign_key "organization_team_memberships", "organization_teams", on_delete: :cascade
   add_foreign_key "organization_teams", "organizations"
   add_foreign_key "ownership_calls", "rubygems", name: "ownership_calls_rubygem_id_fk"
   add_foreign_key "ownership_calls", "users", name: "ownership_calls_user_id_fk"
