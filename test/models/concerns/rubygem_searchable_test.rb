@@ -191,6 +191,27 @@ class RubygemSearchableTest < ActiveSupport::TestCase
     end
   end
 
+  context "prefix matches" do
+    setup do
+      { "rails-addon" => 10, "RaIlS-other" => 20, "addon-rails" => 100 }.each do |name, downloads|
+        rubygem = create(:rubygem, name:, downloads:)
+        create(:version, :reindex, rubygem:)
+      end
+    end
+
+    should "rank prefixes consistently regardless of query or gem name case" do
+      %w[rails Rails rAiLs rai RaI].each do |query|
+        error, response = ElasticSearcher.new(query).search
+
+        assert_nil error
+        expected = %w[RaIlS-other rails-addon]
+        expected << "addon-rails" if query.downcase == "rails"
+
+        assert_equal expected, response.map(&:name), "Unexpected ranking for #{query}"
+      end
+    end
+  end
+
   context "sort" do
     setup do
       { "sortgem-b" => [30, 20.days.ago], "sortgem-a" => [10, 5.days.ago], "sortgem-c" => [20, 10.days.ago] }.each do |name, (downloads, published)|
