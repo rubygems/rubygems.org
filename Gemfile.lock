@@ -630,7 +630,7 @@ GEM
     prism (2.1.0-x86_64-darwin)
     prism (2.1.0-x86_64-linux-gnu)
     prism (2.1.0-x86_64-linux-musl)
-    prop_initializer (0.5.1)
+    prop_initializer (1.0.0)
       zeitwerk (>= 2.6.18)
     propshaft (1.3.2)
       actionpack (>= 7.0.0)
@@ -1015,7 +1015,7 @@ DEPENDENCIES
   pghero (~> 4.1)
   phlex-rails (~> 2.4)
   pp (= 0.6.4)
-  prop_initializer (~> 0.5)
+  prop_initializer (~> 1.0)
   propshaft (~> 1.3.2)
   prosopite (~> 2.5)
   public_suffix (~> 7.0)
@@ -1309,7 +1309,7 @@ CHECKSUMS
   prism (2.1.0-x86_64-darwin) sha256=6c645d8e6afc742956c7518220ce5106367727c4d9980ac9ab386d55004ddab4
   prism (2.1.0-x86_64-linux-gnu) sha256=b2b647afce09551e650b8bb3e2fc91d7d73d392a09534ca307ec0d619c33bfd4
   prism (2.1.0-x86_64-linux-musl) sha256=249f45981726923e259b927902246219fa25ad10a76f43849c9aee1a3d3ec5b8
-  prop_initializer (0.5.1) sha256=e34f4b298678b81517534d83574a9f2fde844201af3f157fda9e427c6b29ab0e
+  prop_initializer (1.0.0) sha256=2b0b560e944e22338946fcc198c1c069b17f7ab06e5cb754af7a3b56de5969ef
   propshaft (1.3.2) sha256=1d56a3e56a92c21bfc29caf07406b5386b00d4c47ddf357cf989a5a234b1389e
   prosopite (2.5.0) sha256=48ed8b147d119c58ad7ea6dfb9ff7f6741053db3161dcc01ccd53b144f2fd689
   protobug (0.2.0) sha256=eb154bdbe2a3afe796711e0c16e89b2ed59efee0f172a10b634400471299b3f2
