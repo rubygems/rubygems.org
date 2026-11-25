@@ -22,6 +22,9 @@
   <% if policy(@organization).list_gem_name_reservations? %>
     <%= nav.link t("organizations.show.reservations"), organization_gem_name_reservations_path(@organization), name: :gem_name_reservations, icon: "description" %>
   <% end %>
+  <% if FeatureFlag.enabled?(FeatureFlag::ORGANIZATION_TEAMS, @organization) && policy(@organization).list_teams? %>
+    <%= nav.link t("organizations.show.teams"), organization_teams_path(@organization), name: :teams, icon: "organizations" %>
+  <% end %>
   <% if policy(@organization).edit? %>
     <%= nav.link t("layouts.application.header.settings"), edit_organization_path(@organization), name: :settings, icon: "settings" %>
   <% end %>

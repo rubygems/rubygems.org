@@ -102,6 +102,9 @@ es:
         workflow_repository_name:
       oidc/pending_trusted_publisher:
         rubygem_name:
+      organization_team:
+        name:
+        handle:
     errors:
       messages:
         not_pwned: ha aparecido con anterioridad en una filtración de datos y no se
@@ -125,6 +128,10 @@ es:
           attributes:
             handle:
               invalid:
+        organization_team:
+          attributes:
+            handle:
+              reserved:
         membership:
           attributes:
             user:
@@ -379,6 +386,8 @@ es:
     invite_member:
     reservations:
     reserve_gem_name:
+    teams:
+    create_team:
   mailer:
     confirm_your_email: Por favor confirma tu dirección de correo con el enlace enviado.
     confirmation_subject: Por favor confirma tu dirección de correo con %{host}
@@ -543,6 +552,7 @@ es:
       invite:
       transfer:
       reservations:
+      teams:
     members:
       create:
         user_already_invited:
@@ -592,6 +602,20 @@ es:
         limit_reached_html:
         unlimited:
         disclaimer:
+    teams:
+      create:
+        team_created:
+      index:
+        create:
+        no_teams:
+      new:
+        title:
+        name:
+        name_placeholder:
+        handle:
+        handle_placeholder:
+        handle_hint:
+        create:
     invitation_expiry_title:
     invitations:
       expired:

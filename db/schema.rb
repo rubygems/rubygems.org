@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_10_184402) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -549,8 +549,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
     t.datetime "updated_at", null: false
     t.index ["api_key_id"], name: "index_oidc_trusted_publisher_id_tokens_on_api_key_id"
     t.index ["asserted_owner_id"], name: "index_oidc_trusted_publisher_id_tokens_on_asserted_owner_id"
-    t.index ["oidc_provider_id"], name: "index_oidc_trusted_publisher_id_tokens_on_oidc_provider_id"
     t.index ["oidc_provider_id", "jti"], name: "index_oidc_trusted_publisher_id_tokens_on_provider_and_jti", unique: true
+    t.index ["oidc_provider_id"], name: "index_oidc_trusted_publisher_id_tokens_on_oidc_provider_id"
   end
 
   create_table "organization_invites", force: :cascade do |t|
@@ -585,6 +585,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
     t.integer "rubygems", default: [], array: true
     t.string "status", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "organization_teams", force: :cascade do |t|
+    t.string "handle", null: false
+    t.string "name", null: false
+    t.bigint "organization_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index "organization_id, lower((handle)::text)", name: "index_organization_team_handle_on_organizations", unique: true
   end
 
   create_table "organizations", force: :cascade do |t|
@@ -870,6 +879,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
   add_foreign_key "organization_invites", "users"
   add_foreign_key "organization_onboarding_invites", "organization_onboardings"
   add_foreign_key "organization_onboarding_invites", "users"
+  add_foreign_key "organization_teams", "organizations"
   add_foreign_key "ownership_calls", "rubygems", name: "ownership_calls_rubygem_id_fk"
   add_foreign_key "ownership_calls", "users", name: "ownership_calls_user_id_fk"
   add_foreign_key "ownership_requests", "ownership_calls", name: "ownership_requests_ownership_call_id_fk"

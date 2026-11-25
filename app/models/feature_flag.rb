@@ -2,6 +2,7 @@
 
 class FeatureFlag
   ORGANIZATIONS = :organizations
+  ORGANIZATION_TEAMS = :organization_teams
   CONTENT_ADDRESSABLE_GEM_PUSHES = :content_addressable_gem_pushes
   UNLIMITED_GEM_NAME_RESERVATIONS = :unlimited_gem_name_reservations
 

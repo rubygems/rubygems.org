@@ -17,4 +17,12 @@ class Events::OrganizationEvent < ApplicationRecord
     attribute :rubygem_gid, :global_id
     attribute :actor_gid, :global_id
   end
+
+  TEAM_CREATED = define_event "organization:team:created" do
+    attribute :team, :string
+    attribute :created_by, :string
+
+    attribute :team_gid, :global_id
+    attribute :actor_gid, :global_id
+  end
 end

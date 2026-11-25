@@ -96,6 +96,9 @@ zh-TW:
         workflow_repository_name:
       oidc/pending_trusted_publisher:
         rubygem_name:
+      organization_team:
+        name:
+        handle:
     errors:
       messages:
         not_pwned: 曾出現在資料外洩事件中，不應再使用
@@ -117,6 +120,10 @@ zh-TW:
           attributes:
             handle:
               invalid:
+        organization_team:
+          attributes:
+            handle:
+              reserved:
         membership:
           attributes:
             user:
@@ -361,6 +368,8 @@ zh-TW:
     invite_member:
     reservations:
     reserve_gem_name:
+    teams:
+    create_team:
   mailer:
     confirm_your_email: 已寄送連結，請點擊連結來確認您的電子郵件地址。
     confirmation_subject: "%{host} 電子郵件地址確認"
@@ -506,6 +515,7 @@ zh-TW:
       invite:
       transfer:
       reservations:
+      teams:
     members:
       create:
         user_already_invited:
@@ -555,6 +565,20 @@ zh-TW:
         limit_reached_html:
         unlimited:
         disclaimer:
+    teams:
+      create:
+        team_created:
+      index:
+        create:
+        no_teams:
+      new:
+        title:
+        name:
+        name_placeholder:
+        handle:
+        handle_placeholder:
+        handle_hint:
+        create:
     invitation_expiry_title:
     invitations:
       expired:

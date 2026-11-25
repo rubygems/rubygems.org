@@ -1,0 +1,49 @@
+<%
+  add_breadcrumb t("breadcrumbs.dashboard"), dashboard_path
+  add_breadcrumb t("breadcrumbs.org_name", name: @organization.handle), organization_path(@organization)
+  add_breadcrumb t("breadcrumbs.create_team")
+%>
+
+<% content_for :subject do %>
+  <%= render "organizations/subject", organization: @organization, current: :teams %>
+<% end %>
+
+<h1 class="text-h2 mb-10"><%= t("organizations.show.teams") %></h1>
+
+<%= render CardComponent.new do |c| %>
+  <%= c.head do %>
+    <%= c.title t(".title"), icon: "organizations" %>
+  <% end %>
+
+  <%= form_with(model: @team, url: organization_teams_path(@organization), method: :post) do |f| %>
+    <% if @team.errors.any? %>
+      <div class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md" data-testid="team-errors">
+        <ul class="list-disc pl-5 space-y-1 text-sm text-red-700 dark:text-red-300">
+          <% @team.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="mb-4">
+      <%= f.label :name, t(".name"), class: "block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2" %>
+      <%= f.text_field :name, class: "block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-500",
+        placeholder: t(".name_placeholder"),
+        data: { testid: "team-name-field" },
+        autofocus: true %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.label :handle, t(".handle"), class: "block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2" %>
+      <%= f.text_field :handle, class: "block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-500",
+        placeholder: t(".handle_placeholder"),
+        data: { testid: "team-handle-field" } %>
+      <p class="mt-2 text-b3 text-neutral-600 dark:text-neutral-400"><%= t(".handle_hint") %></p>
+    </div>
+
+    <div class="flex justify-end">
+      <%= render ButtonComponent.new t(".create"), type: :submit, style: :outline, class: "px-4 py-2 dark:border-gray-400 dark:text-gray-100" %>
+    </div>
+  <% end %>
+<% end %>
