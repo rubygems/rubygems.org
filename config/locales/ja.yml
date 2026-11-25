@@ -347,6 +347,9 @@ ja:
         close_menu:
         search_gem_html: gemを検索...
         members: メンバー
+        theme_auto:
+        theme_light:
+        theme_dark:
       mfa_banner_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。[詳細はこちら](link
         to blog post)！"
   breadcrumbs:
