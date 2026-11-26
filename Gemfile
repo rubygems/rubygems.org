@@ -12,6 +12,7 @@ gem "aws-sdk-sqs", "~> 1.130"
 gem "aws_advanced_ruby_driver_wrapper", "~> 1.1.0", require: "aws_advanced_ruby_driver_wrapper/postgresql"
 gem "bootsnap", "~> 1.26"
 gem "clearance", "~> 2.12"
+# Pinned: verify any change against production ElastiCache memcached (1.6.22), below Dalli 5.1+'s documented 1.6.27 minimum.
 gem "dalli", "5.3.3"
 gem "datadog", "~> 2.49"
 gem "dogstatsd-ruby", "~> 5.7"
