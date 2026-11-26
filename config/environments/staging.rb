@@ -109,7 +109,6 @@ Rails.application.configure do
   config.active_record.attributes_for_inspect = [:id]
 
   config.cache_store = :mem_cache_store, ENV['MEMCACHED_ENDPOINT'], {
-    protocol: :meta,
     failover: true,
     socket_timeout: 1.5,
     socket_failure_delay: 0.2,

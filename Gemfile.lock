@@ -967,7 +967,7 @@ DEPENDENCIES
   chartkick (~> 5.3)
   clearance (~> 2.12)
   csv (~> 3.3)
-  dalli (~> 5.3)
+  dalli (= 5.3.3)
   datadog (~> 2.49)
   debug (~> 1.0)
   derailed_benchmarks (~> 2.2)
