@@ -84,6 +84,16 @@ class RequestLogPayloadTest < ActionDispatch::IntegrationTest
     assert_match %r{\Ahttp://[^/]+/\z}, http[:url]
   end
 
+  test "http url leaves out the query string, so no reset token is logged" do
+    token = create(:user).issue_password_reset!
+
+    payload = capture_request_payload { get edit_password_path(token:) }
+
+    assert_response :success
+    assert_match %r{\Ahttp://[^/]+/password/edit\z}, payload[:http][:url]
+    assert_equal({ "token" => "[FILTERED]" }, payload[:rails][:params])
+  end
+
   test "message summarizes status, method, path and controller action" do
     payload = capture_request_payload { get "/" }
 
