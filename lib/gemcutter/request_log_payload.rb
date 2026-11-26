@@ -47,7 +47,7 @@ module Gemcutter::RequestLogPayload
       method: request.method,
       status_code: response.status,
       useragent: request.user_agent,
-      url: request.url
+      url: request.base_url + request.path
     }
   end
 
