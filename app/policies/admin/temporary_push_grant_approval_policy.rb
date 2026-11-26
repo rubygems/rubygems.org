@@ -4,7 +4,7 @@
 class Admin::TemporaryPushGrantApprovalPolicy < Admin::ApplicationPolicy
   class Scope < Admin::ApplicationPolicy::Scope
     def resolve
-      rubygems_org_admin? ? scope.all : scope.none
+      scope.all
     end
   end
 
