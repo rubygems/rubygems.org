@@ -421,6 +421,16 @@ en:
       subject: Security device removed on %{host}
       title: SECURITY DEVICE REMOVED
       subtitle: Hi %{handle}!
+    temporary_push_grant_activated:
+      subject: Temporary push access to %{gem} on %{host}
+      title: TEMPORARY PUSH ACCESS
+      subtitle: Hi %{handle}
+      intro: RubyGems.org operators activated a temporary push grant that lets you publish one approved release of %{gem}. It does not make you an owner or maintainer.
+      scope_html: "Approved release: <strong>%{gem} %{version}</strong> (%{platforms})"
+      expires_html: "Expires: <strong>%{expires_at}</strong>"
+      key_intro: "Your publish-only API key (shown only in this email):"
+      usage_html: Each upload needs this key and your multi-factor code, for example <code>GEM_HOST_API_KEY=&lt;key&gt; gem push %{gem}-%{version}.gem --otp &lt;code&gt;</code>. Only the reviewed gem files can be published, once each.
+      unexpected: If you did not request this access, contact security@rubygems.org.
     totp_enabled:
       subject: Authentication app enabled on %{host}
       title: AUTHENTICATION APP ENABLED

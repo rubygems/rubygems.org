@@ -126,6 +126,13 @@ class Mailer < ApplicationMailer
       subject: I18n.t("mail.api_key_created.subject", default: "New API key created for rubygems.org")
   end
 
+  def temporary_push_grant_activated(grant, key)
+    @grant = grant
+    @key = key
+    mail to: grant.grantee.email,
+      subject: I18n.t("mailer.temporary_push_grant_activated.subject", gem: grant.rubygem.name, host: Gemcutter::HOST_DISPLAY)
+  end
+
   def api_key_revoked(user_id, api_key_name, enabled_scopes, commit_url)
     @commit_url = commit_url
     @user = User.find(user_id)

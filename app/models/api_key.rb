@@ -19,6 +19,7 @@ class ApiKey < ApplicationRecord
   has_one :oidc_trusted_publisher_id_token, class_name: "OIDC::TrustedPublisher::IdToken", dependent: :nullify, inverse_of: :api_key
   has_one :oidc_api_key_role, class_name: "OIDC::ApiKeyRole", through: :oidc_id_token, source: :api_key_role, inverse_of: :api_keys
   has_many :pushed_versions, class_name: "Version", inverse_of: :pusher_api_key, foreign_key: :pusher_api_key_id, dependent: :nullify
+  has_one :temporary_push_grant, inverse_of: :api_key, dependent: :restrict_with_error
 
   before_validation :set_owner_from_user
   after_create :record_create_event
@@ -33,6 +34,7 @@ class ApiKey < ApplicationRecord
   validate :known_scopes
   validate :not_soft_deleted?
   validate :not_expired?
+  validate :temporary_push_grant_key_limits, if: :temporary_push_grant
 
   delegate :rubygem_id, :rubygem, to: :ownership, allow_nil: true
 
@@ -89,6 +91,8 @@ class ApiKey < ApplicationRecord
     to: :user, allow_nil: true
 
   def mfa_authorized?(otp)
+    # Every upload under a temporary push grant needs the grantee's MFA, whatever their MFA level.
+    return user.mfa_enabled? && user.api_mfa_verified?(otp) if user? && temporary_push_grant
     return true unless mfa_enabled?
     return true if oidc_id_token.present?
     user.api_mfa_verified?(otp)
@@ -172,6 +176,13 @@ class ApiKey < ApplicationRecord
   def not_expired?
     return false if changed == %w[expires_at]
     errors.add :base, "An expired API key cannot be used. Please create a new one." if expired?
+  end
+
+  # An operator-issued grant key may only push, with MFA, and its owner cannot widen it.
+  def temporary_push_grant_key_limits
+    errors.add(:scopes, "of a temporary push grant key cannot be changed") unless scopes == %i[push_rubygem]
+    errors.add(:mfa, "is required for a temporary push grant key") unless mfa
+    errors.add(:rubygem, "cannot be set on a temporary push grant key") if ownership
   end
 
   def set_owner_from_user

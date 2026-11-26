@@ -432,6 +432,16 @@ fr:
       subject:
       title:
       subtitle:
+    temporary_push_grant_activated:
+      subject:
+      title:
+      subtitle:
+      intro:
+      scope_html:
+      expires_html:
+      key_intro:
+      usage_html:
+      unexpected:
     totp_enabled:
       subject:
       title:
