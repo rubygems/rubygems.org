@@ -298,7 +298,7 @@ class Rack::Attack
         method: method,
         status_code: 429,
         useragent: request.user_agent,
-        url: request.url
+        url: request.base_url + request.path
       },
       throttle: {
         matched: request.env["rack.attack.matched"],
