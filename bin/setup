@@ -14,7 +14,11 @@ FileUtils.chdir APP_ROOT do
   # Add necessary setup steps to this file.
 
   puts "== Installing dependencies =="
-  system! "gem install bundler --conservative"
+  # Bundler 4.1+ ships its own copy of RubyGems' vendored libraries, so a Bundler that
+  # doesn't match RubyGems loads Gem::URI twice and warns on every boot.
+  require "bundler"
+  bundler_version = Bundler::LockfileParser.bundled_with
+  system! "gem update --system #{bundler_version} --no-document" unless bundler_version == Gem::VERSION
   system("bundle check") || system!("bundle install")
 
   puts "\n== Installing Playwright browser (used by system tests) =="
