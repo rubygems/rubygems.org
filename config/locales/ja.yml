@@ -312,9 +312,11 @@ ja:
         designed_by: 設計
         discussion_forum: 議論
         gems_served_by: gemの提供
+        github:
         guides: ガイド
         help: ヘルプ
         hosted_by: ホスト
+        mastodon:
         monitored_by: 監視
         optimized_by: 最適化
         policies: ポリシー
@@ -326,11 +328,11 @@ ja:
         status: 状態
         support_us: 支援
         x:
-        supported_by: 協賛
         operated_by: 運営
-        supported_by_html: |
-          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
-          は以下から支援を受けています
+        ruby_alliance:
+        rubygems_supporters:
+        infrastructure_donors:
+        see_all_supporters:
         uptime: 稼働時間
         secured_by: セキュリティ
       header:

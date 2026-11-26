@@ -319,9 +319,11 @@ pt-BR:
         designed_by: Design
         discussion_forum: Fóruns
         gems_served_by: Provisionamento
+        github:
         guides: Guias
         help: Ajuda
         hosted_by: Hospedagem
+        mastodon:
         monitored_by: Monitoramento
         optimized_by: Otimizações
         policies:
@@ -333,11 +335,11 @@ pt-BR:
         status: Status
         support_us:
         x:
-        supported_by: Patrocínio
         operated_by:
-        supported_by_html: |
-          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
-          <br class="hidden lg:block"> é apoiado por
+        ruby_alliance:
+        rubygems_supporters:
+        infrastructure_donors:
+        see_all_supporters:
         uptime: Uptime
         secured_by:
       header:

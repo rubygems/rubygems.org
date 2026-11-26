@@ -78,11 +78,11 @@ class GemFilterTest < ApplicationSystemTestCase
     end
   end
 
-  test "organization filtering finds off-page gems and carries the filter through pagination and sorting" do
-    gems = create_list(:rubygem, 5, organization: @organization, number: "1.0.0")
+  test "profile and organization filtering finds off-page gems and carries the filter through pagination and sorting" do
+    gems = create_list(:rubygem, 5, owners: [@user], organization: @organization, number: "1.0.0")
     names = gems.map(&:name).sort
 
-    [organization_path(@organization), organization_gems_path(@organization)].each do |path|
+    [profile_path(@user.handle), organization_path(@organization), organization_gems_path(@organization)].each do |path|
       visit "#{path}?sort=name&page=2"
       fill_in "Filter by gem name", with: "RubyGem"
 

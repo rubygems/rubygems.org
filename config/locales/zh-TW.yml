@@ -311,9 +311,11 @@ zh-TW:
         designed_by: 設計
         discussion_forum: 討論群組
         gems_served_by: 服務
+        github:
         guides: 教學文件
         help: 說明
         hosted_by: 托管
+        mastodon:
         monitored_by: 監控
         optimized_by: 最佳化
         policies:
@@ -325,11 +327,11 @@ zh-TW:
         status: 狀態
         support_us:
         x:
-        supported_by: 支持
         operated_by:
-        supported_by_html: |
-          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
-          <br class="hidden lg:block"> 由以下支持
+        ruby_alliance:
+        rubygems_supporters:
+        infrastructure_donors:
+        see_all_supporters:
         uptime: 上線時間
         secured_by:
       header:

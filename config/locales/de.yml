@@ -334,9 +334,11 @@ de:
         designed_by: Design von
         discussion_forum: Diskussion
         gems_served_by: Gems angeboten von
+        github:
         guides: Dokumentation
         help: Hilfe
         hosted_by: Gehostet von
+        mastodon:
         monitored_by: Überwacht von
         optimized_by: Optimiert mit
         policies:
@@ -348,11 +350,11 @@ de:
         status: Status
         support_us:
         x:
-        supported_by: Unterstützt von
         operated_by:
-        supported_by_html: |
-          <a href="https://rubygems.org" class="font-semibold">RubyGems.org</a>
-          wird unterstützt von
+        ruby_alliance:
+        rubygems_supporters:
+        infrastructure_donors:
+        see_all_supporters:
         uptime: Betriebszeit
         secured_by:
       header:
