@@ -365,6 +365,22 @@ class RackAttackTest < ActionDispatch::IntegrationTest
       assert_response :too_many_requests
     end
 
+    should "log a throttled password reset link without its token" do
+      token = @user.issue_password_reset!
+      exceed_limit_for("clearance/ip")
+      logged = []
+      Rack::Attack.logger.stubs(:info).with { |message, json| logged << [message, json] }
+
+      get edit_password_path(token:), headers: { REMOTE_ADDR: @ip_address }
+
+      assert_response :too_many_requests
+      message, json = logged.sole
+
+      assert_equal "Rack::Attack Throttling", message
+      assert_match %r{\Ahttp://[^/]+/password/edit\z}, JSON.parse(json).dig("http", "url")
+      refute_includes json, token
+    end
+
     should "throttle verify password" do
       exceed_limit_for("clearance/ip")
 
