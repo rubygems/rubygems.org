@@ -22,6 +22,7 @@ class Avo::TemporaryPushGrantsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     page.assert_text "draft"
+
     %w[Approve Activate Suspend Resume Revoke].each do |verb|
       assert_select "a[data-action-name='#{verb} Temporary Push Grant']", count: 1
     end

@@ -24,8 +24,8 @@ class TemporaryPushGrantActionsTest < ActiveSupport::TestCase
     assert_equal ["Approve Temporary Push Grant", "Approve Temporary Push Grant", "Record Technical Review",
                   "Activate Temporary Push Grant", "Suspend Temporary Push Grant", "Resume Temporary Push Grant",
                   "Revoke Temporary Push Grant"], audits.map(&:action)
-    assert_equal %w[operator-one operator-two operator-one operator-two operator-one operator-one operator-two],
-      audits.map { it.admin_github_user.login }
+    assert_equal(%w[operator-one operator-two operator-one operator-two operator-one operator-one operator-two],
+      audits.map { it.admin_github_user.login })
     assert_equal "No conflicts", audits.first.audited_changes.dig("fields", "conflict_disclosure")
 
     mail = ActionMailer::Base.deliveries.last
