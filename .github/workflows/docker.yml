@@ -30,7 +30,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 60
     env:
-      RUBYGEMS_VERSION: "4.0.16"
+      RUBYGEMS_VERSION: "4.1.0"
       RUBY_VERSION: .ruby-version
     permissions:
       contents: read

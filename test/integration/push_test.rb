@@ -200,13 +200,10 @@ class PushTest < ActionDispatch::IntegrationTest
                                "surrogate-key" => "gem/sandworm", "sha256" => checksum_sha256 } },
                  RubygemFs.instance.head("gems/sandworm-2.0.0.gem"))
 
-    gem_io.rewind
-    spec = Gem::Package.new(Gem::Package::IOSource.new(gem_io)).spec
-    spec.abbreviate
-    spec.sanitize
-    spec_checksum = Digest::SHA256.base64digest Gem.deflate Marshal.dump spec
+    spec_contents = RubygemFs.instance.get("quick/Marshal.4.8/sandworm-2.0.0.gemspec.rz")
 
-    assert_equal({ checksum_sha256: spec_checksum, key: "quick/Marshal.4.8/sandworm-2.0.0.gemspec.rz" },
+    assert_equal "sandworm-2.0.0", Marshal.load(Zlib.inflate(spec_contents)).full_name # rubocop:disable Security/MarshalLoad
+    assert_equal({ checksum_sha256: Digest::SHA256.base64digest(spec_contents), key: "quick/Marshal.4.8/sandworm-2.0.0.gemspec.rz" },
                  RubygemFs.instance.head("quick/Marshal.4.8/sandworm-2.0.0.gemspec.rz"))
 
     get rubygem_path("sandworm")
