@@ -24,9 +24,7 @@
       <h3 class="<%= section_heading_class %> mb-4" data-testid="versions-count">
         <%= t(".versions_since", count: @versions.total_count, since: nice_date_for(@oldest_version_date)) %>
       </h3>
-      <ol data-testid="gem-versions" class="flex flex-col gap-3">
-        <%= render partial: "versions/grouped_versions", locals: { versions: @versions } %>
-      </ol>
+      <%= render partial: "versions/grouped_versions", locals: { versions: @versions } %>
       <%= paginate @versions, theme: "hammy" %>
     </div>
   <% end %>
