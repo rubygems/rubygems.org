@@ -69,9 +69,6 @@ RUN --mount=type=cache,id=bld-gem-cache,sharing=locked,target=/srv/vendor \
   # Remove .gem files
   rm -r /app/vendor/ruby/*/cache
 
-  # Remove gem extension build logs
-  rm /app/vendor/ruby/*/extensions/*/*/*/gem_make.out
-
   # Remove avo source maps (8+ MB!)
   find /app/vendor/ruby -type f -name '*.js.map' -exec rm {} \;
 
