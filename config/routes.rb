@@ -128,6 +128,8 @@ Rails.application.routes.draw do
         resources :providers, only: %i[index show], format: 'json', defaults: { format: :json }
 
         resources :id_tokens, only: %i[index show], format: 'json', defaults: { format: :json }
+
+        resources :pending_trusted_publishers, only: %i[index create], format: 'json', defaults: { format: :json }
       end
     end
   end
