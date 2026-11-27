@@ -24,6 +24,14 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
     }, status: :unprocessable_content
   end
 
+  # Unique indexes catch a token exchanged concurrently or already exchanged at another endpoint
+  rescue_from ActiveRecord::RecordNotUnique do |err|
+    raise err unless OIDC::TokenExchange.replay?(err)
+    render json: {
+      errors: { "jwt.claims.jti" => ["must be unique"] }
+    }, status: :unprocessable_content
+  end
+
   def index
     authorize OIDC::ApiKeyRole, :index?
     render json: @api_key.user.oidc_api_key_roles
@@ -51,6 +59,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
         api_key_role: @api_key_role,
         provider: @api_key_role.provider
       )
+      OIDC::TokenExchange.create!(provider: @provider, jti: @jwt[:jti])
       Mailer.api_key_created(api_key.id).deliver_later
     end
 

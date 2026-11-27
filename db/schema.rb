@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_26_150943) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -491,6 +491,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
     t.jsonb "jwt", null: false
     t.bigint "oidc_api_key_role_id", null: false
     t.datetime "updated_at", null: false
+    t.index "(((jwt -> 'claims'::text) ->> 'iss'::text)), (((jwt -> 'claims'::text) ->> 'jti'::text))", name: "index_oidc_id_tokens_on_issuer_and_jti", unique: true
     t.index ["api_key_id"], name: "index_oidc_id_tokens_on_api_key_id"
     t.index ["oidc_api_key_role_id"], name: "index_oidc_id_tokens_on_oidc_api_key_role_id"
   end
@@ -527,6 +528,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
     t.index ["trusted_publisher_type", "trusted_publisher_id"], name: "index_oidc_rubygem_trusted_publishers_on_trusted_publisher"
   end
 
+  create_table "oidc_token_exchanges", force: :cascade do |t|
+    t.bigint "oidc_provider_id", null: false
+    t.string "jti", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["oidc_provider_id", "jti"], name: "index_oidc_token_exchanges_on_oidc_provider_id_and_jti", unique: true
+  end
+
   create_table "oidc_trusted_publisher_github_actions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "environment"
@@ -549,8 +558,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
     t.datetime "updated_at", null: false
     t.index ["api_key_id"], name: "index_oidc_trusted_publisher_id_tokens_on_api_key_id"
     t.index ["asserted_owner_id"], name: "index_oidc_trusted_publisher_id_tokens_on_asserted_owner_id"
-    t.index ["oidc_provider_id"], name: "index_oidc_trusted_publisher_id_tokens_on_oidc_provider_id"
     t.index ["oidc_provider_id", "jti"], name: "index_oidc_trusted_publisher_id_tokens_on_provider_and_jti", unique: true
+    t.index ["oidc_provider_id"], name: "index_oidc_trusted_publisher_id_tokens_on_oidc_provider_id"
   end
 
   create_table "organization_invites", force: :cascade do |t|
@@ -864,6 +873,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_28_023433) do
   add_foreign_key "oidc_id_tokens", "oidc_api_key_roles"
   add_foreign_key "oidc_pending_trusted_publishers", "users"
   add_foreign_key "oidc_rubygem_trusted_publishers", "rubygems"
+  add_foreign_key "oidc_token_exchanges", "oidc_providers"
   add_foreign_key "oidc_trusted_publisher_id_tokens", "api_keys", on_delete: :nullify
   add_foreign_key "oidc_trusted_publisher_id_tokens", "oidc_providers"
   add_foreign_key "oidc_trusted_publisher_id_tokens", "users", column: "asserted_owner_id"

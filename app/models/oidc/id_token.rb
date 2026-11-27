@@ -7,11 +7,8 @@ class OIDC::IdToken < ApplicationRecord
   has_one :user, through: :api_key_role, inverse_of: :oidc_id_tokens
 
   validates :jwt, presence: true
+  validates :jti, presence: true
   validate :jti_uniqueness
-
-  def self.provider_id(oidc_provider_id)
-    joins(:api_key_role).where(api_key_role: { oidc_provider_id: })
-  end
 
   def payload
     {
@@ -30,6 +27,10 @@ class OIDC::IdToken < ApplicationRecord
     jwt&.dig("claims", "jti")
   end
 
+  def iss
+    jwt&.dig("claims", "iss")
+  end
+
   def claims
     jwt&.dig("claims")
   end
@@ -39,8 +40,8 @@ class OIDC::IdToken < ApplicationRecord
   end
 
   def jti_uniqueness
-    relation = self.class.where("(jwt->>'claims')::jsonb->>'jti' = ?", jti)
-    relation = relation.provider_id(api_key_role.oidc_provider_id) if api_key_role
+    return if iss.nil? || jti.nil?
+    relation = self.class.where("jwt -> 'claims' ->> 'iss' = ? AND jwt -> 'claims' ->> 'jti' = ?", iss, jti)
     return unless relation.where.not(id: self).exists?
     errors.add("jwt.claims.jti", "must be unique")
   end

@@ -9,6 +9,7 @@ FactoryBot.define do
         claims: {
           claim1: "value1",
           claim2: "value2",
+          iss: api_key_role.provider.issuer,
           jti:
         },
         header: {

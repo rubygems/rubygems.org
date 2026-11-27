@@ -640,7 +640,7 @@ class PusherIntegrationTest < ActiveSupport::TestCase
       )
 
       @api_key = create(:api_key, owner: rubygem_trusted_publisher.trusted_publisher, key: "54321", scopes: %i[push_rubygem])
-      create(:oidc_id_token, api_key: @api_key, jwt: { claims: { "ref" => "refs/heads/main" } })
+      create(:oidc_id_token, api_key: @api_key, jwt: { claims: { "ref" => "refs/heads/main", "jti" => SecureRandom.uuid } })
       @cutter = Pusher.new(@api_key, build_gem(gemspec_yaml_template), attestations: attestations.map(&:as_json))
     end
 

@@ -6,6 +6,7 @@ class OIDC::ProviderTest < ActiveSupport::TestCase
   should have_many :api_key_roles
   should have_many :id_tokens
   should have_many :users
+  should have_many :token_exchanges
 
   context "with an issuer that does not match the configuration" do
     setup do

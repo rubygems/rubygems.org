@@ -717,6 +717,29 @@ class Api::V1::OIDC::ApiKeyRolesTest < ActionDispatch::IntegrationTest
           response.parsed_body
         )
       end
+
+      should "return 422 rather than 500 when the database rejects a raced insert" do
+        # The race is through another role: replay is refused across the whole provider.
+        other_role = create(:oidc_api_key_role, provider: @role.provider)
+        create(:oidc_id_token, api_key_role: other_role, jti: @claims["jti"])
+        OIDC::IdToken.any_instance.stubs(:jti_uniqueness)
+
+        assert_no_difference ["ApiKey.count", "OIDC::IdToken.count", "Events::UserEvent.count"] do
+          assert_no_enqueued_jobs do
+            assert_no_enqueued_emails do
+              post assume_role_api_v1_oidc_api_key_role_path(@role.token),
+                  params: { jwt: jwt.to_s },
+                  headers: {}
+            end
+          end
+        end
+
+        assert_response :unprocessable_content
+        assert_equal_hash(
+          { "errors" => { "jwt.claims.jti" => ["must be unique"] } },
+          response.parsed_body
+        )
+      end
     end
 
     context "with a Buildkite OIDC token" do
