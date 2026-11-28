@@ -109,4 +109,65 @@ class Api::V1::OIDC::TokenExchangeTest < ActionDispatch::IntegrationTest
       end
     end
   end
+
+  test "each endpoint records when the token it exchanged expires" do
+    post api_v1_oidc_trusted_publisher_exchange_token_path, params: { jwt: }
+
+    assert_response :success
+    assert_equal Time.zone.at(@claims["exp"]), OIDC::TokenExchange.find_by!(jti: @claims["jti"]).expires_at
+
+    @claims["jti"] = SecureRandom.uuid
+    @claims["exp"] += 3600
+    post assume_role_api_v1_oidc_api_key_role_path(@role.token), params: { jwt: }
+
+    assert_response :success
+    assert_equal Time.zone.at(@claims["exp"]), OIDC::TokenExchange.find_by!(jti: @claims["jti"]).expires_at
+  end
+
+  test "pruning straight after an exchange leaves the token refused at the other endpoint" do
+    post api_v1_oidc_trusted_publisher_exchange_token_path, params: { jwt: }
+
+    assert_response :success
+    assert_equal 0, OIDC::TokenExchange.prune
+
+    assert_no_difference "ApiKey.count" do
+      post assume_role_api_v1_oidc_api_key_role_path(@role.token), params: { jwt: }
+    end
+
+    assert_response :unprocessable_content
+  end
+
+  test "pruning keeps the exchange of a long-lived token until that token expires" do
+    @claims["exp"] = 30.days.from_now.to_i
+    post api_v1_oidc_trusted_publisher_exchange_token_path, params: { jwt: }
+
+    assert_response :success
+
+    travel 29.days
+
+    assert_equal 0, OIDC::TokenExchange.prune
+
+    assert_no_difference "ApiKey.count" do
+      post assume_role_api_v1_oidc_api_key_role_path(@role.token), params: { jwt: }
+    end
+
+    assert_response :unprocessable_content
+    assert_equal({ "errors" => { "jwt.claims.jti" => ["must be unique"] } }, response.parsed_body)
+  end
+
+  test "pruning deletes an exchange only once its token is refused as expired anyway" do
+    post api_v1_oidc_trusted_publisher_exchange_token_path, params: { jwt: }
+
+    assert_response :success
+
+    travel_to Time.zone.at(@claims["exp"]) + OIDC::TokenExchange::PRUNE_GRACE + 1.second
+
+    assert_equal 1, OIDC::TokenExchange.prune
+
+    assert_no_difference "ApiKey.count" do
+      post assume_role_api_v1_oidc_api_key_role_path(@role.token), params: { jwt: }
+    end
+
+    assert_response :not_found
+  end
 end

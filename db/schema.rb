@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_26_150943) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_27_142231) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -533,6 +533,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_26_150943) do
     t.string "jti", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "expires_at"
+    t.index ["expires_at"], name: "index_oidc_token_exchanges_on_expires_at"
     t.index ["oidc_provider_id", "jti"], name: "index_oidc_token_exchanges_on_oidc_provider_id_and_jti", unique: true
   end
 
