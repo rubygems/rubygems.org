@@ -42,7 +42,7 @@ class Api::V1::OIDC::TrustedPublisherController < Api::BaseController
         jti: @jwt[:jti],
         asserted_owner: @asserted_owner
       )
-      OIDC::TokenExchange.create!(provider: @provider, jti: @jwt[:jti])
+      OIDC::TokenExchange.record!(provider: @provider, jwt: @jwt)
     end
 
     render json: {

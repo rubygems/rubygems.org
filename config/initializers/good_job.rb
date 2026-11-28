@@ -34,6 +34,18 @@ Rails.application.configure do # rubocop:disable Metrics/BlockLength
       set: { priority: 10 },
       description: "Refreshing all OIDC provider configurations every 30m"
     },
+    prune_oidc_token_exchanges: {
+      cron: "every hour",
+      class: "PruneOIDCTokenExchangesJob",
+      set: { priority: 10 },
+      description: "Pruning the records of expired OIDC token exchanges every hour"
+    },
+    oidc_token_exchange_stats: {
+      cron: "every 15m",
+      class: "OIDCTokenExchangeStatsJob",
+      set: { priority: 10 },
+      description: "Sending the counts of OIDC token exchange records, and of those overdue for pruning, to statsd every 15m"
+    },
     sync_disposable_email_domains: {
       cron: "0 4 * * *",
       class: "SyncDisposableEmailDomainsJob",

@@ -59,7 +59,7 @@ class Api::V1::OIDC::ApiKeyRolesController < Api::BaseController
         api_key_role: @api_key_role,
         provider: @api_key_role.provider
       )
-      OIDC::TokenExchange.create!(provider: @provider, jti: @jwt[:jti])
+      OIDC::TokenExchange.record!(provider: @provider, jwt: @jwt)
       Mailer.api_key_created(api_key.id).deliver_later
     end
 
