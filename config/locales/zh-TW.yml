@@ -346,6 +346,8 @@ zh-TW:
         main_navigation:
         open_menu:
         close_menu:
+        back: 返回
+        language: 語言
         search_gem_html: 搜尋 Gems&hellip;
         members:
       mfa_banner_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。[了解詳情](部落格文章連結)！"
@@ -667,7 +669,7 @@ zh-TW:
       或 "使用者介面和 API"。請閱讀我們的<a href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">部落格文章</a>以了解詳情。
     strong_mfa_level_recommended: 為保護您的帳號和 Gems，我們建議您將您的 MFA 等級設為 "使用者介面和 Gem 登入"
       或 "使用者介面和 API"。未來我們將強制要求所有帳號將設為上述 MFA 等級。
-    setup_webauthn_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。<a
+    setup_webauthn_html: "\U0001F389 我們現在支援安全裝置了！<a href=\"/zh-TW/settings/edit#security-device\">設定</a>新的裝置來提升您的帳號安全。<a
       href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">了解詳情</a>！"
     api:
       mfa_required:

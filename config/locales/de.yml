@@ -330,7 +330,7 @@ de:
         bluesky:
         contribute: Beitragen
         data: Daten
-        docs: Dokumentation
+        docs: Doku
         designed_by: Design von
         discussion_forum: Diskussion
         gems_served_by: Gems angeboten von
@@ -369,6 +369,8 @@ de:
         main_navigation:
         open_menu:
         close_menu:
+        back: Zurück
+        language: Sprache
         search_gem_html: Suche Gems&hellip;
         members:
       mfa_banner_html:
@@ -740,7 +742,7 @@ de:
       In Zukunft wird dein Konto verpflichtend MFA auf einem dieser Level aktiviert
       haben.
     setup_webauthn_html: "\U0001F389 Wir unterstützen jetzt Sicherheitsgeräte! Verbessere
-      die Sicherheit deines Kontos, indem du <a href=\"/settings/edit#security-device\">ein
+      die Sicherheit deines Kontos, indem du <a href=\"/de/settings/edit#security-device\">ein
       neues Gerät einrichtest</a>. <a href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">Erfahre
       mehr</a>!"
     api:

@@ -347,6 +347,8 @@ ja:
         main_navigation:
         open_menu:
         close_menu:
+        back: 戻る
+        language: 言語
         search_gem_html: gemを検索...
         members: メンバー
       mfa_banner_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。[詳細はこちら](link
@@ -667,7 +669,7 @@ ja:
     strong_mfa_level_required_html: アカウントとgemの保護のため、MFAの水準の「UIとgemのサインイン」または「UIとAPI」への変更が必要です。詳細については<a
       href="https://blog.rubygems.org/2022/08/15/requiring-mfa-on-popular-gems.html">ブログ記事</a>をお読みください。
     strong_mfa_level_recommended: アカウントとgemの保護のため、MFAの水準を「UIとgemのサインイン」または「UIとAPI」に変更することをお勧めします。将来のアカウントはこれらの水準のどちらか1つにMFAが有効になっていることが必須になります。
-    setup_webauthn_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。<a
+    setup_webauthn_html: "\U0001F389 セキュリティ機器に対応しました！新しい機器を<a href=\"/ja/settings/edit#security-device\">設定</a>してアカウントのセキュリティを向上しましょう。<a
       href=\"https://blog.rubygems.org/2023/08/03/level-up-using-security-devices.html\">詳細はこちら</a>！"
     api:
       mfa_required: このgemにはMFAの有効化が必要です。まだMFAを有効にしていません。
@@ -932,7 +934,7 @@ ja:
       managed_by: 管理者
       outside_contributors: 外部の貢献者
       authors_header: 作者
-      self_no_mfa_warning_html: アカウントをセキュアに保つため、<a href="/settings/edit">多要素認証（MFA）
+      self_no_mfa_warning_html: アカウントをセキュアに保つため、<a href="/ja/settings/edit">多要素認証（MFA）
         の有効化</a>をご検討ください。
       not_using_mfa_warning_show: 多要素認証（MFA）を使っていない所有者がいます。完全な一覧を見るにはクリックしてください。
       not_using_mfa_warning_hide: "* 以下の所有者は多要素認証（MFA）を使っていません。クリックして隠します。"

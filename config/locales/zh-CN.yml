@@ -347,6 +347,8 @@ zh-CN:
         main_navigation:
         open_menu:
         close_menu:
+        back: 返回
+        language: 语言
         search_gem_html: 搜索 Gem &hellip;&hellip;
         members:
       mfa_banner_html:
@@ -928,7 +930,7 @@ zh-CN:
       managed_by:
       outside_contributors:
       authors_header: 作者
-      self_no_mfa_warning_html: 请考虑 <a href="/settings/edit">启用多因素身份验证（MFA）</a> 来保障您的帐户安全。
+      self_no_mfa_warning_html: 请考虑 <a href="/zh-CN/settings/edit">启用多因素身份验证（MFA）</a> 来保障您的帐户安全。
       not_using_mfa_warning_show: "* 某些所有者当前还没有启用多因素验证（MFA）。请点击查看完整列表。"
       not_using_mfa_warning_hide: "* 以下所有者还未使用多因素验证（MFA）。点击隐藏。"
       owners_header: 所有者

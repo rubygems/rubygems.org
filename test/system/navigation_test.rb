@@ -6,8 +6,8 @@ class NavigationTest < ApplicationSystemTestCase
   test "about opens on hover and its links remain reachable" do
     visit root_path
 
-    menu = "header [data-dropdown-target='menu']"
-    button = find("header [data-controller='dropdown'] button")
+    menu = "header nav [data-dropdown-target='menu']"
+    button = find("header nav [data-controller='dropdown'] button")
 
     assert_no_selector menu
     button.hover
@@ -35,8 +35,8 @@ class NavigationTest < ApplicationSystemTestCase
   test "about stays open for keyboard focus after the mouse leaves and closes when focus leaves" do
     visit root_path
 
-    menu = "header [data-dropdown-target='menu']"
-    button = find("header [data-controller='dropdown'] button")
+    menu = "header nav [data-dropdown-target='menu']"
+    button = find("header nav [data-controller='dropdown'] button")
     button.hover
     button.send_keys(:tab)
     find("header a", text: "docs", exact_text: true).hover
@@ -49,7 +49,7 @@ class NavigationTest < ApplicationSystemTestCase
     assert_selector "#{menu} a:focus", text: "Status"
 
     page.driver.with_playwright_page do |pw_page|
-      5.times { pw_page.keyboard.press("Tab") }
+      6.times { pw_page.keyboard.press("Tab") }
     end
 
     assert_no_selector menu
