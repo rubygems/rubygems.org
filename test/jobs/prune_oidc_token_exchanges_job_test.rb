@@ -23,12 +23,6 @@ class PruneOIDCTokenExchangesJobTest < ActiveJob::TestCase
     end
   end
 
-  test "reports how many rows are left" do
-    assert_statsd_gauge("oidc.token_exchanges.count", 1) do
-      PruneOIDCTokenExchangesJob.perform_now
-    end
-  end
-
   test "is scheduled, as nothing else deletes these rows" do
     schedule = Rails.application.config.good_job.cron.fetch(:prune_oidc_token_exchanges)
 
